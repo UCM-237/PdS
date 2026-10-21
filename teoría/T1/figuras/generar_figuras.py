@@ -516,28 +516,33 @@ def serie_fourier_cuadrada():
 
 
 @figura
-def espectros_pulso():
+def espectro_ctft_pulso():
     W = np.linspace(-6 * np.pi, 6 * np.pi, 2001)
     T = 1.0
-    fig, axs = pe.figura(1, 2, ancho=4.8, alto=1.55)
-    axs[0].plot(W, T * np.sinc(W * T / (2 * np.pi)))
-    axs[0].set_xticks([-4 * np.pi, -2 * np.pi, 0, 2 * np.pi, 4 * np.pi],
-                      [r"$-\frac{4\pi}{T}$", r"$-\frac{2\pi}{T}$", "0", r"$\frac{2\pi}{T}$", r"$\frac{4\pi}{T}$"])
-    axs[0].set_title(r"CTFT de $\Pi(t/T)$: $T\,\mathrm{sinc}(\Omega T/2\pi)$")
-    axs[0].set_xlabel(r"$\Omega$")
+    fig, ax = pe.figura(ancho=2.6, alto=1.6)
+    ax.plot(W, T * np.sinc(W * T / (2 * np.pi)))
+    ax.set_xticks([-4 * np.pi, -2 * np.pi, 0, 2 * np.pi, 4 * np.pi],
+                  [r"$-\frac{4\pi}{T}$", r"$-\frac{2\pi}{T}$", "0", r"$\frac{2\pi}{T}$", r"$\frac{4\pi}{T}$"])
+    ax.set_title(r"CTFT de $\Pi(t/T)$")
+    ax.set_xlabel(r"$\Omega$")
+    pe.ejes_centrados(ax)
+    guardar(fig, "espectro_ctft_pulso")
+
+
+@figura
+def espectro_dtft_pulso():
     w = np.linspace(-3 * np.pi, 3 * np.pi, 3001)
     L = 5
     with np.errstate(invalid="ignore", divide="ignore"):
         D = np.sin(w * L / 2) / np.sin(w / 2)
     D[np.isclose(np.sin(w / 2), 0)] = L
-    axs[1].plot(w, D, color=pe.ROJO)
-    axs[1].set_xticks([-2 * np.pi, -np.pi, 0, np.pi, 2 * np.pi],
-                      [r"$-2\pi$", r"$-\pi$", "0", r"$\pi$", r"$2\pi$"])
-    axs[1].set_title(r"DTFT de un pulso de $L=5$ muestras")
-    axs[1].set_xlabel(r"$\omega$")
-    for ax in axs:
-        pe.ejes_centrados(ax)
-    guardar(fig, "espectros_pulso")
+    fig, ax = pe.figura(ancho=2.6, alto=1.6)
+    ax.plot(w, np.abs(D), color=pe.ROJO)
+    ax.set_xticks([-2 * np.pi, -np.pi, 0, np.pi, 2 * np.pi],
+                  [r"$-2\pi$", r"$-\pi$", "0", r"$\pi$", r"$2\pi$"])
+    ax.set_title(r"$|X(e^{j\omega})|$, pulso de $L=5$ muestras")
+    ax.set_xlabel(r"$\omega$")
+    guardar(fig, "espectro_dtft_pulso")
 
 
 # ---------------------------------------------------------------------
@@ -687,7 +692,7 @@ def bandas_aplicaciones():
     ]
     colores = {"Geofísica": pe.GRIS, "Biomedicina": pe.ROJO, "Control y robótica": pe.NARANJA,
                "Audio": pe.VERDE, "Comunicaciones": pe.AZUL}
-    fig, ax = pe.figura(ancho=5.6, alto=2.9)
+    fig, ax = pe.figura(ancho=4.6, alto=2.6)
     for i, (nom, f1, f2, cat) in enumerate(bandas):
         ax.barh(i, np.log10(f2) - np.log10(f1) if f2 / f1 > 1.15 else 0.12, left=np.log10(f1),
                 height=0.62, color=colores[cat])

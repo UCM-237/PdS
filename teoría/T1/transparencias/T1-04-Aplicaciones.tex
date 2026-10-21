@@ -1,0 +1,176 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T1 · Señales reales]{Introducción: señales y sistemas}
+\subtitle{Tema 1 · Parte 4: contenido en frecuencia de señales reales}
+
+\begin{document}
+\portada
+
+\begin{frame}{¿Por qué fijarse en la frecuencia?}
+  \begin{itemize}
+    \item Cada tipo de señal ocupa una banda de frecuencias característica, y cada fuente de ruido también.
+    \item Conocer las dos bandas decide casi todo el diseño:
+    \begin{itemize}\small
+      \item la \alert{frecuencia de muestreo} mínima ($F_s>2F_{\max}$, Tema 2);
+      \item el \alert{filtro} que separa señal y ruido (Tema 4);
+      \item la resolución en frecuencia necesaria para analizarla (Tema 3).
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Un mapa de frecuencias}
+  \begin{center}\includegraphics[width=0.7\linewidth]{bandas_aplicaciones}\end{center}
+  \nota{Escala logarítmica: de centésimas de hercio (sismología) a cientos de terahercios (fibra óptica).}
+\end{frame}
+
+\begin{frame}{Comunicaciones}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \alert{Señales}
+      \begin{itemize}\small
+        \item Voz en telefonía: 300\,Hz – 3,4\,kHz.
+        \item Radio AM (onda media): 526,5 – 1606,5\,kHz.
+        \item Radio FM: 87,5 – 108\,MHz.
+        \item GPS: bandas L1 (1575,42\,MHz), L2 y L5.
+        \item Wi-Fi: 2,4\,GHz, 5\,GHz y 6\,GHz.
+        \item Fibra óptica: luz de 1550\,nm, unos 193\,THz.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \alert{Ruido e interferencias}
+      \begin{itemize}\small
+        \item \alert{Ruido térmico}: blanco, se reparte por toda la banda; su potencia crece con el ancho de banda ($kTB$).
+        \item Interferencias electromagnéticas de otros equipos (kHz – GHz).
+        \item Desvanecimiento por multitrayecto: variaciones lentas de la amplitud, de Hz a kHz según la velocidad del receptor.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \nota{Las señales de radio se procesan casi siempre en banda base, tras desplazarlas en frecuencia (modulación, propiedad de la transformada de Fourier).}
+\end{frame}
+
+\begin{frame}{Audio y música}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \alert{Señales}
+      \begin{itemize}\small
+        \item Banda audible: 20\,Hz – 20\,kHz.
+        \item Subgraves 20–60\,Hz, graves 60–250\,Hz, medios 250\,Hz–2\,kHz, agudos 2–20\,kHz.
+        \item Frecuencias de muestreo habituales: 8\,kHz (telefonía), 44,1\,kHz (CD), 48\,kHz (vídeo), 96 y 192\,kHz (estudio).
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \alert{Ruido}
+      \begin{itemize}\small
+        \item \alert{Ruido de cuantificación}: aproximadamente blanco, repartido en toda la banda $[0,F_s/2]$, con potencia $\Delta^2/12$ (Tema 2).
+        \item Interferencia de la red eléctrica: 50\,Hz en Europa (60\,Hz en América) y sus armónicos.
+        \item Ruido ambiental: banda ancha.
+        \item Clics y chasquidos: impulsivos.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \begin{block}{Proyecto «Audio con ruido»}
+    \small Una grabación con cuatro ruidos: zumbido de red con armónicos (muescas o filtro peine), soplido de banda ancha (paso bajo, Wiener), clics impulsivos (predicción lineal) y un silbido de frecuencia variable (STFT).
+  \end{block}
+\end{frame}
+
+\begin{frame}{Señales biomédicas}
+  \begin{columns}[T]
+    \begin{column}{0.54\textwidth}
+      \alert{Señales}
+      \begin{itemize}\small
+        \item \alert{ECG}: 0,05 – 150\,Hz en diagnóstico (0,5 – 40\,Hz para monitorización).
+        \item \alert{EEG}: 0,5 – 100\,Hz. Ritmos delta (0,5–4\,Hz), theta (4–8), alfa (8–13), beta (13–30) y gamma ($>30$\,Hz).
+        \item \alert{EMG} de superficie: 10 – 500\,Hz.
+        \item Fonocardiograma: 20 – 1000\,Hz aproximadamente.
+        \item Ecografía: ultrasonidos de 2 – 15\,MHz.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \alert{Ruido y artefactos}
+      \begin{itemize}\small
+        \item Red eléctrica: 50/60\,Hz.
+        \item Deriva de la línea base por la respiración: $<0{,}5$\,Hz.
+        \item Artefactos de movimiento: $<10$\,Hz.
+        \item Actividad muscular (EMG) sobre el ECG: $>20$\,Hz.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \begin{block}{Proyecto «ECG»}
+    \small Registros de holter a 360\,Hz con deriva, red, ruido muscular y artefactos: hay que limpiarlos sin deformar el segmento ST, detectar los latidos (Pan-Tompkins) y analizar la variabilidad del ritmo.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Control y robótica}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \alert{Señales}
+      \begin{itemize}\footnotesize
+        \item Posición, velocidad, fuerza, IMU: dinámica útil por debajo de 0,1–1\,kHz.
+        \item Cámaras a 30–60 fotogramas/s: solo representan variaciones de hasta 15–30\,Hz ($F_s/2$).
+        \item LiDAR: la luz es óptica (905 o 1550\,nm); la \emph{tasa de barrido}, de 10\,Hz a 1\,kHz, es la que marca el muestreo.
+        \item Conmutación PWM de motores: 1 – 50\,kHz.
+        \item Buses: CAN de 125\,kbit/s a 1\,Mbit/s; EtherCAT a 100\,Mbit/s.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \alert{Ruido}
+      \begin{itemize}\footnotesize
+        \item Deriva térmica y ruido $1/f$ de los sensores: baja frecuencia.
+        \item Ruido térmico y de cuantificación: blancos, en toda la banda.
+        \item Vibraciones mecánicas y resonancias: 10\,Hz – 10\,kHz.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \vspace{-1mm}
+  \begin{block}{Proyecto «Registro de carrera»}
+    \small Sesiones reales de carrera (velocidad GPS, frecuencia cardiaca y altitud) con muestreo irregular: remuestrear, filtrar, modelar el ruido y detectar cambios de ritmo.
+  \end{block}
+\end{frame}
+
+\begin{frame}{Geofísica y sismología}
+  \begin{columns}[T]
+    \begin{column}{0.54\textwidth}
+      \alert{Señales}
+      \begin{itemize}\small
+        \item Ondas P: 0,1 – 10\,Hz; ondas S: 0,1 – 3\,Hz.
+        \item Ondas superficiales (Rayleigh, Love): 0,01 – 1\,Hz. Son las que más dañan las estructuras.
+        \item Microtremores: 0,1 – 1\,Hz.
+        \item Vibraciones de estructuras: 0,1 – 100\,Hz; interesan sus resonancias.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \alert{Ruido}
+      \begin{itemize}\small
+        \item Actividad humana (tráfico, maquinaria): 1 – 10\,Hz y más.
+        \item Microsismos del oleaje: 0,1 – 0,3\,Hz.
+        \item Viento y presión atmosférica: $<1$\,Hz.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \nota{Con señales de tan baja frecuencia, la duración del registro (y no la frecuencia de muestreo) limita la resolución espectral: $\Delta F\approx1/T_{\mathrm{obs}}$ (Tema 3).}
+\end{frame}
+
+\begin{frame}{Imagen}
+  \begin{itemize}
+    \item En una imagen la variable independiente es espacial: la frecuencia se mide en ciclos/píxel o ciclos/mm.
+    \item Bajas frecuencias: zonas uniformes. Altas frecuencias: bordes, texturas y ruido.
+    \item Ruido típico: gaussiano del sensor (banda ancha), sal y pimienta (impulsivo), patrones periódicos (picos aislados en el espectro 2D).
+  \end{itemize}
+  \begin{block}{Proyectos «Imagen con ruido» y «Códigos de barras»}
+    \small Restaurar imágenes con ruido gaussiano, sal y pimienta, interferencia periódica y desenfoque; y leer códigos EAN-13 tratando cada fila como una señal 1D muestreada.
+  \end{block}
+\end{frame}
+
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{itemize}
+    \item Cada aplicación tiene una banda de señal y unas bandas de ruido características.
+    \item El ruido térmico y el de cuantificación son de banda ancha; la red eléctrica es de banda estrecha (50/60\,Hz y armónicos); las derivas son de muy baja frecuencia.
+    \item La banda de la señal fija la frecuencia de muestreo y el tipo de filtro.
+    \item Los proyectos de evaluación del curso trabajan sobre estas situaciones.
+  \end{itemize}
+\end{frame}
+
+\end{document}
