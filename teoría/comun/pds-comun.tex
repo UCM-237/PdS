@@ -1,0 +1,91 @@
+% =====================================================================
+%  pds-comun.tex — Paquetes, colores y estilos de código comunes a
+%  transparencias, apuntes y hojas de ejercicios. Compilar con XeLaTeX.
+%  No cargar directamente: lo cargan pds-beamer.tex y pds-apuntes.tex.
+% =====================================================================
+
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc,shapes.geometric,decorations.pathreplacing}
+\usepackage{listings}
+\usepackage{siunitx}
+\sisetup{output-decimal-marker={,}, group-separator={\,}, per-mode=symbol}
+
+% Ruta común (logo y figuras compartidas)
+\newcommand{\rutacomun}{../../comun/}
+\input{\rutacomun datos.tex}
+
+% ---------------------------------------------------------------------
+%  Paleta (la misma que usan las figuras generadas con Python,
+%  ver comun/pds_estilo.py)
+% ---------------------------------------------------------------------
+\definecolor{pdsazul}{HTML}{2B3A8C}
+\definecolor{pdsrojo}{HTML}{C0392B}
+\definecolor{pdsverde}{HTML}{1E7B4F}
+\definecolor{pdsnaranja}{HTML}{D9822B}
+\definecolor{pdsgris}{HTML}{5A5A66}
+\definecolor{pdsfondo}{HTML}{F3F4FA}
+\definecolor{pdscodigo}{HTML}{F7F7F2}
+
+% ---------------------------------------------------------------------
+%  Diagramas de bloques (TikZ)
+% ---------------------------------------------------------------------
+\tikzset{
+  bloque/.style={rectangle, rounded corners=2pt, draw=pdsazul!80, fill=pdsfondo,
+                 very thick, minimum height=8mm, minimum width=14mm, align=center},
+  sumador/.style={circle, draw=pdsazul!80, fill=pdsfondo, thick, inner sep=1.5pt},
+  flecha/.style={-{Stealth[length=2.2mm]}, thick, pdsgris},
+}
+
+% ---------------------------------------------------------------------
+%  Código: Python y Matlab en paralelo
+% ---------------------------------------------------------------------
+\newcommand{\pdscodesize}{\footnotesize}
+\lstdefinestyle{pds}{
+  basicstyle=\ttfamily\pdscodesize,
+  keywordstyle=\color{pdsazul}\bfseries,
+  commentstyle=\color{pdsverde}\itshape,
+  stringstyle=\color{pdsrojo},
+  numbers=none,
+  backgroundcolor=\color{pdscodigo},
+  frame=single, rulecolor=\color{pdsgris!40}, framerule=0.4pt,
+  xleftmargin=2pt, xrightmargin=2pt, aboveskip=2pt, belowskip=2pt,
+  columns=fullflexible, keepspaces=true,
+  showstringspaces=false, breaklines=true, tabsize=4,
+  upquote=true,
+  % Con XeLaTeX, listings desordena los caracteres no ASCII junto a
+  % dígitos («2π» sale «π2»): se sustituyen por su versión matemática.
+  literate={π}{{$\pi$}}1 {δ}{{$\delta$}}1 {ω}{{$\omega$}}1 {Ω}{{$\Omega$}}1
+           {≈}{{$\approx$}}1 {µ}{{$\mu$}}1 {·}{{$\cdot$}}1 {α}{{$\alpha$}}1
+           {á}{{á}}1 {é}{{é}}1 {í}{{í}}1 {ó}{{ó}}1 {ú}{{ú}}1 {ñ}{{ñ}}1 {¿}{{¿}}1,
+}
+\lstdefinestyle{python}{style=pds, language=Python,
+  morekeywords={as,True,False,None}}
+\lstdefinestyle{matlab}{style=pds, language=Matlab,
+  morekeywords={function,end,true,false}}
+
+% \codigo{<ruta sin extensión>} muestra el mismo ejemplo en Python
+% y en Matlab, uno al lado del otro. Los ficheros viven en
+% ../codigo/python/<nombre>.py y ../codigo/matlab/<nombre>.m y se
+% ejecutan en las pruebas (make prueba-codigo).
+\newcommand{\rutacodigo}{../codigo/}
+\newcommand{\codigoetiqueta}[1]{{\sffamily\scriptsize\bfseries\color{pdsgris}#1}}
+\newcommand{\codigo}[2][]{%
+  \par\noindent
+  \begin{minipage}[t]{0.495\linewidth}
+    \codigoetiqueta{Python}\par\vspace{1pt}
+    \lstinputlisting[style=python,#1]{\rutacodigo python/#2.py}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.495\linewidth}
+    \codigoetiqueta{Matlab}\par\vspace{1pt}
+    \lstinputlisting[style=matlab,#1]{\rutacodigo matlab/#2.m}
+  \end{minipage}\par}
+
+\input{\rutacomun notacion.tex}

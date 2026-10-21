@@ -1,0 +1,98 @@
+% =====================================================================
+%  pds-beamer.tex — Estilo común de las transparencias.
+%
+%  Uso (desde teoría/Tx/transparencias/):
+%     \documentclass[aspectratio=169,11pt]{beamer}
+%     \input{../../comun/pds-beamer}
+%     \title{...}  \subtitle{Tema x · ...}
+%     \begin{document}
+%       \portada
+%       ...
+%     \end{document}
+%  Compilar con:  latexmk -xelatex  (o «make» desde teoría/)
+% =====================================================================
+
+\usetheme{Boadilla}
+\usecolortheme{orchid}
+\usefonttheme{professionalfonts}
+\setbeamercovered{transparent}
+\setbeamersize{text margin left=0.8cm, text margin right=0.8cm}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}[square]
+\setbeamertemplate{itemize subitem}[circle]
+\setbeamertemplate{itemize subsubitem}[triangle]
+\setbeamertemplate{enumerate item}[square]
+\setbeamertemplate{enumerate subitem}[circle]
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
+\input{../../comun/pds-comun.tex}
+
+% Tipografía: Fira Sans + Fira Math (legibles en proyector)
+\usepackage{fontspec}
+\usepackage{unicode-math}
+% Se cargan por nombre de fichero para que funcionen con cualquier
+% instalación de TeX Live (o MiKTeX) sin instalar fuentes en el sistema.
+\setmainfont{FiraSans}[Extension=.otf, UprightFont=*-Regular, BoldFont=*-SemiBold,
+  ItalicFont=*-Italic, BoldItalicFont=*-SemiBoldItalic]
+\setsansfont{FiraSans}[Extension=.otf, UprightFont=*-Regular, BoldFont=*-SemiBold,
+  ItalicFont=*-Italic, BoldItalicFont=*-SemiBoldItalic]
+\setmonofont{FiraMono}[Extension=.otf, UprightFont=*-Regular, BoldFont=*-Medium, Scale=0.92]
+\setmathfont{FiraMath-Regular.otf}
+\setmathfont{latinmodern-math.otf}[range={"229B}]
+
+% Colores del tema ajustados a la paleta común (más contraste)
+\setbeamercolor{structure}{fg=pdsazul}
+\setbeamercolor{alerted text}{fg=pdsrojo}
+\setbeamercolor{example text}{fg=pdsverde}
+\setbeamercolor{block title}{bg=pdsazul, fg=white}
+\setbeamercolor{block body}{bg=pdsfondo}
+\setbeamercolor{block title alerted}{bg=pdsrojo, fg=white}
+\setbeamercolor{block body alerted}{bg=pdsrojo!6}
+\setbeamercolor{block title example}{bg=pdsverde, fg=white}
+\setbeamercolor{block body example}{bg=pdsverde!6}
+\setbeamercolor{frametitle}{fg=pdsazul, bg=white}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{block title}{size=\normalsize, series=\bfseries}
+\setbeamertemplate{blocks}[rounded][shadow=false]
+
+% Logo en la esquina superior derecha de cada transparencia
+\pgfdeclareimage[height=0.8cm]{logo}{../../comun/ucm.png}
+\addtobeamertemplate{frametitle}{}{%
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north east, inner sep=0pt] at ([xshift=-0.25cm, yshift=-0.2cm]current page.north east) {\pgfuseimage{logo}};
+  \end{tikzpicture}}
+
+% Datos de portada
+\author[\autorescorto]{\autores}
+\institute[UCM]{\footnotesize\departamento\\\universidad}
+\date[\curso]{\footnotesize\grado\\\curso}
+
+\newcommand{\portada}{%
+  \begin{frame}[plain]
+    \begin{center}
+      \includegraphics[height=1.9cm]{../../comun/ucm.png}
+    \end{center}
+    \vspace{-0.4cm}
+    \titlepage
+  \end{frame}}
+
+% Índice al empezar cada sección
+\AtBeginSection[]{%
+  \begin{frame}{Contenido}
+    \tableofcontents[currentsection, hideothersubsections]
+  \end{frame}}
+
+\renewcommand{\pdscodesize}{\scriptsize}
+
+% Utilidades
+\newcommand{\herramienta}[1]{%
+  \par\vfill\hfill{\scriptsize\color{pdsgris}\faIcon\ Herramienta interactiva: \texttt{herramientas/#1}}}
+\newcommand{\faIcon}{\textbf{▶}}
+\newcommand{\gris}[1]{{\color{pdsgris}#1}}
+\newcommand{\nota}[1]{\par\vspace{2pt}{\footnotesize\color{pdsgris}\textit{#1}}\par}
+\newcommand{\apuntes}[1]{\nota{Más detalle en los apuntes, #1.}}
+
+% Bloques con nombre en castellano
+\newenvironment{definicion}[1][Definición]{\begin{block}{#1}}{\end{block}}
+\newenvironment{importante}[1][Importante]{\begin{alertblock}{#1}}{\end{alertblock}}
+\newenvironment{ejemplo}[1][Ejemplo]{\begin{exampleblock}{#1}}{\end{exampleblock}}
