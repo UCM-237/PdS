@@ -1,11 +1,10 @@
-import requests
+import os
 import webbrowser
 
-CLIENT_ID = "192086"
-CLIENT_SECRET = "e7ee4a247554a37d6cbbea26e98f162bbe966d79"
+# El identificador de la aplicación de Strava se lee de una variable de entorno:
+#   export STRAVA_CLIENT_ID=...
+CLIENT_ID = os.environ["STRAVA_CLIENT_ID"]
 REDIRECT_URI = "http://localhost/exchange_token"
-ACCESS_TOKEN = "93e0129fbbc699e1792898140ebafe8771173659"
-REFRESH_TOKEN = "a0a8810e6708666365859e0acf600971a3986f85"
 
 auth_url = (
     f"https://www.strava.com/oauth/authorize?"

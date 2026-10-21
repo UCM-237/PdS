@@ -1,19 +1,13 @@
-# Proyecto de Evaluacion
+# Proyectos de evaluación
 
-Esta carpeta agrupa cinco proyectos de evaluacion continua inspirados en la estructura de las practicas de la asignatura.
+Cinco proyectos para los «trabajos específicos de carácter individual» de la evaluación continua (Nec, 25 % según la guía docente). Cada estudiante elige uno y lo desarrolla en cuatro hitos ligados a los temas de teoría; todos tienen código de partida equivalente en Matlab y en Python.
 
-## Temas
-1. Registro de carrera
-2. Audio con ruido
-3. Imagen de codigos de barras
-4. ECG
-5. Imagen con ruido
+| Proyecto | Señales | Técnicas principales | Dificultad |
+|---|---|---|---|
+| [01 · Registro de carrera](01_Registro_Carrera/README.md) | Velocidad GPS, FC y altitud de Strava (reales) y sesiones sintéticas | Remuestreo, EMA y Butterworth de fase cero, Hampel, segmentación, STFT | Media-baja |
+| [02 · Audio con ruido](02_Audio_Con_Ruido/README.md) | Grabación de 10 s con zumbido, soplido, clics y silbido | Muescas y peine, FIR/IIR, predicción AR, Wiener, STFT, sustracción espectral | Media |
+| [03 · Códigos de barras](03_Imagen_Codigos_de_Barras/README.md) | Fotos de códigos EAN-13 giradas, con ruido y desenfoque | Muestreo y aliasing, filtros separables, Otsu, DFT 2D, deconvolución | Media |
+| [04 · ECG](04_ECG/README.md) | Dos registros de holter de 3 min | Línea base, Pan-Tompkins, HRV, wavelets, clasificación de latidos | Media-alta |
+| [05 · Imagen con ruido](05_Imagen_Con_Ruido/README.md) | Seis fotos con ruido gaussiano, impulsivo, periódico, de Poisson y desenfoque | Filtros separables, mediana, Wiener local, muescas 2D, deconvolución | Media |
 
-## Estructura comun
-- `00_Comun/`: plantilla, rubrica, datos de ejemplo y utilidades compartidas.
-- Cada proyecto incluye `00_Enunciado/`, `01_Datos/`, `02_Codigo/`, `03_Hitos/`, `04_Entrega_Final/` y `05_Solucion/`.
-
-## Criterio de uso
-- Los hitos se entregan de forma incremental.
-- La entrega final debe integrar analisis, codigo y conclusiones.
-- La solucion del profesor se conserva separada de los materiales del alumno.
+El material común (calendario, rúbrica, plantillas, normas y guía del profesor) está en [`00_Comun/`](00_Comun/README.md). La solución de cada proyecto (`05_Solucion/`) no está en este repositorio.

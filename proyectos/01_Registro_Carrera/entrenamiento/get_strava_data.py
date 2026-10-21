@@ -1,9 +1,11 @@
+import os
+
 import requests
 import pandas as pd
-import matplotlib.pyplot as plt
 
-REFRESH_TOKEN = "03dc894b2a65a2b39ffad8659a6a0a8490349e05"
-ACCESS_TOKEN = "fbb21c238a1327f7dfaef7003350470eb999cb06"
+# El token de acceso se lee de una variable de entorno para no guardarlo en el repositorio:
+#   export STRAVA_ACCESS_TOKEN=...
+ACCESS_TOKEN = os.environ["STRAVA_ACCESS_TOKEN"]
 
 def get_activities():
   headers = {
