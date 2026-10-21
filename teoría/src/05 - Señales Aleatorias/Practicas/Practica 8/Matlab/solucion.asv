@@ -1,0 +1,71 @@
+%%
+set(groot, 'DefaultFigureWindowStyle', 'docked');
+clear; close all;
+[x, patron, fs] = DatosTarea2();
+
+[phi, lags] = xcorr(x, patron, 'unbiased');
+
+figure(1);
+subplot(211); hold on;
+  plot(patron, 'b')
+  plot(x, 'r')
+subplot(212)
+  plot(lags/fs, phi)
+
+
+%%
+clear all; close all;
+N = 200;
+M = floor(N/4);
+Ts = 2;
+fs = 1/Ts;
+t = [0:N-1]*Ts;
+u = randn(N, 1);
+
+H = tf(1, [10 1]);
+y = lsim(H, u, t);
+
+figure(1); hold on;
+  plot(t, u, 'b');
+  plot(t, y, 'r');
+  xlabel('tiempo (s)')
+  title('Excitación - Respuesta')
+% Calculo del espectro
+phi_uu = xcorr(u, M, 'none');
+phi_uy = xcorr(y, u, M, 'none');
+Phi_uu = fft(phi_uu);
+Phi_uy = fft(phi_uy);
+
+K = 2*M + 1;
+f = [0:K-1] * fs/K;
+w = 2*pi*f;
+Hw = Phi_uy ./ Phi_uu;
+Hw_ = 1 ./ (10j*w + 1);
+
+figure(2)
+subplot(221);
+  plot(abs(Phi_uu));
+  title('|\Phi_{uu}(w)|')
+subplot(222);
+  plot(abs(Phi_uy));
+  title('|\Phi_{uy}(w)|')
+subplot(223);
+  plot(angle(Phi_uu));
+  title('arg \Phi_{uu}(w)')
+subplot(224);
+  plot(angle(Phi_uy));
+  title('arg \Phi_{uy}(w)')
+
+figure(3);
+subplot(211); hold on;
+  plot(f, abs(Hw), 'o');
+  plot(f, abs(Hw_), 'r:');
+  title('|H(j\omega)|')
+  xlim([0, fs/2]);
+  ylim([0, 1])
+subplot(212); hold on;
+  plot(f, angle(Hw));
+  plot(f, angle(Hw_));
+  xlim([0, fs/2]);
+  ylim([-pi, pi])
+  title('arg H(j\omega)')

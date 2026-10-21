@@ -1,0 +1,11 @@
+n=1:100;N=length(X); 
+F=1/3;
+x=sin(2*pi*F*n);
+F=1/10;
+x=x+sin(2*pi*F*n);
+X=fft(x);AX=abs(X);
+plot((0:N-1)/N,AX);
+xlabel('f_d');ylabel('X(f_d)')
+X=fftshift(X);AX=abs(X);
+plot((0:N-1)/N-1/2,AX);
+xlabel('f_d');ylabel('X(f_d)')

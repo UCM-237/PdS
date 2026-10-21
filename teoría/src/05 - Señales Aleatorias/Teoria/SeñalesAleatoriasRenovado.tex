@@ -1,0 +1,111 @@
+\documentclass{beamer}
+%\documentclass[handout]{beamer}
+
+\mode<presentation> {%
+	% \usetheme[]{Boadilla}%{default}%{Malmoe}
+	% \usecolortheme{seahorse}
+	% \setbeamercovered{transparent}
+	% \setbeamersize{text margin left=0.7cm}
+	% \setbeamersize{text margin right=0.7cm}
+}
+
+% \usepackage{pstricks}
+% \usepackage{pst-node}
+% \usepackage{bm}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+% \usepackage[normalem]{ulem}
+% \usepackage{times}
+% \usepackage[T1]{fontenc}
+\usepackage{graphicx}
+% \usepackage{multirow}
+% \usepackage{pifont}
+% \usepackage{rotating}
+% \usepackage{colortbl}
+% \usepackage{amssymb}
+
+% \usepackage[framed]{mcode}
+% \usepackage{verbatim}
+% \lstset{literate={ñ}{{\~n}}1}
+
+% \definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+% \definecolor{general}{rgb}{0.9 0.9 1}%
+% \newrgbcolor{colorsistema}{0 1 1}
+% \newrgbcolor{colorviolet}{0.9 0.8 1}
+
+\title[Procesamiento de Señales]{Introducción: señales y sistemas}
+\author[Jesús Chacón Sombría] {%
+	\textit{Ingeniería Electrónica de Comunicaciones}\\
+	\vspace{0.6cm}
+	\small Jesús Chacón Sombría%
+}%\inst{1}
+
+\institute[DACYA. UCM] {%\inst{1}%
+	\footnotesize  Departamento de Arquitectura de Computadores y Automática\\
+  Universidad Complutense de Madrid
+}
+
+\date[Señales Aleatorias] % (optional)
+{\footnotesize Curso 2019-2020}%{\today / Master}
+\subject{Talks}
+
+\pgfdeclareimage[height=0.75cm]{logo}{ucm.png}
+
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\newcommand{\MyLogo}{%
+\begin{textblock}{14}(116.0,0.6)
+  \pgfuseimage{logo}
+\end{textblock}
+}
+
+\makeatletter
+\numberwithin{section}{part}
+\AtBeginPart{
+\beamer@tocsectionnumber=0\relax
+\frame{\partpage}
+}
+\makeatother
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+	%\MyLogo
+\oldmacro\hfill%
+}
+
+\AtBeginSection[]
+{
+  \begin{frame}%<beamer>
+    \frametitle{Esquema}
+  \small
+    \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+  \end{frame}
+}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}%<beamer>
+    \frametitle{Esquema}
+  \small
+   \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+      \end{frame}
+}
+
+%\input{./Partes/Objetivos.tex}
+%\input{./Partes/Introduccion.tex}
+\section{Variables aleatorias}
+\input{./Partes/VariableAleatoria1mio.tex}
+%\input{./Partes/VariableAleatoriaN.tex}
+%\section{Señales aleatorias}
+%\input{./Partes/SenhalesAleatorias1.tex}
+%\input{./Partes/SenhalesAleatorias2.tex}
+
+\end{document}

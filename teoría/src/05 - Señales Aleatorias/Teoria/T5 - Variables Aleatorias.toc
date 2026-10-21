@@ -1,0 +1,2 @@
+\babel@toc {spanish}{}\relax 
+\beamer@subsectionintoc {0}{1}{Múltiples variables aleatorias}{2}{0}{0}

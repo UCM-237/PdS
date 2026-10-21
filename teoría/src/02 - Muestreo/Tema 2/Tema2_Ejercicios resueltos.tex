@@ -1,0 +1,167 @@
+%% PLANTILLA PARA ARTICULOS
+
+\documentclass[10pt,twoside,spanish,a4paper]{article}
+\input{configfile}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{verbatim}
+\usepackage{amsmath}
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+
+\begin{document}
+
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+\title{
+  \vspace{-0.2cm}
+	\begin{center}
+		\large
+		\begin{tabular}{rrl}
+		\multirow{4}{*}{\includegraphics[width=1.7cm]{UCM.eps} \hspace{1cm}}&Grado: & Ingeniería Electrónica de Comunicaciones\\
+		&Asignatura:& Procesamiento de Señales \\
+		&Profesores:  & Jesús Chacón Sombría \\
+		\end{tabular}
+	\end{center}
+	\rule{\textwidth}{0.4pt}
+	%
+	\vspace{-1.5cm}
+	\begin{center}
+		\color{blue} \Huge
+		\begin{tabular}{c}
+	        \textbf{Ejercicios}\\
+		\textbf{Muestreo y Reconstrucción}\\
+		\end{tabular}
+	\end{center}
+	\vspace{-0.5cm}
+	\rule{\textwidth}{0.4pt}
+}
+\maketitle
+ \thispagestyle{empty}
+\pagestyle{fancy}
+
+\lfoot{\includegraphics[width=0.8cm]{UCM.eps}}
+\cfoot{\vspace{-0.6cm} Ingeniería Electrónica de Comunicaciones }
+\rfoot{\vspace{-0.6cm} \thepage}
+\lhead{Práctica}
+\rhead{Práctica 2A: Variables aleatorias}
+\renewcommand{\headrule}{ \vspace{-0.2cm} \rule{\textwidth}{0.4pt}}
+\renewcommand{\footrule}{\vspace{0.5cm} \rule{\textwidth}{0.4pt}\\ \vspace{-0.3cm} \\}
+
+%**************************************************************<- para indicar pregunta de la pr·ctica
+\newcounter{ctPreg}
+\setcounter{ctPreg}{1}
+\newcommand{\itemP}{ \item[{\color{blue}\fbox{\textbf{Ejercicio \arabic{ctPreg}:}}}] \addtocounter{ctPreg}{1}}  %
+\newcommand{\itemB}{ \item[{\color{blue}$\bullet$} ]    }
+\newcommand{\itemR}{ \item[{\color{blue}$\triangleright$} ]    }       %
+%**************************************************************
+
+\vspace{-8em}
+
+	\begin{itemize}
+		\itemP La señal $x(t)$ tiene ancho de banda $\omega_m$. Determinar la frecuencia de muestreo mínima para que no se produzca aliasing:
+		\begin{itemize}
+			\item $x(t) + x(t-1)$: La transformada de Fourier es $X(\omega) + X(\omega)\mathrm{e}^{-j\omega}$. El ancho de banda sigue siendo $\omega_m$, por lo que la frecuencia de muestreo mínima es $\omega_s = 2 \omega_m$.
+			\item $\frac{dx(t)}{dt}$: La transformada de Fourier es $j\omega X(\omega)$. El ancho de banda sigue siendo $\omega_m$, por lo que la frecuencia de muestreo mínima es $\omega_s = 2 \omega_m$.
+			\item $x^2(t)$: La transformada de Fourier es $X(\omega) * X(\omega)$, por lo que el ancho de banda es $2\omega_m$. La frecuencia de muestreo mínima es $\omega_s = 4 \omega_m$.
+			\item $x(t)cos(\omega_0 t)$: La transformada de Fourier es $\frac{1}{2}[X(\omega - \omega_0) + X(\omega + \omega_0)]$. 
+			En este caso, el espectro se desplaza $\pm \omega_0$, aunque el ancho de banda sigue siendo $\omega_m$, ya que en las frecuencias que 
+			van de 0 a $\omega_m$ no hay señal. Por lo que la frecuencia de muestreo mínima es $\omega_s = 2 \omega_m$.
+			Por otro lado, si interpretamos el ancho de banda como la frecuencia máxima, entonces la frecuencia máxima es $\omega_0 + \omega_m$,
+			por lo que la frecuencia de muestreo mínima sería $\omega_s = 2(\omega_0 + \omega_m)$.
+		\end{itemize}
+
+		\itemP Determinar el periodo de muestreo necesario para poder reconstruir las siguientes señales:
+		\begin{itemize}
+			\item $x_1(t)=\mathrm{e}^{-t}, t \geq 0$: Esta señal es de ancho de banda infinito, por lo que no es posible evitar el aliasing.
+			\item $x_2(t)=\mathrm{sinc}(f_c t)$: Esta señal tiene ancho de banda $f_c$, por lo que la frecuencia de muestreo mínima es $f_s = 2 f_c$.
+			\item $x_3(t)=\mathrm{sinc}^2(f_c t)$: Esta señal tiene ancho de banda $2f_c$, por lo que la frecuencia de muestreo mínima es $f_s = 4 f_c$.
+		\end{itemize}
+
+		\itemP Indica la respuesta impulso del retenedor de orden 1 (FOH) causal y del no causal. Compara sus espectros frecuenciales mediante
+		la transformada de Fourier.
+		La respuesta al impulso del FOH causal es:
+		\[h_{FOH-causal}(t) = \left\{ \begin{array}{ll}
+		\frac{1}{T_s}\left(t - nT_s\right) & nT_s \leq t < (n+1)T_s \\
+		0 & \text{en otro caso}
+		\end{array} \right.\]
+		La respuesta al impulso del FOH no causal es:
+		\[h_{FOH-no-causal}(t) = \left\{ \begin{array}{ll}
+		\frac{1}{T_s}\left(t - nT_s + \frac{T_s}{2}\right) & nT_s - \frac{T_s}{2} \leq t < nT_s + \frac{T_s}{2} \\
+		0 & \text{en otro caso}
+		\end{array} \right.\]
+		Las transformadas de Fourier son:
+		\begin{itemize}
+			\item FOH causal: $H_{FOH-causal}(\omega) = \mathrm{e}^{-j\omega \frac{T_s}{2}} \left(\mathrm{sinc}\left(\frac{\omega T_s}{2}\right)\right)^2$
+			\item FOH no causal: $H_{FOH-no-causal}(\omega) = \left(\mathrm{sinc}\left(\frac{\omega T_s}{2}\right)\right)^2$
+		\end{itemize}
+
+		\itemP Muestrea las siguientes señales, eligiendo un valor adecuado de $T_s$. Indica en cada caso si es posible o no 
+		evitar el aliasing, y reconstruye la señal utilizando retenedores de orden cero y uno.
+		\begin{itemize}
+			\item $x_1(t)=\mathrm{sin}(\frac{2\pi}{4} t)$
+			\item $x_2(t)=\mathrm{sin}(\frac{2\pi}{4} t), 0\leq t\leq 7$
+			\item $x_3(t)=\mathrm{sin}(\frac{20\pi}{700}t)\mathrm{cos}(\frac{20\pi}{35}t)$
+		\end{itemize}
+
+		\itemP Un conversor A/D de 10 bits admite una entrada entre 0 y $V_{ref}$. Según la configuración, $V_{ref}$ puede tomar diferentes valores (1.1 V, 3.3 V, 5 V).
+		\begin{itemize}
+			\item Indica la resolución, número de niveles y rango dinámico para cada posible configuración.
+			La resolución es el valor del bit menos significativo (LSB), que se calcula como:
+			\[ \text{Resolución (LSB)} = \frac{V_{ref}}{2^{\text{número de bits}}} \]
+			Para un conversor A/D de 10 bits, el número de niveles es $2^{10} = 1024$.
+			El rango dinámico (DR) se calcula como:
+			\[ \text{Rango Dinámico (DR)} = 20 \log_{10}(2^{\text{número de bits}}) \approx 6.02 \times \text{número de bits} \text{ dB} \]
+			\begin{itemize}
+				\item Para $V_{ref} = 1.1 V$:
+				\begin{itemize}
+					\item Resolución: $\frac{1.1 V}{1024} \approx 1.074 \text{ mV}$
+					\item Niveles: 1024
+					\item Rango Dinámico: $20 \log_{10}(1024) \approx 60.2 \text{ dB}$
+				\end{itemize}
+				\item Para $V_{ref} = 3.3 V$:
+				\begin{itemize}
+					\item Resolución: $\frac{3.3 V}{1024} \approx 3.222 \text{ mV}$
+					\item Niveles: 1024
+					\item Rango Dinámico: $20 \log_{10}(1024) \approx 60.2 \text{ dB}$
+				\end{itemize}
+				\item Para $V_{ref} = 5 V$:
+				\begin{itemize}
+					\item Resolución: $\frac{5 V}{1024} \approx 4.883 \text{ mV}$
+					\item Niveles: 1024
+					\item Rango Dinámico: $20 \log_{10}(1024) \approx 60.2 \text{ dB}$
+				\end{itemize}
+			\end{itemize}
+			\item Si la señal de entrada varía entre 0 y 3 V, ¿cuál es la configuración más adecuada? Justifica la respuesta.\\
+			La configuración más adecuada sería con $V_{ref} = 3.3 V$, ya que permite aprovechar al máximo el rango de entrada de la señal (0 a 3 V) sin saturar el conversor.
+			Con $V_{ref} = 1.1 V$, la señal de entrada excedería el rango del conversor, y con $V_{ref} = 5 V$, la resolución sería menor.
+			\item Si la señal de entrada varía entre 0 y 5 V, ¿cuál es la configuración más adecuada? Justifica la respuesta.\\
+			La configuración más adecuada sería con $V_{ref} = 5 V$, ya que permite cubrir todo el rango de entrada de la señal (0 a 5 V) sin saturar el conversor.
+			Con $V_{ref} = 1.1 V$ o $V_{ref} = 3.3 V$, la señal de entrada excedería el rango del conversor.
+			\item Si la señal de entrada varía entre -2.5 V y 2.5 V, ¿cuál es la configuración más adecuada? Justifica la respuesta.\\
+			En este caso, ninguna de las configuraciones es adecuada, ya que todas asumen una entrada entre 0 y $V_{ref}$.
+			Sería necesario utilizar un conversor A/D con entrada diferencial o un circuito de adaptación de nivel para desplazar la señal a un rango positivo.
+			\item ¿Cuantos bits serían necesarios, en cada caso, para obtener un precisión de $1e^{-4}$ V?.
+			\item Para determinar el número de bits necesarios para una precisión de $1 \times 10^{-4}$ V, utilizamos la fórmula de resolución:
+			\[ \text{Resolución (LSB)} = \frac{V_{ref}}{2^{\text{número de bits}}} \]
+			Despejando el número de bits:
+			\[ \text{número de bits} = \log_2\left(\frac{V_{ref}}{\text{Resolución (LSB)}}\right) \]
+			Calculamos para cada valor de $V_{ref}$:
+			\begin{itemize}
+				\item Para $V_{ref} = 1.1 V$:
+				\[ \text{número de bits} = \log_2\left(\frac{1.1 V}{1 \times 10^{-4} V}\right) \approx 13.43 \]
+				Se necesitarían al menos 14 bits.
+				\item Para $V_{ref} = 3.3 V$:
+				\[ \text{número de bits} = \log_2\left(\frac{3.3 V}{1 \times 10^{-4} V}\right) \approx 15.02 \]
+				Se necesitarían al menos 16 bits.
+				\item Para $V_{ref} = 5 V$:
+				\[ \text{número de bits} = \log_2\left(\frac{5 V}{1 \times 10^{-4} V}\right) \approx 15.61 \]
+				Se necesitarían al menos 16 bits.
+			\end{itemize}
+		\end{itemize}
+
+	\end{itemize}
+
+\end{document}

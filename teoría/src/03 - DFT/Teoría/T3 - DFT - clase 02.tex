@@ -1,0 +1,323 @@
+\documentclass{beamer}
+
+\mode<presentation> {%
+	\usetheme[]{Boadilla}
+	\usecolortheme{orchid}
+	\setbeamercovered{transparent}
+	\setbeamersize{text margin left=0.7cm}
+  \setbeamersize{text margin right=0.7cm}
+  \setbeamertemplate{enumerate item}[square]
+  \setbeamertemplate{enumerate subitem}[circle]
+  \setbeamertemplate{enumerate subsubitem}[>]
+  \setbeamertemplate{itemize item}[square]
+  \setbeamertemplate{itemize subitem}[circle]
+  \setbeamertemplate{itemize subsubitem}[>]
+}
+
+% \usepackage{bm}
+% \usepackage[utf8]{inputenc}
+% \usepackage[spanish]{babel}
+% \usepackage{times}
+% \usepackage[T1]{fontenc}
+% \usepackage{graphicx}
+% \usepackage{multirow}
+% \usepackage{pifont}
+% \usepackage{rotating}
+% \usepackage{colortbl}
+% \usepackage[framed]{mcode}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+% \definecolor{general}{rgb}{0.9 0.9 1}%
+% \newrgbcolor{colorsistema}{0 1 1}
+% \newrgbcolor{colorviolet}{0.9 0.8 1}
+
+\title[Procesamiento de Señales]{Transformada de Fourier Discreta (DFT)}
+\author[J. Chacón]{%[Author, Another] % (optional, use only with lots of authors)
+\textit{Ingeniería Electrónica de Comunicaciones }\\
+\vspace{0.6cm}
+\small Jesús Chacón Sombría}
+
+\institute[DACYA] % (optional, but mostly needed)
+{
+  %\inst{1}%
+
+\footnotesize  Departamento de Arquitectura de Computadores y Automática.\\
+  Universidad Complutense de Madrid
+  }
+
+\date[Transformada Fourier Discreta] % (optional)
+{\footnotesize Curso 2025-2026}%{\today / Master}
+\subject{Talks}
+
+\pgfdeclareimage[height=0.75cm]{logo}{ucm.png}
+
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\newcommand{\MyLogo}{%
+\begin{textblock}{14}(116.0,0.6)
+  \pgfuseimage{logo}
+\end{textblock}
+}
+
+\makeatletter
+\numberwithin{section}{part}
+\AtBeginPart{
+\beamer@tocsectionnumber=0\relax
+\frame{\partpage}
+}
+\makeatother
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+ \MyLogo
+  \oldmacro\hfill%
+}
+
+\AtBeginSection[]{}
+
+\AtBeginSubsection[]{}      
+
+\begin{frame}
+  \frametitle{Periodograma}
+  
+  \footnotesize
+  \begin{itemize}
+    \item \alert{Podemos usar la DFT para estimar el espectro de una señal/sistema.}
+    \[
+    X(\frac{2\pi k}{N})=X[k]=\substack{N-1\\\sum\\n=0}x[n]\text{e}^{-j\frac{2\pi}{N}kn}
+    \]
+    \begin{itemize}
+      \item La muestra $k$ corresponde a la frecuencia discreta $\Omega=\frac{2\pi}{N}k$.
+      \item Si usamos un periodo de muestreo $T_s$, entonces:
+    \[
+    \omega=\frac{\Omega}{T_s}=\frac{2\pi k}{N T_s},f=\frac{k}{NT_s}
+    \]
+    \end{itemize}
+
+    \item \alert{La densidad espectral es $\Phi_{xx}(\omega_k)\approx\frac{1}{N\cdot f_s}|X[k]|^2$.}
+    \begin{itemize}
+      \footnotesize
+      \item En escala logarítmica (dB/Hz):
+      \[
+        \Phi_{xx}|_{dB} = 20\:\text{log}_{10}\left(\frac{|X[k]|}{\sqrt{N\cdot f_s}}\right)
+      \]
+    \end{itemize} 
+    \item \alert{La potencia es: $\frac{|X[k]|^2}{N\cdot f_s}\Delta f=\frac{|X[k]|^2}{N\cdot f_s}\cdot\frac{f_s}{N}=|\frac{X[k]}{N}|^2$.}
+    \begin{itemize}
+      \footnotesize
+      \item En escala logarítmica (dB):
+      \[
+        \Phi_{xx}|_{dB} = 20\:\text{log}_{10}\left(\frac{|X[k]|}{N}\right)
+      \]
+    \end{itemize} 
+    
+    
+
+  \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Convolución circular}
+  
+  \footnotesize
+  \begin{itemize}
+    \item Tenemos dos secuencias finitas de longitud $L$ y $M$, elegimos $N=L+M-1$:
+    \begin{center}
+      $\color{blue}x_1[n]\color{black} \Leftrightarrow X_1[k]=\substack{N-1\\\sum\\n=0} x_1[n]e^{-j \frac{2\pi}{N}kn}
+      \quad 
+      \color{blue}x_2[n]\color{black} \Leftrightarrow X_2[k]=\substack{N-1\\\sum\\n=0}x_2[n]e^{-j \frac{2\pi}{N}kn}$
+    \end{center}
+    
+    \item Definimos $\color{blue}X_3[k]=X_1[k]X_2[k]\color{black}$ y calculamos su IDFT:\scriptsize
+    \[
+    \begin{aligned}
+      x_3[n] &= \frac{1}{N}\sum_{k=0}^{N-1} X_3[k]e^{j \frac{2\pi}{N}kn}=\frac{1}{N}\sum_{k=0}^{N-1} \left[\sum_{m=0}^{N-1}x_1[m]e^{-j \frac{2\pi}{N}km} \right] \left[\sum_{l=0}^{N-1}x_2[l]e^{-j \frac{2\pi}{N}kl} \right]e^{j \frac{2\pi}{N}kn}=\\
+             &= \frac{1}{N}\sum_{m=0}^{N-1} x_1[m]  \sum_{l=0}^{N-1}x_2[l] \left[ \sum_{k=0}^{N-1}e^{j \frac{2\pi}{N}k(n-m-l)} \right ]=\\
+             &= \sum_{m=0}^{N-1} x_1[m] x_2[n-m-pN]=\sum_{n=0}^{N-1} x_1[n] x_2[(m-n)|_N]=(x*y)_N[n]
+    \end{aligned}
+    \]
+
+    \item \alert{$(x*y)_N[m]=\sum_{n=0}^{N-1} x_1[n] x_2[(m-n)|_N]  \:\:\:\:   \leftrightarrow \:\:\:\: X[k]Y[k]$}
+    
+    \rule{11cm}{0.4pt}
+    
+    $\substack{N-1\\\sum\\k=0}e^{j \frac{2\pi}{N}k(n-m-l)} = \left \{\begin{array}{l} N,   \:\:\: n-m-l=pN, p\in \mathcal{Z} \\ 0,  \:\:\: c.c. \end{array}\right .$  
+  \end{itemize}
+\end{frame}
+  
+  
+  \begin{frame}
+  \frametitle{Sistemas LTI y filtros discretos}
+  
+  \begin{itemize}
+    \item Respuesta $y[n]$ de un sistema LTI discreto a una entrada $x[n]$:
+    \begin{itemize}
+      \vspace{0.2cm}
+      \item \textbf{Metodo 1}:
+      \begin{itemize}
+        \item $y[n]=\substack{\infty\\\sum\\m=-\infty} x[m]h[n-m]$
+      \end{itemize}  
+      \vspace{0.2cm}
+      \item \textbf{Metodo 2}:
+      \begin{itemize}
+        \item Transformada de Fourier: $Y(e^{jw})=H(e^{jw})X(e^{jw})$\\
+        \vspace{0.1cm}
+        $X(e^{jw})=\sum_{n=-\infty}^{\infty} x[n] e^{-jwn}$\\
+        $H(e^{jw})=\sum_{n=-\infty}^{\infty} h[n] e^{-jwn}$
+      \end{itemize}  
+    \end{itemize}  
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+    \frametitle{Sistemas LTI y filtros discretos}
+    
+    \footnotesize
+    \alert{¿Podemos usar la DFT para calcular la respuesta de sistemas LTI?}
+  \begin{itemize}
+    \item Las operaciones correspondientes en el caso de la DFT son:
+    \begin{itemize}
+    \footnotesize
+    \item $y[n]=\substack{N-1\\\sum\\m=0} x[m]h[n-m]_N$ para señales de longitud $\le N$
+    \vspace{0.1cm}
+    
+    \item $Y[k]=H[k]X[k]$
+    \vspace{0.1cm}
+    \item $X[k]=\substack{N-1\\\sum\\n=0} x[n]e^{j\frac{2\pi}{N}kn}$ para señales de longitud $\le N$
+    \end{itemize}
+    \item Para poder realizar las operaciones con la DFT necesitamos que:  
+    \begin{itemize}
+      \footnotesize
+      \item $x[n]$ sea una señal de longitud finita $L< N$
+      \item $h[n]$ sea una señal de longitud finita $M < N$  $\rightarrow $ sistema FIR.
+      \item Para que no haya elementos del desplazamiento circular, $N \ge L+M-1$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+  
+\begin{frame}
+  \frametitle{Sistemas LTI y filtros discretos}
+  
+  \begin{itemize}
+    \item \textbf{Si el sistema $h[n]$ es IIR}:
+    \begin{itemize}
+      \item Podemos obtener la DFT como $H[k]=H[e^{\frac{2\pi k}{N}}]$. 
+      \item No podemos usar la DFT para calcular la respuesta del sistema.
+    \end{itemize}
+    \vspace{0.2cm}
+  
+    \item \textbf{Si la entrada $x[n]$ no tiene longitud finita:}
+    \begin{itemize}
+      \item Podemos obtener la DFT como $X[k]=X(e^{\frac{2\pi k}{N}})$.
+      \item No utilizar la DFT para calcular la respuesta de un sistema LTI.
+    \end{itemize}
+    \vspace{0.2cm}
+
+    \item Para $x[n],h[n]$ periódicas, caso particular:
+    \begin{itemize}
+      \item Señales de longitud finita $N,M$ (un periodo). 
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+  
+  
+\begin{frame}
+  \frametitle{Ejemplo de respuesta de sistema LTI}
+  
+  \footnotesize
+  \begin{itemize}
+    \item \color{olivegreen}Calcular la respuesta del sistema $h[n]=\{0,2\}$ a la entrada  $x[n]=\{1,3,4\}$.\color{gray}
+    \begin{itemize}
+      \item \color{black}A traves de la convolución:\color{gray}
+    \end{itemize}
+
+    \scriptsize
+    $\left . \!\!\!\!\! \begin{array}{l} y[0]=\sum_{n=0}^{1}h[n]x[0-n]=0\cdot 1 + 2 \cdot 0=0\\
+    y[1]=\sum_{n=0}^{1}h[n]x[1-n]=0\cdot 3 + 2 \cdot 1=2\\
+    y[2]=\sum_{n=0}^{1}h[n]x[2-n]=0\cdot 4+ 2 \cdot 3=6\\
+    y[3]=\sum_{n=0}^{1}h[n]x[3-n]=0\cdot 0 + 2 \cdot 4=8\end{array}\!\!\right\}$ $\rightarrow y[n]=(0,2,6,8)^T$
+  
+    \begin{itemize}
+      \item \color{black}A través de la DFT:\color{gray}
+    \end{itemize}
+      
+      \scriptsize 
+      $N=3+2-1=4$\\[1ex]
+      $x[n]=(1,3,4,0)^T ; h[n]=(0,2,0,0)^T$\\[1ex]
+      $W=\begin{pmatrix} 
+        1 &  1 &  1 &  1 \\
+        1 & -j & -1 &  j \\
+        1 & -1 &  1 & -1 \\
+        1 &  j & -1 & -j \\
+      \end{pmatrix}
+      \quad
+      W^{-1}=\begin{pmatrix} 
+        1 &  1 &  1 &  1 \\
+        1 &  j & -1 & -j \\
+        1 & -1 &  1 & -1 \\
+        1 & -j & -1 &  j \\
+      \end{pmatrix}$\\[1ex]      
+      $X[k]=W\cdot x[n]=\left(8, -3-3j, 2, -3+3j\right)^T$\\[1ex]
+      $H[k]=W\cdot h[n]=\left(2, -2j, -2, 2j\right)^T$\\[1ex]
+      $y[n]=\frac{1}{N}W^{-1}\cdot H[K]\cdot X[k]=(0,2,6,8)^T$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conceptos importantes}
+
+  \begin{itemize}\scriptsize
+    \item \alert{DFT para estimar el espectro.}
+    \[
+      X[k]=X(\frac{2\pi k}{N})=\substack{N-1\\\sum\\n=0}x[n]\text{e}^{-j\frac{2\pi}{N}kn}
+    \]
+
+    \item \alert{La potencia/densidad espectral es:}
+    \[
+      P_{x}(\omega_k)=\left|\frac{X[k]}{N}\right|^2 \quad P_{x}(\omega_k)|_{dB} = 20\:\text{log}_{10}\left(\frac{|X[k]|}{N}\right)
+    \]
+    \[
+    \Phi_{xx}(\omega_k)=\frac{|X[k]|^2}{N\cdot f_s} \quad \Phi_{xx}(\omega_k)|_{dB} = 20\:\text{log}_{10}\left(\frac{|X[k]|}{\sqrt{N\cdot f_s}}\right)
+    \]
+
+    \item \alert{Convolución circular:}
+    \[
+      \substack{N-1\\\sum\\k=0}e^{j \frac{2\pi}{N}k(n-m-l)} = \left \{\begin{array}{l} N,   \:\:\: n-m-l=pN, p\in \mathcal{Z} \\ 0,  \:\:\: c.c. \end{array}\right .
+    \]
+
+    \item \alert{Respuesta LTI:}
+    \begin{itemize}\scriptsize
+      \item \textbf{Si el sistema $h[n]$ es IIR}:
+      \begin{itemize}\scriptsize
+        \item Podemos obtener la DFT con $H[k]=H[e^{\frac{2\pi k}{N}}]$. 
+        \item No podemos usar la DFT para calcular la respuesta del sistema.
+      \end{itemize}
+      \vspace{0.2cm}
+    
+      \item \textbf{Si la entrada $x[n]$ no tiene longitud finita:}
+      \begin{itemize}\scriptsize
+        \item Podemos obtener la DFT como $X[k]=X(e^{\frac{2\pi k}{N}})$.
+        \item No utilizar la DFT para calcular la respuesta de un sistema LTI.
+      \end{itemize}
+      \vspace{0.2cm}
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+\end{document}

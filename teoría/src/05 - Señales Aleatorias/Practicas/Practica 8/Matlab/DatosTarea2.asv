@@ -1,0 +1,17 @@
+function [x, patron, fs] = DatosTarea2()
+  c = 3*1e8;
+  l = 905*1e-9;
+  f = 100 * 1e9;
+  T = 2/f;
+  % dt = (l/c) / 10;
+  th = pi/6;
+  % ping = @(t) sin(2*pi*f*t) .* sin(2*pi*(c/l)*t);
+  dt = 1 / f / 20;
+  t = [0:dt:T];
+  ping = @(t) sin(2*pi*f*t) .* (0 < t & t < 1/f);
+  patron = ping(t);
+  th/2/pi/f
+  n = rand()
+  x = ping(t - th/2/pi/f);
+  fs = 1/dt;
+end

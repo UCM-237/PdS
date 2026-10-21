@@ -1,0 +1,186 @@
+%% PLANTILLA PARA ARTICULOS
+
+\documentclass[10pt,twoside,spanish,a4paper]{article}
+\input{configfile}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{verbatim}
+\usepackage{amsmath}
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+
+\begin{document}
+
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+\title{
+  \vspace{-0.2cm}
+	\begin{center}
+		\large
+		\begin{tabular}{rrl}
+		\multirow{4}{*}{\includegraphics[width=1.7cm]{UCM.eps} \hspace{1cm}}&Grado: & Ingeniería Electrónica de Comunicaciones\\
+		&Asignatura:& Procesamiento de Señales \\
+		&Profesores:  & Jesús Chacón Sombría \\
+		\end{tabular}
+	\end{center}
+	\rule{\textwidth}{0.4pt}
+	%
+	\vspace{-1.5cm}
+	\begin{center}
+		\color{blue} \Huge
+		\begin{tabular}{c}
+	        \textbf{Ejercicios}\\
+		\textbf{Introducción: señales y sistemas}\\
+		\end{tabular}
+	\end{center}
+	\vspace{-0.5cm}
+	\rule{\textwidth}{0.4pt}
+}
+\maketitle
+ \thispagestyle{empty}
+\pagestyle{fancy}
+
+\lfoot{\includegraphics[width=0.8cm]{UCM.eps}}
+\cfoot{\vspace{-0.6cm} Ingeniería Electrónica de Comunicaciones }
+\rfoot{\vspace{-0.6cm} \thepage}
+\lhead{Ejercicios}
+\rhead{Muestreo en el dominio del tiempo}
+\renewcommand{\headrule}{ \vspace{-0.2cm} \rule{\textwidth}{0.4pt}}
+\renewcommand{\footrule}{\vspace{0.5cm} \rule{\textwidth}{0.4pt}\\ \vspace{-0.3cm} \\}
+
+%**************************************************************<- para indicar pregunta de la pr·ctica
+\newcounter{ctPreg}
+\setcounter{ctPreg}{1}
+\newcommand{\itemP}{ \item[{\color{blue}\fbox{\textbf{Ejercicio \arabic{ctPreg}:}}}] \addtocounter{ctPreg}{1}}  %
+\newcommand{\itemB}{ \item[{\color{blue}$\bullet$} ]    }
+\newcommand{\itemR}{ \item[{\color{blue}$\triangleright$} ]    }       %
+%**************************************************************
+
+\vspace{-8em}
+
+	\begin{itemize}
+		\itemP Caracterizar las siguientes señales según su \emph{dimensión}, y continuidad de las variables dependientes e independientes:
+		\begin{itemize}
+				\itemB $x(t)=\begin{pmatrix}4t \\ e^{j 2t}\end{pmatrix}$
+				\itemB $x(n)=4 \textrm{e}^{j\frac{3}{5}n}$
+				\itemB $x[n]=3 \textrm{e}^{j\frac{2}{\pi}n}$
+				\itemB $x[n]=\lfloor sen (\frac{2\pi n}{20})\rfloor$
+				\itemB $x(t,x)=\textrm{sen}(\omega t-kx)$
+		\end{itemize}
+		
+		\itemP Clasifica las siguientes señales según su \emph{periodicidad} y su \emph{paridad}. Para las señales periódicas, indica su periodo.
+		\begin{itemize}
+				\itemB $x(t)=4 \textrm{e}^{j\frac{3}{5}t}$
+				\itemB $x(t)= 3 t$
+				\itemB $x(t)= 3 t^2$
+				\itemB $x[n]= \textrm{sen}(3 n)$
+				\itemB $x[n]= \textrm{cos}(\frac{\pi n}{20})$
+				\itemB $x[n]= \textrm{cos}(3 n - 4),0\leq n \leq N_0$ 
+		\end{itemize}
+		
+		\itemP Clasifica las siguientes señales según su \emph{energía} y \emph{potencia} (finita o infinita).
+		\begin{itemize}
+				\itemB $x(t)=t$
+				\itemB $x(t)=u(t)$ (escalón unitario)
+				\itemB $x(t)=\textrm{e}^{- j 4 t}$
+				\itemB $x(t)=4t,0\leq t \leq 10$
+		\end{itemize}
+
+		\clearpage
+		\itemP Indica si las siguientes señales son reales o complejas.
+		\begin{itemize}
+				\itemB $x(t)=e^{-3 t}$
+				\itemB $x(t)=e^{j 2\pi t}$
+				\itemB $x[n]=e^{j \pi n}$
+				\itemB $x(t)=\textrm{cos}(4t) + j \textrm{sen}(5t)$
+				\itemB $x(t)=e ^{j \pi} e^{-j 3t}$
+		\end{itemize}
+		
+		\itemP Realiza las operaciones indicadas sobre las siguientes señales $x_1(t)=\textrm{sin(t)}$, $x_2(t)=\textrm{cos}(\frac{2\pi}{5} t)$, $x_3[n]=[0,3,1,1]$, $x_4[n]=\textrm{e}^{j 4 n}$.
+		\begin{itemize}
+				\itemB $x_1(t) * x_2(t)$
+				\itemB $x_1(t) + x_2(t)$
+				\itemB $(x_1*x_2)(t)$
+				\itemB $x_3[n] / x_4[n]$
+				\itemB $x_3[n] - x_4[n]$
+				\itemB $(x_3*x_4)[n]$
+		\end{itemize}
+		
+		\itemP Calcular la convolución discreta $(x*y)[n]$ de las siguientes señales:
+		\begin{itemize}
+				\itemB $x[n]=[1,4,2,0,1]$ e $y[n]=[4,2,3]$
+				\itemB $x[n]=4\delta[n-6]$ e $y[n]=\textrm{e}^{j\frac{2\pi}{5} n}$
+				\itemB $x[n]=u[n]$ (escalón) e $y[n]=a^n$
+		\end{itemize}
+		
+		\itemP Calcular la expansión en serie de Fourier de las siguientes señales:
+		\begin{itemize}
+				\itemB Onda cuadrada
+				\itemB Onda triangular
+		\end{itemize}
+		
+		\itemP Calcular la transformada de Fourier de las siguientes señales, para el caso continuo y el discreto.
+		\begin{itemize}
+				\itemB $\delta(t-t_0),\delta[n-n_0]$ (Impulso)
+				\itemB $\Pi(\frac{t}{T}),\Pi[\frac{n}{N}]$ (Pulso cuadrado causal y no causal).
+				\itemB $\wedge(t),\wedge[n]$ (Pulso triangular (duración T) causal y no causal)
+		\end{itemize}
+		
+		\itemP Determinar si la señal es periódica en $n$ y en $\omega$.
+			
+		\begin{itemize}
+				\itemB $x[n]=2\textrm{e}^{j(2\pi/8)n}$
+				\itemB $x[n]=5\textrm{e}^{j(3/4)n}$
+				\itemB $x[n]=cos(2\pi n)$
+				\itemB $x[n]=\frac{1}{n}$
+		\end{itemize}
+		
+		\itemP Determinar la estabilidad de los siguientes sistemas continuos:
+		\begin{itemize}
+				\itemB $H(s)=\frac{1}{s}$
+				\itemB $H(s)=\frac{s+2}{s+4}$
+				\itemB $H(s)=\frac{1}{s-3}$
+				\itemB $H(s)=\frac{s+1}{s^2+25}$
+		\end{itemize}
+		
+		\itemP Determinar la estabilidad de los siguientes sistemas discretos:
+		\begin{itemize}
+				\itemB $H(z)=\frac{z}{z-1.5}$
+				\itemB $H(z)=\frac{z}{(z-1)^2}$
+				\itemB $H(z)=\frac{z}{z-0.9}$
+				\itemB $H(z)=\frac{z}{z^2+1}$
+		\end{itemize}
+		
+		\itemP Determinar en cada caso si la respuesta del sistema a la señal de entrada es o no acotada.
+		\begin{itemize}
+				\itemB $H(s)=\frac{s}{s+4}$, entrada: $u(t)=\textrm{sin}(4t)$
+				\itemB $H(s)=\frac{s^2}{s^2+16}$, entrada: $u(t)=\textrm{cos}(2t) + \textrm{sin}(4t)$
+				\itemB $H(z)=\frac{z~\textrm{sin}(\frac{2\pi}{7})}{z^2-2z~\textrm{cos}(\frac{2\pi}{7})+1}$, entrada: $u[n]=3\textrm{cos}({-\frac{4\pi}{14}n})$
+				\itemB $H(z)=\frac{z}{z^2+2}$, entrada: $u[n]=0.9^n$
+		\end{itemize}
+		
+		\itemP Obtener, utilizando la transformada de Fourier y Laplace, la respuesta temporal de los siguientes sistemas a las correspondientes señales de entrada (se asume $u(t)=0, \forall t<0$).
+		\begin{itemize}
+				\itemB $h(t)=\textrm{e}^{-2t}$, entrada: $u(t)=4~\textrm{cos}(3t)+10~\textrm{sin}(5t-15)$.
+				\itemB $h(t)=\textrm{sin}(4t)$, entrada: $U(s)=\frac{s}{s^2+5}$
+				\itemB $H(s)=\frac{s+3}{s+10}$, entrada: $u(t)=t^2$
+		\end{itemize}
+		
+		\itemP Obtener, utilizando la transformada de Fourier y Z, la respuesta temporal de los siguientes sistemas a las correspondientes señales de entrada.
+		\begin{itemize}
+				\itemB $H(z)=\frac{z}{z+0.8}$, entrada: $u[n]=0.5^n + 4\cdot0.8^{n-1}$.
+				\itemB $H(z)=\frac{z}{z-0.8}$, entrada: $u[n]=n$
+				\itemB $H(z)=\frac{z^2}{z^2-0.3z+0.4}$, entrada: $u[n]=\textrm{cos}(\frac{\pi}{6}n)$
+		\end{itemize}
+		
+		\itemP Obtener, utilizando la transformada de Fourier, la respuesta permanente de los siguientes sistemas a las correspondientes señales de entrada (suponer que las señales de entrada son causales).
+		\begin{itemize}
+				\itemB Sistema: $\frac{1}{s+4}$, entrada: $x(t)$ onda cuadrada con $T=2$.
+				\itemB Sistema: $\frac{z}{z-0.8}$, entrada: $2\textrm{cos}(\frac{\pi}{6}n)+\textrm{sin}(\frac{\pi}{2}n)$.
+				\itemB Sistema: $\frac{z}{z-1.2}$, entrada: $\textrm{cos}(\frac{2\pi}{10}n)$.
+		\end{itemize}
+	\end{itemize}
+	
+\end{document}

@@ -1,0 +1,8 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Objetivos}{2}{0}{1}
+\beamer@sectionintoc {2}{Introducción}{4}{0}{2}
+\beamer@sectionintoc {3}{Relación de la DTF con otras transformadas}{13}{0}{3}
+\beamer@sectionintoc {4}{Propiedades de la DFT}{18}{0}{4}
+\beamer@sectionintoc {5}{Sistemas LTI y Filtros Discretos}{25}{0}{5}
+\beamer@sectionintoc {6}{Cómputo eficiente}{29}{0}{6}
+\beamer@sectionintoc {7}{Señales con comportamiento en frecuencias variable}{38}{0}{7}

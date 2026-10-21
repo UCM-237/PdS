@@ -1,0 +1,39 @@
+\documentclass{beamer}
+\mode<presentation> {%
+	\usetheme[]{Boadilla}%
+	\usecolortheme{seahorse}%
+}
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{footline}{}
+
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.multipart,decorations.pathreplacing}
+\tikzstyle{bloque}=[rectangle,rounded corners=2pt,draw=black!60,fill=black!5,very thick,minimum size=5mm,align=center]%
+\tikzstyle{arrow}=[very thick,color=black!60]%
+
+
+\usepackage{hyperref}
+\usepackage{graphicx}
+\hypersetup{
+    colorlinks=true,
+	linkcolor=blue,
+}
+\graphicspath{{../Figures/}}
+
+\title{Diseño de Filtros}
+\institute{Universidad Complutense de Madrid}
+\author{Jesús Chacón Sombría} 
+\date{30 Marzo 2020}
+\logo{\includegraphics[width=0.5cm]{ucm.png}}
+
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+
+\input{FiltrosIdeales.tex}
+
+\end{document}

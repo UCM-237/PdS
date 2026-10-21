@@ -1,0 +1,3 @@
+\babel@toc {spanish}{}\relax 
+\beamer@subsectionintoc {0}{1}{Filtros paso bajo}{2}{0}{0}
+\beamer@subsectionintoc {0}{2}{Filtro paso alta, paso banda y supresores de banda}{15}{0}{0}

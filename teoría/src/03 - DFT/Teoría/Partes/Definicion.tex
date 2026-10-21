@@ -1,0 +1,21 @@
+\begin{frame}
+  \frametitle{Definición de la transformada de Fourier Discreta}
+
+  \footnotesize
+  \begin{itemize}
+    \item Una señal discreta $x(n)$ de longitud finita L  (x(n)=0 $n\ge L$)
+    \item Transformada de Fourier Discreta (DFT) de N muestras ($N \ge L$):
+    \hspace{0.5cm} \alert{$X(k)=X(e^{j\frac{2\pi}{N}k})=\sum_{n=0}^{N-1} x(n) e^{-j\frac{2\pi}{N}kn}$}   para $k=\{0,\dots,N-1\}$
+    \item Transformada de Fourier Discreta Inversa (IDFT):
+    \hspace{0.5cm} \alert{$x(n)=\frac{1}{N}\sum_{k=0}^{N-1} X(k) e^{j\frac{2\pi}{N}kn}$}
+
+    \item Observaciones:
+    \begin{itemize}
+    \footnotesize
+      \item Si $L < N$ la expresión de la IDFT da x(n)=0 para $n\ge L$.
+      \item La DFT de una señal de duración infinita siempre se obtendrá con aliasing
+      \item Para cualquier señal $x(n)$ de duración finita de longitud L, cualquier DFT con $N\ge L$ obtenida a partir de la extensión periódica $x_p(n)$ de la señal original, permite obtener unívocamente su DTFT $X(e^{jw})$ utilizando la función de interpolación $P(e^{jw})$.
+      \item Una mayor diferencia entre N y L no suministra mayor información sobre el espectro $X(e^{jw})$, aunque permite representarlo en más puntos (los N de la DFT).
+    \end{itemize}
+  \end{itemize}
+\end{frame}

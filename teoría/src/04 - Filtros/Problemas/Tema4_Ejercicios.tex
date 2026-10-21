@@ -1,0 +1,87 @@
+%% PLANTILLA PARA ARTICULOS
+
+\documentclass[10pt,twoside,spanish,a4paper]{article}
+\input{configfile}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{verbatim}
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+
+\begin{document}
+
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+\title{
+  \vspace{-0.2cm}
+	\begin{center}
+		\large
+		\begin{tabular}{rrl}
+		\multirow{4}{*}{\includegraphics[width=1.7cm]{UCM.eps} \hspace{1cm}}&Grado: & Ingeniería Electrónica de Comunicaciones\\
+		&Asignatura:& Procesamiento de Señales \\
+		&Profesores:  & Jesús Chacón Sombría \\
+		&             & María José Gómez Silva \\
+		\end{tabular}
+	\end{center}
+	\rule{\textwidth}{0.4pt}
+	%
+	\vspace{-1.5cm}
+	\begin{center}
+		\color{blue} \Huge
+		\begin{tabular}{c}
+	        \textbf{Ejercicios}\\
+		\textbf{Muestreo en el dominio de la frecuencia}\\
+		\end{tabular}
+	\end{center}
+	\vspace{-0.5cm}
+	\rule{\textwidth}{0.4pt}
+}
+\maketitle
+ \thispagestyle{empty}
+\pagestyle{fancy}
+
+\lfoot{\includegraphics[width=0.8cm]{UCM.eps}}
+\cfoot{\vspace{-0.6cm} Ingeniería Electrónica de Comunicaciones }
+\rfoot{\vspace{-0.6cm} \thepage}
+\lhead{Ejercicios}
+\rhead{Muestreo en el dominio del tiempo}
+\renewcommand{\headrule}{ \vspace{-0.2cm} \rule{\textwidth}{0.4pt}}
+\renewcommand{\footrule}{\vspace{0.5cm} \rule{\textwidth}{0.4pt}\\ \vspace{-0.3cm} \\}
+
+%**************************************************************<- para indicar pregunta de la pr·ctica
+\newcounter{ctPreg}
+\setcounter{ctPreg}{1}
+\newcommand{\itemP}{ \item[{\color{blue}\fbox{\textbf{Ejercicio \arabic{ctPreg}:}}}] \addtocounter{ctPreg}{1}}  %
+\newcommand{\itemB}{ \item[{\color{blue}$\bullet$} ]    }
+\newcommand{\itemR}{ \item[{\color{blue}$\triangleright$} ]    }       %
+%**************************************************************
+
+\vspace{-8em}
+
+	\begin{itemize}
+		\itemP Para cada señal, calcula y representa su DFT de $N$ muestras en MATLAB (mediante \color{blue}\texttt{fft}\color{black}). Indica el valor de $N$ y del periodo de muestreo $T_s$ ($t=n T_s$) y justifica su elección.
+			\begin{itemize}
+				\itemB $x(t)=\textrm{sin}(\frac{\pi}{2}t)$
+				\itemB $x(t)=\sum_{k=0}^{10}0.9^k sin(\frac{k\pi}{2}t)$
+				\itemB $x_1(t)=\textrm{e}^{-t}, 0\leq t<5$
+				\itemB $x_2(t)=\textrm{sinc}(t)$
+				\itemB $x_2(t)=\textrm{randn}(N,1)$
+			\end{itemize}
+
+		\itemP Reconstruye las señales del ejercicio 1 a partir de la DFT, en los casos en que sea posible.
+
+		\itemP Reconstruye la DTFT de las señales del ejercicio 1 a partir de la DFT, en los casos en que sea posible.
+		
+		\itemP Reconstruye la transformada Z de las señales del ejercicio 1 a partir de la DFT, en los casos en que sea posible.
+
+		\itemP Calcula, mediante la DFT, la respuesta de los siguientes sistemas LTI tomando como entrada las señales del ejercicio 1. 
+		\begin{itemize}
+			\itemB $h(n)=\frac{1}{N}, 0\leq n < N=20$
+			\itemB $h(n)=0.7^{-n}$
+			\itemB $H(z)=0.8 + 0.5z^{-1} - 0.2 z^{-2} - 4 z^{-3} + z^{-4}$
+			\itemB $H(z)=\frac{0.8}{1 + 0.5z^{-1}}$
+		\end{itemize}
+	
+\end{document}

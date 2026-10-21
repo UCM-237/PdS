@@ -1,0 +1,115 @@
+% \documentclass[handout]{beamer}
+\documentclass{beamer}
+
+\mode<presentation> {%
+	\usetheme[]{Boadilla}
+	\usecolortheme{orchid}
+	\setbeamercovered{transparent}
+	\setbeamersize{text margin left=0.7cm}
+  \setbeamersize{text margin right=0.7cm}
+  \setbeamertemplate{enumerate item}[square]
+  \setbeamertemplate{enumerate subitem}[circle]
+  \setbeamertemplate{enumerate subsubitem}[>]
+  \setbeamertemplate{itemize item}[square]
+  \setbeamertemplate{itemize subitem}[circle]
+  \setbeamertemplate{itemize subsubitem}[>]
+}
+
+\usepackage{pstricks}
+\usepackage{pst-node}
+\usepackage{bm}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[normalem]{ulem}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{pifont}
+\usepackage{rotating}
+\usepackage{colortbl}
+\usepackage{verbatim}
+\usepackage{amssymb}
+
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+\definecolor{general}{rgb}{0.9 0.9 1}%
+\newrgbcolor{colorsistema}{0 1 1}
+\newrgbcolor{colorviolet}{0.9 0.8 1}
+
+
+\title[Procesamiento de Señales]{Muestreo y reconstrucción de señales \\ en el dominio del tiempo}
+\author[J. Chacón, M. J. Gómez] {%
+	\textit{Ingeniería Electrónica de Comunicaciones}\\
+	\vspace{0.6cm}
+	\small Jesús Chacón Sombría \\
+  \small María José Gómez Silva%
+}%\inst{1}
+
+\institute[DACYA] {%\inst{1}%
+	\footnotesize  Departamento de Arquitectura de Computadores y Automática\\
+  Universidad Complutense de Madrid
+}
+
+\date[Muestreo y reconstrucción] % (optional)
+{\footnotesize Curso 2022-2023}%{\today / Master}
+\subject{Talks}
+
+\pgfdeclareimage[height=0.75cm]{logo}{ucm}
+
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\newcommand{\MyLogo}{%
+\begin{textblock}{14}(116.0,0.6)
+  \pgfuseimage{logo}
+\end{textblock}
+}
+
+\makeatletter
+\numberwithin{section}{part}
+\AtBeginPart{
+\beamer@tocsectionnumber=0\relax
+\frame{\partpage}
+}
+\makeatother
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+ \MyLogo
+  \oldmacro\hfill%
+}
+
+\AtBeginSection[]
+{
+  \begin{frame}%<beamer>
+    \frametitle{Esquema}
+  \small
+    \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+  \end{frame}
+}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}%<beamer>
+    \frametitle{Esquema}
+    \small
+   \tableofcontents[sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+      \end{frame}
+}
+
+\input{./Partes/Objetivos.tex}
+\input{./Partes/Conversores.tex}
+\input{./Partes/MuestreoContinuo.tex}
+\input{./Partes/Reconstruccion.tex}
+\input{./Partes/CuantificacionCodificacion.tex}
+\input{./Partes/MuestreoDiscreto.tex}
+
+\end{document}

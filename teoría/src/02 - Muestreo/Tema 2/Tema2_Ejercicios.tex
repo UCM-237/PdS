@@ -1,0 +1,98 @@
+%% PLANTILLA PARA ARTICULOS
+
+\documentclass[10pt,twoside,spanish,a4paper]{article}
+\input{configfile}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{verbatim}
+\usepackage{amsmath}
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+
+\begin{document}
+
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+\title{
+  \vspace{-0.2cm}
+	\begin{center}
+		\large
+		\begin{tabular}{rrl}
+		\multirow{4}{*}{\includegraphics[width=1.7cm]{UCM.eps} \hspace{1cm}}&Grado: & Ingeniería Electrónica de Comunicaciones\\
+		&Asignatura:& Procesamiento de Señales \\
+		&Profesores:  & Jesús Chacón Sombría \\
+		\end{tabular}
+	\end{center}
+	\rule{\textwidth}{0.4pt}
+	%
+	\vspace{-1.5cm}
+	\begin{center}
+		\color{blue} \Huge
+		\begin{tabular}{c}
+	        \textbf{Ejercicios}\\
+		\textbf{Muestreo y Reconstrucción}\\
+		\end{tabular}
+	\end{center}
+	\vspace{-0.5cm}
+	\rule{\textwidth}{0.4pt}
+}
+\maketitle
+ \thispagestyle{empty}
+\pagestyle{fancy}
+
+\lfoot{\includegraphics[width=0.8cm]{UCM.eps}}
+\cfoot{\vspace{-0.6cm} Ingeniería Electrónica de Comunicaciones }
+\rfoot{\vspace{-0.6cm} \thepage}
+\lhead{Práctica}
+\rhead{Práctica 2A: Variables aleatorias}
+\renewcommand{\headrule}{ \vspace{-0.2cm} \rule{\textwidth}{0.4pt}}
+\renewcommand{\footrule}{\vspace{0.5cm} \rule{\textwidth}{0.4pt}\\ \vspace{-0.3cm} \\}
+
+%**************************************************************<- para indicar pregunta de la pr·ctica
+\newcounter{ctPreg}
+\setcounter{ctPreg}{1}
+\newcommand{\itemP}{ \item[{\color{blue}\fbox{\textbf{Ejercicio \arabic{ctPreg}:}}}] \addtocounter{ctPreg}{1}}  %
+\newcommand{\itemB}{ \item[{\color{blue}$\bullet$} ]    }
+\newcommand{\itemR}{ \item[{\color{blue}$\triangleright$} ]    }       %
+%**************************************************************
+
+\vspace{-8em}
+
+	\begin{itemize}
+		\itemP La señal $x(t)$ tiene ancho de banda $\omega_m$. Determinar la frecuencia de muestreo mínima para que no se produzca aliasing:
+		\begin{itemize}
+			\item $x(t) + x(t-1)$
+			\item $\frac{dx(t)}{dt}$
+			\item $x^2(t)$
+			\item $x(t)cos(\omega_0 t)$
+		\end{itemize}
+
+		\itemP Determinar el periodo de muestreo necesario para poder reconstruir las siguientes señales:
+		\begin{itemize}
+			\item $x_1(t)=\mathrm{e}^{-t}, t \geq 0$
+			\item $x_2(t)=\mathrm{sinc}(f_c t)$
+			\item $x_3(t)=\mathrm{sinc}^2(f_c t)$
+		\end{itemize}
+
+		\itemP Indica la respuesta impulso del retenedor de orden 1 (FOH) causal y del no causal. Compara sus espectros frecuenciales mediante
+		la transformada de Fourier.
+
+		\itemP Muestrea las siguientes señales, eligiendo un valor adecuado de $T_s$. Indica en cada caso si es posible o no 
+		evitar el aliasing, y reconstruye la señal utilizando retenedores de orden cero y uno.
+		\begin{itemize}
+			\item $x_1(t)=\mathrm{sin}(\frac{2\pi}{4} t)$
+			\item $x_2(t)=\mathrm{sin}(\frac{2\pi}{4} t), 0\leq t\leq 7$
+			\item $x_3(t)=\mathrm{sin}(\frac{20\pi}{700}t)\mathrm{cos}(\frac{20\pi}{35}t)$
+		\end{itemize}
+
+		\itemP Un conversor A/D de 10 bits admite una entrada entre 0 y $V_{ref}$. Según la configuración, $V_{ref}$ puede tomar diferentes valores (1.1 V, 3.3 V, 5 V).
+		\begin{itemize}
+			\item Indica la resolución, número de niveles y rango dinámico para cada posible configuración.
+			\item ¿Cuantos bits serían necesarios, en cada caso, para obtener un precisión de $1e^{-4}$ V?.
+		\end{itemize}
+
+	\end{itemize}
+
+\end{document}

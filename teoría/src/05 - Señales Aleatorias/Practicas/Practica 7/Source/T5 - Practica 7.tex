@@ -1,0 +1,103 @@
+%% PLANTILLA PARA ARTICULOS
+\documentclass[10pt,twoside,spanish,a4paper]{article}
+\input{configfile}
+\usepackage{enumitem}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{verbatim}
+\usepackage{amsmath}
+
+\begin{document}
+
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+\title{
+  \vspace{-0.2cm}
+	\begin{center}
+		\large
+		\begin{tabular}{rrl}
+		\multirow{4}{*}{\includegraphics[width=1.7cm]{UCM.eps} \hspace{1cm}}&Grado: & Ingeniería Electrónica de Comunicaciones\\
+		&Asignatura: & Procesamiento de Señales \\
+		&Curso:      & 2025/2026 \\
+		\end{tabular}
+	\end{center}
+	\rule{\textwidth}{0.4pt}
+	%
+	\vspace{-1.5cm}
+	\begin{center}
+		\color{blue} \Huge
+		\begin{tabular}{c}
+	        \textbf{Práctica 7}\\
+		\textbf{Variables aleatorias}\\
+		\end{tabular}
+	\end{center}
+	\vspace{-0.5cm}
+	\rule{\textwidth}{0.4pt}
+}
+\maketitle
+ \thispagestyle{empty}
+\pagestyle{fancy}
+
+\lfoot{\includegraphics[width=0.8cm]{UCM.eps}}
+\cfoot{\vspace{-0.6cm} Ingeniería Electrónica de Comunicaciones }
+\rfoot{\vspace{-0.6cm} \thepage}
+\lhead{Práctica}
+\rhead{Práctica 7: Variables aleatorias}
+\renewcommand{\headrule}{ \vspace{-0.2cm} \rule{\textwidth}{0.4pt}}
+\renewcommand{\footrule}{\vspace{0.5cm} \rule{\textwidth}{0.4pt}\\ \vspace{-0.3cm} \\}
+
+%**************************************************************<- para indicar pregunta de la pr·ctica
+\newcounter{ctPreg}
+\setcounter{ctPreg}{1}
+\newcommand{\itemP}{ \item[{\color{blue}\fbox{\textbf{Tarea \arabic{ctPreg}:}}}] \addtocounter{ctPreg}{1}}  %
+\newcommand{\itemB}{ \item[{\color{blue}$\bullet$} ]    }
+\newcommand{\itemR}{ \item[{\color{blue}$\triangleright$} ]    }       %
+%**************************************************************
+
+\vspace{-8em}
+
+\section*{Objetivos}
+
+\begin{itemize}
+	\item Aprender a caracterizar el comportamiento de diferentes conjuntos de variables aleatorias.
+\end{itemize}
+
+\section*{Generación y análisis de conjuntos de variables aleatorias}
+\begin{itemize}
+	\itemP \textbf{Muestreo de diferentes conjuntos de variables aleatorias.}
+
+	Generar 100000 muestras de cada conjunto de variables aleatorias a partir de las siguientes funciones de densidad de probabilidad.
+
+	\begin{itemize}
+		\itemR Caso 1: $p_{XYZ}(x,y,z)=\mathcal{N}_{(\mu,\Sigma)}(x,y,z)$\\[2ex]
+		$\quad\mu=\left[\begin{matrix}2\\8\\-2\end{matrix}\right],~\Sigma=\left[\begin{matrix}2 & 0.5 & 1\\0.5 & 3 & 2\\1 & 2 & 2\end{matrix}\right]$
+
+		\itemR Caso 2: $p_{XYZ}(x,y,z)=\mathcal{N}_{(\mu,\Sigma)}(x,y)\mathcal{U}_{[2,5]}(z)$\\[2ex]
+		$\mu=\left[\begin{matrix}2\\8\end{matrix}\right]$
+		$\Sigma=\left[\begin{matrix}2 & 3\\3 & 6\end{matrix}\right]$
+	\end{itemize}
+
+	Para comprobar que las muestras generadas siguen la función de probabilidad propuesta:
+	\begin{enumerate}[label=\alph*)]
+		\item Representa gráficamente los valores de las muestras. 
+		\item Representa en histogramas 1D (\color{blue}\texttt{histogram}\color{black}), las variables probabilisticamente independientes.
+		\item Representa en histogramas 2D (\color{blue}\texttt{histogram2}\color{black}), los pares de variables dependientes.
+		\item Compara los histogramas con la función de probabilidad original.
+	\end{enumerate}
+
+
+	\hspace{0.2cm}\color{blue}Ayuda: \color{black} \color{black} \'{U}nicamente se pueden usar los generadores aleatorios de Matlab  \color{blue}randi\color{black}, \color{blue}randn \color{black} y \color{blue}rand\color{black}.  Por lo tanto, se recomienda utilizar el método de muestreo más sencillo que, utilizando dichas funciones, genere las muestras propuestas.
+
+	\itemP  \textbf{Caracterización de conjuntos muestrales desconocidos}
+
+	El objetivo de esta tarea es caracterizar conjuntos muestrales de 2 variables aleatorias de origen desconocido a partir de su histograma 2D. Los 2 conjuntos muestrales que hay que analizar se generarán utilizando el DNI del alumno y la función \color{blue}\texttt{DatosTarea2}\color{black}.
+	\begin{enumerate}[label=\alph*)]
+		\item Analiza el histograma e intenta identificar la forma de la función de probabilidad original.
+		\item Calcula los estadísticos habituales de cada uno de los conjuntos e indica en que casos parametrizan correctamente la función de probabilidad.
+		\item Indica en qué casos los estadísticos permiten determinar alguna característica de la función de probabilidad.
+	\end{enumerate}
+\end{itemize}
+
+\end{document}

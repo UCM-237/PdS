@@ -1,0 +1,4 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Sistemas}{2}{0}{1}
+\beamer@subsectionintoc {1}{1}{Tipos de Sistemas}{3}{0}{1}
+\beamer@subsectionintoc {1}{2}{Sistemas LTI}{9}{0}{1}

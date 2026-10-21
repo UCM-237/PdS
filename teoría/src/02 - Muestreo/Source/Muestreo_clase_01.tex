@@ -1,0 +1,91 @@
+\documentclass[handout]{beamer}
+%\documentclass{beamer}
+\mode<presentation> {%
+	\usetheme[]{Boadilla}
+	\usecolortheme{orchid}
+	\setbeamercovered{transparent}
+	\setbeamersize{text margin left=0.7cm}
+  \setbeamersize{text margin right=0.7cm}
+  \setbeamertemplate{enumerate item}[square]
+  \setbeamertemplate{enumerate subitem}[circle]
+  \setbeamertemplate{enumerate subsubitem}[>]
+  \setbeamertemplate{itemize item}[square]
+  \setbeamertemplate{itemize subitem}[circle]
+  \setbeamertemplate{itemize subsubitem}[>]
+}
+
+% \usepackage{bm}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+\tikzstyle{block} = [rectangle, draw, text centered, rounded corners, minimum height=2em, align=center]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+\definecolor{general}{rgb}{0.9 0.9 1}%
+
+\title[Procesamiento de Señales]{Muestreo y reconstrucción de señales \\ en el dominio del tiempo}
+\author[Jesús Chacón] {%
+	\textit{Ingeniería Electrónica de Comunicaciones}\\
+	\vspace{0.6cm}
+	\small Jesús Chacón Sombría%
+}%\inst{1}
+
+\institute[DACYA] {%\inst{1}%
+	\footnotesize  Departamento de Arquitectura de Computadores y Automática\\
+  Universidad Complutense de Madrid
+}
+
+\date[Muestreo y reconstrucción] % (optional)
+{\footnotesize Curso 2025-2026}%{\today / Master}
+\subject{Talks}
+
+\pgfdeclareimage[height=0.75cm]{logo}{ucm}
+
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\newcommand{\MyLogo}{%
+\begin{textblock}{14}(116.0,0.6)
+  \pgfuseimage{logo}
+\end{textblock}
+}
+
+\makeatletter
+\numberwithin{section}{part}
+\AtBeginPart{
+\beamer@tocsectionnumber=0\relax
+\frame{\partpage}
+}
+\makeatother
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+ \MyLogo
+  \oldmacro\hfill%
+}
+
+\AtBeginSection[]{}
+\AtBeginSubsection[]{}
+
+\section{Objetivos}
+\input{./Partes/Objetivos.tex}
+\section{Conversión analógico-digital y digital-analógico}
+\input{./Partes/Conversores.tex}
+\section{Muestreo de señales continuas}
+\subsection{Muestreo periódico}
+\input{./Partes/MuestreoContinuo.tex}
+
+
+\end{document}

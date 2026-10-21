@@ -1,0 +1,11 @@
+load leleccum;y = leleccum(1:3920);
+ly = length(y);tipo='haar';
+subplot(4,1,1);plot(y);title('Señal');
+[cA,cD]=dwt(y,tipo);
+yD=idwt([],cD,tipo);
+subplot(4,1,2);plot(yD); title('D1');
+[cA,cD]=dwt(cA,tipo);
+yD=idwt([],cD,tipo);
+subplot(4,1,3);plot(yD);title('D2');
+yA=idwt(cA,[],tipo);
+subplot(4,1,4);plot(yA); title('A2');

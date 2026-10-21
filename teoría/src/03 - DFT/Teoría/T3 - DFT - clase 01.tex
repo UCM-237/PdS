@@ -1,0 +1,398 @@
+\documentclass{beamer}
+
+\mode<presentation> {%
+	\usetheme[]{Boadilla}
+	\usecolortheme{orchid}
+	\setbeamercovered{transparent}
+	\setbeamersize{text margin left=0.7cm}
+  \setbeamersize{text margin right=0.7cm}
+  \setbeamertemplate{enumerate item}[square]
+  \setbeamertemplate{enumerate subitem}[circle]
+  \setbeamertemplate{enumerate subsubitem}[>]
+  \setbeamertemplate{itemize item}[square]
+  \setbeamertemplate{itemize subitem}[circle]
+  \setbeamertemplate{itemize subsubitem}[>]
+}
+
+% \usepackage{bm}
+% \usepackage[utf8]{inputenc}
+% \usepackage[spanish]{babel}
+% \usepackage{times}
+% \usepackage[T1]{fontenc}
+% \usepackage{graphicx}
+% \usepackage{multirow}
+% \usepackage{pifont}
+% \usepackage{rotating}
+% \usepackage{colortbl}
+% \usepackage[framed]{mcode}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% \definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+% \definecolor{general}{rgb}{0.9 0.9 1}%
+% \newrgbcolor{colorsistema}{0 1 1}
+% \newrgbcolor{colorviolet}{0.9 0.8 1}
+
+\title[Procesamiento de Señales]{Transformada de Fourier Discreta (DFT)}
+\author[J. Chacón]{%[Author, Another] % (optional, use only with lots of authors)
+\textit{Ingeniería Electrónica de Comunicaciones }\\
+\vspace{0.6cm}
+\small Jesús Chacón Sombría}
+
+\institute[DACYA] % (optional, but mostly needed)
+{
+  %\inst{1}%
+
+\footnotesize  Departamento de Arquitectura de Computadores y Automática.\\
+  Universidad Complutense de Madrid
+  }
+
+\date[Transformada Fourier Discreta] % (optional)
+{\footnotesize Curso 2025-2026}%{\today / Master}
+\subject{Talks}
+
+\pgfdeclareimage[height=0.75cm]{logo}{ucm.png}
+
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\newcommand{\MyLogo}{%
+\begin{textblock}{14}(116.0,0.6)
+  \pgfuseimage{logo}
+\end{textblock}
+}
+
+\makeatletter
+\numberwithin{section}{part}
+\AtBeginPart{
+\beamer@tocsectionnumber=0\relax
+\frame{\partpage}
+}
+\makeatother
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+ \MyLogo
+  \oldmacro\hfill%
+}
+
+\AtBeginSection[]{}
+
+\AtBeginSubsection[]{}      
+
+\section{Introducción}
+
+\begin{frame}
+  \frametitle{¿Qué es la Transformada Discreta de Fourier (DFT)?}
+  \begin{itemize}
+      \item La Transformada Discreta de Fourier (DFT) es una herramienta matemática fundamental en el procesamiento de señales.
+      \item Convierte una secuencia de valores discretos en una secuencia de coeficientes en el dominio de la frecuencia.
+      \item Es ampliamente utilizada en aplicaciones como análisis espectral, compresión de audio, y procesamiento de imágenes.
+      \item Existen algoritmos eficientes para calcular la DFT.
+  \end{itemize}    
+\end{frame}    
+
+\begin{frame}
+  \frametitle{Transformada de Fourier de Tiempo Discreto (DTFT)}
+  \begin{alertblock}{Transformada de Fourier de Tiempo Discreto (DTFT)}
+  \[
+    \begin{aligned}
+      X(\omega) &=\substack{\infty\\\sum\\n=-\infty}x[n]\text{e}^{-j\omega n}\\
+      x[n] &=\frac{1}{2\pi}\int_0^{2\pi}X(\omega)\text{e}^{j\omega n}d\omega
+    \end{aligned}
+  \]
+  \end{alertblock}
+  
+  \begin{itemize}
+    \item Antes de definir y utilizar la DFT, recordamos conceptos importantes.
+    \item La DTFT $X(\omega)$ es una función:
+    \begin{itemize} 
+      \item continua en $\omega$, 
+      \item periódica (con periodo $2\pi$).
+    \end{itemize}
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame} 
+  \frametitle{Relación entre espectro de señales continuas y discretas}
+    \begin{center}
+    \alert{¿Podemos conocer el espectro $X(\omega)$ de una señal $x(t)$\\  
+    a partir de sus muestras $\color{blue}x_d[n]=x(nT_s)$?}
+    \end{center}
+    \begin{itemize}
+      \item Sabemos que $\color{blue}X_d(\Omega=\omega T_s)=\frac{1}{T_s}X_a(\omega)$, con $\color{blue}\Omega=\omega T_s\in(-\pi,\pi)$.
+      \item Pero conocemos un número finito de muestras: $\color{blue}\hat{x}[n]=x_d[n]w[n]\color{black}$ \vspace{0.2cm}
+      \begin{itemize}
+        \item $w[n]=\left\{ \begin{matrix}1~si~0\leq n< N\\ 0~c.c.\end{matrix} \right. \leftrightarrow W(\Omega)=\frac{1-e^{j\Omega N}}{1-e^{j\Omega}}$
+        \item $\hat{X}(\Omega)=\int_{0}^{2\pi}X_d(\xi)W(\Omega-\xi)d\xi$ \\ \vspace{0.1cm}
+        \alert{Truncar la señal en el tiempo distorsiona el espectro}
+      \end{itemize} \vspace{0.2cm}  
+      \item Estimación del espectro: $\color{blue}X_a(\omega)=T_s X_d(\omega)\approx T_s \hat{X_d}(\omega)\color{black}$ \vspace{0.2cm} 
+      \item Estimación de la densidad espectral: $\color{blue}|\Phi_{x_a x_a}(\omega)|\approx T_s^2|\Phi_{\hat{x}\hat{x}}(\omega)|\color{black}$
+    \end{itemize}
+\end{frame}    
+
+\begin{frame}
+  \frametitle{Definición Matemática de la DFT}
+  Al igual que en el dominio del tiempo, es útil muestrear la DTFT.
+  \begin{itemize}
+    \item Únicamente muestras de un periodo (habitualmente $\color{blue}\omega\in[0,2\pi]$).
+    \item Si elegimos $N$ muestras, el periodo resultante es $\color{blue}\Delta\omega=2\pi/N$.
+    \item Entonces, $\color{blue}X[k]=X(\frac{2\pi k}{N})$.
+  \end{itemize}
+
+  \begin{alertblock}{Transformada de Fourier Discreta (DFT)}
+    La DFT de una secuencia \( x[n] \) de longitud \( N \) se define como:
+    \[
+    X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j \frac{2\pi}{N} kn} \quad \text{para } k = 0, 1, \dots, N-1  
+    \]
+    donde:
+    \begin{itemize}
+        \item \( X[k] \) es el coeficiente en el dominio de la frecuencia.
+        \item \( x[n] \) es la secuencia en el dominio del tiempo.
+        \item \( N \) es el número de puntos en la secuencia.
+    \end{itemize}
+  \end{alertblock}
+\end{frame}    
+
+\begin{frame}
+  \alert {¿Podemos reconstruir $x[n]$ a partir de $X[k$]?}
+  \begin{itemize}
+    \item Partimos de la DTFT muestreada: \vspace{-0.2cm} \[ X[k]=X(\frac{2\pi k}{N})=\substack{\infty\\\sum\\n=-\infty}x[n]\text{e}^{-j\frac{2\pi k}{N} n} \]
+    \item Separamos el sumatorio en grupos de $N$ muestras.
+    \[
+      \begin{aligned}
+        X[k]&= ... +
+        \substack{-1\\\sum\\n=-N}x[n]\text{e}^{-j\frac{2\pi k}{N} n} +
+        \substack{N-1\\\sum\\n=0}x[n]\text{e}^{-j\frac{2\pi k}{N} n} +
+        \substack{2N-1\\\sum\\n=N}x[n]\text{e}^{-j\frac{2\pi k}{N} n} + ...
+        \\
+          &= \substack{N-1\\\sum\\n=0}\left[\substack{\infty\\\sum\\m=-\infty}x[n-m N]\right]\text{e}^{-j\frac{2\pi k}{N} (n - mN)}
+      \end{aligned}
+    \]
+    \item Definimos $\color{blue}x_p[n]=\left[\substack{\infty\\\sum\\m=-\infty}x[n-m N]\right]$.
+    \item $x_p[n]$ es la extensión periódica de $x[n]$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \alert {¿Podemos reconstruir $x[n]$ a partir de $X[k$]?}
+  \[X[k]=\substack{N-1\\\sum\\n=0}x_p[n]\text{e}^{-j\frac{2\pi k}{N} n }\]
+  \begin{itemize}
+    \item Es fácil comprobar que $x_p[n]$ es periódica, con periodo $N$.
+    \item Llamamos a $x_p[n]$ \textbf{la extensión periódica} de $x[n]$.
+    \item Para reconstruir $x[n]$ se debe cumplir $x_p[n]=x[n]$ para $0\leq n<L$
+  \end{itemize}
+
+  \begin{alertblock}{Condiciones para poder reconstruir $x[n]$}
+    \begin{itemize}
+      \item (i) $x[n]$ tiene longitud finita $L$,
+      \item (ii) el número de muestras de la DFT es $N\geq L$.
+    \end{itemize}
+    \begin{center}
+      $X[k]=\substack{N-1\\\sum\\n=0}x[n]\text{e}^{-j\frac{2\pi k}{N} n}$\\
+      $x[k]=\frac{1}{N}\substack{N-1\\\sum\\n=0}X[k]\text{e}^{j\frac{2\pi k}{N} n}$
+    \end{center}
+  \end{alertblock}
+\end{frame}
+
+% \section{Propiedades de la DFT}
+
+% \begin{frame}
+%     \frametitle{Algunas propiedades de la DFT}
+%     \begin{itemize}
+%         \item \textbf{Linealidad}: \( \text{DFT}\{a x[n] + b y[n]\} = a X[k] + b Y[k] \)
+%         \item \textbf{Desplazamiento en el tiempo}: \( \text{DFT}\{x[n - m]\} = X[k] e^{-j \frac{2\pi}{N} km} \)
+%         \item \textbf{Simetría}: Si \( x[n] \) es real, entonces \( X[k] = X^*[N - k] \)
+%         \item \textbf{Convolución}: \( \text{DFT}\{x[n] * y[n]\} = X[k] \cdot Y[k] \)
+%     \end{itemize}    
+% \end{frame}    
+
+% \section{Aplicaciones}
+
+% \begin{frame}
+%     \frametitle{Aplicaciones de la DFT}
+%     \begin{itemize}
+%         \item \textbf{Análisis espectral}: Identificación de frecuencias en señales.
+%         \item \textbf{Compresión de audio}: MP3, AAC, etc.
+%         \item \textbf{Procesamiento de imágenes}: Filtrado, compresión (JPEG), etc.
+%         \item \textbf{Comunicaciones digitales}: Modulación OFDM.
+%     \end{itemize}    
+% \end{frame}    
+
+% \section{Ejemplo Práctico}
+
+% \begin{frame}
+%     \frametitle{Ejemplo Práctico}
+%     \begin{itemize}
+%         \item Consideremos una señal sinusoidal simple:
+%         \[
+%         x[n] = \cos\left(\frac{2\pi}{N} k_0 n\right)  
+%         \]
+%         \item Su DFT tendrá picos en \( k = k_0 \) y \( k = N - k_0 \).
+%         \item \textbf{Ejemplo gráfico}:
+%     \end{itemize}    
+%     \begin{center}
+%         % \includegraphics[width=0.6\textwidth]{dft_example.png}
+%     \end{center}    
+% \end{frame}    
+
+
+
+
+
+\section{Análisis Espectral con la DFT}
+
+\begin{frame}
+    \frametitle{Análisis Espectral con la DFT}
+  \begin{itemize}
+    \item ¿Qué es el análisis espectral?
+    \begin{itemize}
+        \item Estudia cómo se distribuye la energía de una señal en frecuencia.
+        \item La densidad espectral de potencia es una medida importante.
+        \item La DFT se utiliza para estimar esta densidad espectral.
+    \end{itemize}    
+    \item La energía se conserva entre tiempo y frecuencia.
+  \end{itemize}    
+  \begin{alertblock}{\centering Teorema de Plancherel - Identidad de Parseval}
+    \vspace{0.2cm} \centering
+    $\int_{-\infty}^{\infty}x(t)x^*(t)dt = \frac{1}{2\pi}\int_{-\infty}^{\infty}X(\omega)X^*(\omega)d\omega$ \\ \vspace{0.3cm}
+    $\sum_{n=0}^{N-1}x[n] x^{*}[n] = \frac{1}{N}\sum_{k=0}^{N-1} X[k] X^*[k]$ \\ \vspace{0.3cm}
+  \end{alertblock}  
+\end{frame}    
+
+\begin{frame}
+    \frametitle{Análisis Espectral con la DFT}
+  \begin{itemize}
+    \item {\small Para señales definidas en energía: $\color{blue}E_x = \int_{-\infty}^{\infty}|x(t)|^2dt<\infty\color{blue}$}
+    \begin{alertblock}{\centering Densidad espectral de energía}
+      \vspace{0.2cm}
+      \centering $S_{xx}(\omega)=X(\omega)X^*(\omega)=|X(\omega)|^2$ \\ \vspace{0.2cm}
+    \end{alertblock}  
+    \item {\small Para señales definidas en potencia: $\color{blue}P_x = \substack{lim\\T\rightarrow\infty}\frac{1}{T}\int_{-T/2}^{T/2}|x(t)|^2dt<\infty\color{blue}$}
+    \begin{alertblock}{\centering Densidad espectral de potencia}
+      Teorema de Wiener-Khinchin \\
+      \centering $\Phi_{xx}(\omega)=\int_{-\infty}^{\infty}\phi_{xx}(t)\text{e}^{-j\omega t}dt$ \\ \vspace{0.2cm}
+      $\phi_{xx}(\tau)=\substack{lim\\T\rightarrow\infty}\int_{-T/2}^{T/2}x(t)x(t+\tau)d\tau$ (autocorrelación) \\ \vspace{0.2cm}
+    \end{alertblock}  
+    \end{itemize}
+  
+\end{frame}    
+
+
+\section{Representación e Interpretación de la DFT}
+
+
+% \begin{frame}\frametitle{Conservación de energía entre tiempo y frecuencia}
+%   \begin{alertblock}{\centering Teorema de Plancherel - Identidad de Parseval}
+%     \vspace{0.2cm} \centering
+%     $\int_{-\infty}^{\infty}x(t)x^*(t)dt = \frac{1}{2\pi}\int_{-\infty}^{\infty}X(\omega)X^*(\omega)d\omega$ \\ \vspace{0.3cm}
+%     $\sum_{n=0}^{N-1}x[n] x^{*}[n] = \frac{1}{N}\sum_{k=0}^{N-1} X[k] X^*[k]$ \\ \vspace{0.3cm}
+%   \end{alertblock}  
+
+%   \begin{itemize}
+%     \item Transformada de Fourier Discreta (DFT): \\
+%     \vspace{0.2cm}
+%     $\color{blue}x[n]=\frac{1}{N}\sum_{k=0}^{N-1}X[k]e^{\:j\frac{2\pi}{N}k n}\color{black}
+%       \leftrightarrow
+%      \color{blue}X[k]=\sum_{n=0}^{N-1}x[n]e^{-j\frac{2\pi}{N}k n}\color{black}$ 
+%     \\ \vspace{0.2cm} 
+%     % {\footnotesize $\color{cyan}x^*[n]=\frac{1}{N}\sum_{k=0}^{N-1}X^*[k]e^{-j\frac{2\pi}{N}k n}\color{black}
+%     %   \leftrightarrow
+%     %  \color{cyan}X^*[-k]=\sum_{n=0}^{N-1}x^*[n]e^{-j\frac{2\pi}{N}k n}\color{black}$ 
+%     % } 
+%     \vspace{0.2cm}
+%     \item Potencia finita: $\color{blue}P_x = \frac{1}{N}\sum_{n=0}^{N-1}x[n]x^*[n]\color{black}$ \\ \vspace{0.2cm}
+%     % {\footnotesize
+%     %   $\color{cyan}\sum_{n=0}^{N-1}x[n] \left[\frac{1}{N}\sum_{k=0}^{N-1}X^*[k]e^{-j\frac{2\pi}{N}k n}\right]
+%     %       = \frac{1}{N} \sum_{k=0}^{N-1} \left[\sum_{n=0}^{N-1}x[n]e^{-j\frac{2\pi}{N}k n}\right] X^*[k]\color{black}$
+%     % }      
+%   \end{itemize}  
+
+% \end{frame}  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \section{Conclusión}
+
+% \begin{frame}
+%     \frametitle{Conclusión}
+%     \begin{itemize}
+%         \item La DFT es una herramienta poderosa para el análisis de señales en el dominio de la frecuencia.
+%         \item Sus aplicaciones son vastas y fundamentales en muchas áreas de la ingeniería y la ciencia.
+%         \item Comprender la DFT es esencial para el procesamiento moderno de señales.
+%     \end{itemize}    
+% \end{frame}    
+
+% \begin{frame}
+%     \frametitle{Preguntas}
+%     \begin{center}
+%         \Huge ¿Preguntas?
+%     \end{center}    
+% \end{frame}    
+
+
+
+% \section{Transformada Discreta de Fourier (DFT)}
+
+% \begin{frame}
+%     \frametitle{Transformada Discreta de Fourier (DFT)}
+%     \begin{itemize}
+%         \item La DFT es una herramienta fundamental en el procesamiento digital de señales.
+%         \item Convierte una señal en el dominio del tiempo en una representación en el dominio de la frecuencia.
+%         \item Se define como:
+%         \[
+%         X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j \frac{2\pi}{N} kn} \quad \text{para } k = 0, 1, \dots, N-1
+%         \]
+%         \item Donde \(X[k]\) es el coeficiente en el dominio de la frecuencia, \(x[n]\) es la señal en el dominio del tiempo, y \(N\) es el número de puntos en la secuencia.
+%     \end{itemize}
+% \end{frame}
+
+% \section{Transformada Rápida de Fourier (FFT)}
+
+% \begin{frame}
+%     \frametitle{Transformada Rápida de Fourier (FFT)}
+%     \begin{itemize}
+%         \item La FFT es un algoritmo eficiente para calcular la DFT.
+%         \item Reduce la complejidad computacional de \(O(N^2)\) a \(O(N \log N)\).
+%         \item Utiliza el enfoque de "divide y vencerás" para dividir la secuencia en subsecuencias más pequeñas y combinar los resultados de manera recursiva.
+%     \end{itemize}
+% \end{frame}
+
+
+% \section{Conclusión}
+
+% \begin{frame}
+%     \frametitle{Conclusión}
+%     \begin{itemize}
+%         \item La DFT y la FFT son herramientas fundamentales en el procesamiento digital de señales.
+%         \item Permiten analizar las componentes frecuenciales de una señal discreta.
+%         \item Las tareas propuestas en la práctica permiten aplicar los conceptos teóricos en un caso práctico de análisis de una señal de audio.
+%     \end{itemize}
+% \end{frame}
+
+\end{document}

@@ -1,0 +1,1012 @@
+\documentclass[handout]{beamer}
+\mode<presentation> {%
+	\usetheme[]{Boadilla}
+	\usecolortheme{orchid}
+	\setbeamercovered{transparent}
+	\setbeamersize{text margin left=0.7cm}
+  \setbeamersize{text margin right=0.7cm}
+  \setbeamertemplate{enumerate item}[square]
+  \setbeamertemplate{enumerate subitem}[circle]
+  \setbeamertemplate{enumerate subsubitem}[>]
+  \setbeamertemplate{itemize item}[square]
+  \setbeamertemplate{itemize subitem}[circle]
+  \setbeamertemplate{itemize subsubitem}[>]
+}
+
+
+\usepackage{pstricks}
+\usepackage{pst-node}
+\usepackage{bm}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{pifont}
+\usepackage{rotating}
+\usepackage{colortbl}
+\usepackage[framed]{mcode}
+\usepackage{verbatim}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.multipart,decorations.pathreplacing}
+\tikzstyle{bloque}=[rectangle,rounded corners=2pt,draw=black!60,fill=black!5,very thick,minimum size=5mm,align=center]%
+\tikzstyle{arrow}=[very thick,color=black!60]%
+
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+\definecolor{general}{rgb}{0.9 0.9 1}%
+\newrgbcolor{colorsistema}{0 1 1}
+\newrgbcolor{colorviolet}{0.9 0.8 1}
+
+\author[J. Chacón]{%[Author, Another] % (optional, use only with lots of authors)
+\textit{Ingeniería Electrónica de Comunicaciones }\\
+\vspace{0.6cm}
+\small Jesús Chacón Sombría}%\inst{1} \and S.~Another\inst{2}}
+
+
+\institute[DACYA. UCM] % (optional, but mostly needed)
+{
+  %\inst{1}%
+
+\footnotesize  Departamento de Arquitectura de Computadores y Automática.\\
+  Universidad Complutense de Madrid
+  }
+
+\date[Diseño de filtros] % (optional)
+{\footnotesize Curso 2025-2026}%{\today / Master}
+\subject{Talks}
+
+\pgfdeclareimage[height=0.75cm]{logo}{ucm}
+
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\newcommand{\MyLogo}{%
+\begin{textblock}{14}(116.0,0.6)
+  \pgfuseimage{logo}
+\end{textblock}
+}
+
+\makeatletter
+\numberwithin{section}{part}
+\AtBeginPart{
+\beamer@tocsectionumber=0\relax
+\frame{\partpage}
+}
+\makeatother
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+ \MyLogo
+  \oldmacro\hfill%
+}
+
+\AtBeginSection[]{}
+\AtBeginSubsection[]{}
+
+% \input{./Partes/Objetivos.tex}
+% \input{./Partes/FiltrosIdeales.tex}
+% \input{./Partes/FiltrosContinuos0.tex}
+% \input{./Partes/FiltrosContinuos1.tex}
+% \input{./Partes/FiltrosDiscretos.tex}
+% \input{./Partes/FiltrosOtros.tex}
+
+
+\subsection{Filtros IIR}
+
+
+% \subsection{Filtro paso alta, paso banda y supresores de banda}
+
+% \begin{frame}
+% \frametitle{Filtro paso alta, paso banda y supresores de banda I}
+
+%   \footnotesize
+%   \begin{itemize}
+%   \item Las funciones de transferencia $H(\hat s)$ de los filtros  paso alta, paso banda y supresores de banda se pueden obtener a partir de la función de transferencia de un filtro paso baja $H_{LP}(s)$ a través de una transformación espectral $s=F(\hat s)$.
+%   \begin{itemize}
+%     \footnotesize
+%     \item Filtro paso alta: \hspace{1.3cm}$s=\frac{\omega_p \hat \omega_p}{\hat s}$ \hspace{1.5cm} $-\omega \hat \omega=\omega_p \hat \omega_p$
+%     \item Filtro paso banda: \hspace{1.0cm} $s=\omega_p\frac{\hat s^2+\hat \omega_0^2}{\hat s (\hat \omega_{p2}-\hat \omega_{p1})}$
+%     \hspace{0.5cm}$\omega=\omega_p\frac{\hat\omega^2-\hat \omega_0^2}{\hat \omega (\hat \omega_{p2}-\hat \omega_{p1})}$
+
+%     \hspace{3.7cm}$\hat \omega_0^2=\hat \omega_{p1}\hat \omega_{p2}=\hat \omega_{s1}\hat \omega_{s2}$
+%     \item Filtro supresor de banda : $s=\omega_s\frac{\hat s (\hat \omega_{s2}-\hat \omega_{s1})}{\hat s^2+\hat \omega_0^2}$ \hspace{0.5cm}$\omega=\omega_s\frac{\hat \omega (\hat \omega_{s2}-\hat \omega_{s1})}{\hat \omega_0^2-\hat \omega^2}$
+
+%     \hspace{3.7cm}$\hat \omega_0^2=\hat \omega_{p1}\hat \omega_{p2}=\hat \omega_{s1}\hat \omega_{s2}$
+%   \end{itemize}
+
+% \item Pasar especificaciones del filtro deseado a paso bajo (suponiendo $\omega_p=1$).
+% \item Calcula la función de transferencia del filtro paso baja asociado al filtro paso baja.
+% \item La función de transferencia del filtro destino será $H(\hat s)=H_{LP}(s=F(\hat s))$ con la $F(\hat s)$ del filtro correspondiente
+% \end{itemize}
+
+% \end{frame}
+
+% \begin{frame}{Transformaciones espectrales}
+%   \begin{columns}
+%       \begin{column}{0.45\textwidth}
+%           \centering\small
+%           Paso bajo $\rightarrow$ Paso alto\\
+%           \[s=\frac{\omega_p\hat{\omega}_p}{\hat{s}}\Leftrightarrow\omega=\frac{-\omega_p\hat{\omega}_p}{\hat{\omega}}\]
+%       \end{column}
+%       \begin{column}{0.55\textwidth}
+%           \centering
+%           \includegraphics[height=4cm]{Figures/TE_1a.png}\\
+%       \end{column}
+%   \end{columns}
+%   \begin{center}
+%       \includegraphics[height=4.25cm]{Figures/TE_1b.png}%
+%       \includegraphics[height=4.25cm]{Figures/TE_1c.png}
+%   \end{center}
+% \end{frame}
+
+% \begin{frame}{Transformaciones espectrales}
+% \begin{columns}
+%   \begin{column}{0.45\textwidth}
+%       \centering\footnotesize
+%       Paso bajo $\rightarrow$ Paso banda\\
+%       \[s=\frac{\omega_p(\hat{s}^2+\hat{\omega_0}^2)}{\hat{s}(\hat{\omega}_{p_2}-\hat{\omega}_{p_1})} \Leftrightarrow
+%       \omega=\frac{\omega_p(\hat{\omega}^2-\hat{\omega}_0^2)}{\hat{\omega}(\hat{\omega}_{p_2}-\hat{\omega}_{p_1})}\]\\
+%   \end{column}
+%   \begin{column}{0.55\textwidth}
+%       \centering
+%       \includegraphics[height=4cm]{Figures/TE_2a.png}\\
+%   \end{column}
+% \end{columns}
+% \begin{center}
+%   \includegraphics[height=4.25cm]{Figures/TE_2b.png}%
+%   \includegraphics[height=4.25cm]{Figures/TE_2c.png}
+% \end{center}
+% \end{frame}
+
+
+% \begin{frame}{Transformaciones espectrales}
+% \begin{columns}
+%   \begin{column}{0.45\textwidth}
+%       \centering\footnotesize
+%       Paso bajo $\rightarrow$ Supresor de banda\\
+%       \[s=\omega_s\frac{\hat{s}(\hat{\omega}_{s_2}-\hat{\omega}_{s_1})}{\hat{s}^2+\hat{\omega_0}^2}\Leftrightarrow\omega=\omega_s\frac{\hat{\omega}(\hat{\omega}_{s_2}-\hat{\omega}_{s_1})}{\hat{\omega_0}^2-\hat{\omega}^2}\]\\
+%   \end{column}
+%   \begin{column}{0.55\textwidth}
+%       \centering
+%       \includegraphics[height=4cm]{Figures/TE_3a.png}\\
+%   \end{column}
+% \end{columns}
+% \begin{center}
+%   \includegraphics[height=4.25cm]{Figures/TE_3b.png}%
+%   \includegraphics[height=4.25cm]{Figures/TE_3c.png}
+% \end{center}
+% \end{frame}
+
+
+% \begin{frame}
+%   \frametitle{Ejemplo filtro paso alto continuo}
+  
+%   \footnotesize
+  
+%   \color{olivegreen}Diseñar un filtro de Butterworth paso altas con un borde paso banda a 4KHz, borde supresor de banda a 1KHz, rizo paso banda de 0.1dB y atenuación supresora de banda mínima 40dB.
+  
+%   \color{gray}
+%   \begin{itemize}
+%   \item $\left . \begin{array}{l}\hat w_p=2\pi \cdot 4000\\ \hat w_s=2\pi \cdot 1000\end{array}\right \}$ Suponemos $w_p=1 \rightarrow w_s=-\frac{w_p \hat w_p}{\hat w_s}=-4 $
+  
+%   \item Diseñar el filtro paso bajo con las ordenes correspondientes de Matlab
+  
+%   \item Convertir el filtro paso bajo a paso alta, con la relación espectral o la orden de Matlab  \alert{\texttt{[num,den]=lp2hp(num,den,$\hat{w}_p$)}}.
+  
+%   \end{itemize}
+  
+%   \begin{columns}[c]
+%   \begin{column}{5.1cm}
+%   \vspace{-0.5cm}
+%   \lstinputlisting{./Matlab/ButterCode.m}
+%   \end{column}
+%   \begin{column}{4cm}
+%   \vspace{0.1cm}
+%   \includegraphics[width=4cm]{./Figures/FiltroButterPA.eps}
+%   \end{column}
+%   \end{columns}
+  
+%   \end{frame}
+  
+  
+%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  
+%   \begin{frame}
+%   \frametitle{Ejemplo filtro paso banda continuo}
+  
+%   \vspace{-0.1cm}
+  
+%   \footnotesize
+  
+%   \color{olivegreen}Diseñar un filtro elíptico con borde de la banda de paso a 4KHz y 7KHz, bordes supresores de banda a 3KHz y 8KHz, rizo de la banda de paso 1dB y atenuación superiora de banda mínima a 22dB.
+  
+%   \vspace{-0.1cm}
+  
+%   \color{gray}
+%   \begin{itemize}
+  
+%   \scriptsize
+%   \item $\left . \begin{array}{ll}\hat w_{p1}=2\pi \cdot 4000 & \hat w_{p2}=2\pi \cdot 7000\\\hat w_{s1}=2\pi \cdot 3000 & \hat w_{s2}=2\pi \cdot 8000\end{array}\right \}$ $\begin{array}{l}w_0^2=(2\pi)^2 \cdot 28 \cdot 10^6\\ w_0^2=(2\pi)^2 \cdot 24 \cdot 10^6\end{array} $
+  
+  
+  
+%   $w_0^2\!=\!(2\pi)^2 \!\cdot \!24 \!\cdot 10^6 \rightarrow  \hat w_{p1}\!=\!\frac{w_0^2}{w_{p2}}\!=\!2\pi \frac{24}{7}10^3$ $\rightarrow \hat w_{p2}\!-\!\hat w_{p1}\!=\!2\pi(7\!-\!\frac{24}{7})10^3 \!=\!2\pi \frac{25}{7}10^3 $
+  
+%   \vspace{-0.1cm}
+  
+%   Suponemos $w_p=1 \rightarrow w_s=w_p\frac{\hat w^2-\hat w_0^2}{\hat w (\hat w_{p2}-\hat w_{p1})}=\frac{9-24}{3(7-24/7)}=-1.4$
+  
+%    \footnotesize
+  
+%   \item Diseñar el filtro paso bajo con las ordenes correspondientes de Matlab
+  
+%   \item Convertir el filtro paso bajo a paso alta, con la relación espectral o la orden de Matlab  \alert{\texttt{[num,den]=lp2bp(num,den,$\hat{w}_0$,$\hat{w}_{p2}-\hat w_{p1}$)}}.
+  
+%   \end{itemize}
+  
+%   \vspace{-0.1cm}
+  
+%   \begin{columns}[c]
+%   \begin{column}{5.1cm}
+%   \vspace{-0.5cm}
+%   \lstinputlisting{./Matlab/EllipCode.m}
+%   \end{column}
+%   \begin{column}{4cm}
+%   \vspace{0.1cm}
+%   \includegraphics[width=4cm]{./Figures/FiltroEllipPB.eps}
+%   \end{column}
+%   \end{columns}
+  
+%   \end{frame}
+  
+  
+%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+%   \begin{frame}
+%   \frametitle{Ejemplo filtro supresor de banda continuo}
+  
+%   \vspace{-0.1cm}
+  
+%   \footnotesize
+  
+%   \color{olivegreen}Diseñar un filtro de Chebyshev tipo II con borde de la banda de paso a 4KHz y 7KHz, bordes supresores de banda a 5KHz y 6KHz, rizo de la banda de paso 2dB y atenuación superiora de banda mínima a 30dB.
+  
+%   \vspace{-0.1cm}
+  
+%   \color{gray}
+%   \begin{itemize}
+  
+%   \scriptsize
+%   \item $\left . \begin{array}{ll}\hat w_{p1}=2\pi \cdot 4000 & \hat w_{p2}=2\pi \cdot 7000\\\hat w_{s1}=2\pi \cdot 5000 & \hat w_{s2}=2\pi \cdot 6000\end{array}\right \}$ $\begin{array}{l}w_0^2=(2\pi)^2 \cdot 28 \cdot 10^6\\ w_0^2=(2\pi)^2 \cdot 30 \cdot 10^6\end{array} $
+  
+  
+  
+%   $w_0^2\!=\!(2\pi)^2 \!\cdot \!28 \!\cdot 10^6 \rightarrow  \hat w_{s1}\!=\!\frac{w_0^2}{w_{s2}}\!=\!2\pi \frac{28}{6}10^3$ $\rightarrow \hat w_{s2}\!-\!\hat w_{s1}\!=\!2\pi(6\!-\!\frac{28}{6})10^3 \!=\!2\pi \frac{8}{6}10^3 $
+  
+%   \vspace{-0.1cm}
+  
+%   Suponemos $w_s=1 \rightarrow w_p=w_s\frac{\hat w_p (\hat w_{s2}-\hat w_{s1})}{\hat w_0^2-\hat w_p^2}=\frac{4(6-28/6)}{28-16}=0.44$
+  
+%    \footnotesize
+  
+%   \item Diseñar el filtro paso bajo con las ordenes correspondientes de Matlab
+  
+%   \item Convertir el filtro paso bajo a paso alta, con la relación espectral o la orden de Matlab  \alert{\texttt{[num,den]=lp2bs(num,den,$\hat{w}_0$,$\hat{w}_{s2}-\hat w_{s1}$)}}.
+  
+%   \end{itemize}
+  
+%   \vspace{-0.1cm}
+  
+%   \begin{columns}[c]
+%   \begin{column}{5.1cm}
+%   \vspace{-0.5cm}
+%   \lstinputlisting{./Matlab/ChebyCode.m}
+%   \end{column}
+%   \begin{column}{4cm}
+%   \vspace{0.1cm}
+%   \includegraphics[width=4cm]{./Figures/FiltroChebySB1.eps}
+%   \end{column}
+%   \end{columns}
+  
+%   \end{frame}
+  
+  
+%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  
+%   \begin{frame}
+%   \frametitle{Filtro continuos con Matlab}
+  
+%   \footnotesize
+%   \begin{itemize}
+%   \item Alternativamente se puede hacer todo en un único paso con las funciones de Matlab que ya conocemos.
+%   \item Veamos un ejemplo con las de Chebyshev de tipo II
+%   \begin{itemize}
+%   \item \alert{\texttt{[N,wn]=cheb2ord(wp,ws,alphap,alphas,'s');}}
+  
+%   \vspace{0.1cm}
+  
+%   {\footnotesize
+%   \hspace{0.5cm}Paso bajo: wp=3, ws=5;
+  
+%   \vspace{0.1cm}
+  
+%   \hspace{0.5cm}Paso alto: wp=5, ws=3;
+  
+%   \vspace{0.1cm}
+  
+%   \hspace{0.5cm}Paso banda: wp=[5 7], ws=[4 8];
+  
+%   \vspace{0.1cm}
+  
+%   \hspace{0.5cm}Eliminación de banda: wp=[5 7], ws=[5.5 6.5];}
+  
+%   \vspace{0.1cm}
+  
+%   \item\alert{\texttt{[num,den]=cheby2(N,alphas,wn,tipo,'s');}}
+  
+%   \vspace{0.1cm}
+  
+%   \hspace{0.5cm}tipo: 'low', 'high', nada, 'stop'
+%   \end{itemize}
+  
+%   \end{itemize}
+  
+%   \end{frame}
+  
+%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  
+  
+%   \begin{frame}
+%   \frametitle{Ejemplos de filtros continuos con Matlab I}
+  
+%   \vspace{-0.1cm}
+  
+%   \footnotesize
+  
+%   \color{olivegreen}Diseñar un filtro de Butterworth paso altas con un borde paso banda a 4KHz, borde supresor de banda a 1KHz, rizo baso banda de 0.1dB y atenuación supresora de banda mínima 40dB.
+  
+%   \vspace{-0.15cm}
+  
+%   \color{gray}
+  
+%   \begin{columns}[c]
+%   \begin{column}{6cm}
+%   \vspace{-0.5cm}
+%   \lstinputlisting{./Matlab/ButterCode2.m}
+%   \end{column}
+%   \begin{column}{4cm}
+%   \vspace{0.1cm}
+%   \includegraphics[width=3.8cm]{./Figures/FiltroButterPA.eps}
+%   \end{column}
+%   \end{columns}
+  
+%   \vspace{-0.15cm}
+  
+%   \color{olivegreen}Diseñar un filtro elíptico con borde de la banda de paso a 4KHz y 7KHz, bordes supresores de banda a 3KHz y 8KHz, rizo de la banda de paso 1dB y atenuación superiora de banda mínima a 22dB.
+  
+%   \vspace{-0.1cm}
+  
+%   \color{gray}
+  
+%   \begin{columns}[c]
+%   \begin{column}{6cm}
+%   \vspace{-0.5cm}
+%   \lstinputlisting{./Matlab/EllipCode2.m}
+%   \end{column}
+%   \begin{column}{4cm}
+%   \vspace{0.1cm}
+%   \includegraphics[width=3.8cm]{./Figures/FiltroEllipPB.eps}
+%   \end{column}
+%   \end{columns}
+  
+%   \end{frame}
+  
+%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
+  
+%   \begin{frame}
+%   \frametitle{Ejemplos de filtros continuos con Matlab II}
+  
+%   \vspace{-0.1cm}
+  
+%   \footnotesize
+  
+%   \color{olivegreen}Diseñar un filtro de Chebyshev tipo I supresor de banda con borde de la banda supresora de 2 KHz a 6 KHz, borde de la banda de paso de 1KHz a 7 KHz, rizo baso banda de 0.5dB y atenuación supresora de banda mínima 20dB.
+  
+%   \vspace{0.2cm}
+  
+  
+%   \color{gray}
+  
+%   \begin{columns}[c]
+%   \begin{column}{6cm}
+%   \vspace{-0.5cm}
+%   \lstinputlisting{./Matlab/ChebyCode2.m}
+%   \end{column}
+%   \begin{column}{4cm}
+%   \vspace{0.1cm}
+%   \includegraphics[width=3.8cm]{./Figures/FiltroChebySB.eps}
+%   \end{column}
+%   \end{columns}
+  
+%   \vspace{-0.15cm}
+  
+  
+  
+%   \end{frame}
+
+
+
+
+  
+
+
+\begin{frame}
+  \frametitle{Transformación del espacio de trabajo ($s \leftrightarrow z$)}
+  \centering Filtro continuo $H_a(s)$ $\rightarrow$  filtro discreto: $H(z)=H_a(s)|_{s=F(z)}$
+  \vspace{0.5cm}  
+  \begin{itemize}
+    \footnotesize
+    \item \alert{Invarianza al impulso: $z=e^{Ts}$ ($s=\frac{ln(z)}{T}$)}
+        \begin{itemize}\scriptsize
+          \item Asigna bandas de anchura $2\pi/T$ en $s$ con puntos del círculo unidad en $z$. 
+          \item Correspondencia muchos (continuo) a uno (discreto).
+          \item Por el aliasing, solo sirve para filtros paso baja y paso banda.
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{columns}
+      \begin{column}{6cm}
+        \includegraphics[height=3.5cm]{Figures/invarianza.png}
+      \end{column}
+      \begin{column}{5cm}
+        \includegraphics[trim=0cm 1cm 0cm 1cm,clip=true,angle=-90,width=5cm]{Figures/Impulso.png}
+      \end{column}
+    \end{columns}
+      % \begin{column}
+    % \end{columns}
+  % \item \alert{Aproximación por derivadas: $\:\:s= \frac{1-z^{-1}}{T} \: \: \leftrightarrow \:\: z=\frac{1}{1-T\cdot s}$}
+  %     \vspace{-0.1cm}
+  %     \begin{columns}[c]
+  %     \hspace{1cm}\begin{column}{7cm}
+  %     \begin{itemize}
+  %     \scriptsize
+  %     \item Se obtiene sustituyendo la $df(t)/dt$ por $[f(nT)-f((n-1)T)]/T$
+  %     \item Puntos del semiplano izquierdo s se relacionan con los puntos internos de la circunferencia pequeña. Se mantiene la estabilidad.
+  %     \item Los polos del filtro digital están confinados en la circunferencia pequeña: no se puede diseñar cualquier filtro digital.
+  %     \end{itemize}
+  %     \end{column}
+  %     \hspace{-0.5cm}\begin{column}{3.5cm}
+  %       \includegraphics[angle=-90,width=3.5cm]{Figures/Derivada.png}
+  %     \end{column}
+  %   \end{columns}
+    % \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Transformación del espacio de trabajo ($s \leftrightarrow z$)}
+  \centering Filtro continuo $H_a(s)$ $\rightarrow$  filtro discreto: $H(z)=H_a(s)|_{s=F(z)}$
+  
+  \vspace{0.4cm}
+  \begin{itemize}
+    \footnotesize
+    \item \alert{Transformada bilineal: $\:\:s=\frac{2}{T}\left ( \frac{1-z^{-1}}{1+z^{-1}}\right) \: \: \leftrightarrow \:\: z=\frac{1+T\cdot s/2}{1-T\cdot s/2}$}
+
+    \begin{columns}[T]
+      \hspace{1cm}\begin{column}{7.5cm}
+        \begin{itemize}
+          \vspace{0.1cm}
+          \scriptsize
+          % \item Se obtiene mediante la aplicación del método de integración numérica trapezoidal a la representación de la ecuación diferencial correspondiente a $H_a(s)$. T es el periodo del paso de integración.
+          \item El semiplano izquierdo $s$ va al círculo unidad en $z$.
+          \item Se puede utilizar para todos los filtros.
+          \item Relación en frecuencias: \alert{$\omega_a=\frac{2}{T}tan(\frac{\omega_d}{2})$}.
+        \end{itemize}
+      \end{column}
+      \begin{column}{4cm}
+        \includegraphics[trim=0cm 0cm 0cm 0cm, clip=true,angle=-90,width=2.5cm]{Figures/Bilineal.png}
+      \end{column}
+    \end{columns}
+
+    \begin{columns}[T]
+      \hspace{0.4cm}\begin{column}{11cm}
+      \begin{itemize}
+        \scriptsize
+        \item Relación entre las frecuencias continuas ($s=j\omega_a$) y discretas ($z=e^{j\omega_d}$)
+
+        $j\omega_a=\frac{2}{T}\left ( \frac{1-e^{-j\omega_d}}{1+e^{-j\omega_d}}\right)=\frac{2}{T}\left ( \frac{e^{j\omega_d/2}-e^{-j\omega_d/2}}{e^{j\omega_d/2}+e^{-j\omega_d/2}}\right)=\frac{2}{T} j \frac{sen(\omega_d/2)}{cos(\omega_d/2)}=j\frac{2}{T} tan(\frac{\omega_d}{2})$
+
+        Se cumple que  $\omega_d \!\in \![0,\pi] \leftrightarrow \omega_a \!\in\! [0,\infty)$; $\omega_d  \!\in\! [0,-\pi] \leftrightarrow \omega_a \!\in\! [0,-\infty)$
+        \color{black}
+        % \item Se produce un \emph{combado} de las frecuencias, asociado al comportamiento no lineal de la tangente.
+        \item \alert{Si hacemos T=2, las expresiones se simplifican.}
+      \end{itemize}
+      \end{column}
+    \end{columns}
+
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Diseño de filtros IIR paso bajo}
+\small
+\begin{enumerate}
+  \item Especificación del filtro deseado ($\color{blue}\omega_p,\alpha_p,\omega_s,\alpha_s$).
+  \item Precombado de frecuencias, $\color{blue}\omega_a=\frac{2}{T}tan(\omega_d/2)$.
+  \item Diseñar el filtro continuo $\color{blue}H_a(s)$.
+  \item Discretizar el filtro con la transformada bilineal, $\color{blue}s=\frac{2}{T}\left ( \frac{1-z^{-1}}{1+z^{-1}}\right)$ %para obtener la función de transferencia del filtro discreto.
+  \begin{itemize}
+  \item Con Matlab: \alert{\texttt{[numz,denz]=bilinear(nums,dens,1/T)}}.
+  \end{itemize}
+
+\item Representar la respuesta en frecuencia del filtro (no hay que normalizarlo).
+\begin{itemize}
+\item Con Matlab: \alert{\texttt{[Hw,w]=freqz(numz,denz)}}
+
+
+\end{itemize}
+
+\end{enumerate}
+
+\rule{12cm}{0.4pt}
+\footnotesize
+
+T=2 para simplificar las expresiones, hacen de la orden bilineal se llamen con tercer parámetro igual a 0.5.
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{frame}
+\frametitle{Ejemplo de diseño de filtro  IIR paso bajo}
+
+\footnotesize
+\color{olivegreen} Diseñar un IIR de Butterworth paso bajas que opera con una tasa de muestreo de 200 KHz, con una frecuencia de paso de 25KHz y una frecuencia supresora de 55KHz, con un rizo paso banda que no exceda los 0.5 dB y una atenuación mínima en la banda supresora de 15dB.
+\color{gray}
+\vspace{0.1cm}
+
+1)  Especificaciones del filtro continuo:
+
+\vspace{0.1cm}
+
+$\left . \begin{array}{l}w_{pd}=w_pT_s=2\pi 25/200=0.25\pi\\w_{sd}=w_sT_s=2\pi 55/200=0.55\pi\end{array}\right \}$ $\rightarrow \left . \begin{array}{l}w_{pa}=tan(w_{pd}/2)=0.4142\\w_{sa}=tan(w_{sd}/2)=1.1708\end{array}\right \}$
+
+\vspace{0.1cm}
+
+2) Cálculo del filtro continuo (utilizando expresiones/Matlab):
+
+\vspace{0.1cm}
+
+\hspace{0.3cm}\texttt{[N,wca]=buttord(0.4142,1.1708,.5,15,'s')}
+
+\vspace{0.1cm}
+
+\hspace{0.3cm}\texttt{[numc,denc]=butter(N,wca,'low','s')};
+
+\vspace{0.1cm}
+
+\begin{columns}[T]
+\begin{column}{7cm}
+3) Conversión al filtro discreto
+
+\vspace{0.1cm}
+
+\hspace{0.3cm}\texttt{[numd,dend]=bilinear(numc,denc,0.5)}
+
+\vspace{0.1cm}
+
+4) Representación del espectro del filtro:
+
+\vspace{0.1cm}
+
+\hspace{0.3cm}\texttt{[Hw,w]=freqz(numz,denz)}
+
+\vspace{0.1cm}
+
+\hspace{0.3cm}\texttt{plot(w/pi,abs(Hw))}
+\end{column}
+\begin{column}{4cm}
+
+\includegraphics[width=4cm]{Figures/FiltroDiscretoPB_Butter.eps}
+\end{column}
+\end{columns}
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Filtros  IIR paso alto, paso banda, supresor de banda}
+\small
+\vspace{-0.4cm}
+  \begin{enumerate}
+  \item Precombado de frecuencias ($\omega_a=\frac{2}{T}tan(\omega_d/2)$).% para obtener la especificación en frecuencias del filtro continuo $H_a(s)$.
+  \vspace{-0.1cm}
+  \item Convertir las especificaciones de $H_a(s)$ en paso bajo $H_{LP}(s)$.
+  \vspace{0.1cm}
+  \begin{columns}[T]
+    \hspace{0.8cm}\begin{column}{2cm}
+    \scriptsize
+    Paso alto:
+
+    \vspace{0.2cm}
+
+    $s=\frac{\omega_p \hat \omega_p}{\hat s}$
+
+    \vspace{0.2cm}
+
+    $- \omega \hat \omega=\omega_p \hat \omega_p$
+    \end{column}
+    \hspace{-0.8cm}\begin{column}{3cm}
+    \scriptsize
+    Paso banda:
+
+    \vspace{0.1cm}
+
+    $s=\omega_p\frac{\hat s^2+\hat \omega_0^2}{\hat s (\hat \omega_{p2}-\hat \omega_{p1})}$
+
+    $\omega=\omega_p\frac{\hat \omega^2-\hat \omega_0^2}{\hat \omega (\hat \omega_{p2}-\hat \omega_{p1})}$
+
+    $\hat \omega_0^2=\hat \omega_{p1}\hat \omega_{p2}=\hat \omega_{s1}\hat \omega_{s2}$
+
+    \end{column}
+    \hspace{-0.8cm}\begin{column}{3cm}
+    \scriptsize
+    Supresor de banda:
+
+    \vspace{0.1cm}
+
+    $s=\omega_s\frac{\hat s (\hat \omega_{s2}-\hat \omega_{s1})}{\hat s^2+\hat \omega_0^2}$
+
+    $\omega=\omega_s\frac{\hat \omega (\hat \omega_{s2}-\hat \omega_{s1})}{\hat \omega_0^2-\hat \omega^2}$
+
+    $\hat \omega_0^2=\hat \omega_{p1}\hat \omega_{p2}=\hat \omega_{s1}\hat \omega_{s2}$
+
+    \end{column}
+  \end{columns}
+
+  \item Diseñar el filtro continuo paso bajas $H_{LP}(s)$
+  
+  \item Convertir el filtro paso baja $H_{LP}(s)$ en el filtro destino $H_a(s)$.
+
+  \item Discretizar $H_a(s)$ con la bilineal ($s=\frac{2}{T}\left ( \frac{1-z^{-1}}{1+z^{-1}}\right)|_{T=2}$)
+  \[
+    H(z) = H_a\left(\frac{1-z^{-1}}{1+z^{-1}}\right)
+  \]
+
+  \end{enumerate}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Ejemplo de un filtro  IIR  paso alto}
+\footnotesize
+
+\footnotesize
+\color{olivegreen} Diseñar con el procedimiento 1 un IIR de Chebyshev Tipo 1 paso altas con las siguientes características: borde de la frecuencia de paso 700Hz, borde de la banda supresora 500Hz, rizo paso banda 1dB, atenuación mínima banda supresora 32 dB, frecuencia de muestreo 2KHz.
+\color{gray}
+\vspace{0.1cm}
+
+1)  Obtener las especificaciones del filtro continuo paso alta $H_a(s)$:
+
+$\left . \begin{array}{l}\omega_{pd}=\omega_pT_s=2\pi 700/2000=0.7\pi\\\omega_{sd}=\omega_sT_s=2\pi 500/2000=0.5\pi\end{array}\right \}$ $\rightarrow \left . \begin{array}{l}\hat \omega_{pa}=tan(\omega_{pd}/2)=1.9626\\\hat \omega_{sa}=tan(\omega_{sd}/2)=1.0\end{array}\right \}$
+
+\vspace{0.1cm}
+
+2) Obtener las especificaciones del filtro continuo paso baja $H_{LP}(s)$:
+
+\vspace{0.1cm}
+
+
+\hspace{0.25cm}$\omega\hat \omega=\omega_{pa}\hat \omega_{pa}$. Suponiendo que $\omega_{pa}=1 \rightarrow \omega_{sa}=\hat \omega_{pa}/\hat \omega_{sa}=1.9626$.
+
+\vspace{0.1cm}
+
+\begin{columns}[T]
+ \hspace{0.2cm}\begin{column}{7.7cm}
+3) Diseño filtro Chebyshev Tipo 1
+
+\vspace{0.1cm}
+
+\hspace{0.25cm}\texttt{[N,wn]=cheb1ord(1,1.9626,1,32,'s')}
+
+\hspace{0.25cm}\texttt{[numlp,denlp]=cheby1(N,1,wn,'low','s')}
+
+\vspace{0.1cm}
+
+ 4) Seguir el procedimiento 1:
+
+ \vspace{0.1cm}
+
+ \hspace{0.25cm}\texttt{[numhp,denhp]=lp2hp(numlp,denlp,1.9626)}
+
+\hspace{0.25cm}\texttt{[numz,denz]=bilinear(numhp,denhp,0.5);}
+ \end{column}
+ \hspace{-0.5cm}\begin{column}{3.8cm}
+ \includegraphics[width=3.8cm]{Figures/FiltroDiscretoPA_Cheby1.eps}
+ \end{column}
+ \end{columns}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{frame}
+\frametitle{Ejemplo de un filtro  IIR paso banda}
+\footnotesize
+
+\footnotesize
+\color{olivegreen} Diseñar con el procedimiento 1 un IIR de Butterworth paso banda con las siguientes características: bordes normalizados de la banda de paso 0.45$\pi$ y 0.65$\pi$, bordes normalizados de la banda supresora 0.3$\pi$ y 0.75$\pi$, rizo paso banda 1dB, atenuación mínima banda supresora 40 dB.
+\color{gray}
+\vspace{0.1cm}
+
+1)  Características del filtro continuo paso banda $H_a(s)$, usando $\hat w_{a}=tan(w_{d}/2)$  :
+
+$\begin{array}{ll}w_{p1d}=0.45\pi \rightarrow \hat w_{p1a}=0.8541 &\:\: w_{p2d}=0.65\pi \rightarrow \hat w_{p2a}=1.6319 \\
+w_{s1d}=0.3\pi \rightarrow \hat w_{s1a}=0.5095 &\:\: w_{s2d}=0.75\pi \rightarrow \hat w_{s2a}=2.4142
+\end{array}$
+
+\vspace{0.1cm}
+
+2) Obtener las especificaciones del filtro continuo paso baja $H_{LP}(s)$:
+
+\vspace{0.1cm}
+
+$\left . \begin{array}{l}\hat w_0^2 =\hat w_{p1a}\hat w_{p2a}=1.3938\\w_0^2 =\hat w_{s1a}\hat w_{s2a}=1.23
+\end{array} \right \}$ $\rightarrow \hat w_{s1a}=\frac{1.3938}{w_{s2a}}=0.5772$, $\hat w_0=1.1806$
+
+
+\hspace{0.25cm}Si $w_p=1$, $w_{s}=w_p\frac{\hat w_{s1a}^2-\hat w_0^2}{\hat w_{s1a} (\hat w_{p2}-\hat w_{p1})}=2.3617$
+
+
+\vspace{0.1cm}
+
+\begin{columns}[T]
+ \hspace{0.2cm}\begin{column}{7.7cm}
+3) Diseño filtro Butterworth
+
+\vspace{0.1cm}
+
+\hspace{0.25cm}\texttt{[N,wn]=buttord(1,2.3617,1,40,'s')}
+
+\hspace{0.25cm}\texttt{[nlp,dlp]=butter(N,wn,'low','s')}
+
+\vspace{0.1cm}
+
+ 4) Seguir el procedimiento 1:
+
+ \vspace{0.1cm}
+  \hspace{0.28cm}\texttt{banda=1.6139-0.8541;}
+
+ \hspace{0.25cm}\texttt{[npb,dpb]=lp2bp(nlp,dlp,1.1806,banda)}
+
+\hspace{0.25cm}\texttt{[numz,denz]=bilinear(npd,dpd,0.5);}
+ \end{column}
+ \hspace{-0.5cm}\begin{column}{3.8cm}
+ \includegraphics[width=3.8cm]{Figures/FiltroDiscretoPBanda_Butter.eps}
+ \end{column}
+ \end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Relaciones espectrales discretas}
+
+\begin{itemize}
+\footnotesize
+\item La transformación espectral discreta $z=F(\hat z)$ permite obtener a partir de un filtro discreto paso bajo $H_{LP}(z)$  otro filtro discreto$^1$ (paso alto, paso banda, supresor de banda) $H(\hat z)=H_{LP}(z)|_{z=F(\hat z)}$.
+\begin{itemize}
+\footnotesize
+
+\item Filtro paso alta: $z^{-1}=-\frac{\hat z^{-1}+\lambda}{1+\lambda \hat z^{-1}}$, con
+$\lambda=-\frac{cos((w_c-	\hat w_c)/2)}{cos((w_c+	\hat w_c)/2)}$
+
+
+
+\item Filtro paso banda: $z^{-1}=-\frac{\hat z^{-2}-\frac{2\lambda \rho}{\rho+1}\hat z^{-1}+\frac{\rho-1}{\rho+1}}{\frac{\rho-1}{\rho+1}\hat z^{-2}-\frac{2\lambda \rho}{\rho+1}\hat z^{-1}+1}$,
+
+$\lambda=\frac{cos((\hat w_{c2}+	\hat w_{c1})/2)}{cos((\hat w_{c2}-	\hat w_{c1})/2)}$, $\rho=\cot((\hat w_{c2}-\hat w_{c1})/2)\tan(w_c/2)$
+
+\item Filtro supresor banda: $z^{-1}=\frac{\hat z^{-2}-\frac{2\lambda}{\rho+1}\hat z^{-1}+\frac{1-\rho}{\rho+1}}{\frac{1-\rho}{\rho+1}\hat z^{-2}-\frac{2\lambda}{\rho+1}\hat z^{-1}+1}$,
+
+$\lambda=\frac{cos((\hat w_{c2}+\hat w_{c1})/2)}{cos((\hat w_{c2}-\hat w_{c1})/2)}$, $\rho=\tan((\hat w_{c2}-\hat w_{c2})/2)\tan(w_c/2)$
+
+
+\end{itemize}
+
+\item Con Matlab$^{2}$
+\begin{itemize}
+\footnotesize
+\item \texttt{[npa,dpa]=iirlp2hp(numlp,denlp,wplp,wphp)}
+\item \texttt{[npa,dpa]=iirlp2bp(numlp,denlp,wplp,[wp1d,wp2d])}
+\item \texttt{[nbs,dbs]=iirlp2sp(numlp,denlp,wslp,[ws1d,ws2d])}
+\end{itemize}
+\end{itemize}
+
+\vspace{-0.2cm}
+\rule{10cm}{0.4pt}
+
+\scriptsize
+$^1$También existe una relación espectral que permite transformar un filtro paso bajo en otro paso bajo, que se utiliza para cambiar las especificaciones en frecuencia de un filtro paso baja ya diseñado.
+
+$^2$ Las frecuencias tienen que estar  normalizadas entre $[0,1]$ que se corresponden a los valores discretos entre $[0,\pi]$
+
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Ejemplo de un filtro  IIR paso banda}
+\footnotesize
+
+\footnotesize
+\color{olivegreen} Diseñar con el procedimiento 2 un IIR de Butterworth paso banda con las siguientes características: bordes normalizados de la banda de paso 0.45$\pi$ y 0.65$\pi$, bordes normalizados de la banda supresora 0.3$\pi$ y 0.75$\pi$, rizo paso banda 1dB, atenuación mínima banda supresora 40 dB.
+\color{gray}
+\vspace{0.1cm}
+
+1)  Características del filtro continuo paso banda $H_a(s)$, usando $\hat w_{a}=tan(w_{d}/2)$  :
+
+$\begin{array}{llll}\hat w_{p1a}=0.8541 &\hat w_{p2a}=1.6319  & \hat w_{s1a}=0.5095 & \hat w_{s2a}=2.4142
+\end{array}$
+
+\vspace{0.1cm}
+
+2) Obtener las especificaciones del filtro continuo paso baja $H_{LP}(s)$:
+
+\vspace{0.1cm}
+
+\hspace{0.25cm}$\hat w_{s1a}=\frac{1.3938}{w_{s2a}}=0.5772$, $\hat w_0=1.1806$, $w_p=1$, $w_{s}=2.3617$
+
+
+\vspace{0.1cm}
+
+\begin{columns}[T]
+ \hspace{0.2cm}\begin{column}{7.7cm}
+3) Diseño filtro Butterworth
+
+\vspace{0.1cm}
+
+\hspace{0.25cm}\texttt{[N,wn]=buttord(1,2.3617,1,40,'s')}
+
+\hspace{0.25cm}\texttt{[nlp,dlp]=butter(N,wn,'low','s')}
+
+\vspace{0.1cm}
+
+ 4) Seguir el procedimiento 2:
+
+ \vspace{0.1cm}
+
+  \hspace{0.25cm}\texttt{[nlpz,dlpz]=bilinear(nlp,dlp,0.5);}
+
+\visible<2->{
+  \hspace{0.25cm}\texttt{[Hlpw,w]=freqz(nlpz,dlpz);}
+
+  \hspace{0.25cm}\texttt{plot(w/pi,abs(Hw))}
+
+   \hspace{0.25cm}\texttt{plot(w/pi,10\^ (-1/20)*ones(length(w),1))};
+
+  }
+
+ \visible<3->{
+  \hspace{0.25cm}\texttt{a=ginput(1);} \hspace{0.25cm}\texttt{wp=a(1);}}
+
+  \hspace{0.25cm}\texttt{wpasod=[0.45,0.65];}
+
+
+ \hspace{0.25cm}\texttt{[nz,dz]=irrlp2bp(nlpz,dlpz,wp,wpasod)}
+
+
+ \end{column}
+ \hspace{-0.5cm}\begin{column}{3.8cm}
+\only<2-3|handout=0>{\includegraphics[width=3.8cm]{Figures/FiltroDiscretoPBanda_Butter21.eps}}
+\visible<4->{\includegraphics[width=3.8cm]{Figures/FiltroDiscretoPBanda_Butter22.eps}}
+
+ \end{column}
+ \end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+\frametitle{Diseño de filtros  IIR con Matlab}
+\footnotesize
+\begin{itemize}
+\item Matlab permite realizar directamente el diseño de los filtros discretos, sin necesidad de realizar los pasos intermedios.
+\item Para ello, hay que poner en las funciones que ya conocemos las frecuencias normalizadas [0,1] y eliminar la llamada a 's'.
+
+\item Veamos un ejemplo con las funciones de Chebyshev de tipo II
+\begin{itemize}
+\item \alert{\texttt{[N,wn]=cheb2ord(wp,ws,alphap,alphas);}}
+
+\vspace{0.1cm}
+
+{\footnotesize
+\hspace{0.5cm}Paso bajo: wp=0.3, ws=0.5;
+
+\vspace{0.1cm}
+
+\hspace{0.5cm}Paso alto: wp=0.5, ws=0.3;
+
+\vspace{0.1cm}
+
+\hspace{0.5cm}Paso banda: wp=[0.5 0.7], ws=[0.4 0.8];
+
+\vspace{0.1cm}
+
+\hspace{0.5cm}Eliminación de banda: wp=[0.5 0.7], ws=[0.55 0.65];}
+
+\vspace{0.1cm}
+
+\item\alert{\texttt{[num,den]=cheby2(N,alphas,wn,tipo);}}
+
+\vspace{0.1cm}
+
+\hspace{0.5cm}tipo: 'low', 'high', nada, 'stop'
+
+\end{itemize}
+
+
+\item Los resultados de Matlab coinciden con los obtenidos a través del procedimiento 1.
+
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}
+\frametitle{Ejemplo de un filtro  IIR paso banda}
+\footnotesize
+
+\footnotesize
+\color{olivegreen} Diseñar directamente con Matlab un IIR de Butterworth paso banda con las siguientes características: bordes normalizados de la banda de paso 0.45$\pi$ y 0.65$\pi$, bordes normalizados de la banda supresora 0.3$\pi$ y 0.75$\pi$, rizo paso banda 1dB, atenuación mínima banda supresora 40 dB.
+\color{gray}
+\vspace{0.1cm}
+
+
+\vspace{0.1cm}
+
+\begin{columns}[T]
+\begin{column}{6cm}
+\lstinputlisting{./Matlab/ButterDCode.m}
+
+
+ \end{column}
+\hspace{-0.5cm} \begin{column}{4.5cm}
+\includegraphics[width=4.5cm]{Figures/FiltroDiscretoPBanda_ButterMatlab.eps}
+
+ \end{column}
+ \end{columns}
+
+\end{frame}
+
+\end{document}

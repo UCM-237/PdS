@@ -1,0 +1,839 @@
+\begin{frame}\frametitle{Muestreo periódico}
+  \small
+  \begin{itemize}
+    \item Existen diferentes métodos para muestrear una señal continua $x_c(t)$
+    \vspace{0.0cm}
+    \visible<2->{
+    \item Sin embargo, el más común es el \alert{muestreo periódico} o uniforme:}\\
+    \vspace{0.1cm}
+    \visible<2->{
+    \hspace{2cm} \alert{$t=nT_s$ \hspace{1cm}  $\rightarrow$
+    \hspace{1cm} $x_d(n)=x_c(nT_s)$}}
+    \vspace{-0.1cm}
+    \begin{columns}[c]
+      \hspace{0.5cm}\begin{column}{4cm}
+        \vspace{0.3cm}
+        \only<1-2|handout:0>{\includegraphics[width=4.5cm]{./Figures/Muestreo1.eps}}
+        \only<3->{\includegraphics[width=4.5cm]{./Figures/Muestreo2.eps}}
+      \end{column}
+      \hspace{-0.5cm}\begin{column}{6cm}
+        \visible<4->{
+        \begin{itemize}
+        \item El tiempo $T_s$ entre dos muestras es constante y se llama periodo de muestreo.
+        \item $F_s=\frac{1}{T_s}$ se llama frecuencia de muestreo.
+        \item Como las variables $t$ (tiempo continuo) y $n$ (tiempo discreto) están relacionadas por $t=nT_s$,
+        \end{itemize}}
+      \end{column}
+    \end{columns}
+    \visible<4->{
+    para muestrear de forma periódica cualquier señal continua $x_c(t)$ basta con evaluarla en los instantes de muestreo $x_d(n)=x_c(nT_s)$}
+  \end{itemize}
+  \visible<5->{
+  \hrule
+  \vspace{0.2cm}
+  \color{gray}
+  \footnotesize
+  La señal muestreada se puede representar respecto a $n$ o a $T_s n$.}
+\end{frame}
+
+
+\begin{frame}\frametitle{Muestreo y reconstrucción}
+  \begin{itemize}
+    \item \alert{Analizamos un caso sencillo:}
+    \begin{itemize}
+      \item<1-> Muestreamos $x(t)=cos(\omega_0 t)$ con un periodo $T_s$ (\color{blue}$t=nT_s$\color{black}).
+      \item<2-> ¿Como elegimos el valor de $T_s$? ¿Qué importancia tiene?
+      \item<3-> La versión discreta de $x(t)$ es \color{blue}$x_d[n]=cos(\omega_0 T_s n)$\color{black}.
+    \end{itemize}
+    \item \alert{¿Qué ocurre al pasar del mundo continuo al discreto?}
+    \begin{itemize}
+      \item Recordemos que, en continuo, $\omega_1\neq\omega_2 \Rightarrow cos(\omega_1 )\neq cos(\omega_2 t)$.
+      \item Sin embargo, en discreto para $k=0,1,2,3,...~$:
+      \color{blue}\[\omega_k = \omega_0 T_s + 2\pi k \Rightarrow cos(\omega_k n) = cos(\omega_0 T_s n)\]
+    \end{itemize}
+  \end{itemize}
+  \begin{alertblock}{Fenómeno de aliasing}
+    \centering Existen infinitas señales continuas que, al muestrear con periodo $T_s$, generan la misma secuencia de muestras.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}\frametitle{Muestreo y reconstrucción}
+  \begin{itemize}
+    \item \alert{¿Por qué se denomina \emph{aliasing}?}
+    \begin{itemize}
+      \item<1-> Cada una de las frecuencias continuas \color{blue}$\omega_k=\omega_0 + \frac{2\pi}{T_s} k$ \color{black} es un \color{blue}\emph{alias}\color{black}.
+      \item<2-> Si $|\omega Ts|> \pi$, entonces $|\omega Ts - 2\pi k|\geq\pi$ para algún $k$.
+      \item<3-> Es decir, existe una señal de frecuencia más baja que genera las misma secuencia de muestras para el periodo de muestreo $T_s$.
+    \end{itemize}
+  \end{itemize}
+  \begin{alertblock}{Alias fundamental}
+    \centering Llamamos \color{blue}\emph{alias fundamental} \color{black}a la señal de frecuencia más baja ($\omega_0$) de entre las que generan la misma secuencia de muestras ($x[n]$).
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}\frametitle{Ejemplos de aliasing en señales sinusoidales I}
+  \small\hspace{1.9cm}\alert{$x_d(n)=x_c(nT_s)=sen(w_cT_sn+\phi)=sen(w_dn+\phi)$}
+  \vspace{-0.1cm}
+  
+  \begin{itemize}
+    \footnotesize
+    \item \color{olivegreen} ¿Cual es el alias fundamental de  $x_c(t)=sen(\frac{2\pi}{10}t)$ cuando el periodo de muestreo es de 2s? \color{gray}\\
+    \vspace{0.1cm}$w_d=\frac{2\pi}{10} \cdot 2=\frac{4\pi}{10}$.\\
+    \vspace{0.1cm}Como $|w_d|<\pi$ ya tenemos el alias fundamental.
+  \end{itemize}
+
+  \vspace{-0.5cm}
+  \begin{columns}[c]
+    \begin{column}{6.8cm}\footnotesize
+      \begin{itemize}
+        \item \color{olivegreen} ¿Cual es el alias fundamental de $x_c(t)=sen(\frac{2\pi}{10/6}t)$ cuando el periodo de muestreo es de $2s$ \color{gray}\\
+        $w_d=\frac{2\pi}{10/6} \cdot 2=\frac{24\pi}{10}$.\\
+        Como $|w_d|>\pi$ tenemos que obtener el alias fundamental.\\
+        $w_{d2}=\frac{24\pi}{10}-2\pi=\frac{4\pi}{10}$.\\
+        $w_{c2}=w_{d2}/T_s=\frac{2\pi}{10}$. Por lo tanto, el alias fundamental es el que se obtiene en la tarea anterior.  
+      \end{itemize}
+    \end{column}\hspace{-0.4cm}
+  \begin{column}{4.5cm}
+  {\includegraphics[width=4.5cm]{./Figures/AliasBasic3.eps}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Ejemplos de aliasing de señales sinusoidales II}\small
+  \hspace{1.9cm}
+  \alert{$x_d(n)=x_c(nT_s)=sen(w_cT_sn+\phi)=sen(w_dn+\phi)$} 
+  \vspace{-0.1cm} 
+  \begin{itemize}\footnotesize
+    \item \color{olivegreen} ¿Cual es el alias fundamental de $x_c(t)=3 sen(\frac{2\pi}{5}t)+ sen(\frac{2\pi}{3}t)$ cuando se muestrea con un periodo de 2s? \color{gray}
+  \end{itemize}
+
+  \begin{columns}[c]
+    \begin{column}{4.6cm}
+      \includegraphics[width=4.5cm]{./Figures/AliasEj3_2.eps}
+    \end{column}
+    \begin{column}{6.2cm}\color{gray}\footnotesize
+      $w_{c1}=\frac{2 \pi}{5}$ $\rightarrow w_{d1}=\frac{4 \pi}{5}$\\
+      \vspace{0.1cm}
+      $w_{c2}=\frac{2 \pi}{3}$ $\rightarrow  w_{d2}=\frac{4 \pi}{3}$\\
+      \vspace{0.1cm}  
+      $|w_{d1}|<\pi$. No hay que calcular su alias fundamental.\\
+      \vspace{0.1cm}
+      $|w_{d2}|>\pi$. Hay que calcular su alias fundamental.\\
+      \vspace{0.1cm}
+      $w'_{d2}=\frac{4 \pi}{3}-2\pi=\frac{-2 \pi}{3}$
+      \vspace{0.1cm}
+      $w'_{c2}=\frac{w'_{d2}}{T_s}=\frac{- \pi}{3}$
+      \vspace{0.1cm}
+      $x'_c(t)=3 sen(\frac{2\pi}{5}t)+ sen(\frac{-\pi}{3}t)$
+      \vspace{0.1cm}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Muestreo y reconstrucción}
+  {\hspace{0.8cm} \alert{¿Es posible reconstruir totalmente una señal muestreada?} }
+  \vspace{0.2cm}
+  \visible<4->{
+  \hspace{5cm}\alert{¿$x_a(t)=y_a(t)$?}}
+  \vspace{0.3cm}
+  \begin{columns}[T]
+    \begin{column}{5cm}\footnotesize
+      \alert{De forma general, no es posible.}\\
+      \vspace{0.3cm} 
+      Sin embargo en algunos casos se puede reconstruir idealmente la señal o una señal muy parecida.
+    \end{column}
+    \begin{column}{5cm}
+      \includegraphics[width=4cm]{./Figures/MuestreoRec4.eps}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Análisis en frecuencia del muestreo}
+  \begin{block}{Propiedad de muestreo de $\delta(t)$}
+    \centering$x(t_0)=\int_{-\infty}^{\infty}x(\tau)\delta(t_0-\tau)d\tau~\quad~x(t)=\int_{-\infty}^{\infty}x(\tau)\delta(t-\tau)d\tau$
+  \end{block}
+  \alert{Caracterización del muestreo mediante $\delta(t)$}
+  \begin{itemize}
+    \item Representamos el proceso de muestrear periódicamente una señal mediante un tren de impulsos $p(t)=\substack{\infty\\\sum\\n=-\infty}{\delta(t-n T_s)}$. 
+    \item Entonces, la señal muestreada es \[x_d(t)=x(t)p(t)=\substack{\infty\\\sum\\n=-\infty}{x(t)\delta(t-n T_s)}\]
+  \end{itemize}
+  \begin{alertblock}{Visión continua del muestreo}\centering
+    Aunque $x_d(t)$ es la versión muestreada de $x(t)$, es importante\\recalcar que $x_d(t)$ sigue siendo una señal de tiempo continuo.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}\frametitle{Análisis en frecuencia del muestreo}
+  \begin{block}{Recuerda...}
+    \begin{itemize}
+      \item Transformada de Fourier de una señal periódica\\[0.5ex]
+    $c[k]=\frac{1}{T}\int_T x(t)\mathrm{e}^{-\frac{2\pi}{T} k t}dt \Rightarrow$
+    $X(\omega)=\substack{\infty\\\sum\\n=-\infty} 2\pi c[k]\delta(\omega- k \frac{2\pi}{T})$
+    \item Propiedad de convolución\\[0.5ex]
+    $x_d(t)=x(t)p(t)~\Rightarrow~X(\omega)=\frac{1}{2\pi}\int_{-\infty}^{\infty}{X_d(\Omega)P(\omega - \Omega)}d\Omega$
+    \end{itemize}
+  \end{block}
+
+  \begin{itemize}
+    \item El tren de impulsos es una señal periódica con periodo $T_s$.
+    \item Su desarrollo en CFS es: $c[k]=\frac{1}{T_s}\int_{-T_s/2}^{T_s/2}\delta(t)\mathrm{e}^{\frac{2\pi}{T_s} k t}dt=\frac{1}{T_s}$
+    \item Su transformada de Fourier es \color{blue}$P(\omega)=\substack{\infty\\\sum\\n=-\infty}\frac{2\pi}{T_s}\delta(\omega- k \frac{2\pi}{T_s})$\color{black}
+  \begin{alertblock}{La TF del tren de impulsos es otro tren de impulsos}\centering
+    $\substack{\infty\\\sum\\n=-\infty}\delta(t - n T_s) \Leftrightarrow
+    \frac{2\pi}{T_s}\substack{\infty\\\sum\\n=-\infty}\delta(\omega- k \frac{2\pi}{T_s})$
+  \end{alertblock}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Análisis en frecuencia del muestreo}
+  \begin{itemize}
+    \item Entonces, la CTFT de la señal muestreada es: \[X_d(\omega)=\frac{1}{2\pi}\int_{-\infty}^{\infty}X(\omega - \Omega)P(\Omega)d\Omega=\frac{1}{T_s}\substack{\infty\\\sum\\n=-\infty}X(\omega- k \frac{2\pi}{T_s})\]
+    \item Convolución del espectro de la señal original y el tren de impulsos.
+  \end{itemize}
+  \begin{alertblock}{El espectro se escala y se replica infinitas veces}
+    \vspace{0.2cm}
+    \[X_d(\omega)=\frac{1}{T_s}\substack{\infty\\\sum\\n=-\infty}X(\omega- k \frac{2\pi}{T_s})\]
+    \vspace{0.1cm}
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}\frametitle{Conceptos importantes}
+  \begin{itemize}
+    \item \alert{Diferencia entre procesamiento analógico y digital}
+    \item \alert{Procesador de Señales Digitales (DSP)}
+    \begin{itemize}
+      \item Esquema y componentes
+      \item Necesidad de muestreo y reconstrucción
+    \end{itemize}
+    \item \alert{Muestreo periódico}
+    \begin{itemize}
+      \item Fenómeno de aliasing
+      \item Análisis en frecuencia del muestreo
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+% \subsection{Señales de banda limitada}
+
+% \begin{frame}
+% \frametitle{Análisis en frecuencia del muestreo ideal I}
+
+% \begin{columns}[c]
+% \begin{column}{7cm}
+% \footnotesize
+
+
+% \begin{itemize}
+
+
+% \item \alert{Suponemos que tenemos una señal continua $x_c(t)$ de banda en frecuencia limitada ($X_c(jw)=0$ para $|w|>w_M$)}
+
+% \vspace{0.5cm}
+
+% \visible<2->{
+
+% \item Vamos a realizar el análisis en frecuencia de la señal muestreada, teniendo en cuenta el espectro de la señal continua. }
+
+% \begin{itemize}
+
+% \footnotesize
+
+% \vspace{-0.1cm}
+% \visible<3->{
+% \item Señal discreta: $x_d(n)=x_c(T_sn)$
+
+% \vspace{0.2cm}}
+
+% \visible<4->{
+% \item Visión continua de la señal discreta (\alert{muestreo ideal, a través de la $\delta(\cdot)$}):
+
+% \vspace{0.2cm}
+% \hspace{0.5cm}	$x_p(t)\!=\!\sum_{k=-\infty}^{\infty}\!x_c(t)\delta(t-kT_s)\!=$
+
+% \vspace{0.2cm}
+% \hspace{1.2cm}	$=\!x_c(t)\!\cdot \! \sum_{k=-\infty}^{\infty}\! \!\delta(t-kT_s)=$
+
+% \vspace{0.2cm}
+% \hspace{1.2cm}	$\!=\!x_c(t)\!\cdot\! p(t)$
+% }
+
+% \end{itemize}
+% \end{itemize}
+% \end{column}
+% \begin{column}{5cm}
+% \vspace{-0.3cm}
+% \includegraphics[width=5cm]{./Figures/Muestreo0.ps}
+% \vspace{-1.5cm}
+% \visible<3->{
+% \includegraphics[width=5cm]{./Figures/Muestreo1.ps}}
+% \end{column}
+% \end{columns}
+% \end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% \begin{frame}
+% \frametitle{Análisis en frecuencia del muestreo ideal II}
+
+% \footnotesize
+
+% \begin{itemize}
+% \item \alert{Señal continua $x_c(t)$ de banda limitada ($X_c(jw)=0$ para $|w|>w_M$)}
+
+% \color{gray}
+% \item Análisis en frecuencia de la señal muestreada:
+
+% \begin{itemize}
+
+% \color{gray}
+% \footnotesize
+
+% \vspace{-0.1cm}
+% \visible<1->{
+% \item Señal discreta: $x_d(n)=x_c(T_sn)$
+
+% \vspace{0.1cm}}
+
+% \visible<1->{
+% \item Visión continua de la señal discreta (\alert{muestreada idealmente $\delta(\cdot)$}):
+
+% \vspace{0.1cm}
+
+% \hspace{0.5cm}	$x_p(t)\!=\!x_c(t)\!\cdot \! \sum_{k=-\infty}^{\infty}\! \!\delta(t-kT_s)\!=\!x_c(t)\!\cdot\! p(t)$
+% }
+% \color{black}
+% \vspace{0.1cm}
+% \visible<2->{
+% \item Transformada de Fourier de $x_p(t)$, propiedad de la multiplicación:
+
+% \vspace{0.1cm}
+
+% \hspace{0.5cm}	$X_p(jw)=\frac{1}{2\pi} (X_c * P)(jw)$
+
+% \vspace{0.1cm}
+% }
+% \visible<3->{
+% \item Transformada de Fourier de $p(t)$, señal periódica de periodo $T_s$:
+
+% \vspace{0.1cm}
+
+% \hspace{0.5cm}	$P(jw)=\sum_{k=-\infty}^{\infty} 2\pi c_k  \delta(w-kw_s)=\sum_{k=-\infty}^{\infty} \frac{2\pi}{T_s} \delta(w-kw_s)$
+
+% \vspace{0.1cm}
+
+% \hspace{0.5cm}	$c_k=\frac{1}{T_s}\int_{T_s} \delta(t)e^{-jkw_st}dt=\frac{1}{T_s}$
+% }
+
+% \vspace{0.1cm}
+
+% \visible<4->{
+% \item Convolución usando deltas:
+
+% \vspace{0.1cm}
+
+% \hspace{2cm}	\alert{$X_p(jw)=\frac{1}{T_s} \sum_{k=-\infty}^{\infty}X_c(j(w-kw_s))$}
+% }
+
+
+% \end{itemize}
+
+% \end{itemize}
+
+
+% \end{frame}
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% \begin{frame}
+% \frametitle{Análisis en frecuencia del muestreo ideal III}
+
+% \begin{columns}[T]
+% \begin{column}{4.5cm}
+
+% \footnotesize
+
+% La relación entre los espectros de la señal continua $x_c(t)$ y de la muestreada idealmente $x_p(t)$ viene dada por la expresión \alert{$X_p(jw)\!\!=\!\!\frac{1}{T_s}\!\! \sum_{k=-\infty}^{\infty}\!X_c(j(w\!-\!kw_s))$}.
+
+% \vspace{0.1cm}
+
+% Si suponemos que \alert{$X_c(jw)=0$ para $|w|>w_M$}:
+
+% \begin{itemize}
+% \item Si $w_s> 2 w_M$ el espectro en frecuencia de la señal original NO se superpone sobre si mismo en la señal muestreada.
+% \item Si $w_s< 2 w_M$  el espectro en frecuencia de la señal original se superpone sobre si mismo en la señal muestreada.
+% \end{itemize}
+% \end{column}
+% \begin{column}{6cm}
+% {\includegraphics[width=6cm]{./Figures/Muestreo2.ps}}
+% \end{column}
+% \end{columns}
+% \end{frame}
+
+
+% \begin{frame}
+% \frametitle{Análisis en frecuencia del muestreo ideal IV}
+
+% \footnotesize
+
+% \begin{itemize}
+% \item Señal banda limitada: \alert{$X_c(jw)=0$ para $|w|>w_M$}
+
+% \vspace{0.1cm}
+% \item CTFT señal muestreada ($w_s=\frac{2\pi}{T_s}$): \alert{$X_p(jw)\!\!=\!\!\frac{1}{T_s}\!\! \sum_{k=-\infty}^{\infty}\!X_c(j(w\!-\!kw_s))$}
+% \end{itemize}
+
+% \vspace{0.1cm}
+
+
+
+% Veamos la aplicación del análisis realizado sobre una señal sinusoidal:
+
+% \begin{columns}[T]
+% \begin{column}{8.5cm}
+% \begin{itemize}
+
+% \footnotesize
+
+% \item $x_c(t)=cos(w_0t)$
+
+% \visible<2->{\item $X_c(jw)=\pi\left [ \delta(w-w_0)+\delta(w+w_0)\right ]$}
+
+% \visible<3->{\item $X_p(jw)\!=\!\frac{\pi}{T_s} \!\sum_{k=-\infty}^{\infty} \!\left [  \delta(w\!-\!w_0\!+\!kw_s)\!+\!\delta(w\!+\!w_0\!+\!kw_s) \right ]$}
+
+% \end{itemize}
+% \end{column}
+% \hspace{-0.5cm}\begin{column}{3cm}
+% \only<2|handout:0>{
+% \includegraphics[width=3cm,clip=true,trim=0cm 0cm 0cm 2.5cm]{./Figures/alias1.eps}}\visible<3->{
+% \includegraphics[width=3cm,clip=true,trim=0cm 0cm 0cm 2.5cm]{./Figures/alias2.eps}}
+% \end{column}
+% \end{columns}
+
+% \vspace{-0.1cm}
+
+% \begin{columns}[c]
+% \begin{column}{8.5cm}
+
+
+
+% \visible<4->{
+% Si $w_s>2w_0$ las únicas componentes espectrales que aparecen dentro del rango de  frecuencias de muestreo son las componentes espectrales de la señal original. }
+
+% \visible<5->{
+
+% \vspace{0.2cm}
+% Si $w_s<2w_0$ las componentes espectrales de la señal original no aparecen dentro del rango de frecuencias de muestreo. Las que aparecen son las componentes asociadas a la frecuencia fundamental ($w_0-w_s$ y $-w_0+w_s$). Por lo tanto, se produce el fenómeno de aliasing.}
+
+% \end{column}
+% \hspace{-0.5cm}\begin{column}{3cm}
+
+% \visible<4->{
+% \includegraphics[width=3cm,clip=true,trim=0cm 0cm 0cm 1cm]{./Figures/alias2b.eps}}
+
+% %\vspace{-0.2cm}
+% \visible<5->{
+
+% \includegraphics[width=3cm,clip=true,trim=0cm 0cm 0cm 1cm]{./Figures/alias3b.eps}}
+% \end{column}
+% \end{columns}
+
+
+% \end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \begin{frame}
+% \frametitle{Análisis en frecuencia del muestreo natural I}
+
+% \footnotesize
+
+% \begin{itemize}
+% \item Muestreo ideal no existe: no se puede tomar una muestra instantáneas.
+% \visible<2->{
+% \item Habitualmente, lo que se hace es muestrear utilizando un \alert{tren de pulsos}: }
+
+% \begin{itemize}
+
+% \footnotesize
+
+% \vspace{-0.1cm}
+% \visible<3->{
+% \item Señal discreta: $x_d(n)=x_c(T_sn)$
+
+% \vspace{0.1cm}}
+
+% \visible<4->{
+% \item Visión continua de la señal discreta (\alert{muestreo natural, a través del tren de pulsos}):
+
+% \vspace{0.1cm}
+% \hspace{0.5cm}	$x_p(t)\!=x_c(t)\!\sum_{k=-\infty}^{\infty} r(t-kT_s)$}
+
+% \vspace{0.1cm}
+
+% \visible<5->{
+% \item Transformada de Fourier de $x_p(t)$, propiedad de la multiplicación:
+
+% \vspace{0.1cm}
+
+% \hspace{0.5cm}	$X_p(jw)=\frac{1}{2\pi} (X_c * R)(jw)$
+
+% \vspace{0.1cm}
+% }
+% \visible<6->{
+% \item Transformada de Fourier de $r(t)$, señal periódica de periodo $T_s$:
+
+% \vspace{0.1cm}
+
+% \hspace{0.5cm}	$R(jw)\!\!=\!\!\sum_{k=-\infty}^{\infty} \!\! 2\pi c_k  \delta(w\!-\!kw_s)\!\!=\!\!\sum_{k=-\infty}^{\infty} \!\!\frac{2\pi\tau}{T_s}Sa(w_sk\tau/2) \delta(w\!-\!kw_s)$
+
+% \vspace{0.1cm}
+
+% \hspace{0.5cm}	$c_k=\frac{1}{T_s}\int_{T_s} \Pi_\tau(t) e^{-jkw_st}dt=\frac{1}{T_s}\int_{-\tau/2}^{\tau/2}e^{-jkw_st}dt=$
+
+% \hspace{1cm}$=\frac{1}{T_s}\frac{1}{-jkw_s}(e^{-jw_sk\tau/2}\!-\!e^{jw_sk\tau/2})\!=\!\frac{\tau}{T_s}\frac{sen(w_sk\tau/2)}{w_sk\tau/2}\!=\!\frac{\tau}{T_s}Sa(w_sk\tau/2)$
+% }
+
+% \vspace{0.1cm}
+
+% \visible<7->{
+% \item Convolución usando deltas:
+
+% \vspace{0.1cm}
+
+% \hspace{1.5cm}	\alert{$X_p(jw)=\frac{\tau}{T_s} \sum_{k=-\infty}^{\infty}Sa(w_sk\tau/2) X_c(j(w-kw_s))$}
+% }
+
+
+
+
+% \end{itemize}
+
+% \end{itemize}
+
+% \end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \begin{frame}
+% \frametitle{Análisis en frecuencia del muestreo natural II}
+
+
+
+% \vspace{0.1cm}
+
+% Muestreo ideal: \alert{$X_p(jw)=\frac{1}{T_s} \sum_{k=-\infty}^{\infty} X_c(j(w-kw_s))$}
+
+% \vspace{0.1cm}
+
+% Muestreo natural: \alert{$X_p(jw)=\frac{\tau}{T_s} \sum_{k=-\infty}^{\infty}Sa(w_sk\tau/2) X_c(j(w-kw_s))$}
+
+% \vspace{0.4cm}
+
+% \footnotesize
+
+% \begin{columns}[T]
+% \begin{column}{6.5cm}
+
+% \hspace{2cm}Muestreo ideal
+
+% \vspace{0.1cm}
+
+% \includegraphics[trim=0cm 0cm 0cm 5cm, clip=true,width=6.5cm]{./Figures/Muestreo2.ps}
+
+
+% \end{column}
+% \begin{column}{6cm}
+
+% \hspace{2cm}Muestreo natural
+
+
+% \end{column}
+% \end{columns}
+
+
+% \end{frame}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \subsection{Teorema de Muestreo}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% \begin{frame}
+% \frametitle{Teorema de Muestreo}
+
+% \footnotesize
+
+% ¿ Cual es el valor del $T_s$ a partir del cual podemos reconstruir la señal original si tenemos un señal de ancho limitado en frecuencia?
+
+% \vspace{0.2cm}
+
+% \visible<2->{
+
+% \alert{Teorema de Nyquist-Shannon$^1$:}  Para que se pueda reconstruir una se\~{n}al a partir de su muestreo es necesario que la frecuencia de muestreo sea al menos dos veces superior a la mayor frecuencia $w_0$ contenida en la se\~{n}al muestreada: \alert{$w_s=\frac{2\pi}{T_s}>2 w_o$}}
+
+% \vspace{0.2cm}
+
+% \visible<3->{
+% \alert{Reformulado con periodos}: $T_s<T_0/2$, con $T_0$ el menor de los periodos de la se\~{n}al original.
+% }
+
+% \vspace{0.2cm}
+
+% \visible<4->{
+% Es decir, necesitamos muestrear con un periodo que por lo menos sea la mitad del periodo del mas pequeño de la señal original.}
+
+% \vspace{0.2cm}
+
+% \visible<5->{
+% \alert{Intuitivamente}:
+
+% \vspace{1cm}
+
+% }
+
+
+% \visible<2->{
+% \rule{10cm}{0.4pt}
+% \scriptsize
+
+% $^1$ Nyquist, en 1928, presenta la idea. Shannon, en 1949, lo enuncia como teorema. }
+
+
+% \end{frame}
+
+
+% \begin{frame}
+% \frametitle{Ejemplos de aliasing de señales sinusoidales III}
+
+% \small
+
+% \hspace{1.9cm}\alert{$x_d(n)=x_c(nT_s)=sen(w_cT_sn+\phi)=sen(w_dn+\phi)$}
+
+% \vspace{-0.1cm}
+
+% \begin{itemize}
+% \footnotesize
+% \item \color{olivegreen} ¿Se puede muestrear $x_c(t)= sen(\frac{2\pi}{10}t)$ con un periodo de muestreo de 2s? \color{gray}
+
+% \visible<2->{
+% \vspace{0.1cm}
+
+% $T=10$. El valor máximo del periodo de muestreo que se puede utilizar es $T_s=\frac{T}{2}=5$.
+
+% \vspace{0.0cm}
+% }
+
+% \visible<3->{
+
+% Como estamos muestreando con $2s$ que es menor que $T_s=5$, las muestras que aparecen están relacionadas con la señal original.
+% }
+% \end{itemize}
+
+% \vspace{-0.5cm}
+
+
+% \begin{columns}[c]
+% \begin{column}{6.8cm}
+% \footnotesize
+
+% \begin{itemize}
+
+% \item \color{olivegreen} ¿Se puede muestrear $x_c(t)= sen(\frac{2\pi}{10/6}t)$ con un periodo de muestreo $2s$? \color{gray}
+
+% \visible<4->{
+% $T=10/6$. El valor máximo del periodo de muestreo que se puede utilizar es $T_s=\frac{10/6}{2}=5/6$.
+% }
+
+% \visible<5->{
+
+% El periodo elegido (2s) es mayor que el límite máximo (5/6s).}\visible<6->{  Por lo tanto, las muestras tienen que estar relacionadas con un alias fundamental (que ya  hemos calculado previamente).
+% }
+% \end{itemize}
+% \end{column}
+% \hspace{-0.4cm}\begin{column}{4.5cm}
+% {\includegraphics[width=4.5cm]{./Figures/AliasBasic3.eps}}
+% \end{column}
+% \end{columns}
+
+% \end{frame}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \begin{frame}
+% \frametitle{Ejemplos de aliasing de señales sinusoidales IV}
+
+% \small
+
+% \hspace{1.9cm}\alert{$x_d(n)=x_c(nT_s)=sen(w_cT_sn+\phi)=sen(w_dn+\phi)$}
+
+% \vspace{-0.1cm}
+
+% \begin{itemize}
+% \footnotesize
+% \item \color{olivegreen} ¿Se puede muestrear $x(t)=3 sen(\frac{2\pi}{5}t)+ sen(\frac{2\pi}{3}t)$ con un periodo de muestreo de 2s? \color{gray}
+% \end{itemize}
+
+% \begin{columns}[c]
+% \begin{column}{4.6cm}
+% \only<1-4>{\includegraphics[width=4.5cm]{./Figures/AliasEj3_1.eps}}
+% \end{column}
+% \begin{column}{6.2cm}
+
+% \color{gray}
+
+% \footnotesize
+
+% $T_1=5$ y $T_2=3$.
+
+% \vspace{0.1cm}
+% \visible<2->{
+% El periodo máximo con el que se debería muestrear esta señal es: $T_s=\frac{3}{2}=1.5$
+% }
+% \vspace{0.1cm}
+% \visible<3->{
+% Muestreamos con una $T_s$ mayor $\rightarrow$ habr\'{a} aliasing (el alias fundamental ya lo hemos calculado previamente). }
+% \vspace{0.1cm}
+% \end{column}
+% \end{columns}
+
+% \vspace{0.2cm}
+% \visible<4->{
+% \hrule
+
+% \vspace{0.2cm}
+
+
+
+% \footnotesize
+% \color{gray}
+% El teorema de Shannon/Nyquist nos permite saber cuando habr\'{a} aliasing o cuando no. Cuando lo haya, se puede pedir que se calcule el alias fundamental. Cuando no lo haya, idealmente se puede reconstruir la se\~{n}al original continua a partir de las muestras (veremos como m\'{a}s adelante}
+
+% \end{frame}
+
+
+
+
+% \begin{frame}
+% \frametitle{Visión Continua y Discreta del Muestreo}
+
+% \footnotesize
+
+% \begin{itemize}
+% \item Visión continua (visto en señales de banda limitada, muestreo ideal):
+
+% \begin{itemize}
+
+% \vspace{-0.1cm}
+
+% \footnotesize
+% \item Señal continua $x_c(t)$ banda limitada: $X_c(jw)=0$ para $|w|>w_M$
+
+% \vspace{0.1cm}
+
+% \item Visión continua de la señal discreta: $x_p(t)\!=\!\sum_{k=-\infty}^\infty x_c(t)\delta(t\!-\!kT_s)$
+
+% \vspace{0.1cm}
+% \item CTFT señal muestreada ($w_s=\frac{2\pi}{T_s}$):
+
+% \vspace{-0.1cm}
+
+% \begin{itemize}
+% \item Propiedad del producto: $X_p(jw)\!\!=\!\!\frac{1}{T_s}\!\! \sum_{k=-\infty}^{\infty}\!X_c(j(w\!-\!kw_s))$
+
+% \vspace{0.1cm}
+
+% \visible<4->{\item Definición: $X_p(jw)=\sum_{k=-\infty}^\infty x_c(kTs)e^{-jwkT_s}$}
+% \end{itemize}
+
+% \end{itemize}
+
+% \item Visión discreta de la señal muestreada:
+
+% \begin{itemize}
+
+% \vspace{-0.1cm}
+
+% \footnotesize
+% \item Señal muestreada: $x_d(n)=x_c(nT_s)$
+
+% \vspace{0.1cm}
+
+% \visible<2->{\item DTFT señal muestreada ($\Omega$ para distinguirla de la $w$ continua):}
+
+% \begin{itemize}
+
+% \visible<3->{\item Definición: $X_d(e^{j\Omega})=\sum_{n=-\infty}^\infty x_c(nTs)e^{-j\Omega n}$}
+
+% \vspace{0.1cm}
+
+% \visible<5->{\item Comparándo $X_d(e^{j\Omega})$ con $X_p(jw)$, coinciden si $\Omega=\omega T_s $}
+
+% \vspace{0.1cm}
+
+% \visible<6->{\item Sustituyendo $w$ por $\frac{\Omega}{T_s}$ en $X_c(jw)$, se obtiene que:
+
+% \vspace{0.1cm}
+
+% $X_d(e^{j\Omega})\!\!=\!\!\frac{1}{T_s}\!\! \sum_{k=-\infty}^{\infty}\!X_c(j(\frac{\Omega}{T_s}\!-\!kw_s))=\!\!\frac{1}{T_s}\!\! \sum_{k=-\infty}^{\infty}\!X_c(j(\frac{\Omega-2k\pi}{T_s}))$}
+
+
+% \end{itemize}
+
+
+% \end{itemize}
+
+
+
+
+
+% \end{itemize}
+
+% \end{frame}
+
+% \begin{frame}
+% \frametitle{Visión Continua y Discreta del Muestreo}
+
+% \footnotesize
+
+% \vspace{0.3cm}
+
+% \begin{columns}[T]
+% \begin{column}{6.5cm}
+
+% \centering
+%     Visión Continua
+
+
+% $X_p(jw)\!\!=\!\!\frac{1}{T_s}\!\! \sum_{k=-\infty}^{\infty}\!X_c(j(w\!-\!kw_s))$
+
+
+% \vspace{0.2cm}
+
+% \includegraphics[trim=0cm 0cm 0cm 5cm, clip=true,width=6.5cm]{./Figures/Muestreo2.ps}
+
+
+% \end{column}
+% \begin{column}{6cm}
+
+% \centering
+
+% \vspace{0.1cm}
+
+%   Visión Continua y Discreta
+
+
+%   ($\Omega=wT_s$)
+
+
+%   $X_d(e^{j\Omega})=\frac{1}{T_s}\!\! \sum_{k=-\infty}^{\infty}\!X_c(j(\frac{\Omega-2k\pi}{T_s}))$
+
+% \vspace{0.2cm}
+
+% \includegraphics[trim=0cm 0cm 0cm 1cm, clip=true,width=4cm]{./Figures/MuestreoContinuoDiscreto.ps}
+% \end{column}
+% \end{columns}
+
+
+% \end{frame}

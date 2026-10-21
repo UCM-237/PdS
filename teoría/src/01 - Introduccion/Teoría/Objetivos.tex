@@ -1,0 +1,86 @@
+\begin{frame}\frametitle{Objetivos del tema}
+  \alert{Establecer la terminología adecuada y repasar conceptos:}
+  \vspace{0.1cm}
+  \begin{itemize}
+    \item \alert{Señales}
+    \begin{itemize}
+      \item Tipos
+      \item Operaciones
+      \item Ejemplos
+    \end{itemize}
+    \item \alert{Sistemas}
+    \begin{itemize}
+      \item Tipos
+      \item Propiedades de los sistemas lineales temporalmente invariantes
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\section{Definiciones y notación}
+
+\begin{frame}
+  \frametitle{Definiciones}
+
+  \begin{figure}
+    \centering
+    \small
+    \begin{tikzpicture}
+      \node[bloque] (T) {Sistema};
+      \node (x) [left=of T] {Señal};
+      \node (y) [right=of T] {Señal};
+      \draw[arrow,->] (x.east) -- (T.west);
+      \draw[arrow,->] (T.east) -- (y.west);
+    \end{tikzpicture}
+  \end{figure}
+  \vspace{-0.3cm}
+  \begin{itemize}
+    \item \alert{Señal:}
+    \begin{itemize}
+      \item Función que transporta algún tipo de información sobre la variabilidad/evolución de una magnitud física respecto a una/varias variables independientes.
+      \vspace{0.1cm}
+      \item Ejemplos: Señales de audio, imagen, video, tensión, presión, ...
+    \end{itemize}
+    \item \alert{Sistema}
+    \begin{itemize}
+      \item Definición:
+      \begin{itemize}
+        \item Entidad que se excita mediante una señal de entrada y produce una señal de salida.
+        \item Representa la transformación que un sistema físico realiza sobre una señal.
+      \end{itemize}
+      \item Ejemplos: filtro paso bajo, conversor A/D, ...
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Notación}
+  \begin{figure}
+    \centering
+    \small
+    \begin{tikzpicture}
+      \node[bloque,minimum width=15mm] (T) {T};
+      \node (x) [left=of T] {x(t)};
+      \node (y) [right=of T] {y(t)=T[x(t)]};
+      \draw[arrow,->] (x.east) -- (T.west);
+      \draw[arrow,->] (T.east) -- (y.west);
+    \end{tikzpicture}
+  \end{figure}
+
+  
+  \begin{block}{}
+  \begin{itemize}
+    \item Señales: $x,y,u,...$ (letras minúsculas)
+    \begin{itemize}
+      \item variable independiente: $t$, $n$
+      \item $y(t)$ - tiempo continuo
+      \item $y(n), y[n]$ - secuencia
+    \end{itemize}
+    \item Sistemas: $T,P,S,...$ (letras mayúsculas)
+    \begin{itemize}
+      \item $y(t)=T[x(t)]$
+      \item $y[n]=T[x[n]]$
+    \end{itemize}
+  \end{itemize}
+  \end{block}
+\end{frame}

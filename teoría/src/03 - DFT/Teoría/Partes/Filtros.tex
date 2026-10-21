@@ -1,0 +1,155 @@
+  
+
+%%%%%%%%%%%%%%Empieza la presentacion%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\begin{frame}
+%\frametitle{Esquema}
+ %   \tableofcontents
+%\end{frame}
+
+\section{Sistemas LTI y Filtros Discretos}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Sistemas LTI y Filtros Discretos I}
+
+\footnotesize
+
+\begin{itemize}
+\item La respuesta y(n) de un sistema LTI discreto a una entrada  x(n) se calcula:
+\begin{itemize}
+\footnotesize
+\item Como la convolución entre  $x(n)$ y la respuesta del sistema a la entrada impulso $h(n)$:
+	$\alert{y(n)}\!=\!T[x(n)]\!=\!(h*x)(n)\!\alert{=\!\sum_{m=-\infty}^\infty x(m)h(n\!-\!m)}$
+\vspace{0.1cm}
+\item A través del producto de las transformadas de Fourier de la entrada y de la función ponderatriz: $Y(e^{jw})=H(e^{jw})X(e^{jw})$
+
+\vspace{0.1cm}
+\item DTFT: $X(e^{jw})=\sum_{n=-\infty}^{\infty} x(n) e^{-jwn}$
+\end{itemize}
+
+
+\end{itemize}
+
+\alert{¿Podemos usar el producto de DFTs para calcular la respuesta de sistemas LTI ?}
+
+
+\begin{itemize}
+
+\visible<2->{
+
+\item Las operaciones correspondientes en el caso de la DFT son: 
+
+\vspace{-0.1cm}
+
+\begin{itemize}
+\footnotesize
+\item $y(n)=\sum_{m=0}^{N-1} x(m)h((m-n)_N)$ para señales de longitud $\le N$
+\vspace{0.1cm}
+
+\item $Y(k)=H(k)X(k)$
+\vspace{0.1cm}
+\item $X(k)=\sum_{n=0}^{N-1} x(n)e^{j\frac{2\pi}{N}kn}$ para señales de longitud $\le N$
+\end{itemize}
+
+}
+
+\visible<3->{
+
+\item La DFT y la convolución se definen para señales de longitud finita. Por lo tanto, para poder realizar las operaciones con la DFT necesitamos que:
+
+\begin{itemize}
+\footnotesize
+\item $x(n)$ sea una señal de longitud finita $L\le N$
+\item $h(n)$ sea una señal de longitud finita $M \le N$  $\rightarrow $ sistema FIR.
+\item Para que no aparezcan elementos del desplazamiento circular, $N \ge L+M-1$
+
+
+\end{itemize}
+
+}
+
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Sistemas LTI y Filtros Discretos II}
+
+\footnotesize
+\begin{itemize}
+\item Para poder calcular la respuesta de un sistema a través del producto de las DFTs, necesitamos:
+\begin{itemize}
+\footnotesize
+\item Sistema sea FIR
+\item El número de muestras de las DFTs es $N>=L+M-1$, con $L$ longitud de la señal de entrada $x(n)$ y $M$ longitud de la respuesta del sistema a la función impulso $h(n)$.
+\item Se rellenará con ceros las secuencias $x(n)$ y $h(n)$ para lograr que las secuencias sean de duración sea $N$ antes de calcular sus DFTs.
+\end{itemize}
+
+\visible<2->{
+
+\item Si el sistema $h(n)$ es IIR:
+\begin{itemize}
+\footnotesize
+\item Podemos obtener la DFT como $H(k)=H(e^{\frac{2\pi k}{N}})$, pero no utilizarlo para calcular la respuesta del sistema a cualquier entrada.
+\end{itemize}}
+
+\visible<3->{
+
+\item Si la entrada $x(n)$ no tiene longitud finita:
+\begin{itemize}
+\footnotesize
+\item Podemos obtener la DFT como $X(k)=X(e^{\frac{2\pi k}{N}})$, pero no utilizar la transformada para calcular la respuesta de cualquier sistema LTI a dicha entrada.
+\end{itemize}
+ }
+ 
+ \visible<4->{
+ 
+\item Las entradas $x(n)$ y funciones ponderatrices $h(n)$ periódicas son un caso particular de señales de longitud finita, considerando como longitud finita de ambas señales su periodo correspondiente.
+}
+ 
+\end{itemize}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Ejemplo de  respuesta sistema LTI}
+
+\footnotesize
+\begin{itemize}
+\item  \color{olivegreen} Calcular la respuesta del sistema $h(n)=\{0,2\}$ a la entrada  $x(n)=\{1,3,4\}$.
+\color{gray}
+\item A traves de la convolución:
+
+$\left . \!\!\!\!\! \begin{array}{l} y(0)=\sum_{n=0}^{1}h(n)x(0-n)=0\cdot 1 + 2 \cdot 0=0\\
+y(1)=\sum_{n=0}^{1}h(n)x(1-n)=0\cdot 3 + 2 \cdot 1=2\\
+y(2)=\sum_{n=0}^{1}h(n)x(2-n)=0\cdot 4+ 2 \cdot 3=6\\
+y(3)=\sum_{n=0}^{1}h(n)x(3-n)=0\cdot 0 + 2 \cdot 4=8\end{array}\!\!\right \}$ $\rightarrow y(n)=\{0,2,6,8\}$
+\item A través de la DFT:
+
+$N=3+2-1=4$
+
+$x(n)=\{1,3,4,0\}$ 
+
+$\left . \!\!\!\!\! \begin{array}{l} 
+X(0)\!=\!\sum_{n=0}^{N-1}\!x(n)e^{-j\frac{2\pi}{N}0n}\!=\!1\!+\!3\!+\!4\!=\!8\\
+X(1)\!=\!\sum_{n=0}^{N-1}\!x(n)e^{-j\frac{2\pi}{N}1n}\!=\!1\!-\!3j\!-\!4\!=\!-\!3\!-\!3j\\
+X(2)\!=\!\sum_{n=0}^{N-1}\!x(n)e^{-j\frac{2\pi}{N}2n}\!=\!1\!-\!3\!+\!4\!=\!2\\
+X(3)\!=\!\sum_{n=0}^{N-1}\!x(n)e^{-j\frac{2\pi}{N}3n}\!=\!1\!+\!3j\!-\!4\!=\!-3\!+\!3j\end{array}\!\!\right \}$ $\rightarrow X(k)\!=\!\{8,\!-3\!-\!3j,2,-3\!-3j\}$
+
+
+
+$h(n)=\{0,2,0,0\}\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:\:$ $\rightarrow H(k)=\{2,-2j,2,2j\}$
+
+$Y(k)\!=\!X(k)H(k)\!=\!\{16,-6\!+\!6j,4,-6\!-\!6j\}$ $\:\rightarrow y(n)=\{0,2,6,8\}$
+
+
+\end{itemize}
+
+\end{frame}

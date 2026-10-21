@@ -1,0 +1,144 @@
+%% PLANTILLA PARA ARTICULOS
+
+\documentclass[10pt,twoside,spanish,a4paper]{article}
+\input{configfile}
+\usepackage{verbatim}
+\usepackage{fancyheadings}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{verbatim}
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+
+\begin{document}
+
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Comenzar a escribir el texto aqui
+%%%%> Cabecera e Indice (opcional)
+\title{
+  \vspace{-0.2cm}
+	\begin{center}
+		\large
+		\begin{tabular}{rrl}
+		%\hline
+		\multirow{4}{*}{\includegraphics[width=1.7cm]{UCM.eps} \hspace{1cm}}&Grado: & Ingeniería Electrónica de Comunicaciones\\
+		%\hline
+		&Asignatura:& Procesamiento de Señales \\
+		%\hline
+		&Profesor:  & Jesús Chacón Sombría  \\
+		%\hline
+		\end{tabular}
+	\end{center}
+	\rule{\textwidth}{0.4pt}
+	%
+	\vspace{-1.5cm}
+	\begin{center}
+		\color{blue} \Huge
+		\begin{tabular}{c}
+	        \textbf{Práctica 6}\\
+		\textbf{Tratamiento de im\'{a}genes reales}\\
+		\textbf{con filtros FIR digitales}\\
+		\end{tabular}
+	\end{center}
+	%\textbf{ AlmacÈnes de datos \\ \Huge \color{blue}{Pr\'{a}ctica 1}}
+	\vspace{-0.5cm}
+	\rule{\textwidth}{0.4pt}
+}
+\maketitle
+ \thispagestyle{empty}
+
+\pagestyle{fancy}
+
+\lfoot{\includegraphics[width=0.8cm]{UCM.eps}}
+\cfoot{\vspace{-0.6cm} Ingeniería Electrónica de Comunicaciones }
+\rfoot{\vspace{-0.6cm} \thepage}
+\lhead{Practica}
+\rhead{Practica 6: Tratamiento de im\'{a}genes digitales}
+\renewcommand{\headrule}{ \vspace{-0.2cm} \rule{\textwidth}{0.4pt}}
+\renewcommand{\footrule}{\vspace{0.5cm} \rule{\textwidth}{0.4pt}\\ \vspace{-0.3cm} \\}
+
+%**************************************************************<- para indicar pregunta de la pr\'{a}ctica
+\newcounter{ctPreg}
+\setcounter{ctPreg}{1}
+\newcommand{\itemP}{ \item[{\color{blue}\fbox{\textbf{Tarea \arabic{ctPreg}:}}}] \addtocounter{ctPreg}{1}}  %
+\newcommand{\itemB}{ \item[{\color{blue}$\bullet$} ]    }
+\newcommand{\itemR}{ \item[{\color{blue}$\triangleright$} ]    }       %
+%**************************************************************
+
+\vspace{-8em}
+
+\section*{Objetivos}
+
+El objetivo de esta pr\'{a}ctica es que el alumno se familiarice con los filtros FIR
+ habituales para el tratamiento de se\~{n}ales 2D, as\'{i} como con en el dise\~{n}o de filtros
+espec\'{i}ficos utilizando la especificaci\'{o}n en el dominio de la frecuencia.
+
+Para alcanzarlo, utilizar\'{a} las funciones que Matlab proporciona para obtener dichos
+ filtros, cuyo uso se explica en este gui\'{o}n. Una vez obtenido el n\'{u}cleo de convoluci\'{o}n
+de cada filtro ($h(x,y)$), observar\'{a} su espectro, y lo aplicar\'{a} a una imagen con el objeto
+de observar el efecto sobre la misma, tanto en el dominio espacial (representando la
+imagen original y la imagen transformada directamente) como en el dominio de la frecuencia
+ (representando sus espectros correspondientes).
+
+\section*{Instrucciones para realizar la práctica}
+\begin{itemize}
+	\item La práctica se realizará de forma individual. Los resultados de la práctica, incluyendo las justificaciones y respuestas a cada tarea, se comentarán en un informe (en formato pdf) dividido en el mismo número de secciones que este guión.
+	El informe no deberá contener el código, éste se entrega aparte como se especifica en los siguientes puntos. Para cada apartado se mostrará el espectro del filtro utilizado, la imagen original y modificada, as\'{i} como su representaci\'{o}n en el dominio de la frecuencia
+	\item Cada tarea se resolverá mediante un programa diferente en Matlab, cuyo fichero .m será entregado en un fichero comprimido junto con el informe.
+	\item Cada programa será nombrado de acuerdo con la tarea a la que corresponda (por ejemplo Tarea1.m será el nombre del programa de la primera sección).
+   	\item En caso de que un programa no ejecute correctamente, el resultado de la tarea no se considerará válido.
+\end{itemize}
+\vspace{-1em}
+\color{blue}Nota: \color{black} El nombre del archivo a entregar es P6\_\emph{DNI}.zip (Ejemplo: \color{blue}P6\_12345678X.zip\color{black}).
+
+
+\section*{Filtros digitales FIR 2D habituales}
+
+El objetivo de esta secci\'{o}n es generar cada uno de los posibles tipos de filtros que la
+funci\'{o}n de Matlab \color{blue}fspecial \color{black} proporciona, observar como los par\'{a}metros influyen en el espectro
+del filtro, y utilizarlos sobre una imagen elegida por el alumno, para ver su efecto,
+tanto en el dominio espacial como en el de la frecuencia.
+
+\begin{itemize}
+\itemP  \textbf{Filtrado de una imagen mediante el filtro promedio (average), circular (disk) o guassiano (gauss) de diferentes tama\~{n}os}
+
+
+\itemP  \textbf{Filtrado de una imagen mediante el filtro laplaciano (laplacian) o laplaciano gaussiano (log) de diferentes par\'{a}metros}
+
+
+
+\itemP  \textbf{Filtrado de una imagen mediante el filtro de movimiento (motion) con diferentes par\'{a}metros}
+
+\itemP  \textbf{Filtrado de una imagen mediante filtros de ensalzado de bordes (prewitt o sobel)}
+
+\end{itemize}
+
+
+\section*{Dise\~{n}o de filtros digitales FIR 2D en el dominio de la frecuencia}
+
+El objetivo de esta secci\'{o}n es que el alumno genere los siguientes filtros, y los utilice sobre una imagen de su elecci\'{o}n, para ver su efecto, tanto en el
+dominio espacial como en el de la frecuencia.
+
+
+\begin{itemize}
+\itemP \textbf{Filtro supresor de banda con simetr\'{i}a rotacional}
+\itemP  \textbf{Filtro para eliminar las frecuencias asociadas a una se\~{n}al sinusoidal 2D superpuesta a una imagen cualquiera}
+\itemP \textbf{Otro filtro propuesto por el alumno}
+\end{itemize}
+
+\section*{Correcci\'{o}n del histograma}
+
+
+El objetivo de esta secci\'{o}n es que el alumno modifique la luminosidad de una imagen con un proposito determinado (que habr\'{a} que indicar la memoria de la pr\'{a}ctica) utilizando para ello los siguientes procedimientos:
+
+\begin{itemize}
+\itemP \textbf{Ajuste del histograma}
+\itemP  \textbf{Ecualizaci\'{o}n del histograma}
+\itemP \textbf{Binarizaci\'{o}n del histograma}
+\end{itemize}
+
+
+
+
+\end{document}

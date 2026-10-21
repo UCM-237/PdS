@@ -1,0 +1,10 @@
+N=100;
+window=hamming(N+1);
+wc=[0,0.28,0.3,0.5,0.52,1];
+As=[0.3,0.3,1.0,1.0,0.7,0.7];
+h=fir2(N,wc,As,window);
+[hw,w]=freqz(h,1);
+K=max(abs(hw));
+plot(w/pi,abs(hw)/K);
+xlabel('w/\pi'),ylabel('|H(exp(jw))|');
+hold on,plot([0,1],10^(-40/20)*[1 1]);

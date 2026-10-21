@@ -1,0 +1,10 @@
+N=100;n=1:N; 
+F=1/3;
+x=sin(2*pi*F*n);
+F=1/10;
+x=x+sin(2*pi*F*n);
+stem(x);
+xlabel('n');ylabel('x(n)')
+X=fft(x);AX=abs(X);
+plot((0:N-1)/N,AX);
+xlabel('f_d');ylabel('X(f_d)')

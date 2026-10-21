@@ -1,0 +1,29 @@
+\documentclass{beamer}
+\input{config.tex}
+
+\begin{document}
+  \portada
+  \section{Objetivos}
+  \section{Señales}
+    \subsection{Tipos de señales}
+    \subsection{Operaciones con señales}
+    \subsection{Señales básicas}
+  \section{Sistemas}
+    \subsection{Tipos de Sistemas}
+      \input{./Partes/Sistemas1.tex}
+    \subsection{Sistemas LTI}
+      \input{./Partes/Sistemas2.tex}
+    \begin{frame}\frametitle{Conceptos importantes}
+      \begin{itemize}
+        \item \alert{Invarianza temporal y linealidad}
+        \item \alert{Relación entre LTI y convolución (respuesta impulso)}
+        \item \alert{Cálculo de la respuesta de un sistema LTI}
+        \begin{itemize}
+          \item Convolución
+          \item Laplace/Z
+          \item Fourier
+        \end{itemize}
+        \item \alert{Diferencia entre IIR y FIR en sistemas discretos}
+      \end{itemize}
+    \end{frame}
+\end{document}

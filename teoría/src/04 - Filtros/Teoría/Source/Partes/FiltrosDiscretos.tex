@@ -1,0 +1,27 @@
+
+\section{Filtros Discretos}
+
+\input{./Partes/FiltrosIIR.tex}
+\input{./Partes/FiltrosFIR.tex}
+
+\subsection{Comparativa IIR vs. FIR}
+
+\begin{frame}
+\frametitle{Filtros IIR vs. filtros FIR}
+
+{\footnotesize
+\hspace{0.5cm}\alert{IIR:} $\displaystyle H(z)=\frac{p_0+p_1 z^{-1}+ \dots +p_M z^{-M}}{d_0+d_1 z^{-1}+ \dots +d_N z^{-N}}$
+\hspace{0.5cm}\alert{FIR:} $H(z)=h_0+\dots h_N z^{-N}$}
+\begin{itemize}
+\small
+\item En los filtros FIR solo es posible colocar ceros (atenuar), mientras que en los filtos IIR se puede colocar ceros (atenuar) y polos (amplificar)
+\item Para dos filtros del mismo orden N, el número de operaciones de un filtro FIR es menor que el número de operaciones del filtro IIR. 
+\item Para dos filtros con las mismas prestaciones (características de la respuesta en frecuencia), el orden del filtro IIR suele ser menor que el orden del filtro FIR
+\item Para diseñar filtros de fase (desfase) lineal se puede:
+\begin{itemize}
+\item Si el filtro es FIR, usar las técnicas de TF con ventana o hacer que las $h(n)$ cumplan una relaciones especiales. 
+\item Si el filtro es IIR, introducir un filtro paso todas que modifique el desfase introducido por el filtro IIR. La introducción del filtro paso todas reduce el ahorro computacional debido a la reducción del orden del filtro.
+\end{itemize}
+
+\end{itemize}
+\end{frame}

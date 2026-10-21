@@ -1,0 +1,189 @@
+
+
+%%%%%%%%%%%%%%Empieza la presentacion%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\begin{frame}
+%\frametitle{Esquema}
+ %   \tableofcontents
+%\end{frame}
+
+\section{Relación de la DTF con otras transformadas}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Relación con la Serie de Fourier Discreta}
+
+
+\vspace{-0.2cm}
+
+\footnotesize
+\begin{itemize}
+ \item \alert{Relación entre las señales periódicas discretas y la DFT:}
+
+\hspace{0.5cm}\alert{¿Dada una señal periódica discreta cual es su DFT ?}
+
+\hspace{0.5cm}\alert{¿Relación existe entre los coeficientes de la DTFS y la DFT ?}
+\end{itemize}
+
+\vspace{-0.3cm}
+
+\visible<2->{
+
+\begin{columns}[T]
+\hspace{0.4cm}\begin{column}{6cm}
+\begin{itemize}
+\item Señal periódica discreta:
+
+$x(n+N)=x(n)$
+
+$x(n)=\sum_{k=0}^{N-1}c_ke^{j\frac{2\pi}{N}kn}$
+
+$c_k=\frac{1}{N}\sum_{n=0}^{N-1}x(n)e^{-j\frac{2\pi}{N}kn}$
+
+\end{itemize}
+\end{column}
+
+
+\begin{column}{6cm}
+\begin{itemize}
+\item DFT:
+
+$x(n)$ de longitud finita $L \le N$
+
+$x(n)=\frac{1}{N}\sum_{k=0}^{N-1} X(k) e^{j\frac{2\pi}{N}kn}$
+
+$X(k)=\sum_{n=0}^{N-1} x(n) e^{-j\frac{2\pi}{N}kn}$
+
+\end{itemize}
+\end{column}
+\end{columns}
+
+}
+
+\begin{itemize}
+\visible<3->{\item Comparando las expresiones:  \alert{$c_k=X(k)/N$}.}
+\visible<4->{\item La serie de Fourier tiene la estructura de la DFT.  Si definimos la secuencia de duración finita como los N puntos de la señal periódica se tiene $X(k)=Nc_k$.}
+\visible<5->{\item La expresión de síntesis de la serie tiene la estructura de la IDFT. Por lo tanto, los $N$ puntos de la DFT nos proporcionan las lineas del espectro de la secuencia periódica de periodo fundamental N.}
+\visible<6->{\item Finalmente, como $X(k)=X(e^{j\frac{2\pi k}{N}})$, y la señal periódica tiene una DTFT que es un tren de pulsos sobre las frecuencia fundamental, es necesario muestrear la DFT con el mismo periodo que el de la señal discreta original para evitar que se pierda algún armónico en la X(k).}
+
+\end{itemize}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Relación con la DTFT}
+
+\footnotesize
+
+\alert{Relación entre la DFT y la DTFT:}
+
+\begin{itemize}
+\footnotesize
+\item Hemos visto la relación en la introducción. Resumimos:
+\item $x(n)$ es una secuencia aperiódica con DTFT $X(e^{jw})$ los N valores de la DFT son $X(k)=X(e^{j\frac{2\pi k}{N}})$.
+
+\item Los X(k) son los coeficientes de la señal periódica $x_p(n)=\sum_{l=-\infty}^{\infty} x(n-lN)$.
+
+\item Si la secuencia x(n) es de duración finita$^{1}$ $L\le N$, entonces los X(k) permiten recuperar la secuencia x(n) a través de la IDFT.
+
+\item Si la secuencia no tiene duración finita o su duración es $L>N$ la IDFT no permite recomponer la señal, ya que aunque sus N coeficientes permitirán obtener la señal periódica $x_p(n)=\sum_{l=-\infty}^{\infty} x(n-lN)$, no podríamos extraer de los mismos los valores de la señal original.
+
+\item Si la secuencia x(n) es de duración finita$^{1}$ $L\le N$, $X(e^{jw})=\!\sum_{k=0}^{N-1} \!X(k)\! \left [\frac{1}{N}\sum_{n=0}^{N-1}e^{-j(w-\frac{2\pi}{N}k)n}\right ]= \!\sum_{k=0}^{N-1} \!X(k)\! \frac{sen(\frac{w_kN}{2})}{N sen(\frac{w_k}{2}) }e^{-j\frac{w_k(N-1)}{2}}$ con $w_k=w-\frac{2\pi}{N}k$
+
+\vspace{-0.2cm}
+
+\rule{11cm}{0.4pt}
+
+ $^1$Las señales periódicas son un caso excepcional a esta norma siempre y cuando el periodo de la señal y el número de muestras de la DFT coincidan.
+
+\end{itemize}
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Relación con la Transformada Z}
+
+\footnotesize
+
+\alert{¿Podemos obtener los N términos $X(k)$ de la DFT a partir de la Transformada Z?}
+
+\begin{itemize}
+\visible<2->{\item $X(k)=X(e^{j\frac{2\pi k}{N}})$}
+\visible<3->{\item $X(e^{jw})=X(z)|_{z=e^{jw}}$}
+\visible<4->{\item Por lo tanto la DFT se puede obtener muestreando de la Transformada Z sobre N puntos equiespaciados del círculo unidad.}
+\end{itemize}
+
+
+\alert{¿Podemos obtener la Transformada Z a partir de los N términos $X(k)$ de la DFT?}
+
+\begin{itemize}
+
+\visible<5->{\item Definición de la Transformada Z: $X(z)=\sum_{n=-\infty}^{\infty} x(n) z^{-n}$}
+
+\visible<6->{\item Si la x(n) es de longitud finita $\le N$:
+
+$X(z)=\sum_{n=0}^{N-1} x(n) z^{-n}=\sum_{n=0}^{N-1}\left [\frac{1}{N}\sum_{k=0}^{N-1} X(k)e^{j \frac{2\pi k n}{N}} \right ] z^{-n}=$
+
+\hspace{1cm}$=\frac{1}{N} \sum_{k=0}^{N-1} X(k) \sum_{n=0}^{N-1} \left [e^{j \frac{2\pi k}{N}} z^{-1}\right ]^n=
+\frac{1}{N} \sum_{k=0}^{N-1} X(k)  \frac{ 1- e^{j \frac{2\pi Nk}{N}} z^{-N}}{1-e^{j \frac{2\pi k}{N}} z^{-1}} =$
+
+\hspace{1cm}$=\frac{1-z^{-N}}{N} \sum_{k=0}^{N-1} \frac{ X(k)  }{1-e^{j \frac{2\pi k}{N}} z^{-1}}$
+
+ }
+
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Relación con la Serie de Fourier Continua}
+
+\footnotesize
+
+\hspace{1cm}\alert{¿Relación existe entre los coeficientes de la CTFS y la DFT ?}
+
+\visible<2->{
+
+\begin{itemize}
+\item Establecemos la relación a través de la IDFT y la CTFS.
+\item IDFT de una señal discreta: $x(n)=\frac{1}{N}\sum_{k=0}^{N-1}X(k)e^{j\frac{2\pi}N kn}$
+\item Señal  continua $x_a(t)$  periódica con periodo $T$
+\item $x_a(t)$  periódica $\rightarrow$ definida con su serie de Fourier: $x_a(t)=\sum_{k=-\infty}^\infty c_k e^{j\frac{2\pi}{T}kt}$
+\item  Muestreando $x_a(t)$ con periodo de muestreo $T_s=\frac{T}{N}$ tenemos la señal discreta $x(n)=x_a(T_sn)=x_a(\frac{Tn}{N})$.
+
+$x(n)=x_a(T_sn)= \sum_{k=-\infty}^\infty c_k e^{j\frac{2\pi}{T}k \frac{Tn}{N}}=\sum_{k=-\infty}^\infty c_k e^{j\frac{2\pi }{N}kn}$
+
+\hspace{0.7cm}$=\sum_{k=0}^{N-1} \left [ \sum_{l=-\infty}^\infty c_{k-lN}  \right ]e^{j\frac{2\pi }{N}kn} $
+
+\vspace{0.1cm}
+}
+\visible<3->{
+\item Relación: $X(k)= N \sum_{l=-\infty}^\infty c_{k-lN}$
+
+\vspace{-0.1cm}
+
+\begin{itemize}
+\scriptsize
+\item  $\sum_{l=-\infty}^\infty c_{k-lN}$ expansión periódica de los coeficientes de Fourier de la señal continua
+\item Si el número de coeficientes no nulos es finito y menor que N, $\sum_{l=-\infty}^\infty c_{k-lN}=c_k$, podemos extraer los coeficientes a partir de la DFT.
+\item  Si el número de coeficientes distintos de cero es mayor que N, no podemos obtenerlos a partir de la DFT. De hecho, en general, salvo que nos aseguren que se cumple el caso contrario, este es el que debemos asumir que se cumple, y que por lo tanto, no se pueden recuperar los $c_k$ a partir de la DFT.
+\end{itemize}
+
+
+}
+
+\end{itemize}
+
+
+
+\end{frame}

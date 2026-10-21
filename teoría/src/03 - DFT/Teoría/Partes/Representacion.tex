@@ -1,0 +1,83 @@
+\section{Representación e Interpretación de la DFT}
+
+
+\begin{frame}\frametitle{Identidad de Parseval}
+  \begin{alertblock}{\centering Identidad de Parseval}
+    \vspace{0.2cm} \centering
+    $\int_{-\infty}^{\infty}x(t)x^*(t)dt = \frac{1}{2\pi}\int_{-\infty}^{\infty}X(\omega)X^*(\omega)d\omega$ \\ \vspace{0.3cm}
+    $\sum_{n=0}^{N-1}x[n] x^{*}[n] = \frac{1}{N}\sum_{k=0}^{N-1} X[k] X^*[k]$ \\ \vspace{0.3cm}
+  \end{alertblock}
+
+  \begin{itemize}
+    \item Transformada de Fourier Discreta (DFT): \\
+    \vspace{0.2cm}
+    $\color{blue}x[n]=\frac{1}{N}\sum_{k=0}^{N-1}X[k]e^{\:j\frac{2\pi}{N}k n}\color{black}
+      \leftrightarrow
+     \color{blue}X[k]=\sum_{n=0}^{N-1}x[n]e^{-j\frac{2\pi}{N}k n}\color{black}$
+    \\ \vspace{0.2cm}
+    {\footnotesize $\color{cyan}x^*[n]=\frac{1}{N}\sum_{k=0}^{N-1}X^*[k]e^{-j\frac{2\pi}{N}k n}\color{black}
+      \leftrightarrow
+     \color{cyan}X^*[-k]=\sum_{n=0}^{N-1}x^*[n]e^{-j\frac{2\pi}{N}k n}\color{black}$
+    }
+    \vspace{0.2cm}
+    \item Potencia finita: $\color{blue}P_x = \frac{1}{N}\sum_{n=0}^{N-1}x[n]x^*[n]\color{black}$ \\ \vspace{0.2cm}
+    {\footnotesize
+      $\color{cyan}\sum_{n=0}^{N-1}x[n] \left[\frac{1}{N}\sum_{k=0}^{N-1}X^*[k]e^{-j\frac{2\pi}{N}k n}\right]
+          = \frac{1}{N} \sum_{k=0}^{N-1} \left[\sum_{n=0}^{N-1}x[n]e^{-j\frac{2\pi}{N}k n}\right] X^*[k]\color{black}$
+    }
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Densidad espectral de potencia}
+
+  \begin{itemize}
+    \begin{alertblock}{\centering Densidad espectral de Potencia}
+      \vspace{0.2cm}
+      \centering $\Phi_{xx}(\omega)=X(\omega)X^*(\omega)=|X(\omega)|^2$ \\ \vspace{0.2cm}
+      % \centering $\Phi_x[k]=c_k^{\phantom{*}} c_k^*=|c_k|^2$ \\ \vspace{0.2cm}
+    \end{alertblock}
+    \item {\small Señales definidas en energía: \\ \centering $\color{blue}E_x = \int_{-\infty}^{\infty}|x(t)|^2dt<\infty\color{blue}$}
+    \item {\small Señales definidas en potencia: \\\centering $\color{blue}P_x = \frac{1}{T}\int_{-T/2}^{T/2}|x(t)|^2dt<\infty\color{blue}$}
+    \end{itemize}
+  
+\end{frame}
+
+
+
+\begin{frame} 
+  \frametitle{Estimación del espectro}
+
+    \begin{itemize}
+      \item Señal muestreada: $\color{blue}x[n]=x_a(nT_s) \leftrightarrow X(\omega)=\frac{1}{T_s}X_a(\omega), \omega\in(-\pi,\pi)$ \vspace{0.2cm}
+      \item Señal de longitud finita: $\color{blue}\hat{x}[n]=x[n]w[n]\color{black}$ \vspace{0.2cm}
+      \begin{itemize}
+        \item $w[n]=\left\{ \begin{matrix}1~si~0\leq n< N\\ 0~c.c.\end{matrix} \right. \leftrightarrow W(\omega)=\frac{1-e^{j\omega N}}{1-e^{j\omega}}$
+        \item $\hat{X}(\omega)=\int_{-\pi}^{\pi}X(\omega)W(\omega-\Omega)d\Omega$ \\ \vspace{0.1cm}
+        \alert{Truncar la señal en el tiempo distorsiona el espectro}
+      \end{itemize} \vspace{0.2cm}
+      \item Estimación del espectro:\\ $\color{blue}X_a(\omega)=T_s X(\omega)\approx T_s \hat{X}(\omega)\color{black}$ \vspace{0.2cm} 
+      \item Estimación de la densidad espectral:\\ $\color{blue}|\Phi_{x_a x_a}(\omega)|\approx T_s^2|\Phi_{\hat{x}\hat{x}}(\omega)|\color{black}$
+    \end{itemize}
+
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Densidad espectral de potencia}
+
+  \begin{itemize}
+    \begin{alertblock}{\centering Densidad espectral de Potencia}
+      \vspace{0.2cm}
+      \centering $\color{blue}\frac{1}{T}\int_{-T/2}^{T/2}|x(t)|^2dt$ \\ \vspace{0.2cm}
+      \centering $\color{blue}\frac{1}{2\pi T}\int_{-\pi/T}^{\pi/T/2}|X(\omega)|^2d\omega$ \\ \vspace{0.2cm}
+      % \centering $\Phi_x[k]=c_k^{\phantom{*}} c_k^*=|c_k|^2$ \\ \vspace{0.2cm}
+    \end{alertblock}
+    \item {\small Señales definidas en energía: \\ \centering $\color{blue}E_x = \int_{-\infty}^{\infty}|x(t)|^2dt<\infty\color{blue}$}
+    \item {\small Señales definidas en potencia: \\\centering $\color{blue}P_x = \frac{1}{T}\int_{-T/2}^{T/2}|x(t)|^2dt<\infty\color{blue}$}
+    \end{itemize}
+  
+\end{frame}

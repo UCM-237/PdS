@@ -1,0 +1,284 @@
+ %%%%%%%%%%%%%%Empieza la presentacion%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Potencia de una señal aleatoria}
+\vspace{-0.2cm}
+\footnotesize
+\begin{itemize}
+\item La potencia de una señal aleatoria se define$^1$ como el valor esperado de la potencia de una señal:
+
+$P_X=E(\lim_{N \rightarrow \infty } \frac{1}{2N+1}\sum_{n=-N}^{N} x^2(n))=\lim_{N \rightarrow \infty } \frac{1}{2N+1} \sum_{n=-N}^{N} E(x^2(n))$
+
+\visible<2->{
+
+\item En los casos en los que  $E(x^2(n))$ es una señal aleatoria estacionaria se cumple que:
+
+\begin{itemize}
+\footnotesize
+\item$P_X=E(x^2(n))$ (sumario de 2N+1 términos iguales hace que se cancele el denominador de la expresión).
+\item $P_X=\phi_{XX}(0)=\sigma^2_X+\mu_x^2$.
+\end{itemize}}
+
+
+\visible<3->{
+\item Por lo tanto, en el caso de las señales aleatorias estacionarias, la potencia de la señal se encuentra relacionada con la autocorrelación en el instante inicial$^2$. 
+}
+
+\end{itemize}
+
+
+\rule{11cm}{0.04ex}
+\scriptsize
+$^1$Vamos a utilizar las definiciones sobre señales discretas en esta caso. Equivalentemente, se podría utilizar la definición sobre continuas, cambiando el sumatorio por la integral.
+
+\vspace{0.1cm}
+\visible<3->{
+$^2$Este hecho hace que la autocorrelación se entienda como una potencia generalizada variable con $\tau$.
+}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Transformada de Fourier de señales aleatorias}
+\vspace{-0.2cm}
+\footnotesize
+\begin{itemize}
+\footnotesize
+
+\item Las transformadas de Fourier representativas (es decir, que mejor caracterizan) a las señales aleatorias no son la transformada de una muestra/secuencia de la señal, si no  las de las señales de autocorrelacion y correlación cruzada.
+\visible<2->{
+\item \alert{La densidad espectral de potencia}$^1$  es la transformada de Fourier de la señal de autocorrelación:
+
+\begin{itemize}
+
+\footnotesize
+
+\item Continuo: $\Phi_{XX}(jw)=\int_{-\infty}^{\infty} \phi_{XX}(\tau)e^{-jw\tau}d\tau$
+
+\vspace{0.1cm}
+
+\item Discreto: $\Phi_{XX}(e^{jw})=\sum_{l=-\infty}^{\infty} \phi_{XX}(l)e^{-jwl}$
+
+\vspace{0.1cm}
+
+\item El espectro de potencia permite clasificar las señales aleatorias: ruido blanco, señal aleatoria de banda ancha, señal aleatoria de banda estrecha. 
+\end{itemize}
+
+}
+
+\visible<3->{
+\item \alert{La densidad espectral cruzada} es la transformada de Fourier de la señal de correlación cruzada:
+
+\begin{itemize}
+
+\footnotesize
+
+\item Continuo: $\Phi_{XY}(jw)=\int_{-\infty}^{\infty} \phi_{XY}(\tau)e^{-jw\tau}d\tau$
+
+\vspace{0.1cm}
+
+\item Discreto: $\Phi_{XY}(e^{jw})=\sum_{l=-\infty}^{\infty} \phi_{XY}(l)e^{-jwl}$
+
+\vspace{0.1cm}
+
+\end{itemize}
+
+
+}
+
+
+\end{itemize}
+
+
+\rule{11cm}{0.04ex}
+\scriptsize
+También se denomina espectro de densidad de potencia o simplemente espectro de potencia.
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Clasificación de las señales aleatorias}
+\vspace{-0.2cm}
+\footnotesize
+\begin{itemize}
+\footnotesize
+\item Señal de ruido blanco: aquella cuyo espectro en potencia toma valor constante
+\begin{itemize}
+\footnotesize
+\scriptsize
+\item Continuo: $\Phi_{XX}(jw)=a$   $\rightarrow \phi_{XX}(\tau)=a\delta(\tau)$.
+
+\vspace{0.1cm}
+
+ No es físicamente realizable, ya que tendría que ser una señal de potencia infinita (ya que $P_X=\phi_{XX}(\tau=0)=\infty$). 
+ 
+ \vspace{0.1cm}
+ 
+ \item Discreto: $\Phi_{XX}(e^{jw})=a $  $\rightarrow \phi_{XX}(l)=a \delta(l)$.
+ 
+ 
+\end{itemize}
+
+\item Señal con bias constante: aquella cuya autocorrelación toma un valor constante:
+\begin{itemize}
+\footnotesize
+\scriptsize
+\item Continuo: $\Phi_{XX}(jw)=\mu^2_X \delta(w)$   $\leftarrow \phi_{XX}(\tau)=\mu^2_X$.
+
+\vspace{0.1cm}
+
+ \item Discreto: $\Phi_{XX}(e^{jw})=\mu^2_X \delta(w)$   $\leftarrow \phi_{XX}(l)=\mu^2_X$.
+
+ 
+ \vspace{0.1cm}
+ 
+ 
+\end{itemize}
+
+
+ \item Una combinación de las dos anteriores
+ 
+ \item Señal aleatoria con espectro en potencia paso baja: es la que su espectro en potencia tiene la forma de un filtro paso bajo ideal.
+ 
+ \item Señal aleatoria con espectro en potencia paso banda: es la que su espectro en potencia tiene la forma de un filtro paso banda ideal.
+
+\item Señal aleatoria de banda estrecha: aquella cuyo espectro en frecuencia tiene una banda en frecuencias estrecha
+
+\item Señal aleatoria de banda ancha: aquella cuyo espectro en frecuencia tiene una banda en frecuencia ancha.
+
+
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Procesamiento de señales aleatorias I}
+\vspace{-0.2cm}
+\footnotesize
+\begin{itemize}
+\item Las señales aleatorias, como señales que son, se pueden procesar con todos los sistemas lineales y filtros ideales con los que hemos trabajado a lo largo de la asignatura.
+\item Pero debido a su aleatoreidad, para caracterizar su comportamiento correctamente necesitamos estudiar que le sucede a la función de probabilidad o a los estadísticos de la señal aleatoria filtrada. 
+\item Esto se pude hacer determinando que le sucede a la media, al valor cuadrático medio, autocorrelación, etc ... de la señal de salida del filtro $H(s)$ o $H(z)$ a partir de los valores de los estadísticos correspondientes de la señal de entrada.
+\item El análisis se puede realizar tanto en continuo como en discreto. En nuestro caso, realizaremos en discreto el análisis restante del tema.
+\item Y en todo momento vamos a suponer que los sistemas lineales/filtros son deterministas, y que por lo tanto, la aleatoreidad del proceso se encuentra únicamente asociado a la aleatoreidad de la señal. 
+\item Además, también supondremos que las señales aleatorias son estacionarias (en el sentido amplio).
+
+
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+\frametitle{Procesamiento de señales aleatorias II}
+\vspace{-0.2cm}
+\footnotesize
+\begin{itemize}
+\item La respuesta de un sistema determinista a cualquier entrada se puede calcular a través de la función de convolución: $y(n)=(h*x)(n)=\sum_{k=-\infty}^{\infty} h(k)x(n-k)$ 
+
+\visible<2->{
+\item El valor medio de la señal de salida:
+\alert{$\mu_Y=H(e^{j0})\mu_X$}
+
+{\scriptsize
+
+\color{gray}
+Se calcula aprovechando las propiedades de la linealidad del sistema
+
+$\mu_Y=E(y(n))=E(\sum_{k=-\infty}^{\infty} h(k)x(n-k))=\sum_{k=-\infty}^{\infty} h(k)E(x(n-k))=$
+
+\hspace{0.8cm}$=\mu_X \sum_{k=-\infty}^{\infty} h(k)=H(e^{j0})\mu_X$
+\color{black}}}
+
+\visible<3->{
+
+\item La señal de autocorrelación (productos aparecen en el dominio de la frecuencia): \alert{$\Phi_{YY}(e^{jw})=|H(e^{jw})H(e^{-jw})|\Phi_{XX}(e^{jw})$}
+
+{\scriptsize
+\color{gray}
+
+$\phi_{YY}(l)\!=\!E(y(n\!+\!l)y(n))\!=\!E\!\!\left (\left ( \sum_{i=-\infty}^{\infty} h(i)x(n\!+\!l\!-\!i) \right )\!\! \left ( \sum_{k=-\infty}^{\infty} h(k)x(n\!-\!k) \right )\right )=$
+
+\hspace{0.9cm}$=\sum_{i=-\infty}^{\infty} h(i) \sum_{k=-\infty}^{\infty} h(k) E(x(n\!+\!l\!-\!i)x(n\!-\!k))=^1$
+
+\vspace{0.1cm}
+
+\hspace{0.9cm}$=\sum_{i=-\infty}^{\infty} h(i) \sum_{k=-\infty}^{\infty} h(k) \psi_{XX}(l+k-i)=^2$
+
+\vspace{0.1cm}
+
+\hspace{0.9cm}$=\sum_{m=-\infty}^{\infty} \psi_{XX}(l-m) \sum_{k=-\infty}^{\infty} h(k) h(m+k) =(\psi_{XX}*(h(k)*h(-k))(l)$
+
+\vspace{0.1cm}
+
+En el dominio de la transformada las operaciones son más sencillas: dos convoluciones sucesivas se convierten en dos productos.
+
+
+
+$\phi_{YY}(e^{jw})=|H(e^{jw})H(e^{-jw})|\Phi_{XX}(e^{jw})$
+
+}}
+
+\end{itemize}
+
+\vspace{-0.2cm}
+
+\rule{11cm}{0.04ex}
+
+\visible<3->{
+\color{gray}
+\scriptsize
+$^1$Como son señales estacionarias el valor esperado solo depende de la diferencia de los indices: $E(x(n\!+\!l\!-\!i)x(n\!-\!k))=\psi_{XX}(l+k-i)$
+
+$^2$Cambio de variable $m=i-k$
+}
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Procesamiento de señales aleatorias III}
+\vspace{-0.2cm}
+\footnotesize
+\begin{itemize}
+\item La señal de autocorrelacion: \alert{$\Phi_{YY}(e^{jw})=|H(e^{jw})H(e^{-jw})|\Phi_{XX}(e^{jw})$}
+\begin{itemize}
+\footnotesize
+\item Utilidad: La expresión es especialmente útil para obtener el espectro en frecuencia de un sistema lineal con una función de transferencia desconocida:
+
+\visible<2->{
+\begin{itemize}
+\footnotesize
+\item  Para eso basta con excitar el sistema con una señal aleatoria estacionaria $x(n)$ de espectro en potencia conocido y observar el espectro en potencia de la señal de salida.
+ 
+\item El cociente de ambos espectros nos da el cuadrado del módulo del espectro del sistema lineal.  
+\end{itemize}}
+\end{itemize}
+
+\visible<3->{
+\item La señal de correlación cruzada: \alert{$\Phi_{XY}(e^{jw})=H(e^{jw})\Phi_{XX}(e^{jw})$}
+
+\begin{itemize}
+\footnotesize
+\item La demostración es análoga a la anterior, calculando la correlación entre la señal de salida (que pasa una vez por el sistema) y la señal de entrada (que no pasa por el filtro). 
+\item En este caso, la expresión nos relaciona el espectro de potencia de la señal de entrada con la densidad espectral cruzada de la entrada y la salida. 
+\item Utilidad similar a la del caso anterior, pero ahora podemos obtener la respuesta en frecuencia completa.
+\end{itemize}}
+
+
+\end{itemize}
+\end{frame}

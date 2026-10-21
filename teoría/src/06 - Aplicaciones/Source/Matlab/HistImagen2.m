@@ -1,0 +1,12 @@
+im=imread('moon.tif');
+figure;imshow(im); 
+figure;imhist(im); 
+im2=imadjust(im,[0.2,0.9],[0 1]);
+figure;imshow(im2); 
+figure;imhist(im2); 
+im3=imadjust(im,[0.2,0.9],[0 1],2);
+figure;imshow(im3); 
+figure;imhist(im3); 
+im4=imadjust(im,[0.2,0.9],[0 1],0.5);
+figure;imshow(im4); 
+figure;imhist(im4); 

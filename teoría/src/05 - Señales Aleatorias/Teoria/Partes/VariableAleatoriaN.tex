@@ -1,0 +1,590 @@
+ %%%%%%%%%%%%%%Empieza la presentacion%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Múltiples variables aleatorias}
+
+
+
+\begin{frame}
+\frametitle{Definición de múltiples variables aleatorias I}
+
+\vspace{-0.2cm}
+
+\footnotesize
+
+\begin{itemize}
+\item Las propiedades de un conjunto $\{X_1,X_2,\dots,X_M\}$ de variables aleatorias se definen a través de la función probabilidad$^1$ conjunta $p_{\{X_1,X_2\dots,X_M\}}(x_1,x_2,\dots,x_M)$.
+
+\vspace{0.1cm}
+
+\item Las probabilidad conjunta se refiere al hecho de la probabilidad de la variable $X_1$ se encuentre en el estado $x_1$ y la variable $X_2$ se encuentre en el estado $x_2$ ... y la variable $X_M$ se encuentre en el estado $x_M$.
+
+\visible<2->{
+
+\item Operaciones básicas de probabilidades:
+
+}
+\begin{itemize}
+\footnotesize
+
+\visible<2->{
+
+\item Regla de la cadena (existen $M!$ factorizaciones posibles): 
+
+
+\hspace{0.2cm}{\scriptsize$p_{\{X_1,\dots,X_M\}}(x_1,\dots,x_M)=p_{X_1}(x_1|x_2,\dots,x_M)p_{X_2}(x_2|x_3,\dots,x_M)\cdots p_{X_M}(x_M)$}
+}
+\vspace{0.1cm}
+
+\visible<3->{
+
+\item Independencia condicional de $X_a$ de $X_b$ dados los valores de $\{x_1,\dots,x_L\}$:
+
+\hspace{0.2cm}$p(x_a|x_1,\dots,x_L,x_b)=p(x_a|x_1,\dots,x_L)$
+}
+
+\visible<4->{
+
+\item Independencia condicional de un conjunto de variables$^2$:
+
+\vspace{0.1cm}
+
+\hspace{0.2cm}$p_{\{X_1,\dots,X_M\}}(x_1,\dots,x_M)=\prod_{i=1}^M p_{X_i}(x_i)$
+
+}
+
+\end{itemize}
+
+
+\end{itemize}
+
+\vspace{-0.3cm}
+
+\rule{11cm}{0.04ex}
+\scriptsize
+$^1$Aunque la definición de las variables aleatorias puede realizarse, al igual que en el caso de continuos, a través de diferentes funciones de probabilidad, vamos a utilizar la definición de probabilidad de masa y densidad de probabilidad.
+
+\visible<4->{
+
+
+\vspace{0.1cm}
+
+$^2$La expresión se obtiene a partir de la regla de la cadena y aplicando el hecho de que son probabilisticamente independientes todas de todas. 
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Definición de múltiples variables aleatorias II}
+
+\footnotesize
+
+
+\begin{itemize}
+\item Operaciones básicas de probabilidades conjuntas:
+\begin{itemize}
+\footnotesize
+
+\visible<2->{
+
+
+\item Marginalización (probabilidad de un subconjunto):
+
+\begin{itemize}
+
+\item Variables discretas: $p_{X_1}(x_1)=\sum_{x_2\in X_2} p_{\{X_1,X_2\}}(x_1,x_2)$
+\item Variables continuas: $p_{X_1}(x_1)=\int_{-\infty}^{\infty} p_{\{X_1,X_2\}}(x_1,x_2)dx_2$
+
+\end{itemize}
+}
+
+\visible<3->{
+
+\item Teorema Bayes$^1$: $p_{X_1}(x_1|x_2)=\frac{p_{X_2}(x_2|x_1)p_{X_1}(x_1)}{p_{X_2}(x_2)}$
+}
+
+\end{itemize}
+
+
+\end{itemize}
+
+\visible<4->{
+
+
+\color{olivegreen}{Ejemplo continuo}: Representar la distribución conjunta de las variables $\{X_1,X_2\}$ a partir de 
+$p_{X_1}(x_1)=\mathcal{U}_{[2,4]}(x_1)$ y la $p_{X_2}(x_2|x_1)=\mathcal{N}(x_2;x_1,1)$
+}
+
+\color{gray}
+
+\vspace{-0.3cm}
+
+\begin{columns}[c]
+\begin{column}{5.5cm}
+
+\visible<5->{
+
+
+\scriptsize
+
+$p_{X_1}(x_1)=\left \{\begin{array}{ll}\frac{1}{4-2}&\:\: 2\le x_1\le 4\\0 &\:\:c.c. \end{array} \right .$
+
+\vspace{0.1cm}
+
+$p_{X_2}(x_2|x_1)=\frac{1}{\sqrt{2\pi}}e^{-\frac{(x_2-x_1)^2}{2}}$
+
+
+\vspace{0.2cm}
+
+$p_{\{X_1,X_2\}}(x_1,x_2)=p(x_2|x_1)p(x_1)=$
+
+\hspace{0.4cm}$=\left \{\begin{array}{ll}\frac{1}{2\sqrt{2\pi}}e^{-\frac{(x_2-x_1)^2}{2}}&\:\: 2\le x_1\le 4\\0 &\:\:c.c. \end{array} \right .$
+}
+\end{column}
+\hspace{-1.5cm}\begin{column}{6.3cm}
+
+
+\visible<6->{
+
+\lstinputlisting{./Matlab/ProbConjunta.m}}
+
+\visible<7->{
+
+
+\vspace{-1.0cm}
+\hspace{3.3cm}\includegraphics[width=3cm]{./Figures/ProbConjunta.eps} 
+
+}
+
+
+
+\end{column}
+\end{columns}
+
+\vspace{0.0cm}
+
+
+
+\color{black}
+\visible<3->{
+
+
+\rule{11cm}{0.04ex}
+\scriptsize
+$^1$Se puede derivar a partir de la regla de la cadena para un conjunto de dos variables: $p(x_1,x_2)=p(x_1|x_2)p(x_2)=p(x_2|x_1)p(x_1)$
+}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+\frametitle{Estadísticos de conjuntos de variables aleatorias}
+
+
+
+\footnotesize
+
+\begin{itemize}
+
+\item Suponemos un conjunto de variables aleatorias $\mathcal{X}=\{X_1,X_2,\dots,X_M\}$ y su función de probabilidad conjunta $p_{\{X_1,X_2\dots,X_M\}}(x_1,x_2,\dots,x_M)$.
+
+\item Los estadísticos que se suelen utilizar son:
+
+\begin{itemize}
+\footnotesize
+
+\visible<2->{
+
+
+\item Los estadísticos de cada variable aleatoria por separado: son los mismos que los de una variable aleatoria (sobre la función de probabilidad marginal asociada a cada variable):
+
+\begin{itemize}
+\scriptsize
+\item  $p_{X_i}(x_i)\!\!=\!\!\int\!\! \int\!\! \int_{-\infty}^{\infty} p_{\{X_1,X_2\dots,X_M\}}\!(x_1,x_2,\dots,x_M)dx_1\cdots dx_{i-1}dx_{i+1}dx_M$
+
+\vspace{0.1cm}
+
+\item Media: $\mu_{X_i}=E(X_i)=\int_{-\infty}^{\infty}x_i p_{X_i}(x_i)dx_i$
+
+\vspace{0.1cm}
+
+\item Valor cuadrático medio: $E(X_i^2)=\int_{-\infty}^{\infty}x_i^2 p_{X_i}(x_i)dx_i$
+
+
+\vspace{0.1cm}
+
+\item Varianza: $\sigma_{x_i}^2\!=\!E((X_i\!-\!\mu_{x_i})^2)\!=\!\!\int_{-\infty}^{\infty}\!(x_i\!-\!\mu_{x_i})^2 p_{X_i}(x_i)dx_i\!=\!E(X_i^2)\!-\!\mu_{X_i}^2$
+
+ 
+\end{itemize}
+}
+
+\visible<3->{
+
+
+\item Aparecen estadísticos de parejas de variables aleatorias (sobre la función de probabilidad marginal de cada par de variables):
+
+\begin{itemize}
+\scriptsize
+\item  $p_{X_iX_j}(x_i,x_j)\!\!= \int_{-\infty}^{\infty} p_{\mathcal{X}} (x_1,x_2,\dots,x_M)dx_{1:i-1} dx_{i+1:j-1}dx_{j+1:M}$
+
+\vspace{0.1cm}
+
+\item Correlación cruzada: $\phi_{X_iX_j}\!=\!E(X_iX_j)\!=\! \int_{-\infty}^{\infty}\!\! x_i x_j p_{X_iX_j}(x_i,x_j)dx_i dx_j$
+
+\vspace{0.1cm}
+
+\item Covarianza: $\psi_{X_iX_j}=E((X_i-\mu_{X_i})(X_j-\mu_{X_j}))=$
+
+\hspace{0.5cm}$=\int_{-\infty}^{\infty} (x_i-\mu_{x_i}) (x_j-\mu_{x_j}) p_{X_i,X_j}(x_i,x_j)dx_i dx_j=\phi_{X_iXj}-\mu_{X_i}\mu_{X_j}$
+
+\item Coeficiente de correlación: $\rho_{X_iX_j}=\frac{\psi_{X_iX_j}}{\sigma_{X_i}\sigma_{X_j}}$
+
+
+\end{itemize}
+}
+ 
+\end{itemize}
+\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Propiedades de pares de variables aleatorias}
+
+\footnotesize
+\begin{itemize}
+
+
+
+\item Independencia probabilística:
+	$p(x_i,x_j)=p(x_i|x_j)p(x_j)=p(x_i)p(x_j)$
+
+\visible<2->{
+
+\item Independencia lineal o falta de correlación cruzada:  $E(X_i X_j)=\mu_{X_i}\mu_{X_j}$
+}
+
+\begin{itemize}
+\footnotesize
+
+\visible<3->{
+
+
+\item Independencia probabilística $\rightarrow$ independencia lineal
+
+\vspace{0.1cm}
+
+$E(X_i X_j)\!=\!\! \int_{-\infty}^{\infty}\!\! x_i x_j p_{X_iX_j}(x_i,x_j)dx_i dx_j\!=\!\!\! \int_{-\infty}^{\infty}\!\! x_i x_j p_{X_i}(x_i)p_{X_j}(x_j)dx_i dx_j\!=\!\mu_{X_i}\mu_{X_j}$
+}
+
+
+\vspace{-0.25cm}
+
+\visible<4->{
+
+\item No hay independencia lineal (o las variables están correlacionadas) $\rightarrow$ hay dependencia probabilística
+}
+
+\vspace{0.1cm}
+
+
+\visible<5->{
+
+\item Por lo tanto, la correlación cruzada de las señales ($E(X_i X_j)\neq \mu_{X_i}\mu_{X_j}$) sirve para determinar la existencia de la dependencia probabilística.
+}
+
+\end{itemize}
+
+
+
+
+\visible<6->{
+\item Independencia probabilística $\rightarrow$ $\psi_{X_iX_j}=0$ (covarianza nula)
+ 
+ 
+ }
+ 
+  
+ \vspace{-0.1cm}
+ 
+ \begin{itemize}
+\visible<6->{
+\item $\psi_{X_iX_j}=E(X_i,X_j)-\mu_{X_i}\mu_{X_j}=\mu_{X_i}\mu_{X_j}-\mu_{X_i}\mu_{X_j}$
+ }
+ 
+ \vspace{0.1cm}
+ 
+ \visible<7->{
+\item  $\psi_{X_iX_j}\ne0$ $\rightarrow$ Hay dependencia probabilística.
+}
+
+\end{itemize}
+
+ \visible<8->{
+
+\item Coeficiente de correlación:
+
+\begin{itemize}
+
+\footnotesize
+\item Independencia probabilística $\rightarrow$ $\rho_{X_iX_j}=0$ (la covarianza es nula)
+\item Dependencia lineal $\rightarrow$ $\rho_{X_iX_j}=\pm 1$
+\end{itemize}
+}
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Variables aleatorias comunes}
+
+\vspace{-0.3cm}
+
+\begin{columns}[T]
+\begin{column}{8cm}
+
+\begin{itemize}
+\footnotesize
+\item Conjunto de variables con una distribución uniforme: $p(x_1,\cdots,x_M)=\prod_{i=1:M} \mathcal{U}_{[a_i,b_i]}(x_i)$
+\begin{itemize}
+\footnotesize
+\item Probabilísticamente independientes.
+
+\item Mismas características individuales.
+
+\item Características de los pares de variables (independencia condicional):
+
+\begin{itemize}
+
+\vspace{-0.1cm}
+
+
+\item Correlación cruzada: 
+
+\vspace{0.1cm}
+
+$\phi_{X_iX_j}=\mu_{X_i}\mu_{X_j}=\frac{b_i+a_i}{2}\frac{b_j+a_j}{2}$
+
+\vspace{0.1cm}
+
+
+\item Covarianza: $\psi_{X_iX_j}=0$
+
+
+
+
+
+\end{itemize}
+
+\end{itemize}
+ 
+\end{itemize}
+
+\end{column}
+\begin{column}{3.5cm}
+
+\includegraphics[width=3.5cm]{./Figures/ProbConjuntaUniforme.eps} 
+
+\end{column}
+\end{columns}
+
+\visible<2->{
+
+\vspace{-1.1cm}
+
+\begin{columns}[c]
+\begin{column}{8cm}
+
+\vspace{0.6cm}
+
+\begin{itemize}
+\footnotesize
+\item Conjunto de variables ($\bm{x}=[x_1,x_2,\dots,x_M]$) con una distribución gaussiana: $p(x_1,\cdots,x_M)=\frac{1}{\sqrt{(2\pi)^M |\bm{\Sigma}|}}e^{-\frac{1}{2}(\bm{x}-\bm{\mu})\bm{\Sigma}^{-1}(\bm{x}-\bm{\mu})^T}$
+
+
+\begin{itemize}
+\footnotesize
+
+\vspace{-0.1cm}
+
+\item $\bm{\mu}=[\mu_{X_1},\mu_{X_2},\cdots,\mu_{X_M}]$
+
+\vspace{0.2cm}
+
+
+\item $\bm{\Sigma}=\left[\begin{array}{llll}\sigma^2_{X_1}&\psi_{X_1X_2}&\dots&\psi_{X_1X_M}\\\psi_{X_1X_2}&\sigma^2_{X_2}&\dots&\psi_{X_2X_M}\\ \vdots & \vdots &\ddots & \vdots \\\psi_{X_1X_M}&\psi_{X_2X_M}&\dots&\sigma^2_{X_M}  \end{array}  \right ]$
+
+
+\end{itemize}
+ 
+\end{itemize}
+
+\end{column}
+\begin{column}{3.5cm}
+
+
+
+\includegraphics[width=3.1cm]{./Figures/ProbConjuntaGaussiana.eps}
+
+\includegraphics[width=3.5cm]{./Figures/ProbConjuntaGaussiana2.eps} 
+
+\end{column}
+\end{columns}
+}
+
+\end{frame} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Variables aleatorias gaussianas}
+
+\vspace{-0.2cm}
+
+\footnotesize
+
+\begin{itemize}
+\item La matriz de covarianza $\bm{\Sigma}$ representa un elipsoide M-dimensional, reorientado según los valores de la covarianza que existe entre los diferentes pares de variables.
+
+\item $\bm{\Sigma}$ se puede construir usando la expresión $\bm{\Sigma}=\bm{RDR}'$, donde $\bm{R}$ es una matriz de rotación, y $\bm D$ es una matriz diagonal en la que en cada componente se coloca la varianza asociada a la dirección marcada con la matriz de rotación.
+
+\item Si tenemos la matriz $\bm \Sigma$ podemos calcular la descomposición con la orden de Matlab $\texttt{svd: [R,D]=svd(Sigma)}$.
+
+\end{itemize}
+
+\vspace{-0.5cm}
+
+\begin{columns}[c]
+\begin{column}{6cm}
+
+\lstinputlisting{./Matlab/ProbRotacion.m}
+\end{column}
+\begin{column}{4cm}
+\includegraphics[width=2.8cm]{./Figures/ProbConjuntaGaussiana0.eps} 
+
+\includegraphics[width=2.8cm]{./Figures/ProbConjuntaGaussiana90.eps} 
+
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Muestreo de conjuntos variables aleatorias}
+
+\footnotesize
+\begin{itemize}
+\item Si tenemos un conjunto de $M$ variables distribuidas uniformemente, podemos aprovechar el hecho de que son independientes condicionalmente las unas de las otras y muestrear cada una de ellas de su distribución uniforme. Una muestra será formada por los conjuntos de $M$ valores muestreados de cada distribución.
+\item Si tenemos un conjunto de $M$ variables que tienen una distribución gaussiana conjunta, podemos muestrearlas  a partir de la función randn, teniendo en cuenta el valor medio $\bm{\mu}$ de cada variable y la matriz de covarianza $\bm{\Sigma}=\bm{RDR}'$
+
+\vspace{-0.4cm}
+
+\lstinputlisting{./Matlab/GaussianaN.m}
+
+\item  En el caso de una distribución genérica, se utilizan métodos de simulación de Monte-Carlo. Por ejemplo, se puede hacer un muetreo ordenado, siguiendo una factorización de la distribución de probabilidad:
+
+$p(x_1,\dots,x_M)=p(x_1)p(x_2|x_1)\cdots p(x_M|x_1,\cdots,x_{M-1})$.
+
+En esta factorización, se empezaría muestreando $x_1$, luego $x_2$ a partir del valor muestreado de $x_1$, y así sucesivamente.  
+
+\end{itemize}
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Caracterización de las muestras}
+
+\vspace{-0.2cm}
+
+\footnotesize
+\begin{itemize}
+\item Estimar la probabilidad conjunta de todas la variables es mucho más complicado que estimar la probabilidad de una única variable aleatoria. 
+\begin{itemize}
+\footnotesize
+\item Para simplificar el problema, se puede buscar una factorización de variables que explote las propiedades de independencia de los datos. 
+\item Ademas de obtener las independencias, es necesario saber que función de probabilidad captura a cada una de las variables. Lo que se suele hacer es suponer que pertenecen a una determinada familia.
+\end{itemize}
+\item Estimar los estadísticos que hemos vistos a partir de las muestras es una labor más sencilla. Al igual que en el caso univariable se puede asimilar la probabilidad a diferentes deltas, y por lo tanto, estimar los estadísticos como sumatorios de funciones de las muestras. En el caso de los estadísticos bidimensionales, aparece un doble sumario externo (ya que es necesario realizar la integración/sumatorio respecto a las dos variables involucradas).
+
+\item Operaciones con Matlab:
+
+\begin{itemize}
+
+\footnotesize
+\item Para que los cálculos se realicen sin problemas, es conveniente que los datos se encuentren recogidos en una matriz $\#_{datos}\cdot M$.
+\item Media de cada variable: \color{blue}\texttt{mean(x);}\color{black}
+\item Matriz de covarianza: \color{blue}\texttt{cov(x,1);}\color{black}
+\item Matriz de coeficiente de correlación: \color{blue}\texttt{corr(x);}\color{black}
+%\item
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Ejemplo de muestreo y caracterizacion}
+
+
+\begin{columns}[c]
+\begin{column}{7cm}
+\small
+\color{olivegreen}Muestrear la funci\'{o}n de distribución conjunta de las variables $\{X_1,X_2\}$ a partir de 
+$p_{X_1}(x_1)=\mathcal{U}_{[2,4]}(x_1)$ y la $p_{X_2}(x_2|x_1)=\mathcal{N}(x_2;x_1,1)$ y caracterizar las muestras obtenidas
+
+\end{column}
+
+\begin{column}{3cm}
+
+\includegraphics[width=3cm]{./Figures/ProbConjunta.eps} 
+
+\end{column}
+
+
+\end{columns}
+
+\vspace{-0.3cm}
+
+\color{black} 
+
+\begin{columns}[c]
+\begin{column}{5cm}
+
+\visible<2->{
+\lstinputlisting{./Matlab/CalculosConjunta.m}}
+
+\end{column}
+
+
+
+\begin{column}{5cm}
+
+
+\visible<3->{
+\includegraphics[width=4cm]{./Figures/HistConjunta.eps} }
+
+\vspace{-0.4cm}
+
+\visible<4->{
+\lstinputlisting{./Matlab/ResultadosConjunta.m}}
+
+\end{column}
+\end{columns}
+\end{frame}

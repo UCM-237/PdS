@@ -1,0 +1,6 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Objetivos}{2}{0}{1}
+\beamer@sectionintoc {2}{Conversión analógico-digital y digital-analógico}{2}{0}{2}
+\beamer@sectionintoc {3}{Muestreo de señales continuas}{2}{0}{3}
+\beamer@subsectionintoc {3}{1}{Muestreo periódico}{2}{0}{3}
+\beamer@subsectionintoc {3}{2}{Teorema del muestreo}{2}{0}{3}

@@ -1,0 +1,177 @@
+%% PLANTILLA PARA ARTICULOS
+\documentclass[10pt,twoside,spanish,a4paper]{article}
+\input{configfile}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{amsmath}
+% \usepackage[framed]{mcode}
+\usepackage{matlab-prettifier}
+\lstset{literate={ñ}{{\~n}}1 {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1}
+
+\begin{document}
+
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+\title{
+  \vspace{-0.2cm}
+	\begin{center}
+		\large
+		\begin{tabular}{rrl}
+		\multirow{4}{*}{\includegraphics[width=1.7cm]{UCM.eps} \hspace{1cm}}&Grado: & Ingeniería Electrónica de Comunicaciones\\
+		&Asignatura: & Procesamiento de Señales \\
+		&Curso:      & 2025/2026 \\
+		\end{tabular}
+	\end{center}
+	\rule{\textwidth}{0.4pt}
+	%
+	\vspace{-1.5cm}
+	\begin{center}
+		\color{blue} \Huge
+		\begin{tabular}{c}
+	        \textbf{Práctica 8}\\
+		\textbf{Señales aleatorias}\\
+		\end{tabular}
+	\end{center}
+	\vspace{-0.5cm}
+	\rule{\textwidth}{0.4pt}
+}
+\maketitle
+ \thispagestyle{empty}
+\pagestyle{fancy}
+
+\lfoot{\includegraphics[width=0.8cm]{UCM.eps}}
+\cfoot{\vspace{-0.6cm} Ingeniería Electrónica de Comunicaciones }
+\rfoot{\vspace{-0.6cm} \thepage}
+\lhead{Práctica}
+\rhead{Práctica 8: Señales aleatorias}
+\renewcommand{\headrule}{ \vspace{-0.2cm} \rule{\textwidth}{0.4pt}}
+\renewcommand{\footrule}{\vspace{0.5cm} \rule{\textwidth}{0.4pt}\\ \vspace{-0.3cm} \\}
+
+%**************************************************************<- para indicar pregunta de la pr·ctica
+\newcounter{ctPreg}
+\setcounter{ctPreg}{1}
+\newcommand{\itemP}{ \item[{\color{blue}\fbox{\textbf{Tarea \arabic{ctPreg}:}}}] \addtocounter{ctPreg}{1}}  %
+\newcommand{\itemB}{ \item[{\color{blue}$\bullet$} ]    }
+\newcommand{\itemR}{ \item[{\color{blue}$\triangleright$} ]    }       %
+%**************************************************************
+
+\vspace{-8em}
+
+\section*{Objetivos}
+
+\begin{itemize}
+	\item Aprender a caracterizar el comportamiento de diferentes señales aleatorias.
+	\item Utilizar la correlación cruzada para encontrar un patrón en una señal.
+	\item Estimar la respuesta en frecuencia de un sistema desconocido.
+\end{itemize}
+
+\section*{Generación y análisis de señales aleatorias}
+
+	\begin{itemize}
+		\itemP \textbf{Generación y clasificación de señales aleatorias}\\
+		Genera muestras de las siguientes señales aleatorias y analiza su comportamiento:
+		\begin{itemize}
+			\item Determina, a partir del análisis de las expresiones o de la observación de diferentes muestras de la señal, cuales son markovianas, estacionarias y/o ergódicas. 
+			\item En aquellos casos en los que sea posible, representa gráficamente la autocorrelación calculada a partir de una secuencia de la señal generada, y la densidad espectral.
+		\end{itemize}
+
+		\begin{itemize}
+			\itemR $p(x[n])=\mathcal{N}_{(\mu=5,\sigma=4)}(x[n])$	
+			\itemR $p(x[n]|x[n-1])=\mathcal{N}_{(\mu=x[n-1],\sigma=0.5)}(x[n]),~p(x[0])=\delta(x)$
+			\itemR $p(x[n]|x[n-1])=\delta(x[n]-x[n-1]),~p(x[0])=\mathcal{N}_{(\mu=0,\sigma=0.25)}(x)$
+		\end{itemize}
+
+		\itemP  \textbf{Determinación de patrones en una señal con ruido}\\
+		Un sensor de distancia por desplazamiento de fase lanza una señal laser modulada a $f=100~\mathrm{MHz}$ y recibe la
+		señal reflejada en el objeto a medir. Para saber la distancia al objeto, se utiliza la expresión $d=\frac{c}{4\pi f}\theta$,
+		siendo $c$ es la velocidad de la luz, $f$ la frecuencia de modulación y $\theta$ el desfase. 
+		
+		Obtén las señales con \color{blue}\texttt{[recibida, enviada] = DatosTarea2()} \color{black}
+		determina el desfase entre ambas utilizando la correlación cruzada.
+
+  \newpage
+  \itemP  \textbf{Determinación del espectro en frecuencia de un sistema}
+
+  Identifica un sistema desconocido a partir de las relaciones que se establecen entre los espectros en potencia de una señal aleatoria y la misma señal filtrada con un filtro LTI.
+
+  \begin{enumerate}
+	  \item \textbf{Genera una señal de identificación}, aleatoria ergódica con espectro plano, que nos permite excitar las frecuencias
+	  de interés del sistema a identificar.
+  		\begin{lstlisting}[style=Matlab-editor,basicstyle=\scriptsize]
+N = 200;
+u = randn(N, 1);
+			\end{lstlisting}
+
+ 	  \item \textbf{Excita el sistema con la señal de identificación.}
+ 	 Para demostrar el método, utilizamos un sistema cuya función de transferencia es $H(s)=\frac{1}{10 s + 1}$.
+  		\begin{lstlisting}[style=Matlab-editor,basicstyle=\scriptsize]
+Ts = 2;
+fs = 1/Ts;
+t = [0:N-1]*Ts;
+
+H = tf(1, [10 1]);
+y = lsim(H, u, t);
+figure(1); hold on;
+	plot(t, u, 'b');
+	plot(t, y, 'r');
+	xlabel('tiempo (s)')
+	title('Excitación - Respuesta')
+		  \end{lstlisting}
+
+		\item \textbf{Calcula la densidad espectral cruzada} de ambas señales. En este ejemplo lo hacemos a través de la correlación cruzada con \texttt{xcorr}.
+			\begin{lstlisting}[style=Matlab-editor,basicstyle=\scriptsize]
+M = floor(N/4);
+phi_uu = xcorr(u, M);
+phi_uy = xcorr(y, u, M);
+Phi_uu = fft(phi_uu);
+Phi_uy = fft(phi_uy);
+
+figure(2)
+subplot(221);
+	plot(abs(Phi_uu));
+	title('|\Phi_{uu}(w)|')
+subplot(222);
+	plot(abs(Phi_uy));
+	title('|\Phi_{uy}(w)|')
+subplot(223);
+	plot(angle(Phi_uu));
+	title('arg \Phi_{uu}(w)')
+subplot(224);
+	plot(angle(Phi_uy));
+	title('arg \Phi_{uy}(w)')
+		\end{lstlisting}
+
+\newpage
+	\item \textbf{Estimar la respuesta en frecuencia} del filtro desconocido, dividiendo
+la densidad espectral cruzada entrada/salida entre la densidad espectral de la entrada.
+En este ejemplo, representamos el resultado junto con la respuesta en frecuencia real, para
+comparar.
+		\begin{lstlisting}[style=Matlab-editor,basicstyle=\scriptsize]
+K = 2*M + 1;
+f = [0:K-1] * fs/K;
+w = 2*pi*f;
+Hw = Phi_uy ./ Phi_uu;
+Hw_ = 1 ./ (10j*w + 1);
+figure(3);
+subplot(211); hold on;
+	plot(f, abs(Hw), 'o');
+	plot(f, abs(Hw_), 'r:');
+	title('|H(j\omega)|')
+	xlim([0, fs/2]);
+	ylim([0, 1])
+subplot(212); hold on;
+	plot(f, angle(Hw));
+	plot(f, angle(Hw_));
+	xlim([0, fs/2]);
+	ylim([-pi, pi])
+	title('arg H(j\omega)')
+		\end{lstlisting}
+  \end{enumerate}
+
+\end{itemize}
+
+
+
+\end{document}

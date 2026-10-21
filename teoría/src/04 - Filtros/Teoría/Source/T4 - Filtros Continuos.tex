@@ -1,0 +1,128 @@
+\documentclass[handout]{beamer}
+\mode<presentation> {%
+	\usetheme[]{Boadilla}
+	\usecolortheme{orchid}
+	\setbeamercovered{transparent}
+	\setbeamersize{text margin left=0.7cm}
+  \setbeamersize{text margin right=0.7cm}
+  \setbeamertemplate{enumerate item}[square]
+  \setbeamertemplate{enumerate subitem}[circle]
+  \setbeamertemplate{enumerate subsubitem}[>]
+  \setbeamertemplate{itemize item}[square]
+  \setbeamertemplate{itemize subitem}[circle]
+  \setbeamertemplate{itemize subsubitem}[>]
+}
+
+
+\usepackage{pstricks}
+\usepackage{pst-node}
+\usepackage{bm}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{pifont}
+\usepackage{rotating}
+\usepackage{colortbl}
+\usepackage[framed]{mcode}
+\usepackage{verbatim}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.multipart,decorations.pathreplacing}
+\tikzstyle{bloque}=[rectangle,rounded corners=2pt,draw=black!60,fill=black!5,very thick,minimum size=5mm,align=center]%
+\tikzstyle{arrow}=[very thick,color=black!60]%
+
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+\definecolor{general}{rgb}{0.9 0.9 1}%
+\newrgbcolor{colorsistema}{0 1 1}
+\newrgbcolor{colorviolet}{0.9 0.8 1}
+
+\author[J. Chacón]{%[Author, Another] % (optional, use only with lots of authors)
+\textit{Ingeniería Electrónica de Comunicaciones }\\
+\vspace{0.6cm}
+\small Jesús Chacón Sombría}%\inst{1} \and S.~Another\inst{2}}
+
+
+\institute[DACYA. UCM] % (optional, but mostly needed)
+{
+  %\inst{1}%
+
+\footnotesize  Departamento de Arquitectura de Computadores y Automática.\\
+  Universidad Complutense de Madrid
+  }
+
+\date[Diseño de filtros] % (optional)
+{\footnotesize Curso 2025-2026}%{\today / Master}
+\subject{Talks}
+
+\pgfdeclareimage[height=0.75cm]{logo}{ucm}
+
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\newcommand{\MyLogo}{%
+\begin{textblock}{14}(116.0,0.6)
+  \pgfuseimage{logo}
+\end{textblock}
+}
+
+\makeatletter
+\numberwithin{section}{part}
+\AtBeginPart{
+\beamer@tocsectionumber=0\relax
+\frame{\partpage}
+}
+\makeatother
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+ \MyLogo
+  \oldmacro\hfill%
+}
+
+\AtBeginSection[]{}
+\AtBeginSubsection[]{}
+
+% \input{./Partes/Objetivos.tex}
+% \input{./Partes/FiltrosIdeales.tex}
+% \input{./Partes/FiltrosContinuos0.tex}
+\input{./Partes/FiltrosContinuos1.tex}
+% \input{./Partes/FiltrosDiscretos.tex}
+% \input{./Partes/FiltrosOtros.tex}
+
+\begin{frame}
+  \frametitle{Conceptos Importantes}
+  \begin{itemize}
+    \item \alert{¿Cómo especificar un filtro paso bajo?}
+    \begin{itemize}
+      \item $\color{blue}(\omega_p,\omega_s)$ Frecuencias de paso y supresión.
+      \item $\color{blue}(\alpha_p,\alpha_s)$ Atenuación máxima de paso y mínima de supresión.
+    \end{itemize}
+    
+    \item \alert{Algunos tipos de filtros continuos}
+    \begin{itemize}
+      \item Butterworth (respuesta plana),
+      \item Chebyshev Tipo I (rizado en banda de paso).
+      \item Chebyshev Tipo II (rizado en banda de supresión).
+      \item Elíptico (rizado en banda de paso y supresión).
+    \end{itemize}
+
+    \item \alert{¿Y para filtros paso alto, paso banda y supresor de banda?}
+    \begin{itemize}
+      \item Transformación espectral
+    \end{itemize}
+  \end{itemize}
+  
+\end{frame}
+
+\end{document}

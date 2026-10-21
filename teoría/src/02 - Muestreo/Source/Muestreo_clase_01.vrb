@@ -1,0 +1,28 @@
+\frametitle{Procesador Digital de Señales (DSP)}
+  \begin{tikzpicture}
+    % Nodes
+    \node (input) [] {};
+    \node (antialiasing) [block, right=1cm of input] {\begin{minipage}{1.25cm}\centering\setlength{\baselineskip}{1.5em}\tiny Filtro\\ anti-aliasing\end{minipage}};
+    \node (adc) [block, right=0.8cm of antialiasing] {\tiny A/D};
+    \node (dsp) [block, right=0.8cm of adc] {\tiny Procesador digital};
+    \node (dac) [block, right=0.8cm of dsp] {\tiny D/A};
+    \node (smoothing) [block, right=0.8cm of dac] {\begin{minipage}{1.25cm}\centering\setlength{\baselineskip}{1.5em}\tiny Filtro de\\suavizado\end{minipage}};
+    \node (output) [right=0.8cm of smoothing] {};
+    % Arrows
+    \draw [arrow] (input) -- (antialiasing) node[midway, above] {\tiny $x(t)$};
+    \draw [arrow] (antialiasing) -- (adc) node[midway, above] {\tiny $x_a(t)$};
+    \draw [arrow] (adc) -- (dsp) node[midway, above] {\tiny $x_d[n]$};
+    \draw [arrow] (dsp) -- (dac) node[midway, above] {\tiny $y_d[n]$};
+    \draw [arrow] (dac) -- (smoothing) node[midway, above] {\tiny $y_a(t)$};
+    \draw [arrow] (smoothing) -- (output) node[midway, above] {\tiny $y(t)$};
+  \end{tikzpicture}
+  \begin{itemize}
+    \item \alert{Esquema general:}
+    \begin{itemize}\scriptsize
+      \item El filtro antialiasing garantiza una señal de ancho de banda limitado.
+      \item El ADC convierte la señal analógica en una señal digital.
+      \item El procesador digital realiza la manipulación de la señal.
+      \item El DAC convierte la señal digital en una señal analógica.
+      \item El filtro de suavizado elimina las altas frecuencia debidas a la reconstrucción.
+    \end{itemize}
+  \end{itemize}

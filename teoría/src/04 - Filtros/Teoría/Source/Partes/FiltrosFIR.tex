@@ -1,0 +1,893 @@
+
+\subsection{Filtros FIR}
+
+\begin{frame}
+\frametitle{Procedimiento de diseño de filtros FIR}
+
+\begin{itemize}
+\footnotesize
+\item Los filtros discretos FIR no tienen conexión directa con ningún filtro continuo, y por lo tanto, su diseño no se puede basar en la construcción de ningún filtro analógico.
+
+\visible<2->{\item El diseño de estos filtros se basa en la aproximación directa de la respuesta en frecuencia deseada (i.e. calcular los valores de $h(n)$ para que $H(e^{jw})$ tenga la forma deseada).
+
+\hspace{0.8cm}$H(e^{jw})=\sum_{n=-\infty}^{\infty} h(n)e^{-jwn} \rightarrow H(e^{jw})=\sum_{n=0}^{N} h(n)e^{-jwn} $   }
+
+\visible<3->{
+\item Los filtros que vamos a estudiar cumplen dos propiedades adicionales: son filtros con \alert{$h(n)$ real} y \alert{fase lineal} en la respuesta en frecuencia: $arg(H(e^{jw}))=\alpha w+\beta$. Ambos hechos\visible<5->{$^1$} hacen que el desfase sea introducido por el filtro a cada frecuencia sea $-Nw/2$.
+
+\begin{itemize}
+\footnotesize
+\item Transformada de Fourier con ventana.
+\item \color{gray} Muestreo en frecuencia.\color{black}
+\item Diseño asistido por computador.
+\end{itemize}
+}
+
+\visible<4->{
+\item Veremos que para diseñar los filtros será necesario primero estimar el valor $N$ y a continuación los valores de las h(n).
+}
+
+\end{itemize}
+
+\visible<5->{
+\rule{12cm}{0.4pt}
+\scriptsize
+$^1$ Al final del tema veremos las propiedades que cumplen todos los filtros FIR con $h(n)$ real y fase lineal. En esta sección nos centraremos en el diseño de un subconjunto de estos filtros.}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Diseño FIR por la TF con ventana  }
+
+\vspace{-0.2cm}
+
+\footnotesize
+
+
+\begin{itemize}
+\item La TF en tiempo discreto relaciona la respuesta en frecuencia del filtro con la respuesta del filtro a la señal impulso $h(n)$.  La segunda expresión permite obtener la $h_d(n)$ a partir de la respuesta en frecuencia $H_d(e^{jw})$.
+
+
+
+\hspace{1cm}$H_d(e^{jw})=\sum_{n=-\infty}^{\infty}h_d(n)e^{-jwn}$
+
+\hspace{1cm}$h_d(n)=\frac{1}{2\pi}\int_{-\pi}^\pi H_d(e^{jw}) e^{jwn} dw\:\:$  con $\:\:\infty \le n \le \infty$
+
+
+\end{itemize}
+
+\vspace{-0.3cm}
+
+\visible<2->{
+
+\begin{columns}[c]
+\begin{column}{8cm}
+\begin{itemize}
+
+\item El problema surge cuando se desea diseñar un filtro cuya respuesta en frecuencia toma un valor constante en módulo por secciones, ya que esto implica que la respuesta a la función impulso es de longitud doblemente infinita (no causal y distinta de cero $\:\:\infty \le n \le \infty$).
+\end{itemize}
+\end{column}
+\hspace{-0.4cm}\begin{column}{3cm}
+\includegraphics[trim=0cm 1cm 0cm 1cm,clip=true,width=3.5cm]{Figures/PorTramos}
+\end{column}
+\end{columns}
+}
+
+\vspace{-0.1cm}
+\begin{itemize}
+
+\visible<3->{
+\item Para convertir el filtro deseado $h_d(n)$ en un FIR de orden N+1 podemos:
+}
+
+\begin{enumerate}
+\footnotesize
+\visible<4->{\item Limitar el tamaño de la respuesta al impulso (truncarla/enventanarla,  $h_t(n)=v(n)h_d(n)$) con una ventana $v(n)$ de tamaño 2L+1=N+1.}
+\visible<5->{
+\item Retardar la respuesta del filtro $L=N/2$ unidades, para convertirlo en causal: $h(n)=h_t(n-L)$. Esto permite que el desfase en frecuencia sea lineal ya que $H(e^{jw})=e^{-jLw}H_t(e^{jw})=e^{-jwN/2}H_t(e^{jw})$.
+}
+\end{enumerate}
+\end{itemize}
+
+\vspace{-0.2cm}
+
+\visible<6->{
+\rule{12cm}{0.4pt}
+\scriptsize
+$h_d(n)$ es el filtro que $d$eseamos diseñar, $h_t(n)$ el sistema  que se obtiene $t$runcando/enventanando $h_d(n)$, y h(n) el filtro FIR (causal) final. }
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Respuesta al impulso de filtros deseados I}
+\footnotesize
+
+\begin{itemize}
+\item Se calcula la $h_d(n)$  de los filtros deseados con $h_d(n)\!=\!\frac{1}{2\pi}\!\!\int_{-\pi}^\pi H_d(e^{jw}) e^{jwn} dw$ o a través de las propiedades de la TFDT.
+\end{itemize}
+
+\begin{columns}[T]
+
+
+\begin{column}{5cm}
+\scriptsize
+\visible<2->{\centering{
+\alert{Filtro paso bajo}}
+
+
+\vspace{0.1cm}
+
+$\scriptsize H_{LPd}(e^{jw})\!=\!\left \{  \!\!\!\begin{array}{l} 1, \:\:\: |w|\!\!<\!\!w_c\\0,\:\:\: w_c\le |w| \le \pi \end{array}\right .$
+
+
+\vspace{0.1cm}
+\color{gray}$h_{LPd}(n)=\frac{1}{2\pi}\int_{-w_c}^{w_c} e^{jwn}dw$\color{black}
+
+
+\vspace{0.1cm}
+$h_{LPd}(n)=\!\left \{\!\!\!\begin{array}{l}\frac{w_c}{\pi}, \:\:\:  \:\:\: \:\:\: n=0\\ \frac{sen(nw_c)}{\pi n},  \:\:\: c.c.\end{array}  \right . $
+
+
+\vspace{0.1cm}
+}
+\visible<3->{
+\scriptsize
+\centering{
+\alert{Filtro paso alto}}
+
+\vspace{0.1cm}
+$\scriptsize H_{HPd}(e^{jw})\!=\!\left \{  \!\!\!\begin{array}{l} 0, \:\:\: |w|\!\!<\!\!w_c\\1,\:\:\: w_c\le |w| \le \pi \end{array}\right .$
+
+
+\vspace{0.1cm}
+
+\color{gray}
+$H_{HPd}(e^{jw})=1-H_{LPd}(e^{jw})$
+
+\vspace{0.1cm}
+
+$h_{HPd}(n)=\delta(n)-h_{LPd}(n)$
+
+\color{black}
+
+\vspace{0.1cm}
+
+$h_{HPd}(n)=\!\left \{\!\!\!\begin{array}{l}1-\frac{w_c}{\pi}, \:\:\:  \:\:\: \:\:\: n=0\\ -\frac{sen(nw_c)}{\pi n},  \:\:\: c.c.\end{array}  \right . $
+
+}
+
+\end{column}
+\begin{column}{5.5 cm}
+\scriptsize
+\visible<4->{
+\centering{
+\alert{Filtro paso banda}}
+
+\vspace{0.1cm}
+
+
+$\scriptsize H_{BPd}(e^{jw})\!=\!\left \{  \!\!\!\begin{array}{l} 1, \:  w_{1}\!\!<\!\!|w|\!\!<\!\!w_{2}\\0, \:\textrm{c.c.}  \end{array}\right .$
+
+
+\vspace{0.1cm}
+\color{gray}
+
+
+\vspace{0.1cm}
+
+$H_{BPd}(e^{jw})=H_{HPd,w_1}(e^{jw})-H_{HPd,w_2}(e^{jw})$
+
+
+\vspace{0.1cm}
+
+\color{black}
+
+$h_{BPd}(n)=\!\left \{\!\!\!\begin{array}{l}\frac{w_2-w_1}{\pi}, \:\:\:  \:\:\: \:\:\: n=0\\ \frac{sen(w_2n)-sen(w_1n)}{\pi n},  \:\:\: c.c.\end{array}  \right . $
+
+}
+\vspace{0.1cm}
+
+\visible<5->{
+\centering{
+\alert{Filtro supresor banda}}
+
+\vspace{0.1cm}
+
+
+$\scriptsize H_{SPd}(e^{jw})\!=\!\left \{  \!\!\!\begin{array}{l} 0, \:  w_{1}\!\!<\!\!|w|\!\!<\!\!w_{2}\\1, \:\textrm{c.c.}  \end{array}\right .$
+
+
+\vspace{0.1cm}
+
+\color{gray}
+$H_{SPd}(e^{jw})=1-H_{BPd}(e^{jw})$
+
+
+\vspace{0.1cm}
+
+$h_{SPd}(n)=\delta(n)-h_{BPd}(n)$
+
+\color{black}
+
+
+\vspace{0.1cm}
+
+$h_{SPd}(n)=\!\left \{\!\!\!\begin{array}{l}1-\frac{w_2-w_1}{\pi}, \:\:\:  \:\:\: \:\:\: n=0\\ -\frac{sen(w_2n)-sen(w_1n)}{\pi n},  \:\:\: c.c.\end{array}  \right . $
+}
+
+\end{column}
+\end{columns}
+
+
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Respuesta al impulso de filtros deseados II}
+\footnotesize
+
+\begin{itemize}
+\item Respuesta al impulso de los diferentes filtros deseados (cuadro resumen en la columna izquierda, filtro multinivel en la columna derecha)
+\end{itemize}
+
+\begin{columns}[T]
+\begin{column}{5cm}
+
+\scriptsize
+
+\centering{
+\alert{Filtro paso bajo}}
+
+
+\vspace{0.1cm}
+$h_{LPd}(n)=\!\left \{\!\!\!\begin{array}{l}\frac{w_c}{\pi}, \:\:\:  \:\:\: \:\:\: n=0\\ \frac{sen(nw_c)}{\pi n},  \:\:\: c.c.\end{array}  \right . $
+
+\vspace{0.1cm}
+
+\centering{
+\alert{Filtro paso alto}}
+
+
+
+\vspace{0.1cm}
+
+$h_{HPd}(n)=\!\left \{\!\!\!\begin{array}{l}1-\frac{w_c}{\pi}, \:\:\:  \:\:\: \:\:\: n=0\\ -\frac{sen(nw_c)}{\pi n},  \:\:\: c.c.\end{array}  \right . $
+
+\vspace{0.1cm}
+
+\centering{
+\alert{Filtro paso banda}}
+
+\vspace{0.1cm}
+
+
+$h_{BPd}(n)=\!\left \{\!\!\!\begin{array}{l}\frac{w_2-w_1}{\pi}, \:\:\:  \:\:\: \:\:\: n=0\\ \frac{sen(w_2n)-sen(w_1n)}{\pi n},  \:\:\: c.c.\end{array}  \right . $
+
+
+\vspace{0.1cm}
+
+\centering{
+\alert{Filtro supresor banda}}
+
+
+\vspace{0.1cm}
+
+$h_{SPd}(n)=\!\left \{\!\!\!\begin{array}{l}1-\frac{w_2-w_1}{\pi}, \:\:\:  \:\:\: \:\:\: n=0\\ -\frac{sen(w_2n)-sen(w_1n)}{\pi n},  \:\:\: c.c.\end{array}  \right . $
+
+
+
+
+\end{column}
+\hspace{-0.3cm}\begin{column}{6 cm}
+\scriptsize
+
+\visible<2->{
+\centering{
+\alert{Filtro FIR multinivel}}
+
+\vspace{0.1cm}
+
+
+\includegraphics[trim=0cm 1cm 0cm 1cm,clip=true,width=3.5cm]{Figures/PorTramos}
+
+
+$\scriptsize H_{MNd}(e^{jw})\!=A_k,  \:\:\: w_{k-1}\le|w|\le w_k$
+
+\hspace{1.4cm}$k\!\in\![0,M]$
+
+\hspace{1.0cm}$w_0\!=\!0$
+
+\hspace{1.1cm}$w_M\!=\!\pi$
+
+
+\vspace{0.1cm}
+\color{gray}
+
+
+\vspace{0.1cm}
+
+$H_{MNd}(e^{jw})=\sum_{k=1}^{M}A_{k}H_{BPd,[w_{k-1},w_k]}(e^{jw})$
+
+
+\vspace{0.1cm}
+
+\color{black}
+
+$h_{MNd}(n)=\!\left \{\!\!\!\begin{array}{l}\sum_{k=1}^MA_k\frac{w_k-w_{k-1}}{\pi}, \:\:\:  \:\:\: \:\:\: n=0\\ \sum_{k=1}^M(A_k-A_{k-1})\frac{sen(w_kn)}{\pi n},  \: c.c.\end{array}  \right . $
+
+
+\vspace{0.1cm}
+}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Diseño del filtro FIR por truncamiento I}
+
+\footnotesize
+
+\begin{itemize}
+\item EL filtro FIR correspondiente se puede diseñar truncando la función $h_d(n)$ correspondiente, haciéndola  cero para valores $|n|>L$ y retardándola L unidades temporales.
+
+
+\visible<2->{
+\item A continuación vemos la respuesta en frecuencia de los filtros así obtenidos para diferentes valores de N:
+
+\vspace{-0.4cm}
+
+
+
+\begin{columns}[c]
+\begin{column}{5cm}
+\lstinputlisting{./Matlab/FIRLowTrunc.m}
+
+
+ \end{column}
+\hspace{-0.5cm} \begin{column}{5cm}
+
+\centering
+
+\visible<3->{
+
+\scriptsize
+Filtro paso bajo
+
+
+
+\includegraphics[width=5cm]{Figures/FIRLowTrunc.eps}
+}
+
+\visible<4->{
+Desfase lineal ($-wN/2$, discont. $\pi$)
+
+$N$ crece $\rightarrow \#_{rizos}$ crece
+
+Tamaño rizos es constante.
+}
+ \end{column}
+ \end{columns}
+}
+
+
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Diseño del filtro FIR por truncamiento II}
+
+\begin{columns}[c]
+\begin{column}{5cm}
+\centering
+\scriptsize
+
+Filtro paso bajo
+
+\includegraphics[width=4cm]{Figures/FIRLowTrunc.eps}
+
+\visible<2->{
+
+Filtro paso alto
+
+\includegraphics[width=4cm]{Figures/FIRHighTrunc.eps}
+
+}
+
+ \end{column}
+\hspace{-0.5cm} \begin{column}{5cm}
+\scriptsize
+
+\visible<3->{
+Filtro paso banda
+\centering
+
+\includegraphics[width=4cm]{Figures/FIRPassTrunc.eps}
+
+Filtro supresor banda
+
+\includegraphics[width=4cm]{Figures/FIRStopTrunc.eps}
+
+}
+
+ \end{column}
+ \end{columns}
+
+\scriptsize
+
+{
+
+Desfase lineal ($-wN/2$, discont. $\pi$); tamaño rizos en el borde es constante; y según $N$ crece $\rightarrow \#_{rizos}$ crece, los rizos son más estrechos y la banda de transición decrece.
+}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Diseño del filtro FIR por truncamiento III}
+
+\footnotesize
+
+\vspace{-0.3cm}
+
+\begin{itemize}
+\item Los rizos que se producen tanto en la banda de paso como en la banda de supresión al truncar el filtro son una consecuencia directa del proceso de truncamiento. Este hecho se llama  fenómeno de Gibbs.
+
+\visible<2->{
+
+\item El truncamiento se puede expresar  alternativamente como el producto de la $h_d(n)$ y una ventana $v(n)$ cuadrada de longitud 2L+1: $h_t(n)\!\!=\!\!v(n)h_d(n)$.
+}
+
+\visible<3->{
+\item Propiedad producto: $h_t(n)=v(n)h_d(n)$} \visible<4->{$\leftrightarrow H_t(e^{jw})=\frac{1}{2\pi}(V*H_d)_{2\pi}(e^{jw})$
+}
+
+\visible<5->{
+$H_t(e^{jw})=\frac{1}{2\pi}\int_{-\pi}^\pi H_d(e^{jw})V(e^{j(w-\phi)}d\phi$
+}
+\vspace{-1cm}
+
+\hspace{0.3cm}\begin{columns}[c]
+\begin{column}{4cm}
+\visible<6->{
+$v(n)=\left \{  \begin{array}{l} 1, \:\:-L\le n \le L\\0, \:\: c.c. \end{array} \right .$
+
+\vspace{0.1cm}
+
+$V(e^{jw})=\frac{sen\left([2L+1]w/2\right)}{sen(w/2)}$
+
+\vspace{0.1cm}
+
+\includegraphics[width=3cm]{Figures/HwTrunc.eps}
+}
+\end{column}
+\hspace{-2cm}\begin{column}{6.5cm}
+\visible<7->{
+\includegraphics[trim=0cm 1cm 0cm 1cm, clip=true,angle=-90,width=6.5cm]{Figures/ConvTrunc}
+}
+\end{column}
+
+\end{columns}
+\visible<6->{
+\vspace{-0.6cm}
+\item Si $N$ crece, el lóbulo principal de $V(e^{jw})$ es más estrecho pero el area permanece cte} \visible<7->{ $\rightarrow$ los rizos de $H_t(e^{jw})$ están más cerca de la $w_c$ pero su tamaño permanece cte.
+}
+
+
+\end{itemize}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{frame}
+\frametitle{Diseño del filtro FIR con ventana fija I}
+
+\vspace{-0.4cm}
+
+\footnotesize
+\begin{itemize}
+\item La aparición del fenómeno de Gibbs se debe a que la ventana $v(n)$ rectangular tiene una transición abrupta.
+
+\visible<2->{
+\item Para mitigarlo, se pueden escoger ventanas con transiciones mas suaves ($-L\le n \le L$)
+\begin{itemize}
+\footnotesize
+\item Barlett: $v(n)=1-\frac{|n|}{L+1}$
+\item Hann: $v(n)=\frac{1}{2}\left [1+cos\left (\frac{2\pi n}{2L+1}\right )\right ]$
+\item Hamming: $v(n)=0.54+0.46 cos \left (\frac{2\pi n}{2L+1}\right )$
+\item Blackman: $v(n)=0.42+0.5 cos \left (\frac{2\pi n}{2L+1}\right )+0.08 cos \left (\frac{4\pi n}{2L+1}\right )$
+\end{itemize}}
+\visible<3->{
+\item Las ventanas se pueden obtener con Matlab con las ordenes: \alert{\texttt{rectwin, bartlett, hann, hamming, blackman}.}
+\begin{itemize}
+\footnotesize
+\item Ejemplo: \color{gray} \texttt{v=rectwin(2*L+1)}\color{black}
+\end{itemize}}
+\end{itemize}
+
+\vspace{-0.2cm}
+
+\begin{columns}[c]
+\visible<4->{
+\hspace{1cm}\begin{column}{4cm}
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true,angle=0,width=3.5cm]{Figures/hnWindow.eps}
+\end{column}}
+
+\visible<5->{
+\hspace{-0.3cm}\begin{column}{4cm}
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true,angle=0,width=3.5cm]{Figures/HwWindow.eps}
+\end{column}}
+\hspace{-0.2cm}\begin{column}{4cm}
+\scriptsize
+\visible<5->{
+$\Delta_{ML}$: Ancho (frecuencias) del lóbulo principal
+
+$A_{ML}$: Nivel relativo (respecto al siguiente lóbulo) del lóbulo principal
+
+Ambos parámetros están relacionados con el comportamiento de $H_t(n)$
+}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Diseño del filtro FIR con ventana fija II}
+
+\begin{columns}[c]
+\begin{column}{7.5cm}
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true,angle=-90,width=7.5cm]{Figures/WindowFija1}
+\end{column}
+
+\hspace{-0.3cm}\begin{column}{4.5cm}
+
+\begin{itemize}
+\footnotesize
+\item $|H(e^{jw_c})|=0.5$
+
+\item $w_c=\frac{w_p+w_s}{2}$
+
+\item $\Delta_w=w_s-w_p<\Delta_{ML}$
+
+\item Tamaño del rizado $\delta$ es el mismo en ambas bandas
+
+\item Son filtros de ventana fija, porque la atenuación (rizado) es constante.
+
+\visible<2->{
+\item M en la tabla es L.}
+\end{itemize}
+\end{column}
+
+\end{columns}
+
+\vspace{-0.5cm}
+\visible<2->{
+\hspace{-0.3cm}\includegraphics[trim=13cm 0cm 0cm 0cm, clip=true,angle=-90,width=12cm]{Figures/WindowFija2}}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+\frametitle{Ejemplo FIR paso baja de ventana fija}
+
+\footnotesize
+
+\color{olivegreen}Diseñar un filtro paso bajo con las siguientes especificaciones:
+
+ $w_p=0.3\pi$, $w_s=0.5\pi$, $\alpha_s=40dB$.
+
+\color{gray}
+
+\vspace{-0.3cm}
+
+\hspace{-0.3cm}\includegraphics[trim=13.5cm 0cm 1cm 0cm, clip=true,angle=-90,width=10.5cm]{Figures/WindowFija2}
+
+\vspace{-0.1cm}
+
+\scriptsize
+
+ $w_c= \frac{w_p+w_s}{2}=0.4\pi$   $\:\:\:\:\:\Delta_w=w_s-w_p=0.2\pi$
+
+$\alpha_s=40dB$: Filtros posibles son Hann, Hamming, y Hamming
+
+
+
+Hann: $\Delta_w=3.11\pi/L  \rightarrow L=3.11\pi/\Delta_w=15.55 \rightarrow L=16$
+
+Hamming: $\Delta_w=3.32\pi/L  \rightarrow L=3.32\pi/\Delta_w=16.6 \rightarrow L=17$
+
+Blackman: $\Delta_w=5.56\pi/L  \rightarrow L=5.56\pi/\Delta_w=27.8 \rightarrow L=28$
+
+\vspace{-0.4cm}
+
+\begin{columns}[T]
+\hspace{1cm}\begin{column}{5.5cm}
+\lstinputlisting{./Matlab/FIREjemplo1.m}
+\end{column}
+\hspace{1cm}\begin{column}{4.5cm}
+
+\vspace{0.4cm}
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true,angle=0,width=4cm]{Figures/FIREx1.eps}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Diseño del filtro FIR con ventana variable}
+\footnotesize
+\begin{itemize}
+\item  El rizado de las ventanas fijas es constante
+\item Para tener control sobre el valor del rizado, se  pueden usar las ventanas ajustables:
+\begin{itemize}
+\footnotesize
+\item \alert{Dolph-Chebyshev}: \texttt{ v=chebwin(2*L+1,Asl)}
+$v(n)=\frac{1}{2L+1}\left[ \frac{1}{\gamma}+\sum_{k=1}^L T_{2N}\left( \beta cos (\frac{k\pi}{2L+1})\right) cos (\frac{2nk\pi}{2L+1})\right]$
+
+$\gamma=\frac{\mathrm{amplitud \:\: lobulo  \:\: lateral}}{\mathrm{amplitud \:\: lobulo  \:\: principal}}$,  $\:\:\:\beta=cosh\left(\frac{1}{2L}acosh(1/\gamma)\right)$
+
+$T_l(x)=\left \{ \begin{array}{l}cos(l \cdot acos(x)), \:\: |x|<1\\cosh(l \cdot acosh(x)), \:\: |x|<1 \end{array}\right .$
+ \alert{$\:\:2L=\frac{2.056\alpha_s-16.4}{2.285\Delta w}$}
+
+
+\vspace{0.2cm}
+
+
+\item \alert{Kaiser}: \texttt{ v=kaiser(2*L+1,beta)}
+
+\vspace{0.1cm}
+
+$v(n)=\frac{I_o\left(\beta \sqrt{1-(n/L)^2}\right)}{I_o\left(\beta\right)}$
+
+\vspace{0.1cm}
+
+$I_o(u)=1+\sum_{r=1}^\infty \left(\frac{(u/2)^r}{r!}\right).$
+
+$\beta=\left\{\begin{array}{l}0.11102(\alpha_s-8.7), \:\: \alpha_s>50\\0.5482(\alpha_s-21)^{0.4}+0.07886(\alpha_s-21), \:\: 50 \le \alpha_s \le 21\\0, c.c.\end{array} \right .$
+
+
+\alert{$2L=\frac{\alpha_s-8}{2.285\Delta w}$}
+
+\end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Ejemplo FIR paso baja de ventana Dolph-Chebyshev}
+
+\footnotesize
+
+\color{olivegreen}Diseñar un filtro paso bajo con las siguientes especificaciones:
+
+ $w_p=0.3\pi$, $w_s=0.5\pi$, $\alpha_s=40dB$.
+
+\color{gray}
+
+ $w_c= \frac{w_p+w_s}{2}=0.4\pi$   $\:\:\:\:\:\Delta_w=w_s-w_p=0.2\pi$
+
+$2L=\frac{2.056\alpha_s-16.4}{2.285\Delta w}  \rightarrow L=22.92  \rightarrow L=23$
+
+
+\begin{columns}[T]
+\hspace{1cm}\begin{column}{5.5cm}
+\lstinputlisting{./Matlab/FIREjemplo2.m}
+\end{column}
+\hspace{1cm}\begin{column}{4.5cm}
+
+\vspace{0.4cm}
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true,angle=0,width=4.2cm]{Figures/FIREx2.eps}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Ejemplo FIR paso baja de ventana Kaiser}
+
+\footnotesize
+
+\color{olivegreen}Diseñar un filtro paso bajo con las siguientes especificaciones:
+
+ $w_p=0.3\pi$, $w_s=0.5\pi$, $\alpha_s=40dB$.
+
+\color{gray}
+
+ $w_c= \frac{w_p+w_s}{2}=0.4\pi$   $\:\:\:\:\:\Delta_w=w_s-w_p=0.2\pi$
+
+$2L=\frac{\alpha_s-8}{2.285\Delta w}  \rightarrow L=11.14  \rightarrow L=12$
+
+$\beta=0.5482(\alpha_s-21)^{0.4}+0.07886(\alpha_s-21)=3.2784$
+
+\begin{columns}[T]
+\hspace{1cm}\begin{column}{5.5cm}
+\lstinputlisting{./Matlab/FIREjemplo3.m}
+\end{column}
+\hspace{1cm}\begin{column}{4.5cm}
+
+\vspace{0.4cm}
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true,angle=0,width=4.2cm]{Figures/FIREx3.eps}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Diseño de filtros avanzados con Matlab}
+\footnotesize
+\begin{itemize}
+\item Adicionalmente, Matlab facilita los cálculos con ordenes adicionales:
+\begin{itemize}
+\footnotesize
+\item Ordenes relacionadas con la ventana de Kaiser:
+
+\texttt{[N,wc,beta,type]=kaiserord([wp,ws],[A1,A2],[dp,ds])}
+
+\texttt{window=kaiser(N+1,beta);}
+
+\texttt{h=fir1(N,wc,type,window);}
+
+\item Ordenes para el diseño de filtros  multinivel:
+
+
+\texttt{ws=[w0,w1,...,wM];}
+
+\texttt{A=[A0,A1,...AM];}
+
+\texttt{h=fir2(N,ws,A,window)};
+
+
+
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Ejemplo FIR paso alto de ventana Kaiser}
+
+\footnotesize
+
+\color{olivegreen}Diseñar un filtro paso alto con las siguientes especificaciones:
+
+ $w_p=0.55\pi$, $w_s=0.4\pi$, $\delta_s=0.01$.
+
+\color{gray}
+
+\begin{columns}[T]
+\begin{column}{6.5cm}
+\lstinputlisting{./Matlab/FIREjemplo4.m}
+\end{column}
+\hspace{-0.5cm}\begin{column}{4.5cm}
+
+\vspace{0.4cm}
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true,angle=0,width=4.2cm]{Figures/FIREx4.eps}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+\frametitle{Ejemplo FIR multibanda}
+
+\footnotesize
+
+\color{olivegreen}Diseñar un filtro multibanda con ventana de Hamming con las siguientes especificaciones:
+
+w=[0,0.28,0.3,0.5,0.52,1];
+
+A=[0.3,0.3,1.0,1.0,0.7,0.7];
+
+
+\color{gray}
+
+\begin{columns}[T]
+\begin{column}{6.5cm}
+\lstinputlisting{./Matlab/FIREjemplo5.m}
+\end{column}
+\hspace{-0.5cm}\begin{column}{4.5cm}
+
+\vspace{0.4cm}
+\includegraphics[trim=0cm 0cm 0cm 0cm, clip=true,angle=0,width=4.2cm]{Figures/FIREx5.eps}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Métodos alternativos cálculo de N}
+
+\vspace{-0.4cm}
+
+\footnotesize
+\begin{itemize}
+\item Existen expresiones  adicionales para estimar el orden (N+1) del filtro:
+
+\begin{itemize}
+
+\vspace{-0.1cm}
+
+\footnotesize
+
+\item Kaiser: $\displaystyle N \approx \frac{-20 log_{10}\left( \sqrt{\delta_p \delta_s}\right)-13}{14.6(w_s-w_p)/(2\pi)}$
+
+%\vspace{0.1cm}
+
+\item Bellanger: $\displaystyle  N \approx - \frac{-2 log_{10}( 10 \delta_p \delta_s)}{3(w_s-w_p)/(2\pi)}$
+
+%\vspace{0.1cm}
+
+\item Hermann: $\displaystyle  N \approx  \frac{D_\infty(\delta_p,\delta_s)-F_\infty(\delta_p,\delta_s)\left [(w_s-w_p)/(2\pi)\right ]^2}{(w_s-w_p)/(2\pi)}$
+
+{\scriptsize
+$D_\infty(\delta_p,\delta_s)=\left [a_1 \left (log_{10}(\delta_p)\right )^2+ a_2 log_{10}(\delta_p)+a_3\right ]log_{10}(\delta_s)-$
+
+\hspace{1.8cm}$-\left [a_4 \left (log_{10}(\delta_p)\right )^2+ a_5 log_{10}(\delta_p)+a_6\right ]$
+
+\vspace{0.1cm}
+
+$F_\infty(\delta_p,\delta_s)=11.01217 + 0.51244 \left ( log_{10}(\delta_p)-log_{10}(\delta_s)\right )$
+
+\vspace{0.1cm}
+
+
+\hspace{-0.2cm}$\begin{array}{lll}a_1=0.005309 &a_2=0.07114 & a_3=-0.4761 \\ a_4=0.00266 &a_5=0.5941&a_6=0.4278\end{array}$
+
+}
+
+
+\end{itemize}
+\vspace{-0.3cm}
+\scriptsize{
+\item Si $\delta_p < \delta_s$ hay que cambiar la una por la otra en la fórmula de Hermann
+\item Para valores elevados de los rizos es mejor usar la ecuación de Hermann
+\item Las formulas estiman N.  Si el filtro no cumple los requisitos, incrementar  N.
+\item En los filtros paso/supresor banda, hay dos bandas de transición. Usar la banda más estrecha.}
+\end{itemize}
+
+\vspace{-0.4cm}
+
+\rule{12cm}{0.4pt}
+
+\scriptsize
+
+Las formulas están en función de los rizos: $\alpha_p=-20 log_10(1-\delta_p)$, $\alpha_s=-20 log_10(\delta_s)$
+
+\end{frame}

@@ -1,0 +1,281 @@
+%% PLANTILLA PARA ARTICULOS
+\documentclass[10pt,twoside,spanish,a4paper]{article}
+\input{configfile}
+\usepackage{enumitem}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{verbatim}
+\usepackage{amsmath}
+
+\begin{document}
+
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+\title{
+  \vspace{-0.2cm}
+	\begin{center}
+		\large
+		\begin{tabular}{rrl}
+		\multirow{4}{*}{\includegraphics[width=1.7cm]{UCM.eps} \hspace{1cm}}&Grado: & Ingeniería Electrónica de Comunicaciones\\
+		&Asignatura:& Procesamiento de Señales \\
+		&Curso:     & 2025/2026 \\
+		\end{tabular}
+	\end{center}
+	\rule{\textwidth}{0.4pt}
+	%
+	\vspace{-1.5cm}
+	\begin{center}
+		\color{blue} \Huge
+		\begin{tabular}{c}
+	        \textbf{Práctica 6}\\
+		\textbf{Variables aleatorias}\\
+		\end{tabular}
+	\end{center}
+	\vspace{-0.5cm}
+	\rule{\textwidth}{0.4pt}
+}
+\maketitle
+ \thispagestyle{empty}
+\pagestyle{fancy}
+
+\lfoot{\includegraphics[width=0.8cm]{UCM.eps}}
+\cfoot{\vspace{-0.6cm} Ingeniería Electrónica de Comunicaciones }
+\rfoot{\vspace{-0.6cm} \thepage}
+\lhead{Práctica}
+\rhead{Práctica 6: Variables aleatorias}
+\renewcommand{\headrule}{ \vspace{-0.2cm} \rule{\textwidth}{0.4pt}}
+\renewcommand{\footrule}{\vspace{0.5cm} \rule{\textwidth}{0.4pt}\\ \vspace{-0.3cm} \\}
+
+%**************************************************************<- para indicar pregunta de la pr·ctica
+\newcounter{ctPreg}
+\setcounter{ctPreg}{1}
+\newcommand{\itemP}{ \item[{\color{blue}\fbox{\textbf{Tarea \arabic{ctPreg}:}}}] \addtocounter{ctPreg}{1}}  %
+\newcommand{\itemB}{ \item[{\color{blue}$\bullet$} ]    }
+\newcommand{\itemR}{ \item[{\color{blue}$\triangleright$} ]    }       %
+%**************************************************************
+
+\vspace{-8em}
+
+\section*{Objetivos}
+
+El objetivo de esta práctica es:
+\begin{itemize}
+	\item Utilizar el método de la ruleta para generar muestras de una variable aleatoria. 
+	\item Caracterizar comportamiento de diferentes variables aleatorias. 
+\end{itemize}
+
+\section*{Generación de muestras de una Variable Aleatoria}
+La generación de muestras de una variable aleatoria es importante para muchas aplicaciones prácticas, por ejemplo para simular procesos aleatorios que describen un fenómeno a través de una distribución de probabilidad,
+o para resolver integrales de las que no se conoce una solución cerrada. %En particular, se conoce con el nombre de Monte-Carlo
+Generalmente se requiere generar muestras (números aleatorios) de forma que la frecuencia de ocurrencia se corresponda con 
+una distribución de probabilidad que describe el comportamiento de la variable aleatoria. 
+
+En la práctica, los computadores no son capaces de generar números realmente aleatorios, en su lugar utilizan lo que se denomina números pseudoaleatorios.
+Estos son números que se generan de forma procedimental (es decir, a través de un algoritmo determinista) pero desde un punto de vista estadístico
+es posible tratarlos como si fueran aleatorios. 
+
+Un algoritmo sencillo y muy utilizado para generar números pseudoaleatorios es el generador lineal congruente, cuyo funcionamiento se basa 
+en generar una secuencia de números a través de una relación de recurrencia de la forma $X(n+1)=(a X_n + c)~\textrm{mod}~m$. Según la elección particular
+de los parámetros $a$, $c$ y $m$, la secuencia generada presentará un comportamiento más o menos adecuado como secuencia aleatoria. Es posible
+realizar diferentes pruebas que verifican si el algoritmo genera números con las propiedades estadísticas deseadas y así poder tratarlos como 
+aleatorios.
+
+\newpage
+\subsection*{Generación de Variables Aleatorias en Matlab}
+Matlab proporciona diferentes funciones para generar muestras de variables aleatorias con las distribuciones de probabilidad más comunes: 
+\begin{itemize}
+	\item \texttt{randi(N,P,Q)} - Genera una matriz de tamaño $PxQ$ con muestras de una variable discreta con N casos equiprobables: $p(x_i)=\frac{1}{N},i=0,1,...,N-1$.
+	\item \texttt{rand(P,Q)} - Genera una matriz de tamaño $PxQ$ con muestras de una variable discreta con una distribución uniforme
+	en el intervalo $[0,1]$: $p(x)=\mathcal{U}_{[0,1]}(x)$. A partir de esta se puede generar cualquier distribución uniforme. Dada $X\sim p_X(x)=\mathcal{U}_{[0,1]}(x)$,
+	podemos construir una distribución uniforme arbitraria mediante $Y=a+(b-a)X$. Se demuestra trivialmente que $p_Y(x)\sim U_{[a,b]}(x)$.
+	\item \texttt{randn(P,Q)} - Genera una matriz de tamaño $PxQ$ con muestras de una variable discreta con una distribución gaussiana
+	de media $\mu=0$ y varianza $\sigma^2=1$: $p(x)=\mathcal{N}_{(0,1)}(x)$. Al igual que en el caso anterior, si $X\sim p_X(x)=\mathcal{N}_{[0,1]}(x)$,
+	y hacemos $Y=\mu+\sigma X$, es fácil ver que $p_Y(x)\sim \mathcal{N}_{[\mu,\sigma]}(x)$.
+\end{itemize}
+
+Para generar otras funciones de probabilidad, debemos recurrir a los algoritmos que hemos visto en las clases teóricas, que presentamos 
+brevemente a continuación.
+
+\subsection*{Método de la ruleta}
+Este método se inspira en el conocido juego de azar\footnote{Por si hay algún despistado, el juego consiste en lanzar una bola dentro de una
+ruleta que gira, dividida en diferentes sectores. La bola puede caer en cualquiera de las divisiones. El juego en sí no tiene mucha gracia, así 
+que para hacerlo más divertido se suelen apostar grandes cantidades de dinero.}. Primero se divide la ruleta en diferentes sectores, proporcionales
+a las probabilidades de la función que se desea muestrear. A continuación se simula el lanzamiento, y se genera la muestra según en que sector
+caiga la bola virtual. Para implementar en Matlab, la ruleta se hace corresponder con el intervalo $[0,1]$, que se divide en tramos proporcionales
+a las probabilidades que se quiere muestrear, y el lanzamiento de la bola se simula mediante el muestreo de una v.a. uniforme en el mismo
+intervalo, $V\sim U_{[0,1]}(x)$. El código se lista a continuación:
+
+\begin{lstlisting}
+function x = ruleta(px, N)
+  Px = cumsum(px);
+  v = rand(N,1);
+  x = sum((v > Px)') + 1;
+end
+\end{lstlisting}
+
+% \section*{Método de Box-Muller}
+% Este método se utiliza para generar variables aleatorias aleatorias gaussianas a partir de uniformes. Se muestrean dos v.a. uniformes, $y_1,y_2\sim \mathcal{U}_{[0,1]}(x)$, a continuación se realiza la transformación\\
+% $x_1=\sqrt{-2\textrm{log}(y_1)}cos(2\pi y_2)$,\\ $x_2=\sqrt{-2\textrm{log}(y_1)}sin(2\pi y_2)$.
+
+% $y_1=\mathrm{e}^{-\frac{x_1^2+x_2^2}{2}}$
+% $y_2=\frac{1}{2\pi}\mathrm{atan}(\frac{x_2}{x_1})$\\
+
+% $\mid\frac{\partial (y_1, y_2)}{\partial (x_1, x_2)}\mid = 
+% \left|\begin{matrix}
+% 	-x_1 \mathrm{e}^{-\frac{x_1^2+x_2^2}{2}} & -x_2 \mathrm{e}^{-\frac{x_1^2+x_2^2}{2}} \\
+% 	-\frac{1}{2\pi}\frac{x_2/x_1^2}{1 + (\frac{x_2}{x_1})^2} & \frac{1}{2\pi}\frac{1/x_1}{1 + (\frac{x_2}{x_1})^2}  
+% \end{matrix}\right|=-\frac{1}{\sqrt{2\pi}}\mathrm{e}^{-\frac{x_1^2}{2}}\frac{1}{\sqrt{2\pi}}\mathrm{e}^{-\frac{x_2^2}{2}}$
+% function x = BoxMuller(px, N)
+%   Px = cumsum(px);
+%   v = rand(N,1);
+%   x = sum((v > Px)') + 1;
+% end
+
+\newpage
+\subsection*{Método de muestreo por rechazo}
+Este método parte de una idea parecida al de la ruleta. En esencia, se genera una muestra de un distribución conocida (p.ej. la uniforme) y
+se utiliza una ruleta para aceptar o rechazar la muestra, con una probabilidad determinada según la proporción entre la distribución objetivo y la auxiliar.
+
+\begin{lstlisting}
+function x_aceptadas = muestreo_rechazo(N)
+  M = 2; 
+  x_aceptadas = [];
+  N_aceptadas = 0;
+  while N_aceptadas < N
+    x_q = rand(N - N_aceptadas, 1);
+    y = rand(N - N_aceptadas, 1);
+    l = find(y*M.*q(x_q) - p(x_q) < 0); % Muestras aceptadas
+    x_aceptadas = [x_aceptadas; x_q(l)];
+    N_aceptadas = length(x_aceptadas); 
+  end
+end
+
+function y = p(x)
+  % Densidad probabilidad objetivo
+  y = ...
+end
+
+function y = q(x)
+  % Densidad probabilidad auxiliar
+  y = 1
+end
+\end{lstlisting}
+	
+\subsection*{Muestreo de una mezcla}
+Este método se utiliza para generar muestras de una v.a. con una densidad de probabilidad de la forma $p(x) = \sum_{i=1}^{N}p(x|x_i)p(x_i)$, es decir,
+una mezcla de varias conocidas. La idea es utilizar una ruleta para decidir a cual de los grupos pertenece la muestra y a continuación utilizar
+el método que corresponda según la distribucion en particular. A continuación se lista el pseudocódigo del algoritmo:
+\begin{lstlisting}
+N = 1000;
+px = [0.4, 0.2, 0.4];
+for i = 1:N
+  tipo = ruleta(px, 1);
+  x(i) = generar_muestra(tipo);
+end
+
+function x = generar_muestra(tipo)
+  switch tipo,
+    case 1, x = ...; break;
+    ...
+    case n, x = ...; break;
+  end
+end
+\end{lstlisting}
+
+\subsection*{Histograma}
+El histograma es una representación en forma de diagrama de barras de las frecuencias de ocurrencia de los valores de una v.a. 
+Para variables discretas, el histograma es simplemente un recuento de las muestras. Si la variable es continua, se agrupan los valores 
+por intervalos, y se realiza el recuento de las muestras que caen en cada intervalo. Si normalizamos el histograma para que su 
+area se 1, lo podemos interpretar directamente como una aproximación de la densidad de probabilidad de la v.a.
+La normalización se consigue dividiendo por $N$, el número de muestras, si la v.a. es discreta. Si la variable es continua,
+hay que dividir por $N\Delta x$, donde $\Delta x$ es la anchura del intervalo utilizado para el recuento.
+
+Para calcular el histograma en Matlab tenemos la función \texttt{histogram}. Si ignoramos los valores devueltos, esta función muestra 
+una gráfica con el histograma generado. 
+\begin{lstlisting}
+h = histogram(x);
+\end{lstlisting}
+Por el contrario, si recogemos el valor devuelto en una variable, la gráfica no se mostrará y a cambio tendremos disponible un objeto con
+toda la información:
+\begin{lstlisting}
+>> h = histogram(x);
+  h = 
+
+  Histogram with properties:
+
+             Data: [1x500 double]
+           Values: [1x14 double]
+          NumBins: 14
+         BinEdges: [1x15 double]
+         BinWidth: 0.0100
+        BinLimits: [0.6000 0.7400]
+    Normalization: 'count'
+        FaceColor: 'auto'
+        EdgeColor: [0 0 0]
+
+  Show all properties
+\end{lstlisting}
+Podemos utilizar esta información para normalizar el histograma.
+\begin{lstlisting}
+h_normalizado = h.Values / h.BinWidth / N;
+\end{lstlisting}
+
+\newpage
+\section*{Estadísticos}
+Es sencillo calcular los estadísticos muestrales en Matlab directamente a partir de las fórmulas:
+\begin{lstlisting}
+% x contiene las muestras de la v.a.
+N = length(x);
+media = sum(x) / N;
+vcm = (x * x') / N;
+varianza = sum((x - media).^2) / N;
+desviacion = sqrt(varianza); % sqrt(sum((x - media).^2) / N);
+\end{lstlisting}
+
+También es posible usar las funciones \texttt{mean}, \texttt{std} y \texttt{var}.
+\begin{lstlisting}
+media = mean(x);
+varianza = var(x, 1); % El 1 es para normalizar por N en lugar de (N-1)
+desviacion = std(x, 1);
+\end{lstlisting}
+
+Conocida la distribución de probabilidad de la v.a., en algunos casos es posible caracterizarla por completo mediante de uno o varios 
+estadísticos. Por ejemplo, una distribución normal se parametriza por la media y varianza, es decir, el conocimiento de estos
+dos estadísticos permite reconstruir por completo la función de densidad de probabilidad. En otros casos el cálculo de 
+los estadísticos no será suficiente.
+
+\newpage
+
+\section*{Generación y análisis de variables aleatorias}
+	\begin{itemize}
+		\itemP  \textbf{Muestreo de variables aleatorias.}
+			El objetivo de esta tarea es generar diferentes conjuntos de muestras de una variable aleatoria discreta mediante el método de la ruleta.
+			\itemR $p_X(x_i)=[0.1,0.25,0.15,0.35,0.1,0.05]$.
+			
+			Para comprobar que las muestras generadas siguen la función de probabilidad propuesta:		
+			\begin{enumerate}[label=\alph*)]
+				\item Genera tres conjuntos de muestras de diferente tamaño: $N=100$, $N=1000$, $N=10000$.
+				\item Representa en una gráfica los valores de las muestras.
+				\item Representa, en otra gráfica, los histogramas normalizados y la función de probabilidad propuesta.
+				\item Compara los histogramas obtenidos con la función de probabilidad. Explica la influencia de N en el resultado.
+				\item Calcula su media, valor cuadrático medio y varianza. Indica si la media y varianza caracterizan la función de probabilidad. 
+			\end{enumerate}
+
+			\hspace{0.2cm}\color{blue}Nota: \color{black} \'{U}nicamente se pueden usar los generadores aleatorios de Matlab  \color{blue}randi\color{black}, \color{blue}randn \color{black} y \color{blue}rand\color{black}.  Por lo tanto, se recomienda utilizar el método de muestreo más sencillo que, utilizando dichas funciones, genere las muestras propuestas.
+
+		\itemP \textbf{Caracterización de conjuntos muestrales desconocidos}
+
+			El objetivo de esta tarea es caracterizar conjuntos muestrales de origen desconocido a partir de su histograma.
+			Los conjuntos muestrales que hay que analizar se generarán utilizando la función \color{blue}\texttt{DatosTarea2}\color{black}. Para cada conjunto muestral:
+			\begin{enumerate}[label=\alph*)]
+				\item Representa el histograma normalizado.
+				\item Indica si la variable es continua o discreta, y cuál es su función de probabilidad original.
+				\item Calcula los estadísticos habituales (media, valor cuadrático medio y varianza).
+				\item ¿Los estadísticos sirven para parametrizar correctamente la función de probabilidad de las muestras?
+			\end{enumerate}
+
+	\end{itemize}
+
+\end{document}

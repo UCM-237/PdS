@@ -1,0 +1,70 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% no tocar
+% Alfredo Cuesta. 01/01/2013. acuestai@ucm.es
+
+%si se quiere usar ARIAL hay que poner estas 2 lineas:
+%\usepackage[scaled]{uarial} %DESCOMENTAR
+\renewcommand*\familydefault{\sfdefault}
+%
+
+\usepackage[compact]{titlesec}
+ \titlespacing\section{0pt}{12pt plus 0pt minus 0pt}{0pt plus 0pt minus 0pt}
+ \titlespacing\subsection{0pt}{5pt plus 0pt minus 0pt}{0pt plus 0pt minus 0pt}
+ \titlespacing\subsubsection{0pt}{0pt plus 0pt minus 0pt}{0pt plus 0pt minus 0pt}
+
+\usepackage[utf8]{inputenc}
+\usepackage{
+amssymb,
+graphicx,
+color,
+url
+%wrapfig %Inclusión de gr·ficos al lado de texto
+}
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+
+\usepackage{listings}
+\lstset{language=Matlab,%
+    basicstyle=\footnotesize,
+    keywordstyle=\color{blue},%
+    commentstyle=\color{olivegreen}\textit,%
+    emph=[1]{ans},emphstyle=[1]\color{black}, %some words to emphasise
+    emph=[2]{resample,timeseries,syms},emphstyle=[2]\color{blue}, %some words to emphasise
+}
+
+\linespread{1.3}%separacion de lineas
+\parindent=0.0in%indentancion de parrafo
+\parskip=6pt%separacion entre el parrafo siguiente
+\setlength{\topmargin}{-0.5in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{16cm}%{4.72in}
+\setlength{\textheight}{22cm}%{7.08in}
+
+\usepackage{babel}
+\addto\shorthandsspanish{\spanishdeactivate{~<>}}
+% correct bad hyphenation here
+\hyphenation{nu-es-tro co-no-ci-mien-to par-ti-cu-lar ca-rac-te-ris-ti-cas ni-vel se-gui-mien-to que-re-mos ca-ta-lo-go}
+\date{}
+
+
+% --- customization ---
+
+\renewcommand\labelitemi{$\bullet$}
+\let\olditemize\itemize
+\renewcommand{\itemize}{
+  \olditemize
+  \vspace{-0pt}
+  \setlength{\itemsep}{6pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+  %\setlength{\topsep}{-15pt}
+}
+
+\let\oldenumerate\enumerate
+\renewcommand{\enumerate}{
+  \oldenumerate
+  \vspace{-2pt}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+  %\setlength{\topsep}{-15pt}
+}

@@ -1,0 +1,66 @@
+\begin{frame}[fragile]
+  % \definecolor{barblue}{RGB}{153,204,254}
+  % \definecolor{groupblue}{RGB}{51,102,254}
+  % \definecolor{linkred}{RGB}{165,0,33}
+  % \renewcommand\sfdefault{phv}
+  % \renewcommand\mddefault{mc}
+  % \renewcommand\bfdefault{bc}
+  % \setganttlinklabel{s-s}{START-TO-START}
+  % %\setganttlinklabel{f-s}{FINISH-TO-START}
+  % \setganttlinklabel{f-f}{FINISH-TO-FINISH}
+  % \sffamily
+  \begin{ganttchart}[
+      canvas/.append style={fill=none, draw=black!5, line width=0.75pt},
+      x unit=0.8cm,
+      y unit chart=0.6cm,
+      hgrid style/.style={draw=black!5, line width=.75pt},
+      vgrid={*1{draw=black!5, line width=.75pt}},
+      title/.style={draw=none, fill=none},
+      title label font=\bfseries\footnotesize,
+      title label node/.append style={below=7pt},
+      include title in canvas=false,
+      bar height=0.5,
+      bar label font=\mdseries\small\color{blue!70},
+      bar label node/.append style={anchor=west,left=0.2cm},
+      bar/.append style={draw=none, fill=blue!60},
+      group left shift=0,
+      group right shift=0,
+      group height=.25,
+      group peaks tip position=0,
+      group label node/.append style={left=0.5cm},
+      % group progress label font=\bfseries\small,
+      %link/.style={-latex, line width=1.0pt, type=recto},
+      % link label font=\scriptsize\bfseries,
+      % link label node/.append style={below left=-2pt and 0pt}
+      milestone label font=\bfseries\small\color{red!70},
+      milestone label node/.append style={left=0.8cm},
+      milestone/.append style={draw=none, fill=red!60},
+      milestone height=0.5,
+      milestone left shift=0.7,
+      milestone right shift=0.3,
+    ]{1}{14}
+    \gantttitle[
+      title label node/.append style={below left=7pt and -3pt}
+    ]{SEMANAS:\quad1}{1}
+    \gantttitlelist{2,...,13}{1} \\
+    \ganttgroup[name=Bloque1]{\textbf{Bloque 1}}{1}{5} \\
+    \ganttbar{Panorama}{1}{1} \\
+    \ganttbar{Sensores}{2}{3} \\
+    \ganttbar{Actuadores}{4}{5} \\
+    \ganttmilestone[name=Test1]{Test Bloque 1}{5} \\
+
+    \ganttgroup{Bloque 2}{6}{9} \\
+    \ganttbar{Máquinas CN}{6}{7} \\
+    \ganttbar{PLCs}{8}{9} \\
+    \ganttmilestone[name=Test2]{Test Bloque 2}{9} \\
+
+    \ganttgroup{Bloque 3}{10}{13} \\
+    \ganttbar{Asp. prácticos}{10}{11} \\
+    \ganttbar{Cnt. Distribuido}{12}{13} \\
+    \ganttmilestone[name=Test3]{Test Bloque 3}{13} \\
+    \ganttbar[
+      bar/.append style={fill=green!40!black},
+      bar label font=\mdseries\small\color{green!40!black},
+    ]{\large{Trabajo Final}}{9}{13} \\
+  \end{ganttchart}
+\end{frame}

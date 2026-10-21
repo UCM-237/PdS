@@ -1,0 +1,7 @@
+\babel@toc {spanish}{}\relax 
+\beamer@sectionintoc {1}{Objetivos}{2}{0}{1}
+\beamer@sectionintoc {2}{Introducciónn al procesamiento de imagenes digitales}{4}{0}{2}
+\beamer@subsectionintoc {2}{1}{Adquisición y repesentación de imágenes}{6}{0}{2}
+\beamer@subsectionintoc {2}{2}{Transformada de Fourier Discreta 2D}{13}{0}{2}
+\beamer@subsectionintoc {2}{3}{Convoluci\'{o}n y filtrado}{20}{0}{2}
+\beamer@subsectionintoc {2}{4}{Histograma de una imagen digital}{28}{0}{2}

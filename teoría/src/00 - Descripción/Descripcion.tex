@@ -1,0 +1,14 @@
+% Usar handout para eliminar animaciones
+%\documentclass{beamer}
+\documentclass[handout]{beamer}
+\input{config.tex}
+
+\def\PBS#1{\let\temp=\\%
+  #1%
+  \let\\=\temp
+}
+
+\begin{document}
+  \portada
+    \input{./Partes/Contenido.tex}
+\end{document}

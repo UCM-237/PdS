@@ -1,0 +1,670 @@
+\documentclass{beamer}
+\mode<presentation> {%
+	\usetheme[]{Boadilla}
+	\usecolortheme{orchid}
+	\setbeamercovered{transparent}
+	\setbeamersize{text margin left=0.7cm}
+  \setbeamersize{text margin right=0.7cm}
+  \setbeamertemplate{enumerate item}[square]
+  \setbeamertemplate{enumerate subitem}[circle]
+  \setbeamertemplate{enumerate subsubitem}[>]
+  \setbeamertemplate{itemize item}[square]
+  \setbeamertemplate{itemize subitem}[circle]
+  \setbeamertemplate{itemize subsubitem}[>]
+}
+  
+\usepackage{bm}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[normalem]{ulem}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{pifont}
+\usepackage{rotating}
+\usepackage{colortbl}
+\usepackage{amssymb}
+
+\usepackage[framed]{mcode}
+\usepackage{verbatim}
+\lstset{literate={ñ}{{\~n}}1}
+
+\definecolor{olivegreen}{rgb}{0.0,0.5,0.0}
+\definecolor{general}{rgb}{0.9 0.9 1}%
+
+\title[Procesamiento de Señales]{Señales Aleatorias}
+\author[Jesús Chacón Sombría] {%
+ 	\textit{Ingeniería Electrónica de Comunicaciones}\\
+ 	\vspace{0.6cm}%
+	\small Jesús Chacón Sombría%
+}%
+
+\institute[DACYA. UCM] {%\inst{1}%
+	\footnotesize  Departamento de Arquitectura de Computadores y Automática\\
+  Universidad Complutense de Madrid
+}
+
+\date[Señales Aleatorias] % (optional)
+{\footnotesize Curso 2024-2025}%{\today / Master}
+\subject{Talks}
+
+\pgfdeclareimage[height=0.75cm]{logo}{ucm}
+
+\usepackage[absolute,overlay]{textpos}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+\newcommand{\MyLogo}{%
+\begin{textblock}{14}(116.0,0.6)
+  \pgfuseimage{logo}
+\end{textblock}
+}
+
+\makeatletter
+\numberwithin{section}{part}
+\AtBeginPart{
+\beamer@tocsectionnumber=0\relax
+\frame{\partpage}
+}
+\makeatother
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\newcommand*\oldmacro{}%
+\let\oldmacro\insertshorttitle%
+\renewcommand*\insertshorttitle{%
+	%\MyLogo
+\oldmacro\hfill%
+}
+
+\AtBeginSection[]{}
+
+\AtBeginSubsection[]{}
+
+
+
+\section{Objetivos}
+
+\begin{frame}
+  \frametitle{Objetivos del tema}
+
+  \begin{itemize}
+    \item Modelar el comportamiento de algunas señales aleatorias:
+    \begin{itemize}
+      \item estacionarias,
+      \item ergódicas, 
+      \item proceso de Markov.
+    \end{itemize}
+    \item Definir matemáticamente las propiedades más relevantes de:
+    \begin{itemize}
+      \normalsize
+      \item Variables aleatorias: 
+      \begin{itemize}
+        \item distribución/densidad de probabilidad,
+        \item valor medio, valor cuadrático medio, varianza,
+        \item correlación.
+      \end{itemize}
+      \item Señales aleatorias:  
+      \begin{itemize}
+        \item valor medio, valor cuadrático medio, 
+        \item covarianza, autocorrelación y correlación cruzada,
+        \item densidad espectral de potencia
+      \end{itemize}
+    \end{itemize}
+    \item Extender las técnicas de PdS a señales aleatorias
+  \end{itemize}
+\end{frame}
+
+\section{Introducción}
+
+
+\begin{frame}\frametitle{Señales deterministas y estocásticas I}
+    \footnotesize
+    \begin{itemize}
+        \item \alert{Señales deterministas}: 
+        \begin{itemize}\footnotesize
+            \item Toman siempre el mismo valor para el mismo instante de tiempo. 
+            \item Se representan por una única secuencia continua/discreta de valores. 
+            \item El valor en cada instante puede ser definido de forma explícita.
+            \item Función matemática determinista:  $t \rightarrow f(t)$\\\scriptsize\color{gray} \emph{relaciona el valor de la señal con el valor de variable independiente (tiempo).}
+        \end{itemize}
+        \item \alert{Señales estocásticas/aleatorias}: 
+        \begin{itemize}\footnotesize
+            \item No toman siempre el mismo valor para un mismo instante de tiempo. 
+            \item Colección infinita de secuencias continuas/discretas de valores. 
+            \item El valor en cada instante es una variable aleatoria.
+            \item El comportamiento se define a través de una función de probabilidad.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}\frametitle{Señales deterministas y estocásticas II}
+    \begin{columns}[T]
+        \begin{column}{6cm}
+            \small
+            \centering Señal determinista:\\
+            \includegraphics[width=6cm]{./Figures/SignalDeterministic.eps} 
+            $x(t)=sen(\omega t)$
+        \end{column}
+        \begin{column}{6cm}
+            \small
+            \centering Señal estocástica:\\
+            \includegraphics[width=6cm]{./Figures/SignalRandom.eps}\\
+            $p(x(t_0),x(t_1),x(t_2),\dots,x(t_\infty))$
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Señales deterministas y estocásticas III}
+  \begin{itemize}
+      \item ¿Las señales reales son deterministas o estocásticas?
+      \vspace{0.1cm}
+      \begin{itemize}\footnotesize
+          \item \alert{Argumento 1:} No existen señales totalmente deterministas.
+          \begin{itemize}\scriptsize
+              \item Puede existir algún fenómeno que no haya sido tenido en cuenta.
+              \item Los valores de la señal no están totalmente determinados a priori.
+          \end{itemize}
+          \item \alert{Argumento 2:} Todas las señales son intrínsecamente deterministas.
+          \begin{itemize}\scriptsize
+              \item Desconocimiento parcial del proceso que las genera. 
+              \item Por tanto no son realmente aleatorias.
+          \end{itemize}
+      \end{itemize}
+      \vspace{0.1cm}
+      \item Clasificación \alert{determinista} vs. \alert{estocástica}:
+      \vspace{0.1cm}
+      \begin{itemize}\footnotesize
+          \item Atiende al tratamiento que se le desea dar a la señal,
+          \vspace{0.1cm}
+          \item no a la forma en que la señal ha sido generada.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\subsection{Una variable aleatoria}
+
+\begin{frame}\frametitle{Definición de una variable aleatoria}
+  \begin{itemize}
+    \item \alert{Variable aleatoria$^1$ $X$ (continua o discreta)}:
+    \begin{itemize}
+      \item Representa el resultado de un experimento aleatorio.
+      \item Su valor no es conocido a priori.
+      \item ¿Cómo podemos caracterizarla?
+      \begin{itemize}
+        \item ¿Que valores puede tomar?
+        \item ¿Es igual de probable cada valor?
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+
+  \begin{columns}[T]
+    \begin{column}{5cm}
+      \scriptsize
+      \centering \color{olivegreen} Ejemplo discreto: X valores de un dado
+      \color{gray}$p_X(x)=\frac{1}{6}$
+
+      \includegraphics[width=3cm]{./Figures/ProbDiscreta.eps}
+    \end{column}
+    \begin{column}{6cm}\centering
+      \scriptsize
+
+      \centering \color{olivegreen} Ejemplo continuo: X tiempo de espera
+
+      \color{gray}$p_X(x)=\mathcal{U}_{X\in[0,30]}(x)$
+
+      \vspace{0.2cm}
+      \includegraphics[height=2cm]{./Figures/ProbContinua.eps}
+      \includegraphics[height=2cm]{./Figures/ProbDistContinua.eps}
+    \end{column}
+  \end{columns}
+
+
+  \rule{10cm}{0.04ex}
+
+  \scriptsize
+  $^1$En estadística es habitual definir la variable aleatoria con mayúsculas y sus valores con minúsculas.
+\end{frame}
+
+
+\begin{frame}\frametitle{Definición de una variable aleatoria}
+  \begin{itemize}
+    \item \alert{Para variables discretas:}
+    \vspace{0.1cm}
+    \begin{itemize}\footnotesize
+      \item Función de \color{olivegreen}\emph{masa de probabilidad}: \color{blue}$p_X(x_i)=Probabilidad(X=x_i)$\color{black}
+      \vspace{0.1cm}
+      \item Propiedades:
+      \begin{itemize}
+        \item $0\le p_X(x_i)\le 1$
+        \vspace{0.1cm}
+        \item $\sum_{x\in X} p_X(x)=1$
+      \end{itemize}
+    \end{itemize}
+    \vspace{0.2cm}
+    \item \alert{Para variables continuas:}
+    \vspace{0.1cm}
+    \begin{itemize}\footnotesize
+      \item \color{olivegreen}\emph{Distribución de probabilidad}: \color{blue}$P_X(x)=Probabilidad(X\le x)$\color{black}
+      \vspace{0.1cm}
+      \item \color{olivegreen}\emph{Densidad de probabilidad}: \color{blue}$p_X(x)=\frac{\partial P_X(x)}{\partial x}$\color{black}
+      \vspace{0.1cm}
+      \item Propiedades:
+      \begin{itemize}
+        \item $p_X(x)\ge 0$ $\rightarrow P_X(x)$ es una función creciente
+        \vspace{0.1cm}
+        \item $P_X(x)=\int_{-\infty}^x p_X(y)dy \rightarrow P_X(\infty)=1$
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Estadísticos}
+    \begin{itemize}
+      \item Un \alert{estadístico} es una medida cuantitiva de una muestra.
+      \begin{itemize}
+        \item Valor esperado de alguna función $g(x)$.
+        \begin{itemize}
+          \vspace{0.1cm}
+          \item \alert{Continuo:} \hspace{0.1cm}\\\vspace{0.1cm}$E\{g(X)\}=\int_{-\infty}^{\infty}g(x) p_X(x)dx$
+          \vspace{0.1cm}
+          \item \alert{Discreto:}\\\vspace{0.1cm}$E\{g(X)\}=\sum_{x_i \in X} g(x_i)p_X(x_i)$
+        \end{itemize}
+      \item Respecto a la probabilidad $p_X(x)$.
+      \end{itemize}
+      \item Trata de inferir o estimar una propiedad de la población.
+    \end{itemize}
+    \footnotesize
+        % \item Estadísticos frecuentes:
+    % \begin{itemize}
+    %   \item $\mu_x=E\{X\}$ (media)
+    %   \item $\sigma_x^2=E\{(X-\mu_x)^2\}$ (varianza)
+    %   \item $E\{X^2\}=\sigma_x^2+\mu_x^2$ (valor cuadrático medio)
+    % \end{itemize}
+  % \end{itemize}
+\end{frame}
+  
+
+\begin{frame}\frametitle{Estadísticos de una variable aleatoria}
+  \footnotesize
+
+  \begin{itemize}
+    \item Estadísticos/características habituales (expresiones continuas$^1$)
+
+    \begin{itemize}\footnotesize
+      \item \alert{Valor medio}:\\\vspace{0.1cm}$\mu_X \triangleq E\{X\}$ $=\int_{-\infty}^{\infty}x p_X(x)dx$
+      \item \alert{Valor cuadrático medio:}\\\vspace{0.1cm}$E\{X^2\}$ $=\int_{-\infty}^{\infty}x^2 p_X(x)dx$
+      \item \alert{Varianza$^2$:}\\\vspace{0.1cm}$\sigma^2_X \triangleq E\{(X-\mu_x)(X-\mu_x)\}=\int_{-\infty}^{\infty}(x-\mu_x)(x-\mu_x) p_X(x)dx$ $=E\{X^2\}-\mu_x^2$
+    \end{itemize}
+
+  \end{itemize}
+
+  \rule{11cm}{0.04ex}
+  \scriptsize
+  $^1$La relación discreta se puede sacar de la continua, construyendo una función densidad de probabilidad para la variable aleatoria discreta:  $p_{X_C}(x)=\sum_{x_i \in X} p_X(x_i)\delta(x-x_i) \rightarrow$
+  $E(g(X_C))\!=\!\int_{-\infty}^{\infty}\!g(x)\! \sum_{x_i \in X} p_X(x_i)\delta(x\!-\!x_i)dx\!=\!\sum_{x_i \in X} g(x_i)p_X(x_i)=E(g(X))$. Equivale a sustituir las integrales por sumarios en las relaciones de las variables continuas. Por lo tanto, podemos definir únicamente las relaciones continuas y extrapolar las discretas.
+
+  \vspace{0.2cm}
+
+  $^2$Relación entre $\sigma^2_X$, $\mu_X$ y $E(X^2)$:  $\sigma^2_X\!=\!\! \int_{-\infty}^{\infty}\!\!(x^2\!-\!2 \mu_X x\!+\! \mu_X^2) p_X(x)dx=$ $=E(X^2)-2\mu_X \int_{-\infty}^{\infty}x p_X(x)dx+ \mu_X^2  \int_{-\infty}^{\infty}p_X(x)dx=E(X^2)-2\mu_X^2+\mu_X^2 $
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}\frametitle{Variables aleatorias comunes}
+  \begin{itemize}
+    \item \alert{Distribución uniforme}:\hspace{0.2cm}
+    \small$p_X(x)=\mathcal{U}_{X \in [a,b]}(x)=\left \{\begin{array}{cl}\frac{1}{b-a}  &  x\in [a,b] \\0 &c.c.\end{array} \right .$
+    \begin{itemize}
+      \footnotesize
+        \vspace{0.1cm}
+        \item \color{blue}$\mu_x=\int_{-\infty}^{\infty}x p_X(x)dx=\frac{b+a}{2}$\color{black}\\
+        \hspace{0.5cm}\color{cyan}$\int_a^b\frac{x}{b-a} dx=\frac{x^2}{2(b-a)}|_a^b=\frac{b^2-a^2}{2(b-a)}=\frac{b+a}{2}$\color{black}
+        \vspace{0.1cm}
+        \item \color{blue}$E(X^2)=\int_{-\infty}^{\infty}x^2 p_X(x)dx=\frac{b^2+a^2+ab}{3}$\color{black}\\
+        \hspace{0.5cm}\color{cyan}$\int_a^b\frac{x^2}{b-a} dx=\frac{x^3}{3(b-a)}|_a^b=\frac{b^3-a^3}{3(b-a)}=\frac{b^2+a^2+ab}{3}$\color{black}
+        \vspace{0.1cm}
+        \item \color{blue}$\sigma^2_X=E(X^2)-\mu^2_X=\frac{(b-a)^2}{12}$\color{black}
+      \end{itemize}
+    \end{itemize}
+    \centering
+    \includegraphics[width=3.5cm]{./Figures/ProbUniforme.eps}
+\end{frame}
+
+
+\begin{frame}\frametitle{Variables aleatorias comunes}
+  \begin{itemize}
+    \item \alert{Distribución gaussiana}:\hspace{0.2cm}
+    \small$p_X(x)=\mathcal{N}_{X}(x;\mu,\sigma)=\frac{1}{\sqrt{2\pi \sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}$
+    \begin{itemize}
+      \footnotesize
+      \item \color{blue}$\mu_x=\int_{-\infty}^{\infty}x p_X(x)dx=\mu$\color{black}
+      \vspace{0.1cm}
+      \item \color{blue}$E(X^2)=\int_{-\infty}^{\infty}x^2 p_X(x)dx=\sigma^2+\mu_x^2$\color{black}
+      \vspace{0.1cm}
+      \item \color{blue}$\sigma^2_X=E(X^2)-\mu^2_X=\sigma^2$\color{black}
+      \vspace{0.1cm}
+    \end{itemize}
+  \end{itemize}
+  \centering
+  \includegraphics[width=3.5cm]{./Figures/ProbGauss.eps}
+\end{frame}
+   
+% \section{Variables aleatorias}
+% \input{./Partes/VariableAleatoria1.tex}
+% \input{./Partes/VariableAleatoriaN.tex}
+% \section{Señales aleatorias}
+% \input{./Partes/SenhalesAleatorias1.tex}
+% \input{./Partes/SenhalesAleatorias2.tex}
+
+
+\begin{frame}
+  \frametitle{Muestreo de una variable aleatoria}
+  
+  \footnotesize
+  
+  \begin{itemize}
+    \item \alert{Muestreo de una variable aleatoria:}
+    \begin{itemize}\scriptsize
+      \item Obtener sus valores (muestras) de acuerdo con la densidad de probabilidad.
+      \item Matemáticamente representaremos la función como: \color{olivegreen}$x \sim p_X(x)$\color{black}
+    \end{itemize}  
+    \item \alert{¿Cómo generar las muestras?}
+    \begin{itemize}\scriptsize
+      \item  Experimentalmente, excitando/observando la respuesta 
+      \begin{itemize}\scriptsize
+        \item de un proceso aleatorio 
+        \item de un proceso determinista con una entrada aleatoria
+      \end{itemize}
+      \item Utilizando un generador de números pseudo-aleatorios:
+  
+      \begin{itemize}\scriptsize
+        \item Probabilidad \alert{discreta}: \color{blue}$p_x(x_i)$ con $i\in [1:N]$\color{black}\\\scriptsize
+        \color{blue}$\bullet\:\:$\color{black} Equiprobables con Matlab: \color{blue}\texttt{randi($\#_{valores}$,filas,col)}\color{black}\\
+        \color{blue}$\bullet\:\:$\color{black} No equiprobables: método de la ruleta
+        \item Probabilidad \alert{uniforme}: \color{blue}$\mathcal{U}_{X\in [a,b]}(x)$\color{black}\\\scriptsize
+        \color{blue}$\bullet\:\:$\color{black} Matlab: \color{blue}\texttt{a+(b-a)*rand(filas,col)}\color{black}\\
+        \color{blue}$\bullet\:\:$\color{black} Secuencias básicas: $x_{i+1}=(a*x_i+c)\mod m$.
+        \hspace{3.2cm}\color{gray}{Ejemplo con $a=65539, m=2^{29}$}\color{black}
+        \item Probabilidad \alert{gaussiana}: \color{blue}$\mathcal{N}_{X}(x;\mu,\sigma)$\color{black}\\\scriptsize
+        \color{blue}$\bullet\:\:$\color{black} Matlab: \color{blue}\texttt{$\mu$+$\sigma$*randn(filas,col)}\color{black}\\
+        \color{blue}$\bullet\:\:$\color{black} Transformada de Box-Muller (a partir de la uniforme)
+        \item Probabilidades \alert{genéricas}:\\\scriptsize
+        \color{blue}$\bullet\:\:$\color{black}Muestreo por rechazo, por importancia\\
+        \color{blue}$\bullet\:\:$\color{black} Muestreo de mezclas
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+  
+\begin{frame}
+  \frametitle{Muestreo de una variable aleatoria}  
+  \footnotesize  
+  
+  \begin{columns}[T]
+    \begin{column}{7cm}
+      \begin{itemize}
+        \item \alert{Método de la ruleta:}
+        \begin{itemize}
+          \footnotesize
+          \item $p(x_i)$
+          \item Muestreo variable auxiliar:
+          $y \sim \mathcal{U}_{y\in [0,1]}(y)$
+          \item $x=\{ j |\sum_{i=1}^{j-1}p(x_i) < y<\sum_{i=1}^j p(x_i)\}$
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}{4cm}
+      \lstinputlisting{./Matlab/Ruleta.m}
+    \end{column}
+  \end{columns}
+  
+  \vspace{-0.2cm}
+  
+  \begin{columns}[T]
+    \begin{column}{7cm}
+      \begin{itemize}
+        \item \alert{Transformada de Box-Muller:}
+        \begin{itemize}
+          \footnotesize
+          \item  $\mathcal{N}(x,\mu\!=\!0,\sigma^2\!=\!1)$
+          \item Muestreo de 2 variables auxiliares:
+          
+          \hspace{0.3cm}$y_1 \sim \mathcal{U}_{y\in [0,1]}(y)$
+          
+          \hspace{0.3cm}$y_2 \sim \mathcal{U}_{y\in [0,1]}(y)$
+          \item Transformación de las muestras:
+          
+          \hspace{0.3cm}$r=\sqrt{-2\log(y_1)}$
+          
+          \hspace{0.3cm}$\theta=2\pi y_2$
+          
+          \hspace{0.3cm}$x_1=r \cos(\theta)$
+          
+          \hspace{0.3cm}$x_2=r \sin(\theta)$
+          
+          \scriptsize
+          Se genera un par, para hacer una guassiana de dos dimensiones o un complejo. Se puede usar solo uno.
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}{4cm}
+      \lstinputlisting{./Matlab/BoxMuller.m}
+    \end{column}
+  \end{columns}
+\end{frame}
+  
+\begin{frame}
+  \frametitle{Muestreo de una variable aleatoria}
+  \footnotesize
+  
+  \begin{columns}[T]
+    \hspace{-0.5cm}\begin{column}{7cm}
+    \begin{itemize}
+      \item \alert{Método de muestreo por rechazo:}
+      \begin{itemize}
+        \footnotesize
+        \item Función de probabilidad genérica $p(x)$
+        \item Las muestras se obtienen de una $q(x)$ auxiliar que debe cumplir que para algún M que Mq(x)-p(x)>0.  Este hecho fuerza a que tengan el mismo soporte (que $q(x)\ne 0$ sobre los mismos puntos x que $p(x)\ne 0$).
+        \item Las $x\sim q(x)$ son también muestras de $p(x)$ si se cumple que $yMq(x)<p(x)$ con $y \sim \mathcal{U}_{y\in [0,1]}(y)$
+      \end{itemize}
+    \end{itemize}
+    \hspace{2cm}\includegraphics[width=3.5cm]{./Figures/MuestreoRechazo.eps}
+    \end{column}
+    \begin{column}{4,5cm}
+      \lstinputlisting{./Matlab/MuestreoRechazo.m}
+    \end{column}
+  \end{columns}
+\end{frame}
+  
+\begin{frame}
+  \frametitle{Muestreo de una variable aleatoria}
+  \footnotesize
+  \begin{columns}[T]
+    \begin{column}{6.8cm}
+      \begin{itemize}
+        \item \alert{Muestreo de una mezcla:}
+        \begin{itemize}
+          \footnotesize
+          \item Función de probabilidad genérica $p(x)=\sum_{i=1}^La_ip_i(x)$, con $\sum_{i=1}^L a_i=1$
+          \item Para muestrearla, podemos seguir el siguiente proceso:
+          \begin{itemize}
+          \item Elegimos la componente de la mezcla (el valor de la i) utilizando la probabilidad discreta $q(i)=a_i$
+          \item Muestreamos la x de la componente elegida $x \sim p_i(x)$
+          \end{itemize}
+        \end{itemize}
+      \end{itemize}
+    
+    \hspace{2cm}\includegraphics[width=3.5cm]{./Figures/MuestreoMezcla.eps}
+    
+    \end{column}
+    \begin{column}{4.2cm}    
+      \lstinputlisting{./Matlab/MuestreoMezcla.m}
+      \small
+      \color{olivegreen}
+      $p_X(x)=0.4\mathcal{N}(x,3,0.5)+$
+
+      \hspace{1.35cm}$0.2\mathcal{U}_{[4,6]}(x)+$
+      
+      \hspace{1.35cm}$0.4\delta(x-7)$
+    \end{column}
+  \end{columns}
+\end{frame}
+  
+\begin{frame}
+  \frametitle{Caracterización de las muestras}  
+  \footnotesize  
+
+  \begin{itemize}
+    \item ¿Cómo podemos caracterizar una v.a. a partir de las muestras?
+    \begin{itemize}
+      \footnotesize
+      \item Intentar estimar la función de probabilidad:
+      \begin{enumerate}
+        \footnotesize
+        \item Determinar el tipo de función de probabilidad: histograma.
+        \item Determinar los parámetros de la función de probabilidad.
+      \end{enumerate}      
+      \item Obtener el valor de los estadísticos a partir:
+      \begin{itemize}
+        \item de la muestras: Método de Monte-Carlo$^1$
+        \item de la función de probabilidad que se ha estimado.
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+  
+  \vspace{0.5cm}
+  
+  \rule{11cm}{0.04ex}
+  \scriptsize
+  
+  $^1$Los métodos de Monte-Carlo también se utilizan para estimar los estadísticos de funciones de probabilidad conocidas de las que no se pueden calcular las integrales de forma cerrada. El proceso consiste en utilizar los métodos de muestreo para generar muestras de la función de probabilidad y luego el método de Monte-Carlo para estimar el estadístico sobre las muestras generadas.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Histograma de un conjunto muestral}
+  \vspace{-0.3cm}
+  \footnotesize
+  \begin{columns}[T]
+    \hspace{0.2cm}\begin{column}{6cm}
+      \begin{itemize}
+      \item El histograma divide el espacio muestral en H segmentos (cubos/bins) continuos de igual tamaño y contabiliza el número de muestras que pertenecen a cada uno de los segmentos.
+      \end{itemize}
+      \end{column}
+      \begin{column}{5cm}
+      \hspace{2cm}\includegraphics[width=3.1cm]{./Figures/Histograma1.eps}
+    \end{column}
+  \end{columns}
+  
+  \vspace{-0.1cm}
+  \begin{itemize}
+    \item Podemos utilizarlos para realizar una representación aproximada de la probabilidad de las muestras, siempre y cuando se normalizan las cuentas del histograma de forma que:
+    \vspace{-0.1cm}
+    \begin{itemize}
+      \footnotesize
+      \item La suma de los valores normalizados del histograma sea 1 para el caso de trabajar con variables aleatorias discretas.
+      \item El area recogida por el histograma normalizado sea igual a 1 para el caso de trabajar con variables aleatorias continuas.
+    \end{itemize}
+   \vspace{-0.2cm}
+  
+   \item Una análisis de la forma del histograma (o del histograma normalizado), en la que obviemos los escalones introducidos por la segmentación del espacio muestral, nos puede permitir determinar en algunos casos el tipo de función de probabilidad al que pertenecen las muestras$^1$.
+  \end{itemize}
+  
+  \vspace{-0.4cm}
+  
+  \rule{11cm}{0.04ex}
+  \scriptsize
+  
+  $^1$En el caso continuo, es conveniente hacer divisiones suficientemente pequeñas para que los escalones no escondan la función de probabilidad real de las muestras.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Histograma de un conjunto muestral}
+  \footnotesize
+  \begin{columns}[c]
+    \begin{column}{6.5cm}    
+      \scriptsize
+      \vspace{-0.2cm}
+      \color{olivegreen}Ejemplo: Histograma de muestras  $\sim \mathcal{N}_X(x,0,1)$\color{black}
+      \vspace{-0.2cm}    
+      \lstinputlisting{./Matlab/HistNormal.m}
+    \end{column}
+    \begin{column}{4.5cm}
+      \includegraphics[width=3cm]{./Figures/HistNormal1.eps}
+      
+      \vspace{-1.6cm}
+      \hspace{1cm}\includegraphics[width=3.5cm]{./Figures/HistNormal2.eps}
+    \end{column}
+  \end{columns}
+  
+  \begin{columns}[c]
+    \begin{column}{6cm}
+      \scriptsize
+      \centering
+      
+      \color{olivegreen}Histograma del ejemplo del rechazo\color{black}
+      
+      \vspace{0.2cm}    
+      \includegraphics[width=4cm]{./Figures/MuestreoRechazo.eps}\includegraphics[width=4cm]{./Figures/HistRechazo.eps}
+      \end{column}
+    \begin{column}{6cm}
+    \scriptsize
+    \centering
+    
+    \color{olivegreen}Histograma del ejemplo de la mezcla\color{black}
+    
+    \vspace{0.2cm}
+    \only<1>{\includegraphics[width=4cm]{./Figures/MuestreoMezcla.eps}}\only<2->{\includegraphics[width=4cm]{./Figures/HistMezcla.eps}}
+    
+    \end{column}
+  \end{columns}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Métodos de Monte-Carlo}
+  \footnotesize
+  
+  \alert{¿Como podemos estimar los estadísticos a partir de las muestras?}
+  \begin{itemize}
+    \item Aproximar la probabilidad de las $N$ muestras: $p_X(x)=\frac{1}{N}\sum_{n=1}^{N} \delta(x-x_i)$.  
+    \item A partir de esa fórmula, podemos obtener los estadísticos directamente:
+    \begin{itemize}
+      \footnotesize
+      \item  $E\{g(X)\}\!=\!\!\int_{-\infty}^\infty g(x)p_X(x)dx\!=\!\!\int_{-\infty}^\infty g(x) \frac{1}{N}\!\!\sum_{n=1}^{N} \delta(x-x_i) dx\!=$  
+      \vspace{0.1cm}
+      \hspace{1.15cm}$=\!\frac{1}{N}\sum_{n=1}^{N} \!g(x_i)$
+      \vspace{0.1cm}
+      \item \emph{Valor medio}: $\mu_X=E\{X\}=\!\frac{1}{N}\sum_{n=1}^{N} \! x_i$
+      \vspace{0.1cm}
+      \item \emph{Valor cuadrático medio}: $E\{X^2\}=\!\frac{1}{N}\sum_{n=1}^{N} \! x_i^2$
+      \vspace{0.1cm}
+      \item \emph{Varianza}: $\sigma_X^2=E\{(X-\mu_X)^2\}=\!\frac{1}{N}\sum_{n=1}^{N} \! (x_i-\mu_x)^2$
+    \end{itemize}
+    \item Los estadísticos básicos se pueden calcular con Matlab:
+    \begin{itemize}
+      \footnotesize
+      \item \emph{Valor medio}: \color{blue}\texttt{mu=mean(samples)}\color{black}
+      \item \emph{Varianza}$^1$: \color{blue}\texttt{sigma2=var(samples,1)}\color{black}
+      \item \emph{Desviación típica}$^1$ ($\sigma_X$): \color{blue}\texttt{sigma=std(samples,1)}\color{black}
+    \end{itemize}
+  \end{itemize}
+  \vspace{-0.2cm}
+  \rule{11cm}{0.04ex}
+  \scriptsize
+  $^1$El segundo parámetro tiene que tomar el valor de 1 para que se calcule la varianza dividiendo los resultados entre N.
+\end{frame}
+
+  
+
+\end{document}
