@@ -110,7 +110,7 @@ def especificaciones():
     w = np.linspace(0, 3, 1500)
     _, H = signal.freqs(b, a, w)
     fig, axs = pe.figura(1, 2, ancho=6.2, alto=2.0)
-    ws = 1.35
+    ws = 1.6
     for ax, en_db in zip(axs, (False, True)):
         mascara_pb(ax, 1.0, ws, 1, 40, 3, en_db)
         ax.plot(w, db(H) if en_db else np.abs(H), color=pe.AZUL)
@@ -119,7 +119,7 @@ def especificaciones():
     axs[0].set_ylim(0, 1.15)
     axs[0].set_yticks([10 ** (-2), 10 ** (-1 / 20), 1], ["$1/A$", "$1/E$", "1"])
     axs[0].annotate("banda de paso", (0.5, 0.6), ha="center", fontsize=6.5, color=pe.GRIS)
-    axs[0].annotate("transición", (1.17, 0.3), ha="center", fontsize=6.5, color=pe.GRIS, rotation=90)
+    axs[0].annotate("transición", (1.3, 0.3), ha="center", fontsize=6.5, color=pe.GRIS, rotation=90)
     axs[0].annotate("banda de supresión", (2.2, 0.6), ha="center", fontsize=6.5, color=pe.GRIS)
     axs[0].set_title(r"$|H(j\omega)|$")
     axs[1].set_ylim(-70, 5)
