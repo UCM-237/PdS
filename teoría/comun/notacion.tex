@@ -6,10 +6,10 @@
 %  Convenios (ver también comun/README.md):
 %   * Tiempo continuo entre paréntesis x(t); tiempo discreto entre
 %     corchetes x[n]. Nunca x(n) para una secuencia.
-%   * Frecuencia angular continua Omega (rad/s) y frecuencia de
-%     oscilación F (Hz); frecuencia angular discreta omega (rad/muestra)
-%     y frecuencia normalizada f (ciclos/muestra). No se usa «w».
-%   * CTFT X(jΩ), DTFT X(e^{jω}), Laplace X(s), Z X(z), siempre
+%   * Frecuencia angular continua omega (rad/s) y frecuencia de
+%     oscilación f (Hz); frecuencia angular discreta Omega (rad/muestra)
+%     y frecuencia normalizada F (ciclos/muestra). No se usa «w».
+%   * CTFT X(jω), DTFT X(e^{jΩ}), Laplace X(s), Z X(z), siempre
 %     bilaterales y con su región de convergencia (ROC).
 %   * DFT: X[k] = Σ_{n=0}^{N-1} x[n] e^{-j2πkn/N}; IDFT con 1/N.
 %     N es siempre una longitud; el orden de un filtro es M.
@@ -63,8 +63,8 @@
 \newcommand{\parSF}{\mathrel{\overset{\mathcal{SF}}{\longleftrightarrow}}}
 
 % Transformadas de Fourier
-\newcommand{\Xc}{X(j\Omega)}           % CTFT
-\newcommand{\Xd}{X(\e^{j\omega})}      % DTFT
+\newcommand{\Xc}{X(j\omega)}           % CTFT
+\newcommand{\Xd}{X(\e^{j\Omega})}      % DTFT
 \newcommand{\ejw}{\e^{j\omega}}
 \newcommand{\ejW}{\e^{j\Omega}}
 

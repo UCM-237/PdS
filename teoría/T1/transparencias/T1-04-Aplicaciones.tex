@@ -13,7 +13,7 @@
     \item Cada tipo de señal ocupa una banda de frecuencias característica, y cada fuente de ruido también.
     \item Conocer las dos bandas decide casi todo el diseño:
     \begin{itemize}\small
-      \item la \alert{frecuencia de muestreo} mínima ($F_s>2F_{\max}$, Tema 2);
+      \item la \alert{frecuencia de muestreo} mínima ($f_s>2f_{\max}$, Tema 2);
       \item el \alert{filtro} que separa señal y ruido (Tema 4);
       \item la resolución en frecuencia necesaria para analizarla (Tema 3).
     \end{itemize}
@@ -63,7 +63,7 @@
     \begin{column}{0.48\textwidth}
       \alert{Ruido}
       \begin{itemize}\small
-        \item \alert{Ruido de cuantificación}: aproximadamente blanco, repartido en toda la banda $[0,F_s/2]$, con potencia $\Delta^2/12$ (Tema 2).
+        \item \alert{Ruido de cuantificación}: aproximadamente blanco, repartido en toda la banda $[0,f_s/2]$, con potencia $\Delta^2/12$ (Tema 2).
         \item Interferencia de la red eléctrica: 50\,Hz en Europa (60\,Hz en América) y sus armónicos.
         \item Ruido ambiental: banda ancha.
         \item Clics y chasquidos: impulsivos.
@@ -108,7 +108,7 @@
       \alert{Señales}
       \begin{itemize}\footnotesize
         \item Posición, velocidad, fuerza, IMU: dinámica útil por debajo de 0,1–1\,kHz.
-        \item Cámaras a 30–60 fotogramas/s: solo representan variaciones de hasta 15–30\,Hz ($F_s/2$).
+        \item Cámaras a 30–60 fotogramas/s: solo representan variaciones de hasta 15–30\,Hz ($f_s/2$).
         \item LiDAR: la luz es óptica (905 o 1550\,nm); la \emph{tasa de barrido}, de 10\,Hz a 1\,kHz, es la que marca el muestreo.
         \item Conmutación PWM de motores: 1 – 50\,kHz.
         \item Buses: CAN de 125\,kbit/s a 1\,Mbit/s; EtherCAT a 100\,Mbit/s.
@@ -149,7 +149,7 @@
       \end{itemize}
     \end{column}
   \end{columns}
-  \nota{Con señales de tan baja frecuencia, la duración del registro (y no la frecuencia de muestreo) limita la resolución espectral: $\Delta F\approx1/T_{\mathrm{obs}}$ (Tema 3).}
+  \nota{Con señales de tan baja frecuencia, la duración del registro (y no la frecuencia de muestreo) limita la resolución espectral: $\Delta f\approx1/T_{\mathrm{obs}}$ (Tema 3).}
 \end{frame}
 
 \begin{frame}{Imagen}

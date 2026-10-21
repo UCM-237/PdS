@@ -31,8 +31,8 @@ teoría/Tx/
 ## Convenios de notación
 
 - Tiempo continuo con paréntesis, `x(t)`; tiempo discreto con corchetes, `x[n]`.
-- Frecuencia continua `\Omega` (rad/s) o `F` (Hz); discreta `\omega` (rad/muestra) o `f`.
-- Transformadas: `\Xc` = X(jΩ), `\Xd` = X(e^{jω}), `X(s)`, `X(z)`, `X[k]`.
+- Frecuencia continua `\omega` (rad/s) o `f` (Hz), con ω = 2πf; discreta `\Omega` (rad/muestra) o `F` (ciclos/muestra). Al muestrear, Ω = ωT_s.
+- Transformadas: `\Xc` = X(jω), `\Xd` = X(e^{jΩ}), `X(s)`, `X(z)`, `X[k]`.
 - Laplace y Z bilaterales, siempre con su región de convergencia (`\ROC`).
 - Ecuación en diferencias en la forma de `filter`/`lfilter`, con `a_0 = 1`.
 - `\conv` para la convolución (nunca para el producto), `\sinc` = sin(πt)/(πt), `\Sa` = sin t / t.
@@ -49,5 +49,10 @@ como mucho 48 caracteres para que quepan en las transparencias.
 
 Las soluciones están dentro de la hoja, en entornos `solucion`, y solo se
 imprimen si se define `\SOLUCIONES` antes de cargar el estilo (lo hace
-`Tx-Ejercicios-Soluciones.tex`). `make publicar` no copia las soluciones a
-`clase/`.
+`Tx-Ejercicios-Soluciones.tex`). `make publicar` copia a `clase/` la hoja
+con y sin soluciones.
+
+## Numeración de los temas
+
+Se sigue la guía docente: T1 Introducción, T2 Muestreo, T3 DFT, T4 Filtros,
+T5 Aplicaciones, T6 Señales aleatorias.

@@ -260,12 +260,12 @@
     =H(s)\,\e^{st}
   \]
   En discreto, con $x[n]=z^n$: \ $y[n]=H(z)\,z^n$, \ $H(z)=\sum_k h[k]\,z^{-k}$.
-  \begin{block}{Respuesta en frecuencia ($s=j\Omega$, $z=\e^{j\omega}$)}
+  \begin{block}{Respuesta en frecuencia ($s=j\omega$, $z=\e^{j\Omega}$)}
     \begin{itemize}\small
-      \item $\e^{j\Omega_0t}\ \to\ H(j\Omega_0)\,\e^{j\Omega_0t}$: misma frecuencia, amplitud por $\abs{H}$, fase desplazada $\arg H$.
-      \item Si $h$ es real: $A\cos(\Omega_0t+\phi)\ \to\ A\,\abs{H(j\Omega_0)}\cos\big(\Omega_0t+\phi+\arg H(j\Omega_0)\big)$.
-      \item Periódica: $x(t)=\sum_kc_k\e^{jk\Omega_0t}\ \to\ y(t)=\sum_kc_k\,H(jk\Omega_0)\,\e^{jk\Omega_0t}$.
-      \item General: $Y(j\Omega)=H(j\Omega)\,\Xc$, \ $Y(\e^{j\omega})=H(\e^{j\omega})\,\Xd$.
+      \item $\e^{j\omega_0t}\ \to\ H(j\omega_0)\,\e^{j\omega_0t}$: misma frecuencia, amplitud por $\abs{H}$, fase desplazada $\arg H$.
+      \item Si $h$ es real: $A\cos(\omega_0t+\phi)\ \to\ A\,\abs{H(j\omega_0)}\cos\big(\omega_0t+\phi+\arg H(j\omega_0)\big)$.
+      \item Periódica: $x(t)=\sum_kc_k\e^{jk\omega_0t}\ \to\ y(t)=\sum_kc_k\,H(jk\omega_0)\,\e^{jk\omega_0t}$.
+      \item General: $Y(j\omega)=H(j\omega)\,\Xc$, \ $Y(\e^{j\Omega})=H(\e^{j\Omega})\,\Xd$.
     \end{itemize}
   \end{block}
   {\footnotesize\color{pdsgris}Si la entrada empieza en $t=0$ y el sistema es estable, dan la respuesta en régimen permanente.}
@@ -288,12 +288,12 @@
   \end{itemize}
   \begin{importante}[Estabilidad de un sistema causal]
     Causal y estable $\iff$ todos los polos en el semiplano izquierdo: $\Re\{p_i\}<0$.\\
-    {\small Equivale a que la ROC (a la derecha del polo más a la derecha) contenga el eje $j\Omega$.}
+    {\small Equivale a que la ROC (a la derecha del polo más a la derecha) contenga el eje $j\omega$.}
   \end{importante}
 \end{frame}
 
 \begin{frame}{Polos y forma de la respuesta al impulso}
-  Cada polo $p$ aporta a $h(t)$ un \alert{modo} $\e^{pt}u(t)$; un par complejo $\sigma\pm j\Omega_0$ aporta $\e^{\sigma t}\cos(\Omega_0t+\phi)$.
+  Cada polo $p$ aporta a $h(t)$ un \alert{modo} $\e^{pt}u(t)$; un par complejo $\sigma\pm j\omega_0$ aporta $\e^{\sigma t}\cos(\omega_0t+\phi)$.
   \begin{center}\includegraphics[width=0.95\linewidth]{polos_estabilidad_s}\end{center}
   \begin{itemize}\small
     \item $\Re\{p\}<0$: el modo decae (estable). Cuanto más a la izquierda, más rápido.
@@ -310,7 +310,7 @@
         \item Un polo en $s=-1/RC$: causal y estable.
         \item $h(t)=\frac{1}{RC}\e^{-t/RC}u(t)$
         \item Escalón: $s(t)=\big(1-\e^{-t/RC}\big)u(t)$
-        \item $\abs{H(j\Omega)}=1/\sqrt{1+(\Omega RC)^2}$: paso bajo con frecuencia de corte $\Omega_c=1/RC$ ($-3$\,dB).
+        \item $\abs{H(j\omega)}=1/\sqrt{1+(\omega RC)^2}$: paso bajo con frecuencia de corte $\omega_c=1/RC$ ($-3$\,dB).
       \end{itemize}
     \end{column}
     \begin{column}{0.48\textwidth}
@@ -343,7 +343,7 @@
 \end{frame}
 
 \begin{frame}{Polos y forma de la respuesta al impulso}
-  Cada polo $p$ aporta a $h[n]$ un modo $p^n u[n]$; un par $r\e^{\pm j\omega_0}$ aporta $r^n\cos(\omega_0n+\phi)$.
+  Cada polo $p$ aporta a $h[n]$ un modo $p^n u[n]$; un par $r\e^{\pm j\Omega_0}$ aporta $r^n\cos(\Omega_0n+\phi)$.
   \begin{center}\includegraphics[width=0.95\linewidth]{polos_estabilidad_z}\end{center}
   \begin{itemize}\small
     \item $\abs{p}<1$: decae; $\abs{p}=1$: oscilación mantenida (no BIBO estable); $\abs{p}>1$: crece.
@@ -460,7 +460,7 @@
     \end{column}
     \begin{column}{0.5\textwidth}
       \begin{itemize}
-        \item Las exponenciales son autofunciones: $\e^{j\Omega t}\to H(j\Omega)\e^{j\Omega t}$.
+        \item Las exponenciales son autofunciones: $\e^{j\omega t}\to H(j\omega)\e^{j\omega t}$.
         \item Cálculo de la respuesta: convolución, Laplace/Z o Fourier.
         \item FIR frente a IIR en sistemas discretos.
       \end{itemize}

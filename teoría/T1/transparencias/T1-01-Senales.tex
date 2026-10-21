@@ -72,8 +72,8 @@
         \item Sistemas: $\T$, con $y(t)=\sis{x(t)}$, $y[n]=\sis{x[n]}$
         \item Frecuencia:
         \begin{itemize}
-          \item continua: $\Omega$ (rad/s), $F$ (Hz), $\Omega=2\pi F$
-          \item discreta: $\omega$ (rad/muestra), $f$ (ciclos/muestra)
+          \item continua: $\omega$ (rad/s), $f$ (Hz), $\omega=2\pi f$
+          \item discreta: $\Omega$ (rad/muestra), $F$ (ciclos/muestra)
         \end{itemize}
         \item Transformadas: $\Xc$, $\Xd$, $X(s)$, $X(z)$, $X[k]$
       \end{itemize}
@@ -192,7 +192,7 @@
   \begin{center}
     \includegraphics[width=0.66\linewidth]{determinista_aleatoria}
   \end{center}
-  \nota{El ruido de un sensor, la voz o el tráfico de una red se modelan como señales aleatorias (tema de señales aleatorias).}
+  \nota{El ruido de un sensor, la voz o el tráfico de una red se modelan como señales aleatorias (Tema 6).}
 \end{frame}
 
 \begin{frame}{Periódicas y aperiódicas}
@@ -295,7 +295,7 @@
     $E_x=\displaystyle\sum_{n=0}^{\infty}\abs{a}^{2n}=\frac{1}{1-\abs{a}^2}$ \quad (señal de energía).
   \end{ejemplo}
   \begin{ejemplo}[Sinusoide]
-    $x(t)=A\cos(\Omega_0t+\phi)$: \quad $P_x=\dfrac{1}{T_0}\displaystyle\int_0^{T_0}A^2\cos^2(\Omega_0t+\phi)\dd t=\dfrac{A^2}{2}$ \quad (señal de potencia).
+    $x(t)=A\cos(\omega_0t+\phi)$: \quad $P_x=\dfrac{1}{T_0}\displaystyle\int_0^{T_0}A^2\cos^2(\omega_0t+\phi)\dd t=\dfrac{A^2}{2}$ \quad (señal de potencia).
   \end{ejemplo}
   \begin{ejemplo}[Escalón]
     $u(t)$: \quad $E=\infty$, \quad $P=\lim_{T\to\infty}\frac{1}{2T}\int_0^T1\dd t=\frac12$.
@@ -346,7 +346,7 @@
     \end{tabular}
   \end{center}
   \begin{block}{Por qué importa}
-    La transformada de Fourier de una señal \alert{real} es \alert{hermítica}: $X(-j\Omega)=X^*(j\Omega)$. Por eso su módulo es par y su fase impar, y basta representar las frecuencias positivas.
+    La transformada de Fourier de una señal \alert{real} es \alert{hermítica}: $X(-j\omega)=X^*(j\omega)$. Por eso su módulo es par y su fase impar, y basta representar las frecuencias positivas.
   \end{block}
 \end{frame}
 
@@ -446,12 +446,12 @@
 \begin{frame}{Exponencial compleja continua}
   \begin{columns}[c]
     \begin{column}{0.52\textwidth}
-      \[x(t)=A\,\e^{j\Omega_0 t}\]
+      \[x(t)=A\,\e^{j\omega_0 t}\]
       \begin{itemize}\small
-        \item Periódica para todo $\Omega_0\neq0$, con $T_0=\dfrac{2\pi}{\abs{\Omega_0}}$:\\
-          \gris{$\e^{j\Omega_0(t+T_0)}=\e^{j\Omega_0t}\e^{j2\pi}=\e^{j\Omega_0t}$}
-        \item $\Omega_0=2\pi F_0$: rad/s y Hz.
-        \item Frecuencias distintas dan señales distintas, y cuanto mayor es $\abs{\Omega_0}$ más rápido oscila.
+        \item Periódica para todo $\omega_0\neq0$, con $T_0=\dfrac{2\pi}{\abs{\omega_0}}$:\\
+          \gris{$\e^{j\omega_0(t+T_0)}=\e^{j\omega_0t}\e^{j2\pi}=\e^{j\omega_0t}$}
+        \item $\omega_0=2\pi f_0$: rad/s y Hz.
+        \item Frecuencias distintas dan señales distintas, y cuanto mayor es $\abs{\omega_0}$ más rápido oscila.
       \end{itemize}
     \end{column}
     \begin{column}{0.46\textwidth}
@@ -470,41 +470,41 @@
 \begin{frame}{Exponencial continua general}
   \[
     x(t)=C\,\e^{at},\quad C,a\in\C
-    \qquad\left.\begin{array}{l}C=\abs{C}\e^{j\phi}\\ a=r+j\Omega_0\end{array}\right\}
-    \;\Rightarrow\; x(t)=\abs{C}\,\e^{rt}\,\e^{j(\Omega_0t+\phi)}
+    \qquad\left.\begin{array}{l}C=\abs{C}\e^{j\phi}\\ a=r+j\omega_0\end{array}\right\}
+    \;\Rightarrow\; x(t)=\abs{C}\,\e^{rt}\,\e^{j(\omega_0t+\phi)}
   \]
   \begin{itemize}
     \item Sinusoide compleja con envolvente exponencial: decreciente ($r<0$), constante ($r=0$) o creciente ($r>0$).
-    \item Si $a$ es real ($\Omega_0=0$) es la exponencial real $C\e^{rt}$.
+    \item Si $a$ es real ($\omega_0=0$) es la exponencial real $C\e^{rt}$.
     \item Son las respuestas naturales de los sistemas descritos por ecuaciones diferenciales lineales: $a$ es un \alert{polo}.
   \end{itemize}
   \begin{center}\includegraphics[width=0.62\linewidth]{exp_general_continua}\end{center}
 \end{frame}
 
 \begin{frame}{Exponencial compleja discreta: periodicidad}
-  \[x[n]=A\,\e^{j\omega_0 n},\qquad \omega_0=2\pi f_0\ \text{(rad/muestra)}\]
+  \[x[n]=A\,\e^{j\Omega_0 n},\qquad \Omega_0=2\pi F_0\ \text{(rad/muestra)}\]
   \begin{importante}[No siempre es periódica]
-    $x[n+N]=x[n]\iff \e^{j\omega_0N}=1\iff \omega_0N=2\pi k$, es decir, $f_0=\dfrac{\omega_0}{2\pi}=\dfrac{k}{N}$ debe ser \alert{racional}.\\[1mm]
+    $x[n+N]=x[n]\iff \e^{j\Omega_0N}=1\iff \Omega_0N=2\pi k$, es decir, $F_0=\dfrac{\Omega_0}{2\pi}=\dfrac{k}{N}$ debe ser \alert{racional}.\\[1mm]
     Con $k/N$ irreducible, el periodo fundamental es $N$.
   \end{importante}
   \vspace{-1mm}
   \begin{ejemplo}
     \begin{itemize}\small
-      \item $\cos(\pi n/4)$: $f_0=1/8$, periodo $N=8$.
-      \item $\cos(3\pi n/8)$: $f_0=3/16$, periodo $N=16$ (¡no $16/3$!).
-      \item $\cos(0{,}4\,n)$: $f_0=0{,}2/\pi$ es irracional, \alert{no es periódica} aunque $\cos(0{,}4\,t)$ sí lo sea.
+      \item $\cos(\pi n/4)$: $F_0=1/8$, periodo $N=8$.
+      \item $\cos(3\pi n/8)$: $F_0=3/16$, periodo $N=16$ (¡no $16/3$!).
+      \item $\cos(0{,}4\,n)$: $F_0=0{,}2/\pi$ es irracional, \alert{no es periódica} aunque $\cos(0{,}4\,t)$ sí lo sea.
     \end{itemize}
   \end{ejemplo}
 \end{frame}
 
 \begin{frame}{Exponencial compleja discreta: frecuencias equivalentes}
   \begin{importante}[Frecuencias que difieren en $2\pi$ dan la misma secuencia]
-    \[\e^{j(\omega_0+2\pi k)n}=\e^{j\omega_0n}\,\e^{j2\pi kn}=\e^{j\omega_0n}\qquad\forall k\in\Z\]
-    Basta un intervalo de longitud $2\pi$: $0\le\omega<2\pi$ o $-\pi\le\omega<\pi$.
+    \[\e^{j(\Omega_0+2\pi k)n}=\e^{j\Omega_0n}\,\e^{j2\pi kn}=\e^{j\Omega_0n}\qquad\forall k\in\Z\]
+    Basta un intervalo de longitud $2\pi$: $0\le\Omega<2\pi$ o $-\pi\le\Omega<\pi$.
   \end{importante}
   \begin{itemize}\small
-    \item La oscilación más rápida posible está en $\omega=\pi$: $\e^{j\pi n}=(-1)^n$.
-    \item Las frecuencias bajas están cerca de $\omega=0$ \emph{y} cerca de $\omega=2\pi$.
+    \item La oscilación más rápida posible está en $\Omega=\pi$: $\e^{j\pi n}=(-1)^n$.
+    \item Las frecuencias bajas están cerca de $\Omega=0$ \emph{y} cerca de $\Omega=2\pi$.
     \item Origen del \alert{aliasing} al muestrear (Tema 2).
   \end{itemize}
   \begin{center}\includegraphics[width=0.75\linewidth]{coseno_discreto_frecuencias}\end{center}
@@ -515,8 +515,8 @@
 \begin{frame}{Exponencial discreta general}
   \[
     x[n]=C\,\alpha^n,\quad C,\alpha\in\C
-    \qquad\left.\begin{array}{l}C=\abs{C}\e^{j\phi}\\ \alpha=\abs{\alpha}\e^{j\omega_0}\end{array}\right\}
-    \;\Rightarrow\; x[n]=\abs{C}\,\abs{\alpha}^n\,\e^{j(\omega_0n+\phi)}
+    \qquad\left.\begin{array}{l}C=\abs{C}\e^{j\phi}\\ \alpha=\abs{\alpha}\e^{j\Omega_0}\end{array}\right\}
+    \;\Rightarrow\; x[n]=\abs{C}\,\abs{\alpha}^n\,\e^{j(\Omega_0n+\phi)}
   \]
   \begin{itemize}
     \item Envolvente decreciente ($\abs{\alpha}<1$), constante ($\abs{\alpha}=1$) o creciente ($\abs{\alpha}>1$).
@@ -553,7 +553,7 @@
   \includegraphics[width=\linewidth]{ondas}
   \begin{itemize}\small
     \item \alert{Cuadrada} y \alert{triangular}: periódicas, con armónicos impares (Parte 2).
-    \item \alert{Chirp lineal}: $x(t)=\cos\!\big(2\pi(F_0t+\tfrac{\beta}{2}t^2)\big)$. Su frecuencia instantánea, $\frac{1}{2\pi}\dv{\theta}{t}=F_0+\beta t$, crece linealmente. Se usa en radar, sonar y para medir respuestas en frecuencia.
+    \item \alert{Chirp lineal}: $x(t)=\cos\!\big(2\pi(f_0t+\tfrac{\beta}{2}t^2)\big)$. Su frecuencia instantánea, $\frac{1}{2\pi}\dv{\theta}{t}=f_0+\beta t$, crece linealmente. Se usa en radar, sonar y para medir respuestas en frecuencia.
   \end{itemize}
 \end{frame}
 
@@ -591,8 +591,8 @@
         \item Señales básicas: $\delta$, $u$, $r$, $\rect$, $\tri$, $\sinc$, $\sgn$, exponenciales.
         \item \alert{Diferencias entre la exponencial continua y la discreta}:
         \begin{itemize}\small
-          \item $\e^{j\omega_0n}$ solo es periódica si $\omega_0/2\pi$ es racional.
-          \item $\omega_0$ y $\omega_0+2\pi$ dan la misma secuencia.
+          \item $\e^{j\Omega_0n}$ solo es periódica si $\Omega_0/2\pi$ es racional.
+          \item $\Omega_0$ y $\Omega_0+2\pi$ dan la misma secuencia.
         \end{itemize}
       \end{itemize}
     \end{column}

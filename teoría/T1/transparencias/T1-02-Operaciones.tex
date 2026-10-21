@@ -208,7 +208,7 @@
 
 \begin{frame}{Idea: descomponer en exponenciales complejas}
   \begin{itemize}
-    \item Las exponenciales complejas $\e^{j\Omega t}$ y $\e^{j\omega n}$ son \alert{autofunciones} de los sistemas LTI: salen del sistema multiplicadas por un número complejo (Parte 3).
+    \item Las exponenciales complejas $\e^{j\omega t}$ y $\e^{j\Omega n}$ son \alert{autofunciones} de los sistemas LTI: salen del sistema multiplicadas por un número complejo (Parte 3).
     \item Si escribimos una señal como suma (o integral) de exponenciales, conocer la respuesta a cada exponencial basta para conocer la respuesta a la señal.
   \end{itemize}
   \begin{center}
@@ -224,18 +224,18 @@
 \end{frame}
 
 \begin{frame}{Serie de Fourier de señales continuas periódicas}
-  $x(t)=x(t+T_0)$, \quad $\Omega_0=2\pi/T_0$
+  $x(t)=x(t+T_0)$, \quad $\omega_0=2\pi/T_0$
   \begin{columns}[T]
     \begin{column}{0.5\textwidth}
       \begin{block}{Forma exponencial}
-        Síntesis: \ $x(t)=\displaystyle\sum_{k=-\infty}^{\infty}c_k\,\e^{jk\Omega_0t}$\\[2mm]
-        Análisis: \ $c_k=\displaystyle\frac{1}{T_0}\int_{T_0}x(t)\,\e^{-jk\Omega_0t}\dd t$
+        Síntesis: \ $x(t)=\displaystyle\sum_{k=-\infty}^{\infty}c_k\,\e^{jk\omega_0t}$\\[2mm]
+        Análisis: \ $c_k=\displaystyle\frac{1}{T_0}\int_{T_0}x(t)\,\e^{-jk\omega_0t}\dd t$
       \end{block}
     \end{column}
     \begin{column}{0.48\textwidth}
       \begin{block}{Forma trigonométrica ($x$ real)}
-        $x(t)=\dfrac{a_0}{2}+\displaystyle\sum_{k=1}^{\infty}\big(a_k\cos(k\Omega_0t)+b_k\sin(k\Omega_0t)\big)$\\[2mm]
-        $a_k=\dfrac{2}{T_0}\displaystyle\int_{T_0}x(t)\cos(k\Omega_0t)\dd t$, \quad $b_k=\dfrac{2}{T_0}\displaystyle\int_{T_0}x(t)\sin(k\Omega_0t)\dd t$
+        $x(t)=\dfrac{a_0}{2}+\displaystyle\sum_{k=1}^{\infty}\big(a_k\cos(k\omega_0t)+b_k\sin(k\omega_0t)\big)$\\[2mm]
+        $a_k=\dfrac{2}{T_0}\displaystyle\int_{T_0}x(t)\cos(k\omega_0t)\dd t$, \quad $b_k=\dfrac{2}{T_0}\displaystyle\int_{T_0}x(t)\sin(k\omega_0t)\dd t$
       \end{block}
     \end{column}
   \end{columns}
@@ -252,7 +252,7 @@
     c_0=0,\qquad c_k=\frac{\sin(\pi k/2)}{\pi k/2}=\sinc(k/2)\ \ (k\neq0)
   \]
   \[
-    x(t)=\frac{4}{\pi}\Big(\cos\Omega_0t-\tfrac13\cos3\Omega_0t+\tfrac15\cos5\Omega_0t-\cdots\Big)
+    x(t)=\frac{4}{\pi}\Big(\cos\omega_0t-\tfrac13\cos3\omega_0t+\tfrac15\cos5\omega_0t-\cdots\Big)
   \]
   \vspace{-3mm}
   \begin{center}\includegraphics[width=0.72\linewidth]{serie_fourier_cuadrada}\end{center}
@@ -285,15 +285,15 @@
 \begin{frame}{Transformada de Fourier en tiempo continuo (CTFT)}
   \begin{block}{Definición}
     \[
-      \Xc=\int_{-\infty}^{\infty}x(t)\,\e^{-j\Omega t}\dd t,
+      \Xc=\int_{-\infty}^{\infty}x(t)\,\e^{-j\omega t}\dd t,
       \qquad
-      x(t)=\frac{1}{2\pi}\int_{-\infty}^{\infty}\Xc\,\e^{j\Omega t}\dd\Omega
+      x(t)=\frac{1}{2\pi}\int_{-\infty}^{\infty}\Xc\,\e^{j\omega t}\dd\omega
     \]
   \end{block}
   \begin{itemize}\small
     \item Es el límite de la serie de Fourier cuando $T_0\to\infty$: las líneas $c_k$ se juntan y el sumatorio pasa a ser una integral.
     \item Existe si $x$ es absolutamente integrable ($\int\abs{x}<\infty$); con deltas se extiende a señales de potencia (sinusoides, escalón).
-    \item Si $x$ es real, $X(-j\Omega)=X^*(j\Omega)$: módulo par y fase impar.
+    \item Si $x$ es real, $X(-j\omega)=X^*(j\omega)$: módulo par y fase impar.
   \end{itemize}
 \end{frame}
 
@@ -305,10 +305,10 @@
         \toprule
         $x(t)$ & $\Xc$\\\midrule
         $\delta(t)$ & $1$\\
-        $1$ & $2\pi\,\delta(\Omega)$\\
-        $\e^{-at}u(t)$, $a>0$ & $\dfrac{1}{a+j\Omega}$\\
-        $\rect(t/T)$ & $T\sinc\!\big(\tfrac{\Omega T}{2\pi}\big)$\\
-        $\cos(\Omega_0t)$ & $\pi[\delta(\Omega-\Omega_0)+\delta(\Omega+\Omega_0)]$\\\bottomrule
+        $1$ & $2\pi\,\delta(\omega)$\\
+        $\e^{-at}u(t)$, $a>0$ & $\dfrac{1}{a+j\omega}$\\
+        $\rect(t/T)$ & $T\sinc\!\big(\tfrac{\omega T}{2\pi}\big)$\\
+        $\cos(\omega_0t)$ & $\pi[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)]$\\\bottomrule
       \end{tabular}
     \end{column}
     \begin{column}{0.48\textwidth}
@@ -320,13 +320,13 @@
 \begin{frame}{Transformada de Fourier en tiempo discreto (DTFT)}
   \begin{block}{Definición}
     \[
-      \Xd=\sum_{n=-\infty}^{\infty}x[n]\,\e^{-j\omega n},
+      \Xd=\sum_{n=-\infty}^{\infty}x[n]\,\e^{-j\Omega n},
       \qquad
-      x[n]=\frac{1}{2\pi}\int_{2\pi}\Xd\,\e^{j\omega n}\dd\omega
+      x[n]=\frac{1}{2\pi}\int_{2\pi}\Xd\,\e^{j\Omega n}\dd\Omega
     \]
   \end{block}
   \begin{itemize}\small
-    \item \alert{Periódica en $\omega$ con periodo $2\pi$} (consecuencia de la parte 1). Basta $[-\pi,\pi)$ o $[0,2\pi)$.
+    \item \alert{Periódica en $\Omega$ con periodo $2\pi$} (consecuencia de la parte 1). Basta $[-\pi,\pi)$ o $[0,2\pi)$.
     \item Existe si $\sum\abs{x[n]}<\infty$. Se evalúa con \texttt{freqz}.
   \end{itemize}
 \end{frame}
@@ -339,9 +339,9 @@
         \toprule
         $x[n]$ & $\Xd$\\\midrule
         $\delta[n]$ & $1$\\
-        $\delta[n-n_0]$ & $\e^{-j\omega n_0}$\\
-        $a^n u[n]$, $\abs{a}<1$ & $\dfrac{1}{1-a\e^{-j\omega}}$\\
-        $u[n]-u[n-L]$ & $\e^{-j\omega\frac{L-1}{2}}\dfrac{\sin(\omega L/2)}{\sin(\omega/2)}$\\\bottomrule
+        $\delta[n-n_0]$ & $\e^{-j\Omega n_0}$\\
+        $a^n u[n]$, $\abs{a}<1$ & $\dfrac{1}{1-a\e^{-j\Omega}}$\\
+        $u[n]-u[n-L]$ & $\e^{-j\Omega\frac{L-1}{2}}\dfrac{\sin(\Omega L/2)}{\sin(\Omega/2)}$\\\bottomrule
       \end{tabular}
     \end{column}
     \begin{column}{0.46\textwidth}
@@ -352,7 +352,7 @@
 
 \begin{frame}{En código: DTFT de un pulso}
   \codigo{dtft_pulso}
-  \nota{\texttt{freqz} evalúa $X(\e^{j\omega})=\sum_n x[n]\e^{-j\omega n}$ en una rejilla de frecuencias; con \texttt{whole} cubre $[0,2\pi)$ y se ve la periodicidad.}
+  \nota{\texttt{freqz} evalúa $X(\e^{j\Omega})=\sum_n x[n]\e^{-j\Omega n}$ en una rejilla de frecuencias; con \texttt{whole} cubre $[0,2\pi)$ y se ve la periodicidad.}
 \end{frame}
 
 \begin{frame}{Propiedades de la transformada de Fourier}
@@ -362,13 +362,13 @@
     \toprule
     Propiedad & CTFT & DTFT\\\midrule
     Linealidad & $a x_1+b x_2\parF aX_1+bX_2$ & ídem\\
-    Desplazamiento & $x(t-t_0)\parF\e^{-j\Omega t_0}\Xc$ & $x[n-n_0]\parF\e^{-j\omega n_0}\Xd$\\
-    Modulación & $\e^{j\Omega_0t}x(t)\parF X(j(\Omega-\Omega_0))$ & $\e^{j\omega_0n}x[n]\parF X(\e^{j(\omega-\omega_0)})$\\
-    Escalado & $x(at)\parF\frac{1}{\abs{a}}X\big(j\tfrac{\Omega}{a}\big)$ & —\\
-    Derivada / diferencia & $\dv{x}{t}\parF j\Omega\,\Xc$ & $x[n]-x[n-1]\parF(1-\e^{-j\omega})\Xd$\\
-    \alert{Convolución} & $x\conv h\parF\Xc H(j\Omega)$ & $x\conv h\parF\Xd H(\e^{j\omega})$\\
-    Producto & $x\,y\parF\frac{1}{2\pi}(X\conv Y)(j\Omega)$ & $x\,y\parF\frac{1}{2\pi}\int_{2\pi}X(\e^{j\theta})Y(\e^{j(\omega-\theta)})\dd\theta$\\
-    Parseval & $\int\abs{x}^2\dd t=\frac{1}{2\pi}\int\abs{X}^2\dd\Omega$ & $\sum\abs{x}^2=\frac{1}{2\pi}\int_{2\pi}\abs{X}^2\dd\omega$\\\bottomrule
+    Desplazamiento & $x(t-t_0)\parF\e^{-j\omega t_0}\Xc$ & $x[n-n_0]\parF\e^{-j\Omega n_0}\Xd$\\
+    Modulación & $\e^{j\omega_0t}x(t)\parF X(j(\omega-\omega_0))$ & $\e^{j\Omega_0n}x[n]\parF X(\e^{j(\Omega-\Omega_0)})$\\
+    Escalado & $x(at)\parF\frac{1}{\abs{a}}X\big(j\tfrac{\omega}{a}\big)$ & —\\
+    Derivada / diferencia & $\dv{x}{t}\parF j\omega\,\Xc$ & $x[n]-x[n-1]\parF(1-\e^{-j\Omega})\Xd$\\
+    \alert{Convolución} & $x\conv h\parF\Xc H(j\omega)$ & $x\conv h\parF\Xd H(\e^{j\Omega})$\\
+    Producto & $x\,y\parF\frac{1}{2\pi}(X\conv Y)(j\omega)$ & $x\,y\parF\frac{1}{2\pi}\int_{2\pi}X(\e^{j\theta})Y(\e^{j(\Omega-\theta)})\dd\theta$\\
+    Parseval & $\int\abs{x}^2\dd t=\frac{1}{2\pi}\int\abs{X}^2\dd\omega$ & $\sum\abs{x}^2=\frac{1}{2\pi}\int_{2\pi}\abs{X}^2\dd\Omega$\\\bottomrule
   \end{tabular}
   \bigskip
 
@@ -381,7 +381,7 @@
 \begin{frame}{Transformada de Laplace}
   \begin{block}{Definición (bilateral)}
     \[
-      X(s)=\Lap\{x(t)\}=\int_{-\infty}^{\infty}x(t)\,\e^{-st}\dd t,\qquad s=\sigma+j\Omega\in\C
+      X(s)=\Lap\{x(t)\}=\int_{-\infty}^{\infty}x(t)\,\e^{-st}\dd t,\qquad s=\sigma+j\omega\in\C
     \]
     Converge solo en una \alert{región de convergencia} (ROC), una franja vertical $\sigma_1<\Re\{s\}<\sigma_2$.
   \end{block}
@@ -399,7 +399,7 @@
       \begin{tikzpicture}[scale=0.55]
         \fill[pdsazul!15] (-1,-2) rectangle (3,2);
         \draw[-{Stealth}] (-3,0) -- (3.2,0) node[right]{\scriptsize $\sigma$};
-        \draw[-{Stealth}] (0,-2.2) -- (0,2.3) node[above]{\scriptsize $j\Omega$};
+        \draw[-{Stealth}] (0,-2.2) -- (0,2.3) node[above]{\scriptsize $j\omega$};
         \draw[dashed, pdsazul] (-1,-2) -- (-1,2);
         \node[pdsrojo] at (-1,0) {$\times$};
         \node[below, font=\scriptsize] at (-1,0) {$-a$};
@@ -412,7 +412,7 @@
 
 \begin{frame}{Laplace: pares y propiedades}
   \small
-  Si la ROC contiene el eje $j\Omega$, la CTFT existe y $\Xc=X(s)\big|_{s=j\Omega}$. La versión \alert{unilateral} ($\int_{0^-}^{\infty}$) coincide con la bilateral para señales causales y permite incluir condiciones iniciales.
+  Si la ROC contiene el eje $j\omega$, la CTFT existe y $\Xc=X(s)\big|_{s=j\omega}$. La versión \alert{unilateral} ($\int_{0^-}^{\infty}$) coincide con la bilateral para señales causales y permite incluir condiciones iniciales.
   \medskip
   \begin{columns}[T]
     \begin{column}{0.46\textwidth}
@@ -425,8 +425,8 @@
         $u(t)$ & $1/s$ & $\Re\{s\}>0$\\
         $t\,u(t)$ & $1/s^2$ & $\Re\{s\}>0$\\
         $\e^{-at}u(t)$ & $\dfrac{1}{s+a}$ & $\Re\{s\}>-a$\\
-        $\cos(\Omega_0t)\,u(t)$ & $\dfrac{s}{s^2+\Omega_0^2}$ & $\Re\{s\}>0$\\
-        $\sin(\Omega_0t)\,u(t)$ & $\dfrac{\Omega_0}{s^2+\Omega_0^2}$ & $\Re\{s\}>0$\\\bottomrule
+        $\cos(\omega_0t)\,u(t)$ & $\dfrac{s}{s^2+\omega_0^2}$ & $\Re\{s\}>0$\\
+        $\sin(\omega_0t)\,u(t)$ & $\dfrac{\omega_0}{s^2+\omega_0^2}$ & $\Re\{s\}>0$\\\bottomrule
       \end{tabular}
     \end{column}
     \begin{column}{0.52\textwidth}
@@ -450,7 +450,7 @@
 \begin{frame}{Transformada Z}
   \begin{block}{Definición (bilateral)}
     \[
-      X(z)=\Zt\{x[n]\}=\sum_{n=-\infty}^{\infty}x[n]\,z^{-n},\qquad z=r\e^{j\omega}\in\C
+      X(z)=\Zt\{x[n]\}=\sum_{n=-\infty}^{\infty}x[n]\,z^{-n},\qquad z=r\e^{j\Omega}\in\C
     \]
     La ROC es una \alert{corona} $r_1<\abs{z}<r_2$.
   \end{block}
@@ -482,7 +482,7 @@
 
 \begin{frame}{Z: pares y propiedades}
   \small
-  Si la ROC contiene la circunferencia unidad, la DTFT existe y $\Xd=X(z)\big|_{z=\e^{j\omega}}$. Señales causales: ROC exterior a un círculo. La unilateral ($\sum_{n\ge0}$) incluye condiciones iniciales.
+  Si la ROC contiene la circunferencia unidad, la DTFT existe y $\Xd=X(z)\big|_{z=\e^{j\Omega}}$. Señales causales: ROC exterior a un círculo. La unilateral ($\sum_{n\ge0}$) incluye condiciones iniciales.
   \medskip
   \begin{columns}[T]
     \begin{column}{0.48\textwidth}
@@ -495,7 +495,7 @@
         $u[n]$ & $\dfrac{1}{1-z^{-1}}$ & $\abs{z}>1$\\
         $a^nu[n]$ & $\dfrac{1}{1-az^{-1}}$ & $\abs{z}>\abs{a}$\\
         $n\,a^nu[n]$ & $\dfrac{az^{-1}}{(1-az^{-1})^2}$ & $\abs{z}>\abs{a}$\\
-        $\cos(\omega_0n)\,u[n]$ & $\dfrac{1-\cos\omega_0\,z^{-1}}{1-2\cos\omega_0\,z^{-1}+z^{-2}}$ & $\abs{z}>1$\\\bottomrule
+        $\cos(\Omega_0n)\,u[n]$ & $\dfrac{1-\cos\Omega_0\,z^{-1}}{1-2\cos\Omega_0\,z^{-1}+z^{-2}}$ & $\abs{z}>1$\\\bottomrule
       \end{tabular}
     \end{column}
     \begin{column}{0.5\textwidth}
@@ -522,10 +522,10 @@
       \node[bloque, right=of L] (Z) {Z \ $X(z)$};
       \node[bloque, below=of L] (F) {CTFT $\Xc$};
       \node[bloque, below=of Z] (D) {DTFT $\Xd$};
-      \draw[flecha] (L) -- node[left, align=right]{$s=j\Omega$\\\scriptsize(ROC $\ni$ eje $j\Omega$)} (F);
-      \draw[flecha] (Z) -- node[right, align=left]{$z=\e^{j\omega}$\\\scriptsize(ROC $\ni$ $\abs{z}=1$)} (D);
+      \draw[flecha] (L) -- node[left, align=right]{$s=j\omega$\\\scriptsize(ROC $\ni$ eje $j\omega$)} (F);
+      \draw[flecha] (Z) -- node[right, align=left]{$z=\e^{j\Omega}$\\\scriptsize(ROC $\ni$ $\abs{z}=1$)} (D);
       \draw[flecha, dashed] (L) -- node[above]{muestreo $t=nT_s$} node[below]{$z=\e^{sT_s}$} (Z);
-      \draw[flecha, dashed] (F) -- node[below]{$\omega=\Omega T_s$} (D);
+      \draw[flecha, dashed] (F) -- node[below]{$\Omega=\omega T_s$} (D);
     \end{tikzpicture}
   \end{center}
   \begin{columns}[T]

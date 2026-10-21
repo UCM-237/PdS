@@ -33,7 +33,7 @@ figuras:
 prueba-codigo:
 	@for t in $(TEMAS); do comun/probar_codigo.sh $$t || exit 1; done
 
-# Nombres de los PDF publicados en clase/ (las soluciones no se publican)
+# Nombres de los PDF publicados en clase/
 publicar: $(TEMAS)
 	cp "T1/transparencias/T1-01-Senales.pdf"      "clase/T1 - 01 - Señales.pdf"
 	cp "T1/transparencias/T1-02-Operaciones.pdf"  "clase/T1 - 02 - Operaciones.pdf"
@@ -41,6 +41,7 @@ publicar: $(TEMAS)
 	cp "T1/transparencias/T1-04-Aplicaciones.pdf" "clase/T1 - 04 - Aplicaciones.pdf"
 	cp "T1/apuntes/T1-Apuntes.pdf"                "clase/T1 - Apuntes.pdf"
 	cp "T1/ejercicios/T1-Ejercicios.pdf"          "clase/T1 - Ejercicios.pdf"
+	cp "T1/ejercicios/T1-Ejercicios-Soluciones.pdf" "clase/T1 - Ejercicios resueltos.pdf"
 
 limpiar:
 	@for t in $(TEMAS); do \

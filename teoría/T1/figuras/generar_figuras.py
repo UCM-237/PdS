@@ -277,12 +277,12 @@ def exp_compleja_continua():
     t = np.linspace(0, 4, 800)
     W = 2 * np.pi
     fig, ax = pe.figura(ancho=3.6, alto=1.5)
-    ax.plot(t, np.cos(W * t), label=r"$\mathrm{Re}\{e^{j\Omega t}\}=\cos(\Omega t)$")
-    ax.plot(t, np.sin(W * t), color=pe.ROJO, label=r"$\mathrm{Im}\{e^{j\Omega t}\}=\sin(\Omega t)$")
+    ax.plot(t, np.cos(W * t), label=r"$\mathrm{Re}\{e^{j\omega t}\}=\cos(\omega t)$")
+    ax.plot(t, np.sin(W * t), color=pe.ROJO, label=r"$\mathrm{Im}\{e^{j\omega t}\}=\sin(\omega t)$")
     ax.set_xlabel("$t$ (s)")
     ax.set_ylim(-1.2, 1.9)
     ax.legend(loc="upper center", ncol=2, fontsize=6.5)
-    ax.set_title(r"$\Omega=2\pi$ rad/s, $T=1$ s")
+    ax.set_title(r"$\omega=2\pi$ rad/s, $T=1$ s")
     guardar(fig, "exp_compleja_continua")
 
 
@@ -297,7 +297,7 @@ def exp_general_continua():
         ax.plot(t, -env, color=pe.GRIS_CLARO, lw=0.8, ls="--")
         ax.set_title(tit)
         ax.set_xlabel("$t$")
-    fig.suptitle(r"$\mathrm{Re}\{C e^{at}\}=|C|e^{rt}\cos(\Omega t+\phi)$", fontsize=8)
+    fig.suptitle(r"$\mathrm{Re}\{C e^{at}\}=|C|e^{rt}\cos(\omega t+\phi)$", fontsize=8)
     guardar(fig, "exp_general_continua")
 
 
@@ -312,7 +312,7 @@ def exp_general_discreta():
         ax.plot(n, -env, color=pe.GRIS_CLARO, lw=0.8, ls="--")
         ax.set_title(tit)
         ax.set_xlabel("$n$")
-    fig.suptitle(r"$\mathrm{Re}\{C\alpha^n\}=|C||\alpha|^n\cos(\omega n+\phi)$, $\omega=0{,}5$", fontsize=8)
+    fig.suptitle(r"$\mathrm{Re}\{C\alpha^n\}=|C||\alpha|^n\cos(\Omega n+\phi)$, $\Omega=0{,}5$", fontsize=8)
     guardar(fig, "exp_general_discreta")
 
 
@@ -325,7 +325,7 @@ def coseno_discreto_frecuencias():
     for ax, (w, txt) in zip(axs, casos):
         ax.plot(tt, np.cos(w * tt), color=pe.GRIS_CLARO, lw=0.7)
         pe.stem(ax, n, np.cos(w * n), ms=2.4)
-        ax.set_title(rf"$\omega={txt}$")
+        ax.set_title(rf"$\Omega={txt}$")
         ax.set_xlabel("$n$")
     axs[0].set_ylim(-1.25, 1.25)
     guardar(fig, "coseno_discreto_frecuencias")
@@ -524,7 +524,7 @@ def espectro_ctft_pulso():
     ax.set_xticks([-4 * np.pi, -2 * np.pi, 0, 2 * np.pi, 4 * np.pi],
                   [r"$-\frac{4\pi}{T}$", r"$-\frac{2\pi}{T}$", "0", r"$\frac{2\pi}{T}$", r"$\frac{4\pi}{T}$"])
     ax.set_title(r"CTFT de $\Pi(t/T)$")
-    ax.set_xlabel(r"$\Omega$")
+    ax.set_xlabel(r"$\omega$")
     pe.ejes_centrados(ax)
     guardar(fig, "espectro_ctft_pulso")
 
@@ -540,8 +540,8 @@ def espectro_dtft_pulso():
     ax.plot(w, np.abs(D), color=pe.ROJO)
     ax.set_xticks([-2 * np.pi, -np.pi, 0, np.pi, 2 * np.pi],
                   [r"$-2\pi$", r"$-\pi$", "0", r"$\pi$", r"$2\pi$"])
-    ax.set_title(r"$|X(e^{j\omega})|$, pulso de $L=5$ muestras")
-    ax.set_xlabel(r"$\omega$")
+    ax.set_title(r"$|X(e^{j\Omega})|$, pulso de $L=5$ muestras")
+    ax.set_xlabel(r"$\Omega$")
     guardar(fig, "espectro_dtft_pulso")
 
 
@@ -640,8 +640,8 @@ def fir_iir():
     axs[1].plot(w, np.abs(Hf), label="FIR")
     axs[1].plot(w, np.abs(Hi), color=pe.ROJO, label="IIR")
     axs[1].set_xticks([0, np.pi / 2, np.pi], ["0", r"$\pi/2$", r"$\pi$"])
-    axs[1].set_title(r"$|H(e^{j\omega})|$")
-    axs[1].set_xlabel(r"$\omega$ (rad/muestra)")
+    axs[1].set_title(r"$|H(e^{j\Omega})|$")
+    axs[1].set_xlabel(r"$\Omega$ (rad/muestra)")
     axs[1].legend(loc="upper right", fontsize=6)
     guardar(fig, "fir_iir")
 
@@ -662,8 +662,8 @@ def rc_respuestas():
     axs[0].set_xlabel("$t$ (ms)")
     axs[1].semilogx(W, 20 * np.log10(np.abs(H)), color=pe.ROJO)
     axs[1].axvline(1 / RC, color=pe.GRIS, ls=":", lw=0.8)
-    axs[1].set_title(r"$|H(j\Omega)|$ (dB)")
-    axs[1].set_xlabel(r"$\Omega$ (rad/s)")
+    axs[1].set_title(r"$|H(j\omega)|$ (dB)")
+    axs[1].set_xlabel(r"$\omega$ (rad/s)")
     guardar(fig, "rc_respuestas")
 
 

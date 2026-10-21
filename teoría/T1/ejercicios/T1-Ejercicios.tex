@@ -17,7 +17,7 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
     \item $x[n]=4\,\e^{j\frac35n}$
     \item $x[n]=3\,\e^{j\frac2\pi n}$
     \item $x[n]=\big\lfloor\sin\big(\tfrac{2\pi n}{20}\big)\big\rfloor$
-    \item $x(t,r)=\sin(\Omega t-\kappa r)$, donde $r$ es una posición en metros
+    \item $x(t,r)=\sin(\omega t-\kappa r)$, donde $r$ es una posición en metros
   \end{incisos}
 \end{ejercicio}
 \begin{solucion}
@@ -26,7 +26,7 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
     \item Unidimensional, escalar y compleja; tiempo discreto y amplitud continua: es una secuencia muestreada (no cuantificada).
     \item Igual que la anterior.
     \item Unidimensional y escalar, con tiempo discreto y amplitud discreta: solo toma los valores $\{-1,0,1\}$ (vale $1$ cuando el seno vale exactamente $1$, en $n=5+20l$). Es una señal digital.
-    \item Bidimensional (tiempo y espacio), escalar y real, con ambas variables y la amplitud continuas. Es una onda que viaja en el sentido de $r$ creciente a velocidad $\Omega/\kappa$.
+    \item Bidimensional (tiempo y espacio), escalar y real, con ambas variables y la amplitud continuas. Es una onda que viaja en el sentido de $r$ creciente a velocidad $\omega/\kappa$.
   \end{enumerate}
 \end{solucion}
 
@@ -46,8 +46,8 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
     \item Periódica con $T_0=2\pi/(3/5)=10\pi/3$. No es par ni impar, pero es hermítica: $x^*(-t)=x(t)$, con parte real $4\cos(3t/5)$ par e imaginaria $4\sin(3t/5)$ impar.
     \item Aperiódica e impar.
     \item Aperiódica y par.
-    \item $f_0=3/(2\pi)$ es irracional: \emph{no} es periódica, aunque $\sin(3t)$ sí lo sea. Es impar.
-    \item $f_0=1/40$: periódica con $N_0=40$. Es par.
+    \item $F_0=3/(2\pi)$ es irracional: \emph{no} es periódica, aunque $\sin(3t)$ sí lo sea. Es impar.
+    \item $F_0=1/40$: periódica con $N_0=40$. Es par.
     \item Tiene duración finita (solo es no nula en $0\le n\le N_0$), así que no es periódica. No es par ni impar: $x[-1]=0$ pero $x[1]=\cos(-1)\ne0$, y $x[0]=\cos(-4)\ne0$.
   \end{enumerate}
 \end{solucion}
@@ -106,7 +106,7 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
 \begin{solucion}
   \begin{enumerate}[label=\alph*)]
     \item $x_1x_2=\sin t\cos\big(\tfrac{2\pi}{5}t\big)=\tfrac12\Big[\sin\big((1+\tfrac{2\pi}{5})t\big)+\sin\big((1-\tfrac{2\pi}{5})t\big)\Big]$. La suma $\sin t+\cos(2\pi t/5)$ no es periódica: los periodos son $2\pi$ y $5$, y su cociente $2\pi/5$ es irracional.
-    \item La integral $\int\sin\tau\cos\big(\tfrac{2\pi}{5}(t-\tau)\big)\dd\tau$ no converge. Interpretada mediante la transformada de Fourier, el resultado es nulo: los espectros son deltas en $\Omega=\pm1$ y $\Omega=\pm2\pi/5$, que no coinciden, así que su producto es cero. Un sistema LTI con $h=x_2$ elimina la frecuencia $\Omega=1$.
+    \item La integral $\int\sin\tau\cos\big(\tfrac{2\pi}{5}(t-\tau)\big)\dd\tau$ no converge. Interpretada mediante la transformada de Fourier, el resultado es nulo: los espectros son deltas en $\omega=\pm1$ y $\omega=\pm2\pi/5$, que no coinciden, así que su producto es cero. Un sistema LTI con $h=x_2$ elimina la frecuencia $\omega=1$.
     \item $x_3[n]/x_4[n]=x_3[n]\,\e^{-j4n}=\{\underline{0},\,3\e^{-j4},\,\e^{-j8},\,\e^{-j12}\}$ y vale $0$ fuera de $0\le n\le3$. \ $x_3[n]-x_4[n]$ vale $x_3[n]-\e^{j4n}$ en $0\le n\le3$ y $-\e^{j4n}$ en el resto.
     \item $(x_3\conv x_4)[n]=\sum_kx_3[k]\,\e^{j4(n-k)}=\e^{j4n}\sum_kx_3[k]\,\e^{-j4k}=\big(3\e^{-j4}+\e^{-j8}+\e^{-j12}\big)\,\e^{j4n}$. La exponencial sale multiplicada por una constante: es una autofunción del sistema LTI con $h=x_3$, y la constante es $X_3(\e^{j4})$.
     \item $x_3[n-2]=\{\underline{0},0,0,3,1,1\}$ (no nula en $n=3,4,5$). \ $x_3[-n]=\{1,1,3,\underline{0}\}$ (de $n=-3$ a $n=0$). \ $x_3[2n]=\{\underline{0},1\}$: se conservan $x_3[0]$ y $x_3[2]$ y se pierden las demás. \ Expansión: $\{\underline{0},0,3,0,1,0,1\}$.
@@ -141,10 +141,10 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
 \end{ejercicio}
 \begin{solucion}
   \begin{enumerate}[label=\alph*)]
-    \item $c_0=0$ y $c_k=\sinc(k/2)$: nulos para $k$ par y $\pm2/(\pi k)$ para $k$ impar. Por tanto $x(t)=\frac4\pi\big(\cos\Omega_0t-\frac13\cos3\Omega_0t+\frac15\cos5\Omega_0t-\cdots\big)$. Parseval: $P=1=2\sum_{k\text{ impar}}\frac{4}{\pi^2k^2}$, porque $\sum_{k\text{ impar}}1/k^2=\pi^2/8$.
-    \item $c_0=0$ y, por ser par, $c_k=\frac{2}{T_0}\int_0^{T_0/2}\big(1-\tfrac{4t}{T_0}\big)\cos(k\Omega_0t)\dd t=\dfrac{2\big(1-(-1)^k\big)}{\pi^2k^2}$: nulos para $k$ par y $4/(\pi^2k^2)$ para $k$ impar. Así, $x(t)=\frac{8}{\pi^2}\big(\cos\Omega_0t+\frac19\cos3\Omega_0t+\frac1{25}\cos5\Omega_0t+\cdots\big)$. Parseval: $P=\frac{1}{T_0}\int x^2\dd t=\frac13$ y $2\sum_{k\text{ impar}}\frac{16}{\pi^4k^4}=\frac{32}{\pi^4}\cdot\frac{\pi^4}{96}=\frac13$.
+    \item $c_0=0$ y $c_k=\sinc(k/2)$: nulos para $k$ par y $\pm2/(\pi k)$ para $k$ impar. Por tanto $x(t)=\frac4\pi\big(\cos\omega_0t-\frac13\cos3\omega_0t+\frac15\cos5\omega_0t-\cdots\big)$. Parseval: $P=1=2\sum_{k\text{ impar}}\frac{4}{\pi^2k^2}$, porque $\sum_{k\text{ impar}}1/k^2=\pi^2/8$.
+    \item $c_0=0$ y, por ser par, $c_k=\frac{2}{T_0}\int_0^{T_0/2}\big(1-\tfrac{4t}{T_0}\big)\cos(k\omega_0t)\dd t=\dfrac{2\big(1-(-1)^k\big)}{\pi^2k^2}$: nulos para $k$ par y $4/(\pi^2k^2)$ para $k$ impar. Así, $x(t)=\frac{8}{\pi^2}\big(\cos\omega_0t+\frac19\cos3\omega_0t+\frac1{25}\cos5\omega_0t+\cdots\big)$. Parseval: $P=\frac{1}{T_0}\int x^2\dd t=\frac13$ y $2\sum_{k\text{ impar}}\frac{16}{\pi^4k^4}=\frac{32}{\pi^4}\cdot\frac{\pi^4}{96}=\frac13$.
   \end{enumerate}
-  La onda triangular es continua (su derivada es una onda cuadrada) y sus coeficientes decaen como $1/k^2$; la cuadrada tiene saltos y decae como $1/k$. Cuanto más suave es la señal, más rápido decae su espectro. De hecho, la derivada de la triangular es $-\frac{4}{T_0}$ por la cuadrada retrasada un cuarto de periodo, y los coeficientes $jk\Omega_0c_k$ de la derivada coinciden con los de esa señal.
+  La onda triangular es continua (su derivada es una onda cuadrada) y sus coeficientes decaen como $1/k^2$; la cuadrada tiene saltos y decae como $1/k$. Cuanto más suave es la señal, más rápido decae su espectro. De hecho, la derivada de la triangular es $-\frac{4}{T_0}$ por la cuadrada retrasada un cuarto de periodo, y los coeficientes $jk\omega_0c_k$ de la derivada coinciden con los de esa señal.
 \end{solucion}
 
 \begin{ejercicio}[transformada de Fourier]
@@ -157,11 +157,11 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
 \end{ejercicio}
 \begin{solucion}
   \begin{enumerate}[label=\alph*)]
-    \item $\e^{-j\Omega t_0}$ y $\e^{-j\omega n_0}$: módulo $1$ en todas las frecuencias y fase lineal.
-    \item $\rect(t/T)\parF T\sinc\big(\tfrac{\Omega T}{2\pi}\big)$, y el causal añade el factor $\e^{-j\Omega T/2}$. En discreto, el centrado da $\sum_{n=-N}^{N}\e^{-j\omega n}=\dfrac{\sin\big(\omega(2N+1)/2\big)}{\sin(\omega/2)}$, real y par; el causal, $\e^{-j\omega\frac{L-1}{2}}\dfrac{\sin(\omega L/2)}{\sin(\omega/2)}$.
-    \item $\tri(t/T)=\frac1T\big(\rect(\cdot/T)\conv\rect(\cdot/T)\big)(t)$, así que $\tri(t/T)\parF T\sinc^2\big(\tfrac{\Omega T}{2\pi}\big)$, y el causal añade $\e^{-j\Omega T}$. En discreto, $t_L$ es la convolución del pulso de $L$ muestras con su reflejado, y su transformada es $\Big(\dfrac{\sin(\omega L/2)}{\sin(\omega/2)}\Big)^2$; la versión causal añade $\e^{-j\omega(L-1)}$.
+    \item $\e^{-j\omega t_0}$ y $\e^{-j\Omega n_0}$: módulo $1$ en todas las frecuencias y fase lineal.
+    \item $\rect(t/T)\parF T\sinc\big(\tfrac{\omega T}{2\pi}\big)$, y el causal añade el factor $\e^{-j\omega T/2}$. En discreto, el centrado da $\sum_{n=-N}^{N}\e^{-j\Omega n}=\dfrac{\sin\big(\Omega(2N+1)/2\big)}{\sin(\Omega/2)}$, real y par; el causal, $\e^{-j\Omega\frac{L-1}{2}}\dfrac{\sin(\Omega L/2)}{\sin(\Omega/2)}$.
+    \item $\tri(t/T)=\frac1T\big(\rect(\cdot/T)\conv\rect(\cdot/T)\big)(t)$, así que $\tri(t/T)\parF T\sinc^2\big(\tfrac{\omega T}{2\pi}\big)$, y el causal añade $\e^{-j\omega T}$. En discreto, $t_L$ es la convolución del pulso de $L$ muestras con su reflejado, y su transformada es $\Big(\dfrac{\sin(\Omega L/2)}{\sin(\Omega/2)}\Big)^2$; la versión causal añade $\e^{-j\Omega(L-1)}$.
   \end{enumerate}
-  En los dos casos la transformada discreta es periódica de periodo $2\pi$ y, cerca de $\omega=0$, se parece a la continua.
+  En los dos casos la transformada discreta es periódica de periodo $2\pi$ y, cerca de $\Omega=0$, se parece a la continua.
 \end{solucion}
 
 \begin{ejercicio}[exponenciales discretas]
@@ -177,11 +177,11 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
 \end{ejercicio}
 \begin{solucion}
   \begin{enumerate}[label=\alph*)]
-    \item $f_0=1/8$: periódica con $N_0=8$; $\omega_0=\pi/4$.
-    \item $f_0=3/(8\pi)$ es irracional: no es periódica; $\omega_0=0{,}75$ ya está en $[-\pi,\pi)$.
-    \item $\cos(2\pi n)=1$ para todo $n$: es constante, periódica con $N_0=1$, y su frecuencia equivalente es $\omega_0=0$.
+    \item $F_0=1/8$: periódica con $N_0=8$; $\Omega_0=\pi/4$.
+    \item $F_0=3/(8\pi)$ es irracional: no es periódica; $\Omega_0=0{,}75$ ya está en $[-\pi,\pi)$.
+    \item $\cos(2\pi n)=1$ para todo $n$: es constante, periódica con $N_0=1$, y su frecuencia equivalente es $\Omega_0=0$.
     \item Aperiódica (e impar).
-    \item El primer término tiene $f=3/16$ y periodo $16$; el segundo, $f=1/12$ y periodo $12$. La suma es periódica con $N_0=\operatorname{mcm}(16,12)=48$.
+    \item El primer término tiene $F=3/16$ y periodo $16$; el segundo, $F=1/12$ y periodo $12$. La suma es periódica con $N_0=\operatorname{mcm}(16,12)=48$.
     \item $11\pi/6-2\pi=-\pi/6$, así que $x[n]=\cos(-\pi n/6)=\cos(\pi n/6)$: periódica con $N_0=12$. Aunque $11\pi/6$ parezca una frecuencia alta, la secuencia oscila despacio.
   \end{enumerate}
 \end{solucion}
@@ -194,7 +194,7 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
   \begin{incisos}[3]
     \item $y(t)=x(t-2)$
     \item $y[n]=x[n]+2$
-    \item $y(t)=x(t)\cos(\Omega_0t)$
+    \item $y(t)=x(t)\cos(\omega_0t)$
     \item $y[n]=\sum_{k=n-2}^{n+2}x[k]$
     \item $y[n]=x[2n]$
     \item $y(t)=\e^{x(t)}$
@@ -219,7 +219,7 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
   \begin{enumerate}[label=\alph*)]
     \item Retardo puro: $h(t)=\delta(t-2)$; el inverso es el adelanto $x(t)=y(t+2)$.
     \item No es lineal porque la entrada nula da $y=2$. Es invertible: $x=y-2$.
-    \item El modulador es lineal, pero no invariante: la respuesta a $x(t-t_0)$ es $x(t-t_0)\cos(\Omega_0t)$ y no $x(t-t_0)\cos(\Omega_0(t-t_0))$. No es invertible porque en los instantes en que $\cos(\Omega_0t)=0$ se pierde el valor de la entrada.
+    \item El modulador es lineal, pero no invariante: la respuesta a $x(t-t_0)$ es $x(t-t_0)\cos(\omega_0t)$ y no $x(t-t_0)\cos(\omega_0(t-t_0))$. No es invertible porque en los instantes en que $\cos(\omega_0t)=0$ se pierde el valor de la entrada.
     \item Media (sin normalizar) de cinco muestras centrada: usa $x[n+1]$ y $x[n+2]$, así que no es causal. Es LTI con $h[n]=u[n+2]-u[n-3]$, y estable porque $\sum\abs{h}=5$. No es invertible: la entrada $\cos(2\pi n/5)$ da salida nula, porque cinco muestras consecutivas de esa sinusoide suman cero.
     \item El diezmado: $y[1]=x[2]$ usa una entrada futura. No es invariante: si la entrada se retrasa una muestra, la salida no se retrasa (se toman las muestras impares en lugar de las pares). Pierde la mitad de las muestras: no es invertible.
     \item No es lineal ($\e^{2x}\ne2\e^{x}$). Es estable: si $\abs{x}\le B$, $y\le\e^B$. Es invertible: $x=\ln y$, porque $y>0$.
@@ -295,7 +295,7 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
 \end{ejercicio}
 \begin{solucion}
   \begin{enumerate}[label=\alph*)]
-    \item $H(s)=\frac{1}{s+2}$. Fourier da el régimen permanente: con $H(j\Omega)=\frac{1}{2+j\Omega}$,
+    \item $H(s)=\frac{1}{s+2}$. Fourier da el régimen permanente: con $H(j\omega)=\frac{1}{2+j\omega}$,
     \[
       y_{\mathrm{ss}}(t)=\frac{4}{\sqrt{13}}\cos\big(3t-\arctan\tfrac32\big)+\frac{10}{\sqrt{29}}\sin\big(5t-\arctan\tfrac52\big).
     \]
@@ -325,7 +325,7 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
     \]
     Comprobación: $y[0]=6=x[0]$ y $y[1]=-0{,}3$, igual que con \texttt{lfilter([1], [1, 0.8], x)}.
     \item $Y(z)=\frac{z}{z-0{,}8}\cdot\frac{z}{(z-1)^2}=\frac{20z}{z-0{,}8}-\frac{20z}{z-1}+\frac{5z}{(z-1)^2}$, de donde $y[n]=\big(20\cdot0{,}8^n-20+5n\big)u[n]$, con $y[0]=0$, $y[1]=1$, $y[2]=2{,}8$, \ldots Crece porque la entrada crece; la ganancia en continua es $H(1)=5$.
-    \item Los polos $0{,}15\pm0{,}614j$ tienen módulo $\sqrt{0{,}4}=0{,}632<1$: el sistema es estable. Con $H(\e^{j\omega})=\frac{1}{1-0{,}3\e^{-j\omega}+0{,}4\e^{-j2\omega}}$, en $\omega=\pi/6$ se obtiene $\abs{H}=1{,}041$ y $\arg H=0{,}206$\,rad, así que
+    \item Los polos $0{,}15\pm0{,}614j$ tienen módulo $\sqrt{0{,}4}=0{,}632<1$: el sistema es estable. Con $H(\e^{j\Omega})=\frac{1}{1-0{,}3\e^{-j\Omega}+0{,}4\e^{-j2\Omega}}$, en $\Omega=\pi/6$ se obtiene $\abs{H}=1{,}041$ y $\arg H=0{,}206$\,rad, así que
     \[
       y[n]=1{,}041\cos\big(\tfrac\pi6n+0{,}206\big)+0{,}632^n\big(A\cos(1{,}331n)+B\sin(1{,}331n)\big),
     \]
@@ -343,16 +343,16 @@ Los ejercicios 1–4 y 9 corresponden a la parte~1 del tema (tipos de señales y
 \end{ejercicio}
 \begin{solucion}
   \begin{enumerate}[label=\alph*)]
-    \item $\Omega_0=\pi$\,rad/s. Cada armónico impar, de amplitud $\frac{4}{\pi k}(-1)^{(k-1)/2}$, se multiplica por $\abs{H(jk\pi)}=1/\sqrt{16+k^2\pi^2}$ y se desfasa $-\arctan(k\pi/4)$:
+    \item $\omega_0=\pi$\,rad/s. Cada armónico impar, de amplitud $\frac{4}{\pi k}(-1)^{(k-1)/2}$, se multiplica por $\abs{H(jk\pi)}=1/\sqrt{16+k^2\pi^2}$ y se desfasa $-\arctan(k\pi/4)$:
     \[
       y_{\mathrm{ss}}(t)=0{,}250\cos(\pi t-0{,}666)-0{,}041\cos(3\pi t-1{,}169)+0{,}016\cos(5\pi t-1{,}321)-\cdots
     \]
     El paso bajo atenúa más los armónicos altos: la salida se parece mucho más a una sinusoide que la entrada.
-    \item $H(\e^{j\omega})=\frac{1}{1-0{,}8\e^{-j\omega}}$. En $\pi/6$: $\abs{H}=1{,}983$, $\arg H=-0{,}916$; en $\pi/2$: $\abs{H}=0{,}781$, $\arg H=-0{,}675$. Por tanto
+    \item $H(\e^{j\Omega})=\frac{1}{1-0{,}8\e^{-j\Omega}}$. En $\pi/6$: $\abs{H}=1{,}983$, $\arg H=-0{,}916$; en $\pi/2$: $\abs{H}=0{,}781$, $\arg H=-0{,}675$. Por tanto
     \[
       y_{\mathrm{ss}}[n]=3{,}966\cos\big(\tfrac\pi6n-0{,}916\big)+0{,}781\sin\big(\tfrac\pi2n-0{,}675\big).
     \]
-    \item El polo $z=1{,}2$ está fuera de la circunferencia unidad: el sistema es inestable, la salida crece como $1{,}2^n$ y no hay régimen permanente. La respuesta en frecuencia $H(\e^{j\omega})$ se puede evaluar, pero no describe la respuesta del sistema.
+    \item El polo $z=1{,}2$ está fuera de la circunferencia unidad: el sistema es inestable, la salida crece como $1{,}2^n$ y no hay régimen permanente. La respuesta en frecuencia $H(\e^{j\Omega})$ se puede evaluar, pero no describe la respuesta del sistema.
   \end{enumerate}
 \end{solucion}
 
