@@ -1,6 +1,0 @@
-fecha,tipo_sesion,distancia_km,distancia_strava_km,duracion_min,tiempo_corriendo_min,ritmo_carrera_min_km,v_carrera_kmh,cv_velocidad_pct,fc_media_ppm,fc_max_ppm,t_Z3_pct,t_Z4_pct,desnivel_pos_m,pendiente_max_pct,estabilizacion_fc_min,desacoplamiento_pct,metros_por_latido,cambios_ritmo
-2026-01-07,Rodaje,8.12,8.12,49.73,48.48,6:00,10.00,9.52,148.75,164.00,31.66,57.89,22.33,2.05,13.00,1.90,1.12,5
-2026-01-09,Tempo,4.96,5.05,26.82,26.82,5:23,11.16,8.25,155.45,166.00,19.58,76.26,10.19,3.46,7.43,1.63,1.20,3
-2026-01-11,Tirada larga,15.14,15.14,91.15,88.93,5:54,10.16,5.67,148.86,160.00,48.69,47.43,61.29,3.69,22.60,3.89,1.14,5
-2026-01-14,Tempo,5.00,5.00,26.68,26.68,5:19,11.29,8.62,151.40,162.00,29.98,63.21,11.16,2.16,8.20,2.15,1.25,3
-2026-01-15,Rodaje,9.13,9.13,58.57,56.70,6:14,9.61,7.79,143.47,160.00,85.66,8.88,33.74,2.68,7.88,1.03,1.12,5

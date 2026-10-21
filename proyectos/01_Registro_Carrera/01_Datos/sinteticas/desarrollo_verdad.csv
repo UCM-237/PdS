@@ -1,0 +1,11 @@
+sesion,tipo,sigma_kmh,cambios_s
+desarrollo_01.csv,Series,1.08,591 681 741 831 891 981 1041 1131 1191 1281 1641
+desarrollo_02.csv,Series,0.81,698 878 968 1148 1238 1418 1508 1688 1778 1958 2048 2228 2318 2498 2588 2768 3158
+desarrollo_03.csv,Series,1.08,634 814 874 1054 1114 1294 1354 1534 1594 1774 1834 2014 2074 2254 2614
+desarrollo_04.csv,Series,0.87,561 621 681 741 801 861 921 981 1041 1101 1461
+desarrollo_05.csv,Progresivo,0.71,587 1106 1632
+desarrollo_06.csv,Progresivo,0.96,711 1241 1945 2634
+desarrollo_07.csv,Progresivo,1.06,591 1298 1968 2583
+desarrollo_08.csv,Rodaje,1.24,2319
+desarrollo_09.csv,Rodaje,0.89,2635
+desarrollo_10.csv,Tirada larga,0.84,5641
