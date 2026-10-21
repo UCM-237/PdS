@@ -1,0 +1,174 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T4 · Filtros especiales]{Filtros}
+\subtitle{Tema 4 · Parte 5: fase cero, fase mínima, paso todo y peine}
+
+\begin{document}
+\portada
+
+% =====================================================================
+\section{Fase cero}
+
+\begin{frame}{Filtros de fase cero}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \footnotesize
+      \begin{itemize}
+        \item Fase cero: $H(\e^{j\Omega})$ real y no negativa. Exige $h[n]=h[-n]$: \alert{no causal}.
+        \item Con $F(z)$ cualquiera, $H(z)=F(z)F(z^{-1})$ es de fase cero:
+        \[
+          H(\e^{j\Omega})=F(\e^{j\Omega})F^*(\e^{j\Omega})=\abs{F(\e^{j\Omega})}^2.
+        \]
+        \item Con la señal \alert{grabada}: filtrar, invertir en el tiempo (conjuga la DTFT), filtrar otra vez e invertir:
+        \[
+          Y=\big(F\,(F\,X)^*\big)^*=\abs{F}^2X
+        \]
+        \item Se duplica la atenuación en dB. \texttt{filtfilt} en Matlab y en \texttt{scipy.signal}.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \includegraphics[width=\linewidth]{fase_cero}
+      \nota{Butterworth de orden 3 y corte en 15\,Hz, $f_s=500$\,Hz. \texttt{filtfilt} conserva la posición del pulso.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{En código: filtrado de fase cero}
+  \codigo{fase_cero}
+  \nota{El máximo de la salida de \texttt{lfilter} se retrasa unos 20\,ms; el de \texttt{filtfilt} queda en 0,4\,s.}
+\end{frame}
+
+% =====================================================================
+\section{Fase mínima y máxima}
+
+\begin{frame}{Mismo módulo, distinta fase}
+  \footnotesize
+  Reflejar un cero respecto a la circunferencia unidad no cambia el módulo (salvo una constante):
+  \[
+    \abs{1-z_0\e^{-j\Omega}}=\abs{z_0}\,\abs{1-\tfrac1{z_0^*}\e^{-j\Omega}}
+  \]
+  \begin{itemize}
+    \item \alert{Fase mínima}: causal y estable con todos los ceros \alert{dentro} del círculo. Su inversa $1/H(z)$ también es causal y estable.
+    \item \alert{Fase máxima}: todos los ceros fuera. \alert{Fase mixta}: unos dentro y otros fuera.
+    \item Entre todos los sistemas con el mismo $\abs H$, el de fase mínima tiene el menor retardo de grupo y concentra la energía de $h[n]$ al principio.
+  \end{itemize}
+  \begin{center}\includegraphics[height=0.32\textheight]{fase_minima}\end{center}
+\end{frame}
+
+% =====================================================================
+\section{Paso todo}
+
+\begin{frame}{Filtros paso todo}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \small
+      \[
+        H_{\text{PT}}(z)=\frac{a_M+a_{M-1}z^{-1}+\dots+z^{-M}}{1+a_1z^{-1}+\dots+a_Mz^{-M}}=\frac{z^{-M}D(z^{-1})}{D(z)}
+      \]
+      \begin{itemize}
+        \item $\abs{H_{\text{PT}}(\e^{j\Omega})}=1$ para toda $\Omega$: el numerador es el denominador con los coeficientes al revés.
+        \item Polos $p$ dentro del círculo y ceros en $1/p^*$, enfrentados.
+        \item La fase decrece $M\pi$ entre $\Omega=0$ y $\Omega=\pi$; el retardo de grupo es positivo.
+        \item Sirven para \alert{igualar la fase} de otro filtro sin tocar su módulo, o como desfasadores.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \includegraphics[width=\linewidth]{paso_todo}
+      \nota{$D(z)=1+0{,}4z^{-1}+0{,}18z^{-2}-0{,}3z^{-3}$.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Descomposición fase mínima por paso todo}
+  \small
+  \begin{importante}[Teorema]
+    Todo sistema racional, causal y estable se escribe $H(z)=H_{\min}(z)\,H_{\text{PT}}(z)$.
+  \end{importante}
+  \begin{itemize}
+    \item Se reflejan hacia dentro los ceros $z_0$ con $\abs{z_0}>1$, y se compensan con un paso todo que tiene un polo en $1/z_0^*$ y el cero en $z_0$.
+  \end{itemize}
+  \begin{ejemplo}[Un cero fuera]
+    \[
+      H(z)=\frac{1+3z^{-1}}{1-0{,}5z^{-1}}
+      =\underbrace{\frac{3\,(1+\frac13z^{-1})}{1-0{,}5z^{-1}}}_{H_{\min}}\cdot\underbrace{\frac{\frac13+z^{-1}}{1+\frac13z^{-1}}}_{H_{\text{PT}}}
+    \]
+    El cero en $-3$ pasa a $-1/3$; $\abs{H_{\min}}=\abs H$ y la fase de $H$ es la de $H_{\min}$ más la del paso todo.
+  \end{ejemplo}
+  \nota{Consecuencia: $\arg H=\arg H_{\min}+\arg H_{\text{PT}}$, y como el paso todo siempre retrasa, el de fase mínima es el de menor retardo.}
+\end{frame}
+
+% =====================================================================
+\section{Filtros en peine}
+
+\begin{frame}{Filtros en peine}
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \small
+      \begin{itemize}
+        \item Se sustituye $z$ por $z^L$ en un filtro $G(z)$:
+        \[
+          H(z)=G(z^L),\qquad H(\e^{j\Omega})=G(\e^{j\Omega L}).
+        \]
+        \item La respuesta se repite con periodo $2\pi/L$: $L$ copias de $G$ en $[0,2\pi)$.
+        \item En el tiempo, se intercalan $L-1$ ceros entre los coeficientes de $g[n]$.
+        \item $G(z)=\frac12(1+z^{-1})$ (paso bajo con un cero en $\pi$) da $H(z)=\frac12(1+z^{-L})$, con ceros en $\Omega=\frac{(2k+1)\pi}{L}$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\linewidth]{peine}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Ejemplo: eliminar la red de 50\,Hz y sus armónicos}
+  \begin{columns}[T]
+    \begin{column}{0.44\textwidth}
+      \small
+      \begin{itemize}
+        \item $f_s=5$\,kHz: la red y sus armónicos están en $\Omega=2\pi k\,f_0/f_s=2\pi k/L$ con $L=f_s/f_0=100$.
+        \item Muesca en peine a partir de $G(z)=\frac{1+a}{2}\,\frac{1-z^{-1}}{1-az^{-1}}$:
+        \[
+          H(z)=\frac{1+a}2\,\frac{1-z^{-L}}{1-a\,z^{-L}}.
+        \]
+        \item Ceros en las $L$ raíces de la unidad; polos con radio $a^{1/L}$ en el mismo ángulo. Cuanto más cerca de 1 está $a$, más estrechas las muescas.
+        \item También anula la continua ($k=0$).
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \includegraphics[width=\linewidth]{peine}
+      \nota{Derecha: muescas con $a=0{,}9$. Es lo que hace \texttt{iircomb} de Matlab y de \texttt{scipy.signal}.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{En código: peine de muescas}
+  \codigo{peine_50hz}
+  \nota{Con $a=0{,}9$ cada muesca mide unos 1,7\,Hz a $-3$\,dB y el transitorio dura unos 0,2\,s: compromiso entre selectividad y rapidez.}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Fase cero: $\abs{F}^2$ filtrando hacia delante y hacia atrás (\texttt{filtfilt}); solo con señales grabadas.
+        \item Fase mínima: ceros dentro; menor retardo; inversa estable.
+        \item $H=H_{\min}\,H_{\text{PT}}$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Paso todo: $\abs H=1$, polos y ceros recíprocos; igualan la fase.
+        \item Peine: $G(z^L)$, respuesta periódica de periodo $2\pi/L$; elimina una frecuencia y todos sus armónicos.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 4, sección 5 · Hoja de ejercicios, ejercicios 16–18.}
+  \herramienta{server/T4\_05\_FIR\_Fase\_Cero.py}
+\end{frame}
+
+\end{document}

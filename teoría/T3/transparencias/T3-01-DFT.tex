@@ -1,0 +1,268 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T3 · DFT]{Transformada discreta de Fourier}
+\subtitle{Tema 3 · Parte 1: de la DTFT a la DFT}
+
+\begin{document}
+\portada
+
+% =====================================================================
+\begin{frame}{Objetivos del tema}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      Calcular espectros con un computador y usarlos para analizar y filtrar señales:
+      \begin{itemize}
+        \item La \alert{DFT} como muestreo de la DTFT de una secuencia finita.
+        \item Sus propiedades y la \alert{convolución circular}.
+        \item Análisis espectral: resolución, fuga y \alert{ventanas}; espectrograma.
+        \item La \alert{FFT} y la convolución rápida.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{block}{Material del tema}
+        \small
+        \begin{enumerate}
+          \item De la DTFT a la DFT
+          \item Propiedades y convolución circular
+          \item Análisis espectral con la DFT
+          \item FFT y convolución rápida
+        \end{enumerate}
+        \smallskip
+        Apuntes, hoja de ejercicios y ejemplos en Python y Matlab.
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+\section{Por qué otra transformada}
+
+\begin{frame}{Recordatorio: la DTFT}
+  \begin{definicion}[Transformada de Fourier de tiempo discreto (DTFT)]
+    \[
+      \Xd=\sum_{n=-\infty}^{\infty}x[n]\,\e^{-j\Omega n},\qquad
+      x[n]=\frac{1}{2\pi}\int_{0}^{2\pi}\Xd\,\e^{j\Omega n}\dd\Omega
+    \]
+  \end{definicion}
+  \begin{itemize}
+    \item $\Xd$ es una función \alert{continua} de $\Omega$ y \alert{periódica} de periodo $2\pi$ (Tema~2: es el muestreo en el tiempo).
+    \item Para calcularla con un computador hay dos obstáculos:
+    \begin{itemize}
+      \item la suma tiene \alert{infinitos términos}: solo conocemos un número finito de muestras;
+      \item el resultado es una función de \alert{variable continua}: solo podemos guardar un número finito de valores.
+    \end{itemize}
+    \item La DFT resuelve los dos: trabaja con $N$ muestras en el tiempo y da $N$ muestras en frecuencia.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Primer obstáculo: solo tenemos $N$ muestras}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \small
+      Observar $N$ muestras es multiplicar por una \alert{ventana}:
+      \[
+        x_N[n]=x[n]\,w[n],\qquad w[n]=\begin{cases}1&0\le n<N\\0&\text{en otro caso}\end{cases}
+      \]
+      \[
+        W(\e^{j\Omega})=\sum_{n=0}^{N-1}\e^{-j\Omega n}=\e^{-j\Omega\frac{N-1}{2}}\,\frac{\sin(\Omega N/2)}{\sin(\Omega/2)}
+      \]
+      Producto en el tiempo, \alert{convolución periódica} en frecuencia:
+      \[
+        X_N(\e^{j\Omega})=\frac{1}{2\pi}\int_{0}^{2\pi}X(\e^{j\theta})\,W\big(\e^{j(\Omega-\theta)}\big)\dd\theta
+      \]
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \includegraphics[width=\linewidth]{ventana_rect}
+      \includegraphics[width=\linewidth]{truncamiento}
+    \end{column}
+  \end{columns}
+  \nota{Truncar la señal emborrona el espectro: cada línea se convierte en una copia de $W$. Cuanto mayor es $N$, más estrecho es el lóbulo principal (parte~3).}
+\end{frame}
+
+\begin{frame}{Segundo obstáculo: muestrear la DTFT}
+  \begin{itemize}
+    \item $N$ muestras equiespaciadas de un periodo, $\Omega\in[0,2\pi)$:
+    \[
+      \Omega_k=\frac{2\pi}{N}k,\qquad k=0,1,\dots,N-1,\qquad \text{separación }\Delta\Omega=\frac{2\pi}{N}.
+    \]
+    \item Si $x[n]$ solo es no nula en $0\le n<N$:
+    \[
+      X[k]=X(\e^{j\Omega})\big|_{\Omega=2\pi k/N}=\sum_{n=0}^{N-1}x[n]\,\e^{-j\frac{2\pi}{N}kn}
+    \]
+  \end{itemize}
+  \begin{center}\includegraphics[height=0.26\textheight]{dtft_dft}\end{center}
+  \nota{Con $N=16$ se ve mejor la forma de la DTFT, pero no hay más información: $x[n]$ es la misma.}
+\end{frame}
+
+% =====================================================================
+\section{Definición}
+
+\begin{frame}{La transformada discreta de Fourier}
+  \begin{definicion}[DFT de $N$ puntos]
+    \[
+      X[k]=\sum_{n=0}^{N-1}x[n]\,W_N^{kn},\qquad
+      x[n]=\frac{1}{N}\sum_{k=0}^{N-1}X[k]\,W_N^{-kn},\qquad
+      W_N=\e^{-j2\pi/N}
+    \]
+    con $n,k=0,1,\dots,N-1$.
+  \end{definicion}
+  \begin{itemize}
+    \item Transforma $N$ números (complejos) en $N$ números: es una transformación \alert{lineal e invertible}.
+    \item La IDFT suma sobre $k$ y lleva el factor $1/N$; el signo del exponente es el contrario que en la DFT.
+    \item $X[k]$ es la DTFT de la secuencia en $\Omega_k=2\pi k/N$: el índice $k$ es una frecuencia.
+    \item $W_N$ es una raíz $N$-ésima de la unidad: $W_N^N=1$, $W_N^{N/2}=-1$, $W_N^{k+N}=W_N^k$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Forma matricial}
+  \begin{columns}[c]
+    \begin{column}{0.56\textwidth}
+      \small
+      \[
+        \begin{pmatrix}X[0]\\X[1]\\\vdots\\X[N-1]\end{pmatrix}=
+        \begin{pmatrix}
+          1&1&\cdots&1\\
+          1&W_N&\cdots&W_N^{N-1}\\
+          \vdots&\vdots&\ddots&\vdots\\
+          1&W_N^{N-1}&\cdots&W_N^{(N-1)(N-1)}
+        \end{pmatrix}
+        \begin{pmatrix}x[0]\\x[1]\\\vdots\\x[N-1]\end{pmatrix}
+      \]
+      \[
+        \mathbf X=\mathbf W_N\,\mathbf x,\qquad \mathbf x=\frac1N\,\mathbf W_N^{*}\,\mathbf X
+      \]
+      \begin{itemize}\small
+        \item $\mathbf W_N$ es simétrica y $\mathbf W_N^{*}\mathbf W_N=N\mathbf I$: sus columnas son ortogonales.
+        \item Cálculo directo: $N^2$ productos complejos. La FFT lo reduce a $\frac N2\log_2N$ (parte~4).
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{ejemplo}[$N=4$, $x=(1,3,4,0)$]
+        \footnotesize
+        $W_4=\e^{-j\pi/2}=-j$:
+        \[
+          \mathbf W_4=\begin{pmatrix}1&1&1&1\\1&-j&-1&j\\1&-1&1&-1\\1&j&-1&-j\end{pmatrix}
+        \]
+        \[
+          \mathbf X=(8,\ -3-3j,\ 2,\ -3+3j)
+        \]
+        $X[0]=\sum x[n]$ es la componente continua (8). $X[3]=X^*[1]$ porque $x$ es real.
+      \end{ejemplo}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{En código: la DFT como producto de matrices}
+  \codigo{dft_directa}
+  \nota{\texttt{fft} calcula exactamente lo mismo, pero en $O(N\log N)$ operaciones.}
+\end{frame}
+
+% =====================================================================
+\section{Extensión periódica}
+
+\begin{frame}{¿Qué secuencia recupera la IDFT?}
+  Si $x[n]$ tiene cualquier longitud, agrupamos la DTFT muestreada en bloques de $N$ muestras:
+  \[
+    X[k]=\sum_{n=-\infty}^{\infty}x[n]\,W_N^{kn}=\sum_{n=0}^{N-1}\Big[\sum_{m=-\infty}^{\infty}x[n-mN]\Big]W_N^{kn},
+  \]
+  porque $W_N^{k(n-mN)}=W_N^{kn}$. La IDFT de las $N$ muestras devuelve un periodo de
+  \begin{importante}[Extensión periódica]
+    \vspace{-2mm}
+    \[
+      \tilde x[n]=\sum_{m=-\infty}^{\infty}x[n-mN]
+    \]
+    \vspace{-4mm}
+  \end{importante}
+  \begin{itemize}
+    \item Muestrear en frecuencia \alert{periodiza} en el tiempo, igual que muestrear en el tiempo periodiza en frecuencia.
+    \item $x[n]$ se recupera si tiene longitud finita $L$ y $N\ge L$. Si $N<L$, las copias se solapan: \alert{aliasing temporal}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Aliasing en el tiempo}
+  \begin{center}\includegraphics[height=0.45\textheight]{extension_periodica}\end{center}
+  \begin{itemize}\small
+    \item Con $N\ge L$ un periodo de $\tilde x[n]$ es exactamente $x[n]$ seguida de $N-L$ ceros.
+    \item Con $N<L$ las muestras $n\ge N$ se suman a las del principio: $\tilde x[0]=x[0]+x[4]$, \dots
+    \item Es el «teorema del muestreo en frecuencia»: $N$ muestras de la DTFT determinan una secuencia de longitud $L\le N$.
+  \end{itemize}
+  \herramienta{html/T3\_Extension\_Periodica.html}
+\end{frame}
+
+\begin{frame}{La DFT y la serie de Fourier discreta}
+  \begin{itemize}
+    \item Una secuencia periódica de periodo $N$ tiene serie de Fourier (Tema~1)
+    \[
+      \tilde x[n]=\sum_{k=0}^{N-1}c_k\,\e^{j\frac{2\pi}{N}kn},\qquad c_k=\frac1N\sum_{n=0}^{N-1}\tilde x[n]\,\e^{-j\frac{2\pi}{N}kn}
+    \]
+    \item Comparando con la DFT de un periodo: \alert{$X[k]=N\,c_k$}.
+    \item La DFT trata la secuencia como si fuera \alert{un periodo de una señal periódica}. Por eso los índices se entienden siempre módulo $N$:
+    \[
+      x[n]\equiv x[((n))_N],\qquad X[k]\equiv X[((k))_N],\qquad ((n))_N=n\bmod N.
+    \]
+    \item Esta interpretación explica las propiedades «circulares» de la parte~2.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{La DFT y la transformada Z}
+  \begin{columns}[c]
+    \begin{column}{0.55\textwidth}
+      \begin{itemize}
+        \item Como $\Xd=X(z)|_{z=\e^{j\Omega}}$:
+        \[
+          X[k]=X(z)\big|_{z=\e^{j2\pi k/N}}
+        \]
+        La DFT son $N$ muestras de $X(z)$ \alert{equiespaciadas en la circunferencia unidad}.
+        \item Para una secuencia de longitud $\le N$, las $N$ muestras determinan $X(z)$ en todo el plano:
+        \[
+          X(z)=\frac{1-z^{-N}}{N}\sum_{k=0}^{N-1}\frac{X[k]}{1-W_N^{-k}z^{-1}}
+        \]
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{center}
+        \begin{tikzpicture}[scale=1.5]
+          \draw[->, pdsgris] (-1.3,0) -- (1.4,0) node[right, font=\footnotesize]{$\Re z$};
+          \draw[->, pdsgris] (0,-1.3) -- (0,1.4) node[above, font=\footnotesize]{$\Im z$};
+          \draw[pdsazul, thick] (0,0) circle (1);
+          \foreach \k in {0,...,7} {
+            \fill[pdsrojo] ({cos(45*\k)},{sin(45*\k)}) circle (1.6pt);
+          }
+          \node[font=\footnotesize, right] at (1,0.15) {$k=0$};
+          \node[font=\footnotesize] at (0.95,0.95) {$k=1$};
+          \node[font=\footnotesize, pdsgris] at (0,-1.55) {$N=8$};
+        \end{tikzpicture}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Observar $N$ muestras es enventanar: el espectro se convoluciona con $W(\e^{j\Omega})$.
+        \item DFT: $X[k]=\sum_{n=0}^{N-1}x[n]W_N^{kn}$, $W_N=\e^{-j2\pi/N}$.
+        \item IDFT: $x[n]=\frac1N\sum_{k=0}^{N-1}X[k]W_N^{-kn}$.
+        \item $X[k]$ es la DTFT en $\Omega_k=2\pi k/N$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Muestrear en frecuencia periodiza en el tiempo: la IDFT da $\tilde x[n]=\sum_mx[n-mN]$.
+        \item Sin aliasing temporal si $N\ge L$.
+        \item $X[k]=Nc_k$: la DFT ve un periodo de una señal periódica; índices módulo $N$.
+        \item $X[k]$ son muestras de $X(z)$ en la circunferencia unidad.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 3, secciones 1 y 2 · Hoja de ejercicios, ejercicios 1–4.}
+  \herramienta{html/T3\_DFT.html}
+\end{frame}
+
+\end{document}

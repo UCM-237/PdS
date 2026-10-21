@@ -1,6 +1,6 @@
 # Material de teoría: transparencias, apuntes y ejercicios (XeLaTeX).
 #
-#   make T1, make T2    compila todo el tema
+#   make T1 ... make T4 compila todo el tema
 #   make figuras        regenera las figuras de todos los temas (Python)
 #   make prueba-codigo  ejecuta los ejemplos en Python y en Matlab/Octave
 #   make publicar       copia los PDF a clase/
@@ -10,7 +10,7 @@
 # Python 3 con numpy, scipy y matplotlib, y Octave con los paquetes
 # signal y control (solo para probar el código Matlab).
 
-TEMAS   := T1 T2
+TEMAS   := T1 T2 T3 T4
 LATEXMK := latexmk -xelatex -interaction=nonstopmode -halt-on-error -silent
 
 .PHONY: all $(TEMAS) figuras prueba-codigo publicar limpiar
@@ -49,6 +49,21 @@ publicar: $(TEMAS)
 	cp "T2/apuntes/T2-Apuntes.pdf"                "clase/T2 - Apuntes.pdf"
 	cp "T2/ejercicios/T2-Ejercicios.pdf"          "clase/T2 - Ejercicios.pdf"
 	cp "T2/ejercicios/T2-Ejercicios-Soluciones.pdf" "clase/T2 - Ejercicios resueltos.pdf"
+	cp "T3/transparencias/T3-01-DFT.pdf"          "clase/T3 - 01 - DFT.pdf"
+	cp "T3/transparencias/T3-02-Propiedades.pdf"  "clase/T3 - 02 - Propiedades.pdf"
+	cp "T3/transparencias/T3-03-AnalisisEspectral.pdf" "clase/T3 - 03 - Análisis espectral.pdf"
+	cp "T3/transparencias/T3-04-FFT.pdf"          "clase/T3 - 04 - FFT.pdf"
+	cp "T3/apuntes/T3-Apuntes.pdf"                "clase/T3 - Apuntes.pdf"
+	cp "T3/ejercicios/T3-Ejercicios.pdf"          "clase/T3 - Ejercicios.pdf"
+	cp "T3/ejercicios/T3-Ejercicios-Soluciones.pdf" "clase/T3 - Ejercicios resueltos.pdf"
+	cp "T4/transparencias/T4-01-Introduccion.pdf" "clase/T4 - 01 - Introducción.pdf"
+	cp "T4/transparencias/T4-02-FiltrosContinuos.pdf" "clase/T4 - 02 - Filtros continuos.pdf"
+	cp "T4/transparencias/T4-03-FiltrosIIR.pdf"   "clase/T4 - 03 - Filtros IIR.pdf"
+	cp "T4/transparencias/T4-04-FiltrosFIR.pdf"   "clase/T4 - 04 - Filtros FIR.pdf"
+	cp "T4/transparencias/T4-05-FiltrosEspeciales.pdf" "clase/T4 - 05 - Filtros especiales.pdf"
+	cp "T4/apuntes/T4-Apuntes.pdf"                "clase/T4 - Apuntes.pdf"
+	cp "T4/ejercicios/T4-Ejercicios.pdf"          "clase/T4 - Ejercicios.pdf"
+	cp "T4/ejercicios/T4-Ejercicios-Soluciones.pdf" "clase/T4 - Ejercicios resueltos.pdf"
 
 limpiar:
 	@for t in $(TEMAS); do \

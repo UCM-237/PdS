@@ -12,3 +12,12 @@ conservan como referencia; no se compilan ni se mantienen.
   del Tema 2 (`src/02 - Muestreo`: presentaciones, hoja de ejercicios y
   ejercicios resueltos). Sustituidas por `teoría/T2/`. Los ejemplos
   (`Ejemplos/`, `Matlab/`) siguen en `src/02 - Muestreo/`.
+- `T3/Teoría`: antiguas fuentes del Tema 3 (`src/03 - DFT/Teoría`:
+  presentaciones «T3 - DFT - clase 01/02/03», `DFT*.tex`, partes y
+  figuras). Sustituidas por `teoría/T3/`. No había hoja de ejercicios.
+- `T4/Teoría`: antiguas fuentes del Tema 4 (`src/04 - Filtros/Teoría`:
+  presentaciones de introducción, filtros continuos, IIR, FIR y «extra»,
+  partes, figuras y ejemplos de Matlab). Sustituidas por `teoría/T4/`.
+- `T4/Problemas`: `Tema4_Ejercicios.tex`, que pese al nombre es una hoja
+  de ejercicios de la DFT (cuyo título dice «Muestreo en el dominio de la
+  frecuencia»). Sus ideas están recogidas en la hoja del Tema 3.

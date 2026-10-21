@@ -1,0 +1,235 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T4 · Introducción]{Filtros}
+\subtitle{Tema 4 · Parte 1: filtros ideales, especificaciones y fase}
+
+\begin{document}
+\portada
+
+\begin{frame}{Objetivos del tema}
+  \begin{itemize}
+    \item Especificar un filtro selectivo en frecuencia: paso bajo, paso alto, paso banda o supresor de banda.
+    \item \alert{Filtros continuos}: obtener la función de transferencia $H(s)$ que aproxima al ideal (Butterworth, Chebyshev, elíptico). No diseñamos el circuito que la realiza.
+    \item \alert{Filtros discretos}:
+    \begin{itemize}
+      \item IIR, a partir de un filtro continuo (invarianza al impulso, transformada bilineal);
+      \item FIR, a partir de la respuesta al impulso ideal y una ventana, o por optimización.
+    \end{itemize}
+    \item Entender el papel de la fase: fase lineal, fase cero, fase mínima y máxima, filtros paso todo.
+    \item Diseñar filtros a medida: muescas y filtros en peine.
+  \end{itemize}
+  \bigskip
+  \gris{Partes: 1 Introducción · 2 Filtros continuos · 3 Filtros IIR · 4 Filtros FIR · 5 Filtros especiales.}
+\end{frame}
+
+% =====================================================================
+\section{Filtros ideales}
+
+\begin{frame}{¿Qué es un filtro?}
+  \begin{columns}[c]
+    \begin{column}{0.55\textwidth}
+      \begin{itemize}\small
+        \item Un sistema LTI estable que modifica \alert{selectivamente} las componentes en frecuencia de una señal.
+        \item Se caracteriza por su respuesta al impulso o por su respuesta en frecuencia:
+        \[
+          h(t)\parF H(j\omega),\qquad h[n]\parF H(\e^{j\Omega}).
+        \]
+        \item Una sinusoide de frecuencia $\omega_0$ sale con la amplitud multiplicada por $\abs{H(j\omega_0)}$ y desfasada $\arg H(j\omega_0)$.
+        \item En los filtros discretos la respuesta es periódica de periodo $2\pi$: basta describirla en $[-\pi,\pi]$, y si $h[n]$ es real, en $[0,\pi]$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{center}
+        \begin{tikzpicture}[>=latex]
+          \node[draw, thick, minimum width=16mm, minimum height=9mm] (H) {$H$};
+          \draw[->, thick] (-2.2,0) -- node[above]{$x$} (H.west);
+          \draw[->, thick] (H.east) -- node[above]{$y=h\conv x$} (2.4,0);
+        \end{tikzpicture}
+      \end{center}
+      \[
+        Y(\e^{j\Omega})=H(\e^{j\Omega})\,X(\e^{j\Omega})
+      \]
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Los cuatro filtros ideales}
+  \begin{center}\includegraphics[width=\linewidth]{ideales}\end{center}
+  \footnotesize
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \[
+        H_{\text{PB}}=\begin{cases}1&\abs{\Omega}<\Omega_c\\0&\Omega_c<\abs{\Omega}\le\pi\end{cases}\qquad
+        H_{\text{PA}}=1-H_{\text{PB}}
+      \]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \[
+        H_{\text{BP}}=\begin{cases}1&\Omega_1<\abs{\Omega}<\Omega_2\\0&\text{resto}\end{cases}\qquad
+        H_{\text{SB}}=1-H_{\text{BP}}
+      \]
+    \end{column}
+  \end{columns}
+  \nota{En continuo es igual con $\omega$ en lugar de $\Omega$ y sin periodicidad. El valor absoluto es imprescindible: un filtro real deja pasar a la vez $\pm\omega$.}
+\end{frame}
+
+\begin{frame}{Los filtros ideales no son realizables}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      La respuesta al impulso del paso bajo ideal es
+      \[
+        h[n]=\frac1{2\pi}\int_{-\Omega_c}^{\Omega_c}\e^{j\Omega n}\dd\Omega=\frac{\sin(\Omega_cn)}{\pi n}
+      \]
+      \begin{itemize}\small
+        \item Es \alert{no causal}: $h[n]\ne0$ para $n<0$.
+        \item Tiene \alert{duración infinita} y decae como $1/n$: ni siquiera es absolutamente sumable.
+        \item En continuo pasa lo mismo: $h(t)=\sin(\omega_ct)/(\pi t)$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \includegraphics[width=\linewidth]{sinc_ideal}
+      \begin{importante}[Consecuencia]
+        \small Diseñar un filtro es \alert{aproximar} el ideal con un sistema causal, estable y de orden finito, admitiendo cierta tolerancia.
+      \end{importante}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+\section{Especificaciones}
+
+\begin{frame}{Plantilla de un filtro paso bajo}
+  \begin{center}\includegraphics[height=0.36\textheight]{especificaciones}\end{center}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \small
+      \begin{itemize}
+        \item Banda de paso $[0,\omega_p]$: atenuación como máximo $\alpha_p$\,dB.
+        \item Banda de supresión $[\omega_s,\infty)$: atenuación como mínimo $\alpha_s$\,dB.
+        \item Banda de transición $(\omega_p,\omega_s)$: sin requisitos.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \small
+      \[
+        \alpha_p=20\log_{10}E,\qquad \alpha_s=20\log_{10}A
+      \]
+      \[
+        \frac1E\le\abs{H}\le1\ \text{(paso)},\qquad \abs{H}\le\frac1A\ \text{(supresión)}
+      \]
+      \gris{Frecuencia de corte: $\abs{H(j\omega_c)}=1/\sqrt2$ ($-3$\,dB).}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Otras formas de dar las especificaciones}
+  \begin{itemize}
+    \item \alert{Rizados}: $1-\delta_p\le\abs{H}\le1+\delta_p$ en la banda de paso y $\abs{H}\le\delta_s$ en la de supresión (habitual en FIR):
+    \[
+      \alpha_p\approx-20\log_{10}(1-\delta_p),\qquad \alpha_s=-20\log_{10}\delta_s.
+    \]
+    \item \alert{Selectividad} $k=\omega_p/\omega_s<1$: cuanto más cerca de 1, más estrecha la transición y mayor el orden.
+    \item \alert{Discriminación} $k_1=\sqrt{E^2-1}/\sqrt{A^2-1}$: cuanto más pequeña, más exigente.
+    \item Los demás tipos se especifican igual, con dos bordes por cada transición: $\omega_{p1},\omega_{p2},\omega_{s1},\omega_{s2}$.
+    \item Para un filtro discreto con $f_s$ dada, las frecuencias en hercios se normalizan: $\Omega=2\pi f/f_s$. \gris{En Matlab y \texttt{scipy.signal} se usan a menudo normalizadas a la de Nyquist: $\Omega/\pi=2f/f_s\in[0,1]$.}
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Fase y retardo de grupo}
+
+\begin{frame}{Distorsión de fase}
+  \begin{itemize}
+    \item Un sistema sin distorsión solo escala y retrasa: $y[n]=K\,x[n-n_0]\ \Rightarrow\ H(\e^{j\Omega})=K\e^{-j\Omega n_0}$. Su fase es \alert{lineal}.
+    \item \alert{Retardo de grupo}: $\tau(\Omega)=-\dfrac{\dd\arg H(\e^{j\Omega})}{\dd\Omega}$, en muestras. Si es constante, todas las frecuencias se retrasan lo mismo.
+  \end{itemize}
+  \begin{center}\includegraphics[height=0.4\textheight]{retardo_grupo}\end{center}
+  \nota{Misma señal cuadrada, dos paso bajo parecidos en módulo. El IIR retrasa más las frecuencias cercanas al corte y deforma la onda; el FIR de fase lineal la retrasa en bloque.}
+\end{frame}
+
+% =====================================================================
+\section{Polos y ceros}
+
+\begin{frame}{Cómo influyen los polos y los ceros}
+  \begin{center}\includegraphics[width=\linewidth]{polos_ceros_continuo}\end{center}
+  \small
+  \begin{itemize}
+    \item \alert{Polo real} en $-a$: atenúa a partir de $\omega\approx a$ con $-20$\,dB/década; cada polo añade otros $20$.
+    \item \alert{Par de polos} $-\sigma\pm j\omega_a$: resonancia cerca de $\omega_a$, más aguda cuanto menor es $\sigma$. Si $\sigma=0$ el sistema es \alert{marginalmente estable}: no sirve como filtro.
+    \item \alert{Par de ceros} en $\pm j\omega_n$: anula exactamente $\omega_n$. Sin polos que lo compensen, $\abs{H}$ crecería como $\omega^2$; con dos polos el sistema es propio (tantos polos como ceros) y vuelve a 1.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Diseño a mano en discreto: filtro de muesca}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \footnotesize
+      Para eliminar $\Omega_0$ (por ejemplo, la red a 50\,Hz):
+      \begin{itemize}
+        \item ceros \alert{sobre} el círculo unidad en $\e^{\pm j\Omega_0}$;
+        \item polos en el mismo ángulo y radio $r<1$, que devuelven la ganancia a 1 lejos de $\Omega_0$.
+      \end{itemize}
+      \[
+        H(z)=\frac{1-2\cos\Omega_0\,z^{-1}+z^{-2}}{1-2r\cos\Omega_0\,z^{-1}+r^2z^{-2}}
+      \]
+      \begin{itemize}
+        \item Anchura de la muesca $\approx2(1-r)$ rad.
+        \item El método vale para filtros muy sencillos; para filtros selectivos generales hace falta un procedimiento sistemático.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \includegraphics[width=\linewidth]{notch_discreto}
+    \end{column}
+  \end{columns}
+  \herramienta{server/T4\_Filtros\_Discretos\_PZMap.py}
+\end{frame}
+
+% =====================================================================
+\section{FIR e IIR}
+
+\begin{frame}{Dos familias de filtros discretos}
+  \[
+    H(z)=\frac{\sum_{k=0}^{M}b_kz^{-k}}{1+\sum_{k=1}^{N}a_kz^{-k}},\qquad
+    y[n]=\sum_{k=0}^{M}b_k\,x[n-k]-\sum_{k=1}^{N}a_k\,y[n-k]
+  \]
+  \footnotesize
+  \renewcommand{\arraystretch}{1.2}
+  \begin{center}
+    \begin{tabular}{@{}p{0.2\textwidth}p{0.36\textwidth}p{0.36\textwidth}@{}}
+      \toprule
+      & \alert{IIR} (con realimentación) & \alert{FIR} ($a_k=0$, $h[n]=b_n$)\\\midrule
+      Diseño & A partir de un filtro continuo (Butterworth, Chebyshev, elíptico) & Directo en discreto: ventanas, optimización\\
+      Orden para unas especificaciones & Bajo & Alto (decenas o cientos de coeficientes)\\
+      Fase & No lineal & Puede ser exactamente lineal\\
+      Estabilidad & Hay que comprobarla & Siempre estable\\
+      Implementación & Sensible a la cuantificación: secciones de orden 2 & Robusta; admite FFT para órdenes altos\\\bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Filtros ideales: paso bajo, paso alto, paso banda, supresor; definidos con $\abs{\omega}$ o $\abs{\Omega}$.
+        \item No son causales ni de duración finita: hay que aproximarlos.
+        \item Plantilla: $\omega_p$, $\omega_s$, $\alpha_p$, $\alpha_s$ (o $\delta_p$, $\delta_s$).
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Fase lineal $\Leftrightarrow$ retardo de grupo constante $\Leftrightarrow$ sin distorsión de fase.
+        \item Ceros en el eje $j\omega$ o en el círculo unidad anulan frecuencias; los polos cercanos realzan.
+        \item IIR: orden bajo, fase no lineal. FIR: orden alto, fase lineal, siempre estables.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 4, sección 1 · Hoja de ejercicios, ejercicios 1–3.}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,208 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T3 · Propiedades]{Transformada discreta de Fourier}
+\subtitle{Tema 3 · Parte 2: propiedades y convolución circular}
+
+\begin{document}
+\portada
+
+% =====================================================================
+\section{Propiedades básicas}
+
+\begin{frame}{Notación}
+  \begin{itemize}
+    \item Escribimos $x[n]\overset{\DFT_N}{\longleftrightarrow}X[k]$, con $n,k=0,\dots,N-1$.
+    \item La DFT ve $x[n]$ como un periodo de su extensión periódica (parte~1), así que los índices se toman \alert{módulo $N$}:
+    \[
+      ((n))_N=n\bmod N\in\{0,\dots,N-1\},\qquad\text{por ejemplo }((-1))_8=7,\ ((10))_8=2.
+    \]
+    \item Si dos secuencias tienen longitudes distintas, se completa la más corta con ceros hasta $N$: la DFT de $N$ puntos de una secuencia de longitud $L<N$ son $N$ muestras de la misma DTFT (\alert{relleno con ceros}).
+    \item Las propiedades son las de la DTFT con una diferencia: los desplazamientos, las inversiones y las convoluciones son \alert{circulares}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Linealidad, periodicidad y desplazamiento circular}
+  \begin{itemize}
+    \item \alert{Linealidad}: $a\,x_1[n]+b\,x_2[n]\longleftrightarrow a\,X_1[k]+b\,X_2[k]$ (con la misma $N$).
+    \item \alert{Periodicidad}: $X[k+N]=X[k]$ y la IDFT cumple $x[n+N]=x[n]$.
+    \item \alert{Desplazamiento circular} en el tiempo y en frecuencia:
+    \[
+      x[((n-m))_N]\longleftrightarrow W_N^{km}X[k],\qquad
+      W_N^{-ln}x[n]\longleftrightarrow X[((k-l))_N]
+    \]
+  \end{itemize}
+  \begin{center}\includegraphics[width=0.9\linewidth]{desplazamiento_circular}\end{center}
+  \nota{Las muestras que «salen» por la derecha entran por la izquierda: es un desplazamiento de la señal periódica $\tilde x[n]$ visto en un periodo.}
+\end{frame}
+
+\begin{frame}{Inversión, conjugación y dualidad}
+  \begin{itemize}
+    \item \alert{Inversión circular}: $x[((-n))_N]\longleftrightarrow X[((-k))_N]$. \gris{$x[((-n))_N]=(x[0],x[N-1],\dots,x[1])$.}
+    \item \alert{Conjugación}: $x^*[n]\longleftrightarrow X^*[((-k))_N]$.
+    \item \alert{Dualidad}: si $x[n]\longleftrightarrow X[k]$, entonces $X[n]\longleftrightarrow N\,x[((-k))_N]$.
+  \end{itemize}
+  \begin{ejemplo}[Un impulso y una constante]
+    $\delta[n]\longleftrightarrow1$ para todo $k$; por dualidad, $1\longleftrightarrow N\delta[k]$. \quad
+    Desplazando, $\delta[n-m]\longleftrightarrow W_N^{km}$; y una exponencial que da un número entero de vueltas,
+    \[
+      \e^{j\frac{2\pi}{N}k_0n}\longleftrightarrow N\,\delta[((k-k_0))_N],
+    \]
+    ocupa una única muestra de la DFT.
+  \end{ejemplo}
+\end{frame}
+
+\begin{frame}{Simetría de la DFT de una señal real}
+  \begin{columns}[c]
+    \begin{column}{0.44\textwidth}
+      Si $x[n]$ es real, $x=x^*$ y por la conjugación
+      \begin{importante}[Simetría hermítica]
+        \[
+          X[k]=X^*[((-k))_N]=X^*[N-k]
+        \]
+      \end{importante}
+      \begin{itemize}\small
+        \item $\abs{X[k]}$ es par y $\arg X[k]$ es impar respecto a $k=N/2$.
+        \item $X[0]=\sum x[n]$ es real; si $N$ es par, también $X[N/2]=\sum(-1)^nx[n]$.
+        \item Basta calcular y dibujar $k=0,\dots,N/2$ (\texttt{rfft}).
+        \item Parte par circular $\leftrightarrow\Re X[k]$; parte impar circular $\leftrightarrow j\Im X[k]$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \includegraphics[width=\linewidth]{simetria_dft}
+      \nota{Las muestras $k>N/2$ corresponden a frecuencias negativas: $\Omega_k-2\pi$.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Identidad de Parseval}
+  \begin{importante}[Parseval para la DFT]
+    \[
+      \sum_{n=0}^{N-1}\abs{x[n]}^2=\frac{1}{N}\sum_{k=0}^{N-1}\abs{X[k]}^2
+    \]
+  \end{importante}
+  \begin{itemize}
+    \item Demostración: sustituimos $x^*[n]=\frac1N\sum_kX^*[k]W_N^{kn}$ en $\sum_nx[n]x^*[n]$ e intercambiamos las sumas:
+    \[
+      \sum_nx[n]x^*[n]=\frac1N\sum_kX^*[k]\underbrace{\sum_nx[n]W_N^{kn}}_{X[k]}.
+    \]
+    \item La energía de la secuencia se reparte entre las $N$ frecuencias: $\abs{X[k]}^2/N$ es la contribución de la frecuencia $\Omega_k$.
+    \item Es la base para estimar potencias y densidades espectrales (parte~3).
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Convolución circular}
+
+\begin{frame}{Producto de DFT}
+  ¿Qué secuencia tiene por DFT el producto $X_3[k]=X_1[k]X_2[k]$?
+  \[
+    x_3[n]=\frac1N\sum_{k=0}^{N-1}\Big[\sum_{m=0}^{N-1}x_1[m]W_N^{km}\Big]\Big[\sum_{l=0}^{N-1}x_2[l]W_N^{kl}\Big]W_N^{-kn}
+    =\sum_{m=0}^{N-1}x_1[m]\sum_{l=0}^{N-1}x_2[l]\,\underbrace{\frac1N\sum_{k=0}^{N-1}W_N^{-k(n-m-l)}}_{=1\ \text{si}\ l=((n-m))_N,\ 0\ \text{si no}}
+  \]
+  \begin{importante}[Convolución circular]
+    \[
+      x_3[n]=(x_1\cconv{N}x_2)[n]=\sum_{m=0}^{N-1}x_1[m]\,x_2[((n-m))_N]\quad\longleftrightarrow\quad X_1[k]\,X_2[k]
+    \]
+  \end{importante}
+  \begin{itemize}\small
+    \item Igual que la convolución lineal, pero el desplazamiento de $x_2$ es circular.
+    \item Dualmente, $x_1[n]\,x_2[n]\longleftrightarrow\frac1N\,(X_1\cconv{N}X_2)[k]$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Convolución circular y convolución lineal}
+  \begin{center}\includegraphics[width=0.92\linewidth]{conv_circular}\end{center}
+  \begin{itemize}\small
+    \item $x[n]$ de longitud $L$ y $h[n]$ de longitud $M$: la convolución lineal tiene $L+M-1$ muestras.
+    \item La convolución circular de $N$ puntos es la lineal \alert{plegada} con periodo $N$:
+    \[
+      (x\cconv{N}h)[n]=\sum_{r}(x\conv h)[n-rN],\qquad 0\le n<N.
+    \]
+    \item \alert{Si $N\ge L+M-1$, coinciden}: se rellenan $x$ y $h$ con ceros hasta $N$ antes de transformar.
+  \end{itemize}
+  \herramienta{html/T3\_Convolucion\_circular.html}
+\end{frame}
+
+\begin{frame}{Ejemplo: respuesta de un sistema FIR con la DFT}
+  \small
+  $h[n]=(0,2)$ y $x[n]=(1,3,4)$: $L+M-1=4$.
+  \begin{columns}[T]
+    \begin{column}{0.46\textwidth}
+      \alert{Convolución lineal}
+      \[
+        y[n]=\sum_mh[m]\,x[n-m]=2x[n-1]
+      \]
+      \[
+        y=(0,\ 2,\ 6,\ 8)
+      \]
+      \alert{Circular con $N=3$} (demasiado corta):
+      \[
+        y_3=(0+8,\ 2,\ 6)=(8,\ 2,\ 6)
+      \]
+      la última muestra se pliega sobre la primera.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \alert{Con la DFT de $N=4$ puntos}
+      \begin{align*}
+        X&=(8,\ -3-3j,\ 2,\ -3+3j)\\
+        H&=(2,\ -2j,\ -2,\ 2j)\\
+        Y=HX&=(16,\ -6+6j,\ -4,\ -6-6j)\\
+        y=\IDFT\{Y\}&=(0,\ 2,\ 6,\ 8)
+      \end{align*}
+      \gris{Por ejemplo, $y[0]=\frac14(16-6+6j-4-6-6j)=0$.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{En código: convolución lineal y circular}
+  \codigo{conv_circular}
+  \nota{Con $N=3$ la muestra $y[3]=8$ se suma a $y[0]=0$. Con $N=4$ el resultado coincide con \texttt{convolve}/\texttt{conv}.}
+\end{frame}
+
+\begin{frame}{Resumen de propiedades}
+  \footnotesize
+  \renewcommand{\arraystretch}{1.25}
+  \begin{center}
+    \begin{tabular}{@{}lll@{}}
+      \toprule
+      Propiedad & Secuencia & DFT de $N$ puntos\\\midrule
+      Linealidad & $a\,x_1[n]+b\,x_2[n]$ & $a\,X_1[k]+b\,X_2[k]$\\
+      Desplazamiento circular & $x[((n-m))_N]$ & $W_N^{km}X[k]$\\
+      Modulación & $W_N^{-ln}x[n]$ & $X[((k-l))_N]$\\
+      Inversión & $x[((-n))_N]$ & $X[((-k))_N]$\\
+      Conjugación & $x^*[n]$ & $X^*[((-k))_N]$\\
+      Señal real & $x[n]\in\R$ & $X[k]=X^*[N-k]$\\
+      Dualidad & $X[n]$ & $N\,x[((-k))_N]$\\
+      Convolución circular & $(x_1\cconv{N}x_2)[n]$ & $X_1[k]X_2[k]$\\
+      Producto & $x_1[n]\,x_2[n]$ & $\frac1N(X_1\cconv{N}X_2)[k]$\\
+      Parseval & $\sum_n\abs{x[n]}^2$ & $\frac1N\sum_k\abs{X[k]}^2$\\\bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Índices módulo $N$: desplazamientos e inversiones circulares.
+        \item Señal real: $X[k]=X^*[N-k]$; basta la mitad del espectro.
+        \item Parseval: $\sum\abs{x}^2=\frac1N\sum\abs{X}^2$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item El producto de DFT es una convolución \alert{circular}.
+        \item Circular $=$ lineal plegada con periodo $N$.
+        \item Para obtener la lineal: $N\ge L+M-1$ y relleno con ceros.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 3, sección 3 · Hoja de ejercicios, ejercicios 5–9.}
+\end{frame}
+
+\end{document}
