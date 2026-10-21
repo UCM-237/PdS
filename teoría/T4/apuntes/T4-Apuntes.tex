@@ -123,7 +123,7 @@ Un filtro discreto causal de orden finito tiene función de transferencia y ecua
   H(z)=\frac{\sum_{k=0}^{M}b_kz^{-k}}{1+\sum_{k=1}^{N}a_kz^{-k}},\qquad
   y[n]=\sum_{k=0}^{M}b_k\,x[n-k]-\sum_{k=1}^{N}a_k\,y[n-k].
 \]
-Si algún $a_k\ne0$ hay realimentación y la respuesta al impulso es infinita: filtro \emph{IIR}. Si todos los $a_k$ son nulos, $h[n]=b_n$ tiene $M+1$ muestras: filtro \emph{FIR}. La \cref{tab:fir-iir} resume sus diferencias, que guían la elección.
+Si algún $a_k\ne0$ hay realimentación y la respuesta al impulso es infinita: filtro \emph{IIR}. Si todos los $a_k$ son nulos, $h[n]=b_n$ tiene $M+1$ muestras: filtro \emph{FIR}. El \cref{tab:fir-iir} resume sus diferencias, que guían la elección.
 
 \begin{table}[ht]
   \centering\small
@@ -486,7 +486,7 @@ Hay transformaciones de orden 2 a paso banda y supresor (Oppenheim y Schafer, ca
 
 \subsection{Implementación}
 
-Un IIR de orden alto en forma directa (los coeficientes $a_k$ y $b_k$ del polinomio completo) es muy sensible al redondeo: las raíces de un polinomio de grado alto cambian mucho con pequeñas perturbaciones de sus coeficientes, y en los filtros selectivos los polos están muy juntos y cerca de la circunferencia. Se implementa como una cascada de \emph{secciones de orden 2} (\texttt{sos}), cada una con un par de polos y un par de ceros: \texttt{butter(..., output="sos")} y \texttt{sosfilt} en Python; \texttt{zp2sos} y \texttt{sosfilt} en Matlab. La \cref{tab:invarianza-bilineal} compara los dos métodos de conversión.
+Un IIR de orden alto en forma directa (los coeficientes $a_k$ y $b_k$ del polinomio completo) es muy sensible al redondeo: las raíces de un polinomio de grado alto cambian mucho con pequeñas perturbaciones de sus coeficientes, y en los filtros selectivos los polos están muy juntos y cerca de la circunferencia. Se implementa como una cascada de \emph{secciones de orden 2} (\texttt{sos}), cada una con un par de polos y un par de ceros: \texttt{butter(..., output="sos")} y \texttt{sosfilt} en Python; \texttt{zp2sos} y \texttt{sosfilt} en Matlab. El \cref{tab:invarianza-bilineal} compara los dos métodos de conversión.
 
 \begin{table}[ht]
   \centering\small
@@ -546,7 +546,7 @@ En el dominio $z$, la simetría equivale a $H(z)=\pm z^{-(N-1)}H(z^{-1})$: si $z
 \end{figure}
 
 \begin{nota}[Erratas de versiones anteriores]
-  En la transparencia antigua de los ceros, los tipos aparecían con la paridad de $N$ cambiada («Tipo 1 ($N$ par)») y con números de ceros en $\pm1$ que no correspondían; la tabla resumen tenía el mismo problema. Lo correcto es la \cref{tab:tipos-fir}: en $z=-1$ hay un número impar de ceros en los tipos II y III, y en $z=1$ en los tipos III y IV. La nota a pie que decía que el desfase es $-\omega N/2$ se refiere a un filtro de $N+1$ coeficientes.
+  En la transparencia antigua de los ceros, los tipos aparecían con la paridad de $N$ cambiada («Tipo 1 ($N$ par)») y con números de ceros en $\pm1$ que no correspondían; la tabla resumen tenía el mismo problema. Lo correcto es el \cref{tab:tipos-fir}: en $z=-1$ hay un número impar de ceros en los tipos II y III, y en $z=1$ en los tipos III y IV. La nota a pie que decía que el desfase es $-\omega N/2$ se refiere a un filtro de $N+1$ coeficientes.
 \end{nota}
 
 \subsection{Método de las ventanas}
