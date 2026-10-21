@@ -1,0 +1,6 @@
+Actividad,Tramos andando/parado (min),Cambios ritmo (seg. binaria),Instantes (min),Cambios derivada+MAD,Muestras > umbral (main.py),Repeticiones,Clase,Etiqueta manual,Motivo
+2026-01-07,48.5-49.7,5,"1.1, 2.5, 36.9, 42.3, 48.5",1,11,1,Rodaje,Rodaje,"v = 10.0 km/h, 58 % en Z4-Z5"
+2026-01-09,-,3,"0.7, 1.5, 2.6",1,10,0,Tempo,Tempo,"v = 11.2 km/h (> 105 % ref.), 76 % en Z4-Z5"
+2026-01-11,88.9-91.1,5,"28.3, 29.3, 80.9, 81.8, 88.9",1,19,2,Tirada larga,Tirada larga,15.1 km
+2026-01-14,-,3,"1.0, 2.5, 25.9",1,19,0,Tempo,Tempo,"v = 11.3 km/h (> 105 % ref.), 63 % en Z4-Z5"
+2026-01-15,56.7-58.5,5,"0.7, 43.6, 45.1, 56.7, 57.4",4,21,0,Rodaje,Rodaje,"v = 9.6 km/h, 9 % en Z4-Z5"

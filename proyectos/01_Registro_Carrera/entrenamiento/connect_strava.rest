@@ -1,0 +1,12 @@
+GET https://www.strava.com/oauth/authorize?client_id=192086&response_type=code&redirect_uri=http://localhost/exchange_token&approval_prompt=force&scope=activity:read_all HTTP/1.1
+
+###
+POST https://www.strava.com/oauth/token HTTP/1.1
+content-type: application/json
+
+{
+  "client_id": "192086",
+  "client_secret": "e7ee4a247554a37d6cbbea26e98f162bbe966d79",
+  "code": "adee3bc3a29edc35973acb4f438b50dde07c9819",
+  "grant_type": "authorization_code"
+}

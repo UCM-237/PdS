@@ -1,0 +1,7 @@
+numpy>=1.26
+pandas>=2.1
+scipy>=1.11
+matplotlib>=3.8
+tabulate>=0.9
+# opcional, solo para compilar la memoria a PDF (ademas hace falta pdflatex)
+pypandoc_binary>=1.13
