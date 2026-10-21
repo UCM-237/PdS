@@ -2,7 +2,7 @@
 
 ## Qué no se distribuye
 
-`05_Solucion/` de cada proyecto contiene la solución completa (código en Matlab y Python, figuras y valores de referencia). Como este repositorio es público, `.gitignore` excluye esa carpeta: la solución se guarda aparte (repositorio privado o copia local) y se coloca en `NN_Proyecto/05_Solucion/` para trabajar con ella.
+`05_Solucion/` de cada proyecto contiene la solución completa (código en Matlab y Python, figuras y valores de referencia). Como este repositorio es público, `.gitignore` excluye esa carpeta: la solución se guarda en el repositorio privado `UCM-237/PdS-soluciones` (una carpeta por proyecto). Para trabajar con ella, se copia esa carpeta en `NN_Proyecto/05_Solucion/`.
 
 ## Cómo corregir un hito
 
