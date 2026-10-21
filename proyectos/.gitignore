@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+02_Codigo/*/figuras/
+*/02_Codigo/*/figuras/
+*/02_Codigo/*/audio_restaurado.wav
+*/05_Solucion/
