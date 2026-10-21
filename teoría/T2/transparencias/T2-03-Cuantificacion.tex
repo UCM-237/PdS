@@ -1,0 +1,236 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T2 · Cuantificación]{Muestreo y reconstrucción de señales}
+\subtitle{Tema 2 · Parte 3: cuantificación y codificación}
+
+\begin{document}
+\portada
+
+% =====================================================================
+\section{Cuantificación}
+
+\begin{frame}{De señal discreta a señal digital}
+  \begin{center}\includegraphics[width=0.85\linewidth]{muestreo_cuant_cod}\end{center}
+  \begin{itemize}
+    \item El muestreo discretiza el tiempo; la amplitud de $x[n]$ sigue siendo \alert{continua}.
+    \item Un procesador solo almacena números con un número finito de bits.
+    \item La \alert{cuantificación} asigna a cada muestra uno de $L$ valores permitidos:
+    \[
+      x_q[n]=Q\big[x[n]\big]
+    \]
+    \item La \alert{codificación} asigna a cada nivel una palabra binaria de $b$ bits.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Cuantificador uniforme}
+  \begin{definicion}[Niveles y escalón de cuantificación]
+    Con $b$ bits hay $L=2^b$ niveles separados por el \alert{escalón} (resolución) $\Delta$. Para una entrada en el margen $[-V,V)$, de fondo de escala $FS=2V$:
+    \[
+      \Delta=\frac{FS}{2^b}=\frac{2V}{2^b}
+    \]
+  \end{definicion}
+  \begin{itemize}
+    \item Es el convenio de los conversores A/D: $\Delta$ es el valor de \alert{1~LSB}.
+    \item \gris{Otro convenio frecuente coloca el primer y el último nivel en los extremos del intervalo: $\Delta=\frac{x_{\max}-x_{\min}}{L-1}$. Las conclusiones son las mismas para $L$ grande.}
+    \item Si $\abs{x}$ supera el margen, el cuantificador \alert{satura}: el error deja de estar acotado.
+    \item Más bits $\Rightarrow$ menor $\Delta$ $\Rightarrow$ menor error, pero más memoria y un conversor más caro.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Redondeo y truncamiento}
+  \begin{center}\includegraphics[height=0.4\textheight]{cuantificador}\end{center}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \alert{Redondeo}: el nivel más cercano.
+      \[
+        Q[x]=\Delta\,\operatorname{round}\!\Big(\frac{x}{\Delta}\Big),\quad -\frac{\Delta}{2}\le e<\frac{\Delta}{2}
+      \]
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \alert{Truncamiento}: el nivel inmediatamente inferior.
+      \[
+        Q[x]=\Delta\,\Big\lfloor\frac{x}{\Delta}\Big\rfloor,\quad -\Delta<e\le 0
+      \]
+    \end{column}
+  \end{columns}
+  \medskip
+  El \alert{error de cuantificación} es $e[n]=x_q[n]-x[n]$. La pérdida de información es irreversible: muchos valores van a parar al mismo nivel.
+\end{frame}
+
+\begin{frame}{Ejemplo: cuantificar $x[n]=0{,}9^n$}
+  \begin{columns}[c]
+    \begin{column}{0.45\textwidth}
+      \small
+      \begin{itemize}
+        \item Para representar \alert{exactamente} $n=0,\dots,9$ hace falta $\Delta=10^{-9}$: $0{,}9^9=0{,}387420489$ tiene nueve decimales.
+        \item Con un decimal, $\Delta=0{,}1$:
+        \begin{itemize}\small
+          \item truncando, $-0{,}1<e\le0$;
+          \item redondeando, $\abs{e}\le0{,}05$.
+        \end{itemize}
+        \item El redondeo tiene media nula; el truncamiento introduce un sesgo de $-\Delta/2$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.53\textwidth}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.15}
+      \begin{tabular}{@{}rlllll@{}}
+        \toprule
+        & & \multicolumn{2}{c}{$x_q[n]$} & \multicolumn{2}{c}{$e[n]$}\\\cmidrule(lr){3-4}\cmidrule(l){5-6}
+        $n$ & $x[n]$ & trunc. & red. & trunc. & red.\\\midrule
+        0 & 1 & 1,0 & 1,0 & 0 & 0\\
+        1 & 0,9 & 0,9 & 0,9 & 0 & 0\\
+        2 & 0,81 & 0,8 & 0,8 & $-0{,}01$ & $-0{,}01$\\
+        3 & 0,729 & 0,7 & 0,7 & $-0{,}029$ & $-0{,}029$\\
+        4 & 0,6561 & 0,6 & 0,7 & $-0{,}0561$ & $0{,}0439$\\
+        5 & 0,59049 & 0,5 & 0,6 & $-0{,}0905$ & $0{,}0095$\\
+        6 & 0,53144 & 0,5 & 0,5 & $-0{,}0314$ & $-0{,}0314$\\
+        7 & 0,47830 & 0,4 & 0,5 & $-0{,}0783$ & $0{,}0217$\\
+        8 & 0,43047 & 0,4 & 0,4 & $-0{,}0305$ & $-0{,}0305$\\
+        9 & 0,38742 & 0,3 & 0,4 & $-0{,}0874$ & $0{,}0126$\\\bottomrule
+      \end{tabular}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+\section{Ruido de cuantificación}
+
+\begin{frame}{Modelo estadístico del error}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\linewidth]{error_cuantificacion}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \small
+      Si la señal cruza muchos niveles y no satura, el error es un \alert{ruido aditivo}, $x_q[n]=x[n]+e[n]$:
+      \begin{itemize}\small
+        \item $e[n]$ uniforme en $[-\Delta/2,\Delta/2)$ (redondeo).
+        \item Incorrelado con $x[n]$, blanco y de media nula.
+      \end{itemize}
+      \begin{importante}
+        \[
+          \sigma_e^2=\frac{1}{\Delta}\int_{-\Delta/2}^{\Delta/2}e^2\dd e=\frac{\Delta^2}{12}
+        \]
+      \end{importante}
+    \end{column}
+  \end{columns}
+  {\footnotesize\gris{El modelo falla si la señal es lenta o pequeña frente a $\Delta$. Las señales aleatorias se estudian en el Tema~6.}}
+\end{frame}
+
+\begin{frame}{Relación señal a ruido de cuantificación (SQNR)}
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+      \[
+        \mathrm{SQNR}=10\log_{10}\frac{P_x}{\sigma_e^2}\ \text{dB}
+      \]
+      Para una sinusoide de amplitud $V$ (fondo de escala):
+      \[
+        P_x=\frac{V^2}{2},\qquad \sigma_e^2=\frac{\Delta^2}{12}=\frac{(2V)^2}{12\cdot2^{2b}}
+      \]
+      \begin{importante}
+        \[
+          \mathrm{SQNR}=10\log_{10}\Big(\frac32\,2^{2b}\Big)\approx 6{,}02\,b+1{,}76\ \text{dB}
+        \]
+      \end{importante}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \includegraphics[width=\linewidth]{sqnr_bits}
+      \begin{itemize}\small
+        \item \alert{Cada bit añade unos 6\,dB}. CD (16 bits): unos 98\,dB.
+        \item Con amplitud $V/10$ se pierden 20\,dB.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{En código: SQNR de un cuantificador}
+  \codigo{cuantificacion}
+  \nota{Con $b=8$ se mide $\mathrm{SQNR}\approx49{,}7$\,dB, frente a los $49{,}9$\,dB del modelo (la amplitud es $0{,}99\,V$).}
+\end{frame}
+
+% =====================================================================
+\section{Codificación y conversores}
+
+\begin{frame}{Codificación}
+  \begin{columns}[c]
+    \begin{column}{0.55\textwidth}
+      \begin{itemize}
+        \item $b$ bits representan $2^b$ palabras distintas; para $L$ niveles:
+        \[
+          2^b\ge L\quad\Longrightarrow\quad b\ge\log_2L
+        \]
+        \item \alert{Ejemplo}: $L=6$ niveles, $\log_26\approx2{,}585$, luego $b=3$ bits.
+        \item Códigos habituales para un margen bipolar:
+        \begin{itemize}\small
+          \item \alert{binario desplazado}: $k+2^{b-1}$;
+          \item \alert{complemento a dos}: el de la aritmética de los procesadores.
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \footnotesize
+      \renewcommand{\arraystretch}{1.1}
+      \begin{tabular}{@{}rrcc@{}}
+        \toprule
+        $k$ & $x_q=k\Delta$ & desplazado & C2\\\midrule
+        3 & $3\Delta$ & 111 & 011\\
+        2 & $2\Delta$ & 110 & 010\\
+        1 & $\Delta$ & 101 & 001\\
+        0 & 0 & 100 & 000\\
+        $-1$ & $-\Delta$ & 011 & 111\\
+        $-2$ & $-2\Delta$ & 010 & 110\\
+        $-3$ & $-3\Delta$ & 001 & 101\\
+        $-4$ & $-4\Delta$ & 000 & 100\\\bottomrule
+      \end{tabular}
+
+      \gris{$b=3$, margen $[-4\Delta,4\Delta)$.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Parámetros de un conversor A/D}
+  \begin{itemize}
+    \item \alert{Resolución} $b$ y \alert{tensión de referencia} $V_{\text{ref}}$. Margen unipolar $[0,V_{\text{ref}})$:
+    \[
+      1\,\text{LSB}=\Delta=\frac{V_{\text{ref}}}{2^b}
+    \]
+    \item \alert{Rango dinámico}: cociente entre la mayor y la menor amplitud distinguibles,
+    \[
+      \mathrm{DR}=20\log_{10}\frac{V_{\text{ref}}}{\Delta}=20\log_{10}2^b\approx6{,}02\,b\ \text{dB}
+    \]
+    \item \alert{Frecuencia de muestreo} máxima y tiempo de conversión.
+    \item Arquitecturas: flash (rápida, pocos bits), aproximaciones sucesivas (SAR), sigma-delta (muchos bits, sobremuestreo; parte~4).
+  \end{itemize}
+  \begin{ejemplo}[Microcontrolador con A/D de 10 bits y $V_{\text{ref}}=3{,}3$\,V]
+    $\Delta=3{,}3/1024\approx3{,}22$\,mV, $\mathrm{DR}\approx60{,}2$\,dB y, para una sinusoide a fondo de escala, $\mathrm{SQNR}\approx62$\,dB.
+  \end{ejemplo}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Cuantificar es aproximar la amplitud: $x_q[n]=Q[x[n]]$.
+        \item $L=2^b$ niveles, $\Delta=FS/2^b$.
+        \item Redondeo: $\abs{e}\le\Delta/2$; truncamiento: $-\Delta<e\le0$.
+        \item Modelo de ruido: $e[n]$ uniforme, $\sigma_e^2=\Delta^2/12$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item $\mathrm{SQNR}\approx6{,}02\,b+1{,}76$\,dB a fondo de escala.
+        \item Codificar $L$ niveles: $b\ge\log_2L$.
+        \item Conversor A/D: $\Delta=V_{\text{ref}}/2^b$, $\mathrm{DR}\approx6{,}02\,b$\,dB.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 2, sección 5 · Hoja de ejercicios, ejercicios 11–13.}
+\end{frame}
+
+\end{document}

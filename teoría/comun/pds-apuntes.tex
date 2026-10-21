@@ -120,7 +120,10 @@
   \fi}
 % \begin{incisos}[columnas] ... \end{incisos}: apartados a), b)... de un
 % enunciado repartidos en columnas (3 por defecto)
-\newenvironment{incisos}[1][3]{\par\vspace{-2pt}\begin{multicols}{#1}\raggedcolumns\raggedright
+% (con una sola columna no se usa multicols, que necesita al menos dos)
+\newenvironment{incisos}[1][3]{\par\vspace{-2pt}%
+  \ifnum#1>1 \def\finincisos{\end{multicols}}\begin{multicols}{#1}\raggedcolumns\raggedright
+  \else\def\finincisos{}\fi
   \begin{enumerate}[label=\alph*), itemsep=3pt, topsep=0pt]}%
-  {\end{enumerate}\end{multicols}\vspace{-4pt}}
+  {\end{enumerate}\finincisos\vspace{-4pt}}
 \newcommand{\herramienta}[1]{\emph{Herramienta interactiva:} \texttt{herramientas/#1}}

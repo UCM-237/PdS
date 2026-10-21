@@ -1,0 +1,315 @@
+\documentclass[11pt,a4paper]{scrartcl}
+\input{../../comun/pds-apuntes}
+\tema{2}{Muestreo y reconstrucción de señales}
+
+\begin{document}
+\ifsoluciones\cabecera{Ejercicios resueltos}\else\cabecera{Ejercicios}\fi
+
+Los ejercicios 1–6 corresponden a la parte~1 del tema (muestreo y aliasing), los ejercicios 7–10 a la parte~2 (reconstrucción), los ejercicios 11–13 a la parte~3 (cuantificación y codificación) y los ejercicios 14–16 a la parte~4 (muestreo de señales discretas). Se usa $\sinc(x)=\sin(\pi x)/(\pi x)$ y $\Sa(x)=\sin x/x$. Muchos resultados se pueden comprobar numéricamente con los ejemplos de \texttt{teoría/T2/codigo/}.
+
+% =====================================================================
+\section*{Muestreo y aliasing}
+
+\begin{ejercicio}[frecuencias discretas]
+  La señal $x(t)=3\cos(50\pi t)+10\sin(300\pi t)-\cos(100\pi t)$ ($t$ en segundos) se muestrea con $f_s=200$\,Hz.
+  \begin{incisos}[1]
+    \item ¿Cuál es la tasa de Nyquist de $x(t)$?
+    \item Obtén la secuencia $x[n]$ expresando cada término con su alias fundamental, $\abs{\Omega}\le\pi$.
+    \item ¿Qué señal se obtiene si se reconstruye $x[n]$ con el filtro ideal de corte $f_s/2$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Las frecuencias son 25, 150 y 50\,Hz. La máxima es $f_m=150$\,Hz, así que la tasa de Nyquist es $2f_m=300$\,Hz.
+    \item $\Omega=2\pi f/f_s$ da $\pi/4$, $3\pi/2$ y $\pi/2$. La segunda se pliega a $3\pi/2-2\pi=-\pi/2$, y como el seno es impar,
+    \[
+      x[n]=3\cos\big(\tfrac\pi4n\big)-10\sin\big(\tfrac\pi2n\big)-\cos\big(\tfrac\pi2n\big).
+    \]
+    \item Cada $\Omega$ vuelve a $f=\Omega f_s/2\pi$: $y(t)=3\cos(50\pi t)-10\sin(100\pi t)-\cos(100\pi t)$. El tono de 150\,Hz aparece en 50\,Hz con el signo cambiado y se suma con el de 50\,Hz original.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[alias fundamental]
+  Las sinusoides $x(t)=\sin(2\pi f_0t)$ con $f_0=200$, $800$, $1200$ y $1700$\,Hz se muestrean a $f_s=1$\,kHz. Para cada una, calcula la frecuencia discreta de su alias fundamental y la señal que se obtendría al reconstruir con el filtro ideal de corte $f_s/2$.
+\end{ejercicio}
+\begin{solucion}
+  Con $\Omega_0=2\pi f_0/f_s$ llevada a $[-\pi,\pi)$:
+  \begin{center}
+    \begin{tabular}{@{}rlll@{}}
+      \toprule
+      $f_0$ (Hz) & $\Omega_0$ & alias fundamental & señal reconstruida\\\midrule
+      200 & $0{,}4\pi$ & $0{,}4\pi$ & $\sin(400\pi t)$\\
+      800 & $1{,}6\pi$ & $-0{,}4\pi$ & $-\sin(400\pi t)$\\
+      1200 & $2{,}4\pi$ & $0{,}4\pi$ & $\sin(400\pi t)$\\
+      1700 & $3{,}4\pi$ & $-0{,}6\pi$ & $-\sin(600\pi t)$\\\bottomrule
+    \end{tabular}
+  \end{center}
+  Las de 200, 800 y 1200\,Hz dan las mismas muestras salvo el signo; la de 1700\,Hz aparece en 300\,Hz. Un alias negativo invierte el signo de un seno (no el de un coseno). Se comprueba con el ejemplo \texttt{alias\_fundamental}.
+\end{solucion}
+
+\begin{ejercicio}[ancho de banda de señales derivadas]
+  La señal $x(t)$ tiene banda limitada a $\omega_m$. Determina la frecuencia de muestreo mínima para muestrear sin aliasing:
+  \begin{incisos}[2]
+    \item $x(t)+x(t-1)$
+    \item $\dfrac{\dd x(t)}{\dd t}$
+    \item $x^2(t)$
+    \item $x(t)\cos(\omega_0t)$, con $\omega_0>\omega_m$
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $X(j\omega)(1+\e^{-j\omega})$: multiplicar por una función no añade frecuencias. La banda sigue siendo $\omega_m$ (como mucho, se anulan algunas): $\omega_s>2\omega_m$.
+    \item $j\omega X(j\omega)$: misma banda, $\omega_s>2\omega_m$.
+    \item El producto en el tiempo es una convolución en frecuencia, $\frac{1}{2\pi}X\conv X$, que ocupa $\abs{\omega}\le2\omega_m$: $\omega_s>4\omega_m$.
+    \item $\frac12\big[X(j(\omega-\omega_0))+X(j(\omega+\omega_0))\big]$: el espectro se traslada a $\pm\omega_0$ y ocupa $\omega_0-\omega_m\le\abs{\omega}\le\omega_0+\omega_m$. La frecuencia máxima es $\omega_0+\omega_m$, así que el teorema del muestreo exige $\omega_s>2(\omega_0+\omega_m)$. \emph{No} basta con $2\omega_m$: con esa frecuencia las réplicas de las bandas en $\pm\omega_0$ se solapan. (Para señales paso banda existe un muestreo paso banda que permite frecuencias menores con condiciones adicionales; queda fuera de este tema.)
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[periodo de muestreo]
+  Determina el periodo de muestreo necesario para poder reconstruir las siguientes señales. Si no es posible evitar el aliasing, propón un criterio práctico.
+  \begin{incisos}[3]
+    \item $x_1(t)=\e^{-t}u(t)$
+    \item $x_2(t)=\sinc(f_ct)$
+    \item $x_3(t)=\sinc^2(f_ct)$
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $X_1(j\omega)=1/(1+j\omega)$ no se anula nunca: la señal no es de banda limitada y siempre hay aliasing. Como $\abs{X_1}=1/\sqrt{1+\omega^2}$ decae, se puede elegir $\omega_s/2$ donde $\abs{X_1}$ sea despreciable. Por ejemplo, para que $\abs{X_1}<0{,}01\,\abs{X_1(0)}$ hace falta $\omega>\sqrt{10^4-1}\approx100$\,rad/s, así que $\omega_s\approx200$\,rad/s y $T_s\approx0{,}03$\,s.
+    \item $\sinc(f_ct)\parF\frac{1}{f_c}\rect(f/f_c)$, que ocupa $\abs{f}\le f_c/2$. La banda es $f_m=f_c/2$, no $f_c$: hace falta $f_s>f_c$, es decir, $T_s<1/f_c$.
+    \item Su transformada es la convolución de dos pulsos, un triángulo que ocupa $\abs{f}\le f_c$: $f_m=f_c$, $f_s>2f_c$ y $T_s<1/(2f_c)$. El ejemplo \texttt{espectro\_muestreado} usa esta señal con $f_c=1$\,Hz y $f_s=3$\,Hz.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[espectro de la señal muestreada]
+  Una señal $x(t)$ tiene espectro triangular: $X(f)=1-\abs{f}/100$ para $\abs{f}\le100$\,Hz y cero fuera.
+  \begin{incisos}[1]
+    \item Dibuja el espectro de $x_s(t)$ para $f_s=300$\,Hz y para $f_s=150$\,Hz.
+    \item Con $f_s=150$\,Hz, ¿en qué banda hay aliasing? ¿Qué forma tiene allí el espectro? ¿Qué banda se conserva intacta?
+    \item Si antes de muestrear a 150\,Hz se aplica un filtro antialiasing ideal, ¿cuál debe ser su corte y qué se pierde?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $X_s(f)=f_s\sum_kX(f-kf_s)$: triángulos de altura $f_s$ centrados en $kf_s$. Con 300\,Hz, cada triángulo ocupa $[k\cdot300-100,k\cdot300+100]$ y quedan huecos de 100\,Hz entre ellos. Con 150\,Hz, cada triángulo se solapa con sus vecinos.
+    \item La réplica en 150\,Hz ocupa $[50,250]$ y se solapa con la central en $50\le f\le100$. Allí la suma vale $f_s\big[(1-\frac{f}{100})+(1-\frac{150-f}{100})\big]=0{,}5\,f_s$, constante: el espectro se aplana. La banda $\abs{f}<50$\,Hz se conserva intacta.
+    \item Corte en $f_s/2=75$\,Hz. Entonces $X$ ocupa $\abs{f}\le75$, las réplicas empiezan en $150-75=75$\,Hz y no se solapan. La banda $\abs{f}<75$\,Hz se conserva y se pierde la de 75 a 100\,Hz: es preferible perderla a que se mezcle con la banda útil.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[frecuencias en un electrocardiograma]
+  Un electrocardiograma (ECG), con información útil entre 0,05 y 40\,Hz, se muestrea a $f_s=500$\,Hz. La red eléctrica añade una interferencia de 50\,Hz y sus armónicos.
+  \begin{incisos}[1]
+    \item ¿A qué frecuencias discretas $\Omega$ aparecen la interferencia y sus armónicos de 150 y 250\,Hz?
+    \item Un filtro digital tiene un cero en $\Omega=0{,}1\pi$. ¿Qué frecuencia en hercios elimina?
+    \item Si el mismo ECG se muestreara a 120\,Hz sin filtro antialiasing, ¿dónde aparecería el armónico de 150\,Hz? ¿Se podría eliminar después con un filtro digital?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\Omega=2\pi f/f_s$: 50\,Hz en $\pi/5$, 150\,Hz en $3\pi/5$ y 250\,Hz en $\pi$, que es la frecuencia de Nyquist.
+    \item $f=\Omega f_s/2\pi=0{,}05\cdot500=25$\,Hz.
+    \item $150/120=1{,}25$, así que el entero más próximo es $k=1$ y $f_a=\abs{150-120}=30$\,Hz, es decir, $\Omega=\pi/2$. Cae dentro de la banda útil del ECG: un filtro digital que lo eliminara se llevaría también la parte de la señal en 30\,Hz. Por eso el filtro antialiasing es imprescindible antes de muestrear.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Reconstrucción}
+
+\begin{ejercicio}[reconstrucción ideal]
+  La señal $x(t)=\cos(6\pi t)+\cos(14\pi t)$ se muestrea y se reconstruye con un filtro paso bajo ideal.
+  \begin{incisos}[1]
+    \item Con $f_s=12$\,Hz y corte $f_s/2$, ¿qué señal se obtiene?
+    \item ¿Cuál es la frecuencia de muestreo mínima para reconstruirla exactamente?
+    \item Con $f_s=20$\,Hz, ¿entre qué valores puede estar la frecuencia de corte del filtro?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Las frecuencias son 3 y 7\,Hz. La de 7\,Hz supera $f_s/2=6$\,Hz y se pliega a $\abs{7-12}=5$\,Hz; al ser un coseno no cambia de signo. Se obtiene $y(t)=\cos(6\pi t)+\cos(10\pi t)$, que tiene las mismas muestras que $x(t)$ a 12\,Hz.
+    \item $f_s>2\cdot7=14$\,Hz.
+    \item Hay que dejar pasar 7\,Hz y eliminar la réplica más baja, en $20-7=13$\,Hz: $7<f_c<13$\,Hz.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[retenedores de orden uno]
+  Obtén la respuesta al impulso y la respuesta en frecuencia de los tres retenedores de orden uno:
+  \begin{incisos}[1]
+    \item El no causal, que une las muestras $x[n]$ y $x[n+1]$ con una recta.
+    \item El mismo retrasado una muestra, para hacerlo causal.
+    \item El causal predictivo, que prolonga la recta que pasa por $x[n-1]$ y $x[n]$.
+  \end{incisos}
+  Compara sus espectros con el del retenedor de orden cero. \emph{Sugerencia}: escribe $h(t)$ como convolución o suma de pulsos rectangulares.
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Una muestra aislada $x[0]=1$ produce un triángulo que vale 1 en $t=0$ y 0 en $t=\pm T_s$: $h_1(t)=\tri(t/T_s)$. Como $\tri(t/T_s)=\frac1{T_s}\rect(t/T_s)\conv\rect(t/T_s)$ y $\rect(t/T_s)\parF T_s\sinc(\omega/\omega_s)$,
+    \[
+      H_1(j\omega)=\frac{1}{T_s}\big(T_s\sinc(\omega/\omega_s)\big)^2=T_s\,\sinc^2\Big(\frac{\omega}{\omega_s}\Big).
+    \]
+    Es real y no negativa (fase nula).
+    \item $h(t)=\tri\big(\frac{t-T_s}{T_s}\big)$, no nula en $[0,2T_s]$, y $H(j\omega)=T_s\,\e^{-j\omega T_s}\sinc^2(\omega/\omega_s)$: el mismo módulo con un retardo de una muestra.
+    \item $y(t)=x[n]+(x[n]-x[n-1])\frac{t-nT_s}{T_s}$ en $[nT_s,(n+1)T_s)$. La muestra $x[0]=1$ interviene como $x[n]$ en $[0,T_s)$, con contribución $1+t/T_s$, y como $x[n-1]$ en $[T_s,2T_s)$, con $-(t-T_s)/T_s=1-t/T_s$:
+    \[
+      h(t)=\begin{cases}1+t/T_s & 0\le t<T_s\\1-t/T_s & T_s\le t<2T_s\\0&\text{en otro caso}\end{cases}
+    \]
+    Integrando, $H(j\omega)=T_s(1+j\omega T_s)\,\e^{-j\omega T_s}\sinc^2(\omega/\omega_s)$ (comprobado simbólicamente).
+  \end{enumerate}
+  El ZOH tiene $\abs{H_0}=T_s\abs{\sinc(\omega/\omega_s)}$, con réplicas que caen como $1/\omega$; los FOH caen como $1/\omega^2$ y las atenúan mejor. El predictivo tiene un factor $\abs{1+j\omega T_s}$ que realza las altas frecuencias: su salida tiene saltos.
+  \begin{nota}[Errata de versiones anteriores]
+    Una versión anterior de esta hoja daba para el FOH causal un pulso en rampa de anchura $T_s$, que no reproduce la interpolación lineal, y $H=\e^{-j\omega T_s/2}\sinc^2$. Las expresiones correctas son las de arriba.
+  \end{nota}
+\end{solucion}
+
+\begin{ejercicio}[conversor D/A de audio]
+  Un conversor D/A de audio trabaja a $f_s=44{,}1$\,kHz con un retenedor de orden cero.
+  \begin{incisos}[1]
+    \item ¿Cuánto atenúa el ZOH los tonos de 1, 10 y 20\,kHz?
+    \item Para un tono de 20\,kHz, ¿a qué frecuencia aparece la primera imagen y a qué nivel respecto al tono?
+    \item ¿Qué ganancia debe tener un filtro digital de compensación en 20\,kHz?
+    \item Repite b) si antes del conversor se interpola por 4, de modo que el ZOH trabaja a 176,4\,kHz.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  $\abs{H_0}/T_s=\abs{\sinc(f/f_s)}$.
+  \begin{enumerate}[label=\alph*)]
+    \item $-0{,}007$\,dB en 1\,kHz, $-0{,}75$\,dB en 10\,kHz y $-3{,}17$\,dB en 20\,kHz.
+    \item La réplica en $f_s$ de la componente en $-20$\,kHz cae en $44{,}1-20=24{,}1$\,kHz, atenuada $-4{,}79$\,dB: solo $1{,}6$\,dB por debajo del tono. El ZOH no basta; hace falta un filtro de suavizado que pase 20\,kHz y elimine 24,1\,kHz, muy abrupto.
+    \item $+3{,}17$\,dB, es decir, $1/\sinc(20/44{,}1)\approx1{,}44$.
+    \item Ahora el tono se atenúa solo $0{,}18$\,dB y la primera imagen está en $176{,}4-20=156{,}4$\,kHz, $17{,}9$\,dB por debajo del tono. El filtro analógico de suavizado tiene una transición de 20 a 156\,kHz y puede ser muy sencillo.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[reconstrucción con retenedores]
+  Muestrea las siguientes señales, eligiendo un valor adecuado de $T_s$. Indica en cada caso si es posible evitar el aliasing y estima el error de reconstruir con retenedores de orden cero y uno.
+  \begin{incisos}[1]
+    \item $x_1(t)=\sin\big(\frac{2\pi}{4}t\big)$
+    \item $x_2(t)=\sin\big(\frac{2\pi}{4}t\big)$ para $0\le t\le7$ y cero fuera
+    \item $x_3(t)=\sin\big(\frac{20\pi}{700}t\big)\cos\big(\frac{20\pi}{35}t\big)$
+  \end{incisos}
+  \emph{Sugerencia}: para una señal suave, el error del ZOH es como mucho $\max\abs{x'}\,T_s$ y el de la interpolación lineal, $\max\abs{x''}\,T_s^2/8$. Comprueba los resultados modificando el ejemplo \texttt{retenedores}.
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $f_0=0{,}25$\,Hz: basta $T_s<2$\,s, aunque con $T_s$ cerca de ese límite los retenedores dan una reconstrucción muy pobre. Con $T_s=0{,}25$\,s (16 muestras por periodo) y $\omega_0=\pi/2$, el error del ZOH es como mucho $\omega_0T_s\approx0{,}39$ y el del FOH, $\omega_0^2T_s^2/8\approx0{,}019$; la simulación da $0{,}38$ y $0{,}019$. El ZOH necesita muchas más muestras para el mismo error.
+    \item Es una señal de duración finita, así que no tiene banda limitada: el aliasing no se puede evitar del todo. Su espectro está concentrado alrededor de $0{,}25$\,Hz y decae, de modo que con el mismo $T_s=0{,}25$\,s el aliasing es pequeño. Los errores son los del apartado anterior, salvo cerca de $t=7$, donde la señal salta de $\sin(3{,}5\pi)=-1$ a 0 y cualquier retenedor comete un error del orden del salto.
+    \item Por la fórmula del producto, $x_3(t)=\frac12\big[\sin\big(\frac{3\pi}{5}t\big)-\sin\big(\frac{19\pi}{35}t\big)\big]$, con frecuencias $0{,}3$ y $19/70\approx0{,}27$\,Hz. Hace falta $f_s>0{,}6$\,Hz, $T_s<5/3$\,s. La envolvente es lenta (0,014\,Hz) y la portadora, de $2/7$\,Hz; con $T_s=0{,}2$\,s, unas 17 muestras por periodo de portadora, el FOH reproduce bien la señal.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Cuantificación y codificación}
+
+\begin{ejercicio}[cuantificador de 3 bits]
+  Un cuantificador de $b=3$ bits tiene margen $[-1,1)$.
+  \begin{incisos}[1]
+    \item Calcula $\Delta$ y los niveles.
+    \item Cuantifica $x[n]=0{,}95\cos(\pi n/4)$ para $n=0,\dots,7$ por redondeo y por truncamiento, y calcula el error.
+    \item Codifica en complemento a dos el resultado del redondeo.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\Delta=2/2^3=0{,}25$; los niveles son $k\Delta$ con $k=-4,\dots,3$, de $-1$ a $0{,}75$.
+    \item Los valores son $0{,}95$, $0{,}672$, $0$, $-0{,}672$, $-0{,}95$, $-0{,}672$, $0$, $0{,}672$. Para $n=0,\dots,4$ (el resto se repite por simetría):
+    \begin{center}
+      \begin{tabular}{@{}rrrrrr@{}}
+        \toprule
+        $n$ & $x[n]$ & redondeo & $e$ & truncamiento & $e$\\\midrule
+        0 & $0{,}950$ & $0{,}75$ & $-0{,}200$ & $0{,}75$ & $-0{,}200$\\
+        1 & $0{,}672$ & $0{,}75$ & $0{,}078$ & $0{,}50$ & $-0{,}172$\\
+        2 & $0$ & $0$ & $0$ & $0$ & $0$\\
+        3 & $-0{,}672$ & $-0{,}75$ & $-0{,}078$ & $-0{,}75$ & $-0{,}078$\\
+        4 & $-0{,}950$ & $-1{,}00$ & $-0{,}050$ & $-1{,}00$ & $-0{,}050$\\\bottomrule
+      \end{tabular}
+    \end{center}
+    En $n=0$ el redondeo daría $1{,}0$, que no es un nivel: el cuantificador \emph{satura} en $0{,}75$ y el error, $-0{,}2$, supera $\Delta/2=0{,}125$. El margen bipolar es asimétrico: llega a $-1$ pero no a $+1$.
+    \item $k=3,3,0,-3,-4,-3,0,3$: \texttt{011}, \texttt{011}, \texttt{000}, \texttt{101}, \texttt{100}, \texttt{101}, \texttt{000}, \texttt{011}.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[conversor A/D de un microcontrolador]
+  Un conversor A/D de 10 bits admite una entrada entre 0 y $V_{\text{ref}}$, que se puede configurar en 1,1, 3,3 o 5\,V.
+  \begin{incisos}[1]
+    \item Indica la resolución, el número de niveles y el rango dinámico de cada configuración.
+    \item ¿Qué configuración es la más adecuada si la entrada varía entre 0 y 3\,V? ¿Y entre 0 y 5\,V? ¿Y entre $-2{,}5$ y $2{,}5$\,V?
+    \item ¿Cuántos bits harían falta, en cada configuración, para una resolución de $10^{-4}$\,V?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Siempre hay $2^{10}=1024$ niveles y $\mathrm{DR}=20\log_{10}1024\approx60{,}2$\,dB. La resolución es $\Delta=V_{\text{ref}}/2^{10}$: $1{,}07$\,mV, $3{,}22$\,mV y $4{,}88$\,mV.
+    \item De 0 a 3\,V, $V_{\text{ref}}=3{,}3$\,V: cubre la señal sin saturar y con la menor $\Delta$ posible (con 1,1\,V saturaría y con 5\,V se desperdiciaría el 40\,\% de los niveles). De 0 a 5\,V, $V_{\text{ref}}=5$\,V. Entre $-2{,}5$ y $2{,}5$\,V ninguna sirve directamente: hay que sumar 2,5\,V con un circuito de adaptación (o atenuar y desplazar) y usar $V_{\text{ref}}=5$\,V, o un conversor bipolar.
+    \item $b\ge\log_2(V_{\text{ref}}/10^{-4})$: $13{,}43$, $15{,}01$ y $15{,}61$, es decir, 14, 16 y 16 bits.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[relación señal a ruido de cuantificación]
+  \begin{incisos}[1]
+    \item ¿Cuántos bits hacen falta para que una sinusoide que ocupa todo el margen tenga $\mathrm{SQNR}\ge80$\,dB?
+    \item ¿Y si su amplitud es solo la cuarta parte del margen?
+    \item ¿Qué SQNR tiene una grabación de 16 bits a fondo de escala?
+    \item Calcula la SQNR de una señal cuyas muestras se distribuyen uniformemente en todo el margen $[-V,V)$.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $6{,}02\,b+1{,}76\ge80$ da $b\ge12{,}997$: 13 bits.
+    \item La potencia baja en un factor 16, es decir, $12{,}04$\,dB, que hay que compensar: $b\ge(80+12{,}04-1{,}76)/6{,}02=14{,}997$, 15 bits.
+    \item $6{,}02\cdot16+1{,}76\approx98{,}1$\,dB.
+    \item La potencia de una variable uniforme en $[-V,V)$ es $P_x=(2V)^2/12$, y $\sigma_e^2=\Delta^2/12=(2V)^2/(12\cdot2^{2b})$. Entonces $\mathrm{SQNR}=10\log_{10}2^{2b}\approx6{,}02\,b$\,dB: $1{,}76$\,dB menos que la sinusoide, porque su factor de cresta es mayor.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Muestreo de señales discretas}
+
+\begin{ejercicio}[diezmado]
+  Sea $x[n]=\cos(0{,}2\pi n)+\cos(0{,}3\pi n)$.
+  \begin{incisos}[1]
+    \item ¿Cuál es el máximo factor de diezmado sin aliasing?
+    \item Obtén $x[2n]$ y $x[4n]$. ¿Hay aliasing en algún caso?
+    \item Antes de diezmar por 4 se aplica un paso bajo ideal de corte $\pi/4$. ¿Qué secuencia se obtiene?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\Omega_m=0{,}3\pi<\pi/M$ exige $M<3{,}33$: $M=3$, que da $\cos(0{,}6\pi n)+\cos(0{,}9\pi n)$.
+    \item $x[2n]=\cos(0{,}4\pi n)+\cos(0{,}6\pi n)$, sin aliasing. $x[4n]=\cos(0{,}8\pi n)+\cos(1{,}2\pi n)$, y $1{,}2\pi$ se pliega a $-0{,}8\pi$: $x[4n]=2\cos(0{,}8\pi n)$. Las dos componentes se han mezclado y ya no se pueden separar.
+    \item El filtro elimina $\cos(0{,}3\pi n)$, porque $0{,}3\pi>\pi/4$, y deja $\cos(0{,}2\pi n)$. Después del diezmado queda $\cos(0{,}8\pi n)$: se pierde una componente, pero la otra no se contamina.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[expansión e interpolación]
+  \begin{incisos}[1]
+    \item Se expande $x[n]=\cos(0{,}4\pi n)$ por $L=2$. ¿Qué frecuencias contiene $x_e[n]$ en $[0,\pi]$? ¿Qué se obtiene tras un filtro ideal de ganancia 2 y corte $\pi/2$?
+    \item Una secuencia tiene espectro triangular de banda $\Omega_m=\pi/2$. Dibuja el espectro tras expandirla por $L=3$ e indica dónde están las imágenes.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $x_e[n]=\cos(0{,}2\pi n)\cdot\frac{1+(-1)^n}{2}$, ya que vale $\cos(0{,}4\pi\,n/2)$ en los pares y 0 en los impares. Como $(-1)^n\cos(0{,}2\pi n)=\cos(1{,}2\pi n)=\cos(0{,}8\pi n)$,
+    \[
+      x_e[n]=\tfrac12\cos(0{,}2\pi n)+\tfrac12\cos(0{,}8\pi n).
+    \]
+    Es lo que predice $X(\e^{j2\Omega})$: picos donde $2\Omega=\pm0{,}4\pi+2\pi k$, es decir, en $0{,}2\pi$ y en la imagen $0{,}8\pi$. El filtro elimina la imagen y duplica el resto: $y[n]=\cos(0{,}2\pi n)$, que es $x[n]$ a doble frecuencia de muestreo.
+    \item $X(\e^{j3\Omega})$ repite el triángulo cada $2\pi/3$ con banda $\pi/6$: el original queda en $\abs{\Omega}\le\pi/6$ y las imágenes, centradas en $\pm2\pi/3$, ocupan $\pi/2\le\abs{\Omega}\le5\pi/6$. El filtro de interpolación, con corte $\pi/3$ y ganancia 3, deja solo la banda central.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[cambio racional y sobremuestreo]
+  \begin{incisos}[1]
+    \item Diseña el esquema para pasar audio de 48\,kHz a 32\,kHz: factores $L$ y $M$, frecuencia intermedia y frecuencia de corte del filtro, en radianes por muestra y en hercios.
+    \item Un conversor A/D de 12 bits sobremuestrea por $K=16$ y después diezma. ¿Qué SQNR alcanza para una sinusoide a fondo de escala? ¿A cuántos bits equivale?
+    \item ¿Qué factor de sobremuestreo haría falta para ganar 4 bits?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $32/48=2/3$: $L=2$, $M=3$. Se interpola a 96\,kHz y se filtra con ganancia 2 y corte $\min(\pi/2,\pi/3)=\pi/3$, que a 96\,kHz son $\frac{1}{6}\cdot96=16$\,kHz, la frecuencia de Nyquist de la salida. Después se diezma por 3.
+    \item $6{,}02\cdot12+1{,}76+10\log_{10}16=72{,}0+12{,}0\approx86{,}0$\,dB, unos 2 bits más: equivale a un conversor de 14 bits.
+    \item 4 bits son unos 24\,dB, así que $10\log_{10}K=24$ y $K\approx256$. Ganar resolución solo con sobremuestreo es caro; los conversores sigma-delta lo consiguen con mucho menos gracias al conformado de ruido.
+  \end{enumerate}
+\end{solucion}
+
+\end{document}

@@ -1,6 +1,6 @@
 # Material de teoría: transparencias, apuntes y ejercicios (XeLaTeX).
 #
-#   make T1             compila todo el Tema 1
+#   make T1, make T2    compila todo el tema
 #   make figuras        regenera las figuras de todos los temas (Python)
 #   make prueba-codigo  ejecuta los ejemplos en Python y en Matlab/Octave
 #   make publicar       copia los PDF a clase/
@@ -10,7 +10,7 @@
 # Python 3 con numpy, scipy y matplotlib, y Octave con los paquetes
 # signal y control (solo para probar el código Matlab).
 
-TEMAS   := T1
+TEMAS   := T1 T2
 LATEXMK := latexmk -xelatex -interaction=nonstopmode -halt-on-error -silent
 
 .PHONY: all $(TEMAS) figuras prueba-codigo publicar limpiar
@@ -42,6 +42,13 @@ publicar: $(TEMAS)
 	cp "T1/apuntes/T1-Apuntes.pdf"                "clase/T1 - Apuntes.pdf"
 	cp "T1/ejercicios/T1-Ejercicios.pdf"          "clase/T1 - Ejercicios.pdf"
 	cp "T1/ejercicios/T1-Ejercicios-Soluciones.pdf" "clase/T1 - Ejercicios resueltos.pdf"
+	cp "T2/transparencias/T2-01-Muestreo.pdf"     "clase/T2 - 01 - Muestreo.pdf"
+	cp "T2/transparencias/T2-02-Reconstruccion.pdf" "clase/T2 - 02 - Reconstrucción.pdf"
+	cp "T2/transparencias/T2-03-Cuantificacion.pdf" "clase/T2 - 03 - Cuantificación.pdf"
+	cp "T2/transparencias/T2-04-MuestreoDiscreto.pdf" "clase/T2 - 04 - Muestreo discreto.pdf"
+	cp "T2/apuntes/T2-Apuntes.pdf"                "clase/T2 - Apuntes.pdf"
+	cp "T2/ejercicios/T2-Ejercicios.pdf"          "clase/T2 - Ejercicios.pdf"
+	cp "T2/ejercicios/T2-Ejercicios-Soluciones.pdf" "clase/T2 - Ejercicios resueltos.pdf"
 
 limpiar:
 	@for t in $(TEMAS); do \
