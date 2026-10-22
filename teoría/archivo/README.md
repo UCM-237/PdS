@@ -10,8 +10,8 @@ conservan como referencia; no se compilan ni se mantienen.
   `teoría/T1/transparencias/T1-04-Aplicaciones.tex`.
 - `T2/Source`, `T2/Problemas`, `T2/Ejercicios resueltos`: antiguas fuentes
   del Tema 2 (`src/02 - Muestreo`: presentaciones, hoja de ejercicios y
-  ejercicios resueltos). Sustituidas por `teoría/T2/`. Los ejemplos
-  (`Ejemplos/`, `Matlab/`) siguen en `src/02 - Muestreo/`.
+  ejercicios resueltos). Sustituidas por `teoría/T2/`. Los antiguos ejemplos de
+  Matlab (`T2/Ejemplos`, `T2/Matlab`) están sustituidos por `teoría/T2/codigo/`.
 - `T3/Teoría`: antiguas fuentes del Tema 3 (`src/03 - DFT/Teoría`:
   presentaciones «T3 - DFT - clase 01/02/03», `DFT*.tex`, partes y
   figuras). Sustituidas por `teoría/T3/`. No había hoja de ejercicios.
@@ -31,3 +31,12 @@ conservan como referencia; no se compilan ni se mantienen.
   Introduccion», «T5 - Variables Aleatorias», «T5 - Señales Aleatorias»
   y borradores). Sustituidas por `teoría/T6/` (Tema 6 de la guía). Las
   prácticas siguen en `src/05 - Señales Aleatorias/Practicas/`.
+- `T1/Herramientas`: exportaciones HTML de Bokeh sin fuente Python
+  (serie de Fourier y respuesta de sistemas LTI continuos y discretos),
+  que estaban en `src/01 - Introduccion/Herramientas Interactivas`. Se
+  conservan como referencia para rehacerlas en `herramientas/`. El resto
+  de esa carpeta y de `src/01 - Introduccion/Codigo` eran copias de lo
+  que ya está en `herramientas/` y se han eliminado.
+
+Los ficheros auxiliares de LaTeX (`.aux`, `.log`, `.synctex.gz`…) se han
+eliminado del archivo: se regeneran al compilar.

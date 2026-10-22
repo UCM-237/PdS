@@ -1,2 +1,0 @@
-\babel@toc {spanish}{}\relax 
-\beamer@sectionintoc {1}{Representación e Interpretación de la DFT}{2}{0}{1}
