@@ -15,8 +15,7 @@ cálculos que dependen de los controles se hacen en el propio navegador.
 | `comun/pds_bokeh.py` | Estilo común (paleta y notación de `teoría/comun`), controles y plantilla de página |
 | `generar.py` | Ejecuta todas las fuentes y escribe el índice |
 | `html/` | Páginas generadas (`Tn-nombre.html`) e índice (`index.html`) |
-| `server/` | Apps que necesitan Python en marcha (`bokeh serve`), como el filtrado de audio |
-| `standalone/`, `notebook/` | Herramientas antiguas, pendientes de pasar a `fuentes/` |
+| `server/` | Apps del Tema 4 que aún necesitan Python en marcha (`bokeh serve`); se irán pasando a `fuentes/`, salvo el filtrado de audio |
 
 ## Uso
 
@@ -26,6 +25,7 @@ make            # genera html/ con Bokeh desde la CDN (para publicar)
 make sin-red    # igual, con Bokeh incrustado en cada página (para clase sin red)
 ```
 
+Para comprobar una página sin red, genera con `make sin-red` y ábrela con el navegador.
 Las apps de `server/` se lanzan con `bokeh serve --show server/<app>.py`.
 No guardan nada salvo que se pida con `PDS_REGISTRO=1`, que escribe un
 registro de interacciones en `logs/`; si se usa con alumnos, hay que

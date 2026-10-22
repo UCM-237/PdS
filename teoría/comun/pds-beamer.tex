@@ -85,8 +85,14 @@
 \renewcommand{\pdscodesize}{\scriptsize}
 
 % Utilidades
+% \herramienta{T1-convolucion-continua}: enlace a la página publicada de
+% herramientas/html (se abre en el navegador, sin instalar nada).
+% \herramientaservidor{server/....py}: app que necesita Python (bokeh serve).
+\newcommand{\urlherramientas}{https://ucm-237.github.io/PdS/}
 \newcommand{\herramienta}[1]{%
-  \par\vfill\hfill{\scriptsize\color{pdsgris}\faIcon\ Herramienta interactiva: \texttt{herramientas/#1}}}
+  \par\vfill\hfill{\scriptsize\color{pdsgris}\faIcon\ \href{\urlherramientas#1.html}{Herramienta interactiva: \texttt{#1}}}}
+\newcommand{\herramientaservidor}[1]{%
+  \par\vfill\hfill{\scriptsize\color{pdsgris}\faIcon\ Herramienta interactiva (con Python): \texttt{herramientas/#1}}}
 \newcommand{\faIcon}{\textbf{▶}}
 \newcommand{\gris}[1]{{\color{pdsgris}#1}}
 \newcommand{\nota}[1]{\par\vspace{2pt}{\footnotesize\color{pdsgris}\textit{#1}}\par}

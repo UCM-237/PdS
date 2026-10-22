@@ -140,7 +140,7 @@
     \item \alert{Alias fundamental}: el de menor frecuencia, el único con $\abs{\Omega}\le\pi$, es decir, $\abs{\omega}\le\omega_s/2$.
     \item Si $\abs{\omega_0}>\omega_s/2$, hay una sinusoide de frecuencia menor con las mismas muestras y, al reconstruir, \alert{obtenemos esa y no la original}.
   \end{itemize}
-  \herramienta{html/T2\_Aliasing.html}
+  \herramienta{T2-aliasing}
 \end{frame}
 
 \begin{frame}{Ejemplos de aliasing}
@@ -251,7 +251,7 @@
     \item La desigualdad debe ser estricta: $\sin(\omega_mt)$ muestreada a $\omega_s=2\omega_m$ da $\sin(\pi n)=0$ en todas las muestras.
     \item Si no se cumple, las réplicas se solapan y la señal original \alert{no se puede recuperar}.
   \end{itemize}
-  \herramienta{html/T2\_Muestreo periódico.html}
+  \herramienta{T2-muestreo-ideal}
 \end{frame}
 
 \begin{frame}{Visión continua y visión discreta del muestreo}
@@ -305,7 +305,7 @@
     \item \alert{Natural}: $x(t)\,p_\tau(t)$. Las réplicas no se deforman, solo se ponderan con los coeficientes del tren de pulsos.
     \item \alert{De techo plano}: cada pulso mantiene el valor de la muestra (es lo que hace el \emph{sample and hold}). Equivale a $x_s(t)$ convolucionada con un pulso, así que el espectro se multiplica por un $\sinc$: \alert{efecto de apertura}, el mismo del retenedor de orden cero (parte 2).
   \end{itemize}
-  \herramienta{html/T2\_Muestreo natural.html}
+  \herramienta{T2-muestreo-natural}
 \end{frame}
 
 % =====================================================================

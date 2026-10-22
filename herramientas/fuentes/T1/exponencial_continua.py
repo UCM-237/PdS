@@ -15,7 +15,7 @@ p = pb.figura("x(t) = Re{C·exp(st)} = exp(σt)·cos(2πft + θ)", "t (s)", "x(t
 p.line("t", "sup", source=datos, color=pb.GRIS_CLARO, line_dash="dashed", legend_label="±exp(σt)")
 p.line("t", "inf", source=datos, color=pb.GRIS_CLARO, line_dash="dashed")
 p.line("t", "x", source=datos, color=pb.AZUL, line_width=2, legend_label="x(t)")
-p.legend.location = "top_left"
+pb.leyenda(p, "below")
 
 sigma = pb.deslizador("σ (1/s)", -1, 1, r, 0.05)
 frec = pb.deslizador("f (Hz)", 0, 4, f, 0.1)
