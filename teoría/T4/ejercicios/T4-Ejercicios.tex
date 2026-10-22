@@ -1,0 +1,282 @@
+\documentclass[11pt,a4paper]{scrartcl}
+\input{../../comun/pds-apuntes}
+\tema{4}{Filtros}
+
+\begin{document}
+\ifsoluciones\cabecera{Ejercicios resueltos}\else\cabecera{Ejercicios}\fi
+
+Los ejercicios 1–3 corresponden a la parte~1 del tema (filtros ideales, especificaciones y fase), los ejercicios 4–7 a la parte~2 (filtros continuos), los ejercicios 8–11 a la parte~3 (filtros IIR), los ejercicios 12–15 a la parte~4 (filtros FIR) y los ejercicios 16–18 a la parte~5 (filtros especiales). Se usa $\omega$ para la frecuencia continua y $\Omega=2\pi f/f_s$ para la discreta, y $E=10^{\alpha_p/20}$, $A=10^{\alpha_s/20}$, $\varepsilon=\sqrt{E^2-1}$. Los resultados se pueden comprobar con \texttt{scipy.signal} o Matlab y con los ejemplos de \texttt{teoría/T4/codigo/}.
+
+% =====================================================================
+\section*{Filtros ideales, especificaciones y fase}
+
+\begin{ejercicio}[especificaciones de un filtro discreto]
+  Un paso bajo discreto trabaja a $f_s=8$\,kHz. Debe tener un rizado $\delta_p=0{,}05$ hasta 1\,kHz y $\abs H\le\delta_s=0{,}001$ desde 1,5\,kHz.
+  \begin{incisos}[1]
+    \item Expresa los bordes en $\Omega$ y normalizados a la frecuencia de Nyquist, como los piden Matlab y \texttt{scipy.signal}.
+    \item Expresa los rizados como $\alpha_p$ y $\alpha_s$ en dB.
+    \item ¿Qué frecuencia de corte en hercios tendría un FIR diseñado con ventana?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\Omega_p=2\pi\cdot1/8=0{,}25\pi$ y $\Omega_s=0{,}375\pi$; normalizados, $0{,}25$ y $0{,}375$.
+    \item Respecto a la ganancia nominal 1, $\alpha_p=-20\log_{10}(1-\delta_p)=0{,}45$\,dB (si se mide entre el máximo $1+\delta_p$ y el mínimo $1-\delta_p$, $20\log_{10}\frac{1{,}05}{0{,}95}=0{,}87$\,dB). $\alpha_s=-20\log_{10}0{,}001=60$\,dB.
+    \item El centro de la transición: $f_c=1{,}25$\,kHz ($\Omega_c=0{,}3125\pi$).
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[retardo de grupo]
+  Compara la fase de dos paso bajo sencillos:
+  \begin{incisos}[2]
+    \item $h[n]=\frac14(1,2,1)$;
+    \item $H(z)=\dfrac{0{,}5}{1-0{,}5z^{-1}}$.
+  \end{incisos}
+  Calcula en cada caso el retardo de grupo en $\Omega=0$, $\pi/2$ y $\pi$, y di cuál distorsiona la forma de un pulso.
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $H(\e^{j\Omega})=\frac14(1+2\e^{-j\Omega}+\e^{-j2\Omega})=\e^{-j\Omega}\frac{1+\cos\Omega}{2}$. El factor real es no negativo, así que la fase es $-\Omega$ y el retardo vale 1 muestra en todas las frecuencias: fase lineal.
+    \item Con $a=0{,}5$, $\arg H=-\arctan\frac{a\sin\Omega}{1-a\cos\Omega}$ y $\tau(\Omega)=\dfrac{a\cos\Omega-a^2}{1-2a\cos\Omega+a^2}$: $\tau(0)=1$, $\tau(\pi/2)=-0{,}2$ y $\tau(\pi)=-1/3$. Las frecuencias se retrasan de forma distinta, y el pulso se deforma.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[filtro de muesca]
+  Diseña un filtro de muesca de orden 2 que elimine los 50\,Hz de la red en una señal muestreada a $f_s=1$\,kHz, con polos de radio $r=0{,}95$.
+  \begin{incisos}[1]
+    \item Escribe $H(z)$ con coeficientes numéricos y la ecuación en diferencias.
+    \item Calcula la ganancia en continua y en $\Omega=\pi$. ¿Cómo la normalizarías?
+    \item Estima la anchura de la muesca en hercios.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\Omega_0=2\pi\cdot50/1000=0{,}1\pi$ y $2\cos\Omega_0=1{,}9021$:
+    \[
+      H(z)=\frac{1-1{,}9021z^{-1}+z^{-2}}{1-1{,}8070z^{-1}+0{,}9025z^{-2}},
+    \]
+    \[
+      y[n]=x[n]-1{,}9021x[n-1]+x[n-2]+1{,}8070y[n-1]-0{,}9025y[n-2].
+    \]
+    \item $H(1)=0{,}0979/0{,}0955=1{,}025$ y $H(-1)=3{,}902/3{,}709=1{,}052$. Se puede multiplicar el numerador por $1/1{,}025$ para tener ganancia 1 en continua.
+    \item Unos $2(1-r)=0{,}1$\,rad, es decir, $0{,}1\cdot1000/2\pi\approx16$\,Hz entre los puntos de $-3$\,dB (numéricamente, 16,4\,Hz).
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Filtros continuos}
+
+\begin{ejercicio}[Butterworth]
+  Diseña el paso bajo de Butterworth de orden mínimo con atenuación de 3\,dB a 2\,kHz y de al menos 30\,dB a 6\,kHz.
+  \begin{incisos}[1]
+    \item Calcula el orden y la frecuencia de corte.
+    \item Da la posición de los polos y escribe $H(s)$ como producto de factores de orden 2.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $E^2-1=10^{0,3}-1=0{,}995\approx1$ y $A^2-1=999$: $N\ge\frac{\log_{10}(999/0{,}995)}{2\log_{10}3}=3{,}15$, $N=4$. Como $\alpha_p=3$\,dB, $\omega_c\approx\omega_p=2\pi\cdot2000=12\,566$\,rad/s.
+    \item $p_k=\omega_c\e^{j\pi(2k+3)/8}$: ángulos de $\pm112{,}5^\circ$ y $\pm157{,}5^\circ$, es decir, $\omega_c(-0{,}3827\pm0{,}9239j)$ y $\omega_c(-0{,}9239\pm0{,}3827j)$.
+    \[
+      H(s)=\frac{\omega_c^4}{(s^2+0{,}7654\,\omega_cs+\omega_c^2)(s^2+1{,}8478\,\omega_cs+\omega_c^2)}.
+    \]
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[comparación de familias]
+  Un paso bajo debe atenuar como mucho 0,5\,dB hasta 10\,kHz y al menos 50\,dB desde 20\,kHz. Calcula el orden mínimo con Butterworth, Chebyshev y elíptico.
+\end{ejercicio}
+\begin{solucion}
+  $\varepsilon^2=10^{0,05}-1=0{,}1220$, $A^2-1\approx10^5$ y $1/k_1=\sqrt{A^2-1}/\varepsilon=905$; $1/k=2$.
+  Butterworth: $N\ge\log(905)/\log2=9{,}82$, $N=10$. Chebyshev (I o II): $N\ge\mathrm{arccosh}(905)/\mathrm{arccosh}(2)=7{,}50/1{,}317=5{,}70$, $N=6$. Elíptico: $k'=\sqrt{1-0{,}25}=0{,}866$, $\rho_0=0{,}0179$, $N\ge\frac{2\log_{10}(4\cdot905)}{\log_{10}(1/\rho)}=\frac{7{,}12}{1{,}75}=4{,}08$, $N=5$. Con \texttt{buttord}, \texttt{cheb1ord} y \texttt{ellipord}: 10, 6 y 5.
+\end{solucion}
+
+\begin{ejercicio}[polinomios de Chebyshev]
+  Un Chebyshev tipo I de orden 3 tiene $\alpha_p=1$\,dB y $\omega_p=1$\,rad/s.
+  \begin{incisos}[1]
+    \item Obtén $T_3(x)$ con la recurrencia.
+    \item ¿Cuánto vale $\abs{H}$ en $\omega=0$ y en $\omega=\omega_p$? ¿Y si el orden fuera par?
+    \item ¿Qué atenuación tiene en $\omega=2$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $T_2=2x\cdot x-1=2x^2-1$ y $T_3=2x(2x^2-1)-x=4x^3-3x$.
+    \item $T_3(0)=0$, así que $\abs{H(0)}=1$; $T_3(1)=1$ y $\abs{H(j\omega_p)}=1/\sqrt{1+\varepsilon^2}=1/E$, la atenuación de 1\,dB. Con $N$ par, $\abs{T_N(0)}=1$ y $\abs{H(0)}=1/E$: el rizado empieza en su mínimo.
+    \item $T_3(2)=26$, $\varepsilon^2=0{,}2589$: $10\log_{10}(1+0{,}2589\cdot676)=22{,}5$\,dB.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[paso banda continuo]
+  Se quiere un paso banda de Butterworth con banda de paso de 900 a 1100\,Hz (1\,dB) y atenuación de al menos 30\,dB por debajo de 600\,Hz y por encima de 1500\,Hz.
+  \begin{incisos}[1]
+    \item Calcula $\hat\omega_0$, $B$ y el $\omega_s$ del prototipo.
+    \item Calcula el orden del prototipo y el del paso banda.
+    \item ¿Es la plantilla geométricamente simétrica? ¿Qué borde se cumple con margen?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item En kHz: $\hat\omega_0^2=0{,}9\cdot1{,}1=0{,}99$ ($f_0=995$\,Hz) y $B=0{,}2$. Los bordes de supresión van a $\abs{0{,}36-0{,}99}/(0{,}6\cdot0{,}2)=5{,}25$ y $(2{,}25-0{,}99)/(1{,}5\cdot0{,}2)=4{,}2$; $\omega_s=4{,}2$.
+    \item $N\ge\frac{\log_{10}(999/0{,}2589)}{2\log_{10}4{,}2}=2{,}88$, $N=3$; el paso banda es de orden 6.
+    \item No: $0{,}6\cdot1{,}5=0{,}9\ne0{,}99$. El borde inferior (600\,Hz) se cumple con margen, porque su imagen en el prototipo (5,25) está más lejos que la del superior.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Filtros IIR}
+
+\begin{ejercicio}[invarianza al impulso]
+  Aplica la invarianza al impulso con $T=0{,}1$\,s a $H_a(s)=\dfrac{1}{(s+1)(s+2)}$.
+  \begin{incisos}[1]
+    \item Obtén $H(z)$ y sus polos.
+    \item Compara la ganancia en continua de $H(z)$ con la de $H_a(s)$. ¿Por qué no coinciden exactamente?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $H_a(s)=\frac{1}{s+1}-\frac{1}{s+2}$, de modo que $H(z)=T\Big[\frac{1}{1-\e^{-T}z^{-1}}-\frac{1}{1-\e^{-2T}z^{-1}}\Big]$, con polos en $\e^{-0,1}=0{,}9048$ y $\e^{-0,2}=0{,}8187$.
+    \item $H(1)=0{,}1\big(\frac{1}{0{,}0952}-\frac{1}{0{,}1813}\big)=0{,}4992$ frente a $H_a(0)=0{,}5$. La diferencia es el aliasing: $H(\e^{j0})=\sum_mH_a(j2\pi m/T)$ incluye las copias desplazadas, que no son nulas aunque sí pequeñas.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[bilineal de primer orden]
+  Convierte $H_a(s)=\dfrac{\omega_c}{s+\omega_c}$ en un paso bajo discreto con corte $\Omega_c=0{,}2\pi$ usando la bilineal con $T=2$.
+  \begin{incisos}[1]
+    \item Obtén $H(z)$ y comprueba que $\abs{H(\e^{j\Omega_c})}=1/\sqrt2$.
+    \item ¿Dónde quedaría el corte si no se predistorsionara ($\omega_c=\Omega_c/T$)?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\omega_c=\tan(0{,}1\pi)=0{,}3249$. Con $s=\frac{1-z^{-1}}{1+z^{-1}}$,
+    \[
+      H(z)=\frac{\omega_c(1+z^{-1})}{(1+\omega_c)+(\omega_c-1)z^{-1}}=\frac{0{,}2452\,(1+z^{-1})}{1-0{,}5095z^{-1}}.
+    \]
+    En $\Omega_c$ la bilineal lleva a $\omega=\omega_c$, donde $\abs{H_a}=1/\sqrt2$; numéricamente, $0{,}7071$.
+    \item Con $\omega_c=0{,}1\pi=0{,}3142$, el corte discreto es $2\arctan(0{,}3142)=0{,}194\pi$, un 3\,\% por debajo. El error crece con la frecuencia.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[importancia de la predistorsión]
+  Un paso bajo de Butterworth discreto a $f_s=10$\,kHz debe atenuar como mucho 1\,dB hasta 1\,kHz y al menos 25\,dB desde 2\,kHz. Calcula el orden con predistorsión y sin ella (usando $\omega=\Omega/T$). ¿Cuál es el correcto?
+\end{ejercicio}
+\begin{solucion}
+  $\Omega_p=0{,}2\pi$, $\Omega_s=0{,}4\pi$; $(A^2-1)/(E^2-1)=315{,}2/0{,}2589=1218$. Con predistorsión, $\omega_p=\tan(0{,}1\pi)=0{,}3249$ y $\omega_s=\tan(0{,}2\pi)=0{,}7265$: $N\ge\frac{\log_{10}1218}{2\log_{10}2{,}236}=4{,}41$, $N=5$, que es lo que da \texttt{buttord(0.2,0.4,1,25)}. Sin predistorsión, la razón sería 2 y $N\ge5{,}12$, $N=6$: el filtro sería más largo de lo necesario y, sobre todo, sus bordes no quedarían donde se pidió. Lo correcto es predistorsionar.
+\end{solucion}
+
+\begin{ejercicio}[paso alto IIR]
+  Diseña un paso alto de Chebyshev I discreto a $f_s=8$\,kHz con banda de paso desde 2\,kHz (1\,dB) y atenuación de al menos 40\,dB por debajo de 1\,kHz. Calcula los bordes predistorsionados, el $\omega_s$ del prototipo y el orden.
+\end{ejercicio}
+\begin{solucion}
+  $\Omega_p=0{,}5\pi$ y $\Omega_s=0{,}25\pi$; $\hat\omega_p=\tan(\pi/4)=1$ y $\hat\omega_s=\tan(\pi/8)=0{,}4142$. Prototipo: $\omega_s=\hat\omega_p/\hat\omega_s=2{,}414$. Con $\sqrt{A^2-1}/\varepsilon=196{,}5$, $N\ge\frac{\mathrm{arccosh}(196{,}5)}{\mathrm{arccosh}(2{,}414)}=\frac{5{,}97}{1{,}53}=3{,}91$, $N=4$. Se diseña el prototipo, se transforma con $s=1/\hat s$ y se aplica la bilineal (o \texttt{cheby1(4,1,0.5,'high')}).
+\end{solucion}
+
+% =====================================================================
+\section*{Filtros FIR}
+
+\begin{ejercicio}[tipos de fase lineal]
+  Para cada FIR, indica el tipo, el retardo de grupo y los ceros, y di si podría ser paso bajo o paso alto:
+  \begin{incisos}[2]
+    \item $h=(1,3,3,1)$;
+    \item $h=(1,-2,2,-1)$.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Simétrica con $N=4$: tipo II, retardo $1{,}5$ muestras. $H(z)=(1+z^{-1})^3$: triple cero en $z=-1$. $A(\Omega)=2\cos(3\Omega/2)+6\cos(\Omega/2)$, que vale 8 en $\Omega=0$ y 0 en $\pi$: paso bajo, nunca paso alto.
+    \item Antisimétrica con $N=4$: tipo IV, retardo $1{,}5$ muestras y desfase adicional $\pi/2$. $H(z)=(1-z^{-1})(1-z^{-1}+z^{-2})$: ceros en $z=1$ y $\e^{\pm j\pi/3}$. El cero en $z=1$ impide que sea paso bajo; $\abs{H(-1)}=6$: paso alto.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[paso alto con ventana]
+  Diseña un paso alto FIR con $\Omega_s=0{,}4\pi$, $\Omega_p=0{,}6\pi$ y $\alpha_s=50$\,dB.
+  \begin{incisos}[1]
+    \item Elige la ventana fija y calcula $L$, el número de coeficientes y $h[n]$.
+    \item Repite con la ventana de Kaiser.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\Omega_c=0{,}5\pi$ y $\Delta\Omega=0{,}2\pi$. Hann no llega (43,9\,dB); Hamming sí (54,5\,dB): $L\ge3{,}32\pi/0{,}2\pi=16{,}6$, $L=17$ y $N=35$. Con $m=n-17$,
+    \[
+      h[n]=\Big(\delta[m]-\frac{\sin(0{,}5\pi m)}{\pi m}\Big)\Big(0{,}54+0{,}46\cos\frac{2\pi m}{35}\Big),\quad 0\le n\le34,
+    \]
+    con $h[17]=0{,}5$. Numéricamente atenúa 52\,dB.
+    \item $\beta=0{,}5842\cdot29^{0,4}+0{,}07886\cdot29=4{,}53$ y $2L\ge42/(2{,}285\cdot0{,}2\pi)=29{,}3$, $L=15$: 31 coeficientes.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[filtro de audio]
+  Un filtro antialiasing digital a 48\,kHz debe dejar pasar hasta 20\,kHz con $\delta_p=0{,}01$ y atenuar desde 22\,kHz con $\delta_s=10^{-4}$.
+  \begin{incisos}[1]
+    \item Calcula $\beta$ y el número de coeficientes con la ventana de Kaiser, y el retardo en milisegundos.
+    \item Estima el número de coeficientes con Parks–McClellan.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item La ventana impone el mismo rizado en las dos bandas: $\alpha_s=-20\log_{10}10^{-4}=80$\,dB. $\Delta\Omega=2\pi\cdot2/48=0{,}0833\pi$. $\beta=0{,}1102(80-8{,}7)=7{,}86$ y $2L\ge72/(2{,}285\cdot0{,}2618)=120{,}4$, $L=61$: 123 coeficientes y un retardo de 61 muestras, $1{,}27$\,ms.
+    \item $N-1\approx\frac{-20\log_{10}\sqrt{0{,}01\cdot10^{-4}}-13}{14{,}6\cdot2/48}=\frac{47}{0{,}608}=77$: unos 79 coeficientes, porque Parks–McClellan aprovecha que $\delta_p$ puede ser mayor que $\delta_s$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[truncamiento y Gibbs]
+  Se trunca el paso bajo ideal con $\Omega_c=\pi/2$ a $\abs n\le10$ (ventana rectangular).
+  \begin{incisos}[1]
+    \item Calcula $h_d[n]$ para $n=0,\dots,3$ y explica por qué los términos pares distintos de cero son nulos.
+    \item ¿Cuánto vale $H_w(\e^{j0})$? ¿Y el máximo de $H_w$?
+    \item ¿Qué cambia si se usa $\abs n\le40$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $h_d[0]=0{,}5$, $h_d[1]=1/\pi=0{,}318$, $h_d[2]=0$, $h_d[3]=-1/(3\pi)=-0{,}106$. Con $\Omega_c=\pi/2$, $\sin(\pi n/2)=0$ para $n$ par.
+    \item $H_w(\e^{j0})=\sum_nh_d[n]=1{,}032$ (no exactamente 1, por el truncamiento); el máximo, cerca del borde, es $1{,}091$: la sobreoscilación de Gibbs, un 9\,\%.
+    \item La transición se estrecha a la cuarta parte y los rizados se acercan al borde, pero la sobreoscilación sigue siendo del 9\,\%.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Filtros especiales}
+
+\begin{ejercicio}[fase cero]
+  Se filtra una señal grabada con $F(z)=\dfrac{0{,}2}{1-0{,}8z^{-1}}$ con \texttt{lfilter} y con \texttt{filtfilt}. Compara la ganancia en $\Omega=0$ y en $\Omega=\pi$ y el retardo en ambos casos. ¿Se podría hacer lo mismo en tiempo real?
+\end{ejercicio}
+\begin{solucion}
+  $F(1)=0{,}2/0{,}2=1$ y $\abs{F(-1)}=0{,}2/1{,}8=0{,}111$: $-19{,}1$\,dB en $\Omega=\pi$ con una pasada. Con \texttt{filtfilt} la respuesta es $\abs F^2$: ganancia 1 en continua y $-38{,}2$\,dB en $\pi$, sin desfase; con \texttt{lfilter} el retardo de grupo en continua es $0{,}8/0{,}2=4$ muestras. No se puede en tiempo real: la pasada hacia atrás necesita las muestras futuras.
+\end{solucion}
+
+\begin{ejercicio}[fase mínima y paso todo]
+  Sea $H(z)=\dfrac{1-2z^{-1}}{1+0{,}8z^{-1}}$.
+  \begin{incisos}[1]
+    \item ¿Es de fase mínima? ¿Es estable y causal su inverso?
+    \item Escríbelo como $H_{\min}(z)H_{\text{PT}}(z)$ y comprueba que $\abs{H_{\text{PT}}}=1$.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item El cero está en $z=2$, fuera del círculo: no es de fase mínima. $1/H$ tendría un polo en $z=2$: causal pero inestable.
+    \item Se refleja el cero a $1/2$:
+    \[
+      H(z)=\underbrace{\frac{2\,(1-0{,}5z^{-1})}{1+0{,}8z^{-1}}}_{H_{\min}}\cdot\underbrace{\frac{0{,}5-z^{-1}}{1-0{,}5z^{-1}}}_{H_{\text{PT}}}.
+    \]
+    $\abs{0{,}5-\e^{-j\Omega}}=\abs{\e^{-j\Omega}}\,\abs{0{,}5\e^{j\Omega}-1}=\abs{1-0{,}5\e^{-j\Omega}}$, así que $\abs{H_{\text{PT}}}=1$. $H_{\min}$ tiene el cero en $0{,}5$ y su inversa es estable.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[peine para la red]
+  Una señal de ECG se muestrea a $f_s=8$\,kHz y lleva interferencia de 50\,Hz y sus armónicos.
+  \begin{incisos}[1]
+    \item ¿Qué $L$ hace que $1-z^{-L}$ anule 50\,Hz y sus armónicos? ¿Qué ganancia tiene a 25\,Hz? ¿Qué problema tiene para el ECG?
+    \item Con $H(z)=\frac{1+a}{2}\frac{1-z^{-L}}{1-az^{-L}}$ y $a=0{,}95$, ¿cuánto vale $\abs H$ a 25\,Hz y a 49\,Hz?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $L=f_s/f_0=160$: ceros en $\Omega=2\pi k/160$, es decir, en $f=50k$\,Hz. $\abs{1-\e^{-j\Omega L}}=2\abs{\sin(\Omega L/2)}$ vale 2 a 25\,Hz: entre muescas la ganancia oscila entre 0 y 2, lo que deforma la señal útil (y también elimina la continua).
+    \item $\abs H=1$ a 25\,Hz y $0{,}93$ a 49\,Hz: las muescas son estrechas y el resto del espectro pasa casi sin cambios.
+  \end{enumerate}
+\end{solucion}
+
+\end{document}

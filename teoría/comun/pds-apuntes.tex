@@ -1,0 +1,129 @@
+% =====================================================================
+%  pds-apuntes.tex — Estilo común de apuntes y hojas de ejercicios.
+%
+%  Uso (desde teoría/Tx/apuntes/ o teoría/Tx/ejercicios/):
+%     \documentclass[11pt,a4paper]{scrartcl}   % o scrreprt
+%     \input{../../comun/pds-apuntes}
+%     \tema{1}{Introducción: señales y sistemas}
+%     \begin{document} \cabecera{Apuntes} ... \end{document}
+%  Compilar con:  latexmk -xelatex  (o «make» desde teoría/)
+% =====================================================================
+
+\input{../../comun/pds-comun.tex}
+
+\usepackage[a4paper, top=2.6cm, bottom=2.6cm, left=2.5cm, right=2.5cm,
+            headheight=1.1cm]{geometry}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{LibertinusSerif}[Extension=.otf, UprightFont=*-Regular, BoldFont=*-Semibold,
+  ItalicFont=*-Italic, BoldItalicFont=*-SemiboldItalic]
+\setsansfont{FiraSans}[Extension=.otf, UprightFont=*-Regular, BoldFont=*-SemiBold,
+  ItalicFont=*-Italic, BoldItalicFont=*-SemiBoldItalic, Scale=MatchLowercase]
+\setmonofont{FiraMono}[Extension=.otf, UprightFont=*-Regular, BoldFont=*-Medium, AutoFakeSlant=0.15, Scale=0.85]
+\setmathfont{LibertinusMath-Regular.otf}
+
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{multicol}
+\setlist{itemsep=2pt, topsep=4pt}
+\usepackage{caption}
+\captionsetup{font=small, labelfont={sf,bf,color=pdsazul}, labelsep=period}
+\usepackage{subcaption}
+\usepackage[most]{tcolorbox}
+\usepackage{environ}
+\usepackage{scrlayer-scrpage}
+\usepackage[hidelinks, unicode]{hyperref}
+\usepackage[spanish, noabbrev]{cleveref}
+
+% Títulos en Fira Sans con el azul de la asignatura
+\setkomafont{disposition}{\sffamily\bfseries\color{pdsazul}}
+\setkomafont{descriptionlabel}{\sffamily\bfseries}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55\baselineskip plus 2pt}
+\linespread{1.05}
+
+% ---------------------------------------------------------------------
+%  Datos del tema y cabeceras
+% ---------------------------------------------------------------------
+\newcommand{\numtema}{}
+\newcommand{\nombretema}{}
+\newcommand{\tema}[2]{\renewcommand{\numtema}{#1}\renewcommand{\nombretema}{#2}}
+
+\pagestyle{scrheadings}
+\clearpairofpagestyles
+\ihead{\sffamily\small\color{pdsgris}\asignatura}
+\ohead{\sffamily\small\color{pdsgris}Tema~\numtema. \nombretema}
+\ifoot{\sffamily\small\color{pdsgris}\grado}
+\ofoot{\sffamily\small\pagemark}
+\setkomafont{pagehead}{\normalfont}
+\setkomafont{pagefoot}{\normalfont}
+
+% \cabecera{Apuntes|Ejercicios|...} : bloque de título de la primera página
+\newcommand{\cabecera}[1]{%
+  \thispagestyle{plain.scrheadings}%
+  \noindent
+  \begin{minipage}[c]{2.2cm}
+    \includegraphics[width=1.9cm]{../../comun/ucm.png}
+  \end{minipage}%
+  \begin{minipage}[c]{\dimexpr\linewidth-2.2cm}
+    \sffamily
+    {\small\color{pdsgris}\grado\par \asignatura\ · \curso\par}
+    \vspace{4pt}
+    {\Large\bfseries\color{pdsazul}#1\par}
+    {\large\bfseries Tema~\numtema. \nombretema\par}
+    \vspace{2pt}
+    {\small\color{pdsgris}\autores\par}
+  \end{minipage}\par
+  \vspace{6pt}{\color{pdsazul}\rule{\linewidth}{0.8pt}}\par\vspace{4pt}}
+
+% ---------------------------------------------------------------------
+%  Cajas: definición, propiedad, ejemplo, nota, «en código»
+% ---------------------------------------------------------------------
+\tcbset{pdsbase/.style={enhanced, breakable, boxrule=0pt, arc=1.5pt, left=8pt, right=8pt,
+    top=5pt, bottom=5pt, fonttitle=\sffamily\bfseries\small, coltitle=white,
+    before skip=8pt, after skip=8pt}}
+\newtcbtheorem[number within=section]{definicion}{Definición}%
+  {pdsbase, colback=pdsfondo, colframe=pdsazul, borderline west={2.5pt}{0pt}{pdsazul}}{def}
+\newtcbtheorem[use counter from=definicion]{propiedad}{Propiedad}%
+  {pdsbase, colback=pdsfondo, colframe=pdsazul!75, borderline west={2.5pt}{0pt}{pdsazul!75}}{prop}
+\newtcbtheorem[use counter from=definicion]{ejemplo}{Ejemplo}%
+  {pdsbase, colback=pdsverde!5, colframe=pdsverde, borderline west={2.5pt}{0pt}{pdsverde}}{ej}
+\newtcolorbox{nota}[1][Nota]{pdsbase, colback=pdsnaranja!7, colframe=pdsnaranja,
+  title={#1}, borderline west={2.5pt}{0pt}{pdsnaranja}}
+\newtcolorbox{importante}[1][Importante]{pdsbase, colback=pdsrojo!5, colframe=pdsrojo,
+  title={#1}, borderline west={2.5pt}{0pt}{pdsrojo}}
+\newtcolorbox{encodigo}[1][En código]{pdsbase, colback=white, colframe=pdsgris,
+  title={#1}, borderline west={2.5pt}{0pt}{pdsgris}}
+
+\lstset{basicstyle=\ttfamily\small}
+\renewcommand{\codigoetiqueta}[1]{{\sffamily\small\bfseries\color{pdsgris}#1}}
+
+% ---------------------------------------------------------------------
+%  Hojas de ejercicios: \begin{ejercicio} ... \end{ejercicio} y
+%  \begin{solucion} ... \end{solucion} (solo se imprime si se define
+%  \SOLUCIONES antes de cargar el documento; ver *-Soluciones.tex)
+% ---------------------------------------------------------------------
+\newif\ifsoluciones
+\ifdefined\SOLUCIONES \solucionestrue \fi
+\newcounter{ejercicio}
+\newenvironment{ejercicio}[1][]{%
+  \refstepcounter{ejercicio}\par\vspace{6pt}%
+  \noindent{\sffamily\bfseries\color{pdsazul}Ejercicio~\theejercicio}%
+  \if\relax\detokenize{#1}\relax\else\ {\sffamily\color{pdsgris}(#1)}\fi\quad}%
+  {\par}
+\NewEnviron{solucion}{%
+  \ifsoluciones
+    \begin{tcolorbox}[pdsbase, colback=pdsverde!4, colframe=pdsverde,
+      borderline west={2.5pt}{0pt}{pdsverde}, title={Solución}]
+      \BODY
+    \end{tcolorbox}
+  \fi}
+% \begin{incisos}[columnas] ... \end{incisos}: apartados a), b)... de un
+% enunciado repartidos en columnas (3 por defecto)
+% (con una sola columna no se usa multicols, que necesita al menos dos)
+\newenvironment{incisos}[1][3]{\par\vspace{-2pt}%
+  \ifnum#1>1 \def\finincisos{\end{multicols}}\begin{multicols}{#1}\raggedcolumns\raggedright
+  \else\def\finincisos{}\fi
+  \begin{enumerate}[label=\alph*), itemsep=3pt, topsep=0pt]}%
+  {\end{enumerate}\finincisos\vspace{-4pt}}
+\newcommand{\herramienta}[1]{\emph{Herramienta interactiva:} \texttt{herramientas/#1}}

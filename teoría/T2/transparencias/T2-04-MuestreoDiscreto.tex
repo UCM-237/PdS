@@ -1,0 +1,223 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T2 · Muestreo discreto]{Muestreo y reconstrucción de señales}
+\subtitle{Tema 2 · Parte 4: muestreo de señales discretas y cambio de frecuencia}
+
+\begin{document}
+\portada
+
+% =====================================================================
+\section{Muestreo de secuencias}
+
+\begin{frame}{¿Por qué muestrear una señal ya discreta?}
+  \begin{itemize}
+    \item Cambiar la frecuencia de muestreo sin volver al dominio analógico:
+    \begin{itemize}
+      \item audio de 48\,kHz a telefonía a 8\,kHz, o de 44,1\,kHz (CD) a 48\,kHz;
+      \item vídeo e imágenes: cambiar la resolución.
+    \end{itemize}
+    \item Reducir el coste de cálculo: procesar a la menor frecuencia posible.
+    \item Conversores con \alert{sobremuestreo}: se muestrea muy rápido y se reduce la frecuencia en digital.
+  \end{itemize}
+  \begin{center}\includegraphics[width=0.9\linewidth]{diezmado_tiempo}\end{center}
+  \gris{Todo lo visto para señales continuas tiene su versión discreta: réplicas, aliasing y filtros.}
+\end{frame}
+
+\begin{frame}{Muestreo de una secuencia}
+  Se conserva una de cada $N$ muestras y se ponen a cero las demás:
+  \[
+    x_p[n]=x[n]\,p[n],\qquad p[n]=\sum_{k=-\infty}^{\infty}\delta[n-kN]=\begin{cases}1 & n=kN\\0&\text{en otro caso}\end{cases}
+  \]
+  Como $p[n]=\frac1N\sum_{k=0}^{N-1}\e^{j2\pi kn/N}$, el producto desplaza el espectro:
+  \begin{importante}
+    \[
+      X_p(\e^{j\Omega})=\frac{1}{N}\sum_{k=0}^{N-1}X\big(\e^{j(\Omega-2\pi k/N)}\big)
+    \]
+  \end{importante}
+  \begin{itemize}
+    \item Aparecen $N-1$ réplicas, separadas $\Omega_s=2\pi/N$.
+    \item \alert{Sin aliasing} si $\Omega_m<\pi/N$; entonces se recupera $x[n]$ con un filtro paso bajo ideal de ganancia $N$ y corte $\pi/N$.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Diezmado}
+
+\begin{frame}{Diezmado (reducción de la frecuencia de muestreo)}
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \small
+      Se descartan las muestras nulas de $x_p[n]$:
+      \[
+        x_d[n]=x[nM]=x_p[nM]
+      \]
+      La nueva frecuencia es $f_s/M$ y el espectro se \alert{expande} por $M$:
+      \begin{importante}
+        \[
+          X_d(\e^{j\Omega})=\frac1M\sum_{k=0}^{M-1}X\big(\e^{j(\Omega-2\pi k)/M}\big)
+        \]
+      \end{importante}
+      \begin{itemize}\small
+        \item Sin aliasing si $\Omega_m<\pi/M$.
+        \item $x_d[n]$ sigue siendo periódica en $2\pi$: la réplica $k$ cae en $2\pi k$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\linewidth]{diezmado_espectro}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Diezmador con filtro antialiasing}
+  \begin{center}
+    \begin{tikzpicture}[node distance=1.2cm]
+      \node (x) {$x[n]$};
+      \node[bloque, right=of x] (h) {$H_d(\e^{j\Omega})$\\corte $\pi/M$};
+      \node[bloque, right=of h] (m) {$\downarrow M$};
+      \node[right=of m] (y) {$y[n]$};
+      \draw[flecha] (x) -- (h); \draw[flecha] (h) -- (m); \draw[flecha] (m) -- (y);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Si $x[n]$ ocupa más de $\pi/M$, se filtra antes: \alert{$H_d$ paso bajo de ganancia 1 y corte $\pi/M$}.
+    \item Es el mismo papel que el filtro antialiasing analógico: se pierde la banda alta, pero no se mezcla con la baja.
+    \item El filtro trabaja a la frecuencia alta, pero solo hace falta calcular una de cada $M$ salidas.
+  \end{itemize}
+  \begin{ejemplo}[De 48\,kHz a 8\,kHz]
+    $M=6$: el filtro corta en $\pi/6$, es decir, en $48/12=4$\,kHz, la frecuencia de Nyquist de la nueva señal.
+  \end{ejemplo}
+\end{frame}
+
+% =====================================================================
+\section{Interpolación}
+
+\begin{frame}{Expansión e interpolación}
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \small
+      \alert{Expansor}: inserta $L-1$ ceros entre muestras,
+      \[
+        x_e[n]=\begin{cases}x[n/L] & n=0,\pm L,\pm2L,\dots\\0 & \text{en otro caso}\end{cases}
+      \]
+      \begin{importante}
+        \[
+          X_e(\e^{j\Omega})=X(\e^{j\Omega L})
+        \]
+      \end{importante}
+      \begin{itemize}\small
+        \item El espectro se \alert{comprime} por $L$ y aparecen $L-1$ \alert{imágenes} en $[-\pi,\pi]$.
+        \item El \alert{filtro de interpolación} (ganancia $L$, corte $\pi/L$) las elimina y rellena los ceros.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\linewidth]{expansion_espectro}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Interpolación en el tiempo}
+  \begin{center}
+    \begin{tikzpicture}[node distance=1.1cm]
+      \node (x) {$x[n]$};
+      \node[bloque, right=of x] (l) {$\uparrow L$};
+      \node[bloque, right=of l] (h) {$H_i(\e^{j\Omega})$\\ganancia $L$, corte $\pi/L$};
+      \node[right=of h] (y) {$y[n]$};
+      \draw[flecha] (x) -- (l); \draw[flecha] (l) -- node[above,font=\footnotesize]{$x_e[n]$} (h); \draw[flecha] (h) -- (y);
+    \end{tikzpicture}
+  \end{center}
+  Con el filtro ideal, la salida es la interpolación de banda limitada de las muestras:
+  \[
+    y[n]=\sum_{k}x[k]\,\sinc\Big(\frac{n-kL}{L}\Big)
+  \]
+  \begin{itemize}
+    \item Es la fórmula de Whittaker--Shannon evaluada en los instantes nuevos: $y[kL]=x[k]$.
+    \item Con filtros más sencillos se obtienen los retenedores discretos:
+    \begin{itemize}
+      \item repetir cada muestra $L$ veces: $h[n]=1$ en $0\le n<L$ (orden cero);
+      \item interpolación lineal: $h[n]=\tri(n/L)$ (orden uno).
+    \end{itemize}
+    \item La ganancia $L$ compensa los ceros insertados: el valor medio de $x_e[n]$ es $1/L$ del de $x[n]$.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Cambio racional y sobremuestreo}
+
+\begin{frame}{Cambio de frecuencia por un factor racional $L/M$}
+  \begin{center}
+    \begin{tikzpicture}[node distance=1.0cm]
+      \node (x) {$x[n]$};
+      \node[bloque, right=of x] (l) {$\uparrow L$};
+      \node[bloque, right=of l] (h) {Paso bajo, ganancia $L$\\corte $\min(\pi/L,\pi/M)$};
+      \node[bloque, right=of h] (m) {$\downarrow M$};
+      \node[right=of m] (y) {$y[n]$};
+      \draw[flecha] (x) -- (l); \draw[flecha] (l) -- (h); \draw[flecha] (h) -- (m); \draw[flecha] (m) -- (y);
+    \end{tikzpicture}
+  \end{center}
+  \begin{itemize}
+    \item Primero se interpola y después se diezma: así no se pierde banda innecesariamente.
+    \item Los dos filtros (interpolación y antialiasing) se funden en uno solo.
+    \item En la práctica se usan estructuras \alert{polifásicas}, que no calculan las muestras que se van a descartar.
+  \end{itemize}
+  \begin{ejemplo}[De 44,1\,kHz (CD) a 48\,kHz]
+    $\frac{48\,000}{44\,100}=\frac{160}{147}$: se interpola por $L=160$ (7,056\,MHz intermedios) y se diezma por $M=147$.
+  \end{ejemplo}
+\end{frame}
+
+\begin{frame}{En código: diezmado y cambio racional}
+  \codigo{cambio_frecuencia}
+  \nota{\texttt{decimate} incluye el filtro antialiasing; \texttt{resample\_poly} (\texttt{resample} en Matlab) usa una estructura polifásica.}
+\end{frame}
+
+\begin{frame}{Conversores con sobremuestreo}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \alert{A/D}: se muestrea a $K f_s$ y se diezma por $K$.
+      \begin{itemize}\small
+        \item El filtro antialiasing analógico puede ser muy suave: la transición va de $f_m$ a $Kf_s-f_m$.
+        \item El ruido de cuantificación $\Delta^2/12$ se reparte en $[-\pi,\pi]$; el diezmador se queda con $1/K$:
+        \[
+          \mathrm{SQNR}\approx6{,}02\,b+1{,}76+10\log_{10}K\ \text{dB}
+        \]
+        \item Cada factor 4 de sobremuestreo gana unos 6\,dB, es decir, 1 bit.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \alert{D/A}: se interpola por $K$ antes del conversor.
+      \begin{itemize}\small
+        \item Las imágenes se alejan hasta $Kf_s$: el filtro de suavizado es sencillo.
+        \item La caída del ZOH en la banda útil es casi nula.
+      \end{itemize}
+      \medskip
+      \alert{Conformado de ruido} (sigma-delta): un lazo de realimentación empuja el ruido fuera de la banda útil. Con 1 bit a frecuencia muy alta se logran 16–24 bits efectivos.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Muestrear una secuencia replica su espectro cada $2\pi/N$.
+        \item Diezmado: $X_d=\frac1M\sum_kX\big(\e^{j(\Omega-2\pi k)/M}\big)$; sin aliasing si $\Omega_m<\pi/M$.
+        \item Antes de diezmar: filtro de corte $\pi/M$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Expansión: $X_e=X(\e^{j\Omega L})$, con imágenes.
+        \item Interpolación: filtro de ganancia $L$ y corte $\pi/L$.
+        \item Cambio $L/M$: interpolar, filtrar y diezmar.
+        \item Sobremuestreo: filtros analógicos sencillos y $+10\log_{10}K$\,dB.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 2, sección 6 · Hoja de ejercicios, ejercicios 14–16.}
+\end{frame}
+
+\end{document}

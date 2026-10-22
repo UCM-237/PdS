@@ -1,0 +1,82 @@
+% =====================================================================
+%  notacion.tex — Notación común de la asignatura (todos los temas)
+%  Procesamiento de Señales · Grado en Ing. Electrónica de Comunicaciones
+% =====================================================================
+%
+%  Convenios (ver también comun/README.md):
+%   * Tiempo continuo entre paréntesis x(t); tiempo discreto entre
+%     corchetes x[n]. Nunca x(n) para una secuencia.
+%   * Frecuencia angular continua omega (rad/s) y frecuencia de
+%     oscilación f (Hz); frecuencia angular discreta Omega (rad/muestra)
+%     y frecuencia normalizada F (ciclos/muestra). No se usa «w».
+%   * CTFT X(jω), DTFT X(e^{jΩ}), Laplace X(s), Z X(z), siempre
+%     bilaterales y con su región de convergencia (ROC).
+%   * DFT: X[k] = Σ_{n=0}^{N-1} x[n] e^{-j2πkn/N}; IDFT con 1/N.
+%     N es siempre una longitud; el orden de un filtro es M.
+%   * La unidad imaginaria es j; la constante de Euler, e (recta).
+%   * Un sistema se denota con T{·}: y(t) = T{x(t)}.
+% ---------------------------------------------------------------------
+
+% Conjuntos numéricos
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+
+% Constantes y diferenciales en redonda
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\dd}{\mathop{}\!\mathrm{d}}
+\newcommand{\dv}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
+\newcommand{\dvn}[3]{\frac{\mathrm{d}^{#3}#1}{\mathrm{d}#2^{#3}}}
+
+% Parte real/imaginaria, argumento y funciones especiales
+% (unicode-math redefine \Re e \Im al empezar el documento: se fijan después)
+\AtBeginDocument{\renewcommand{\Re}{\operatorname{Re}}\renewcommand{\Im}{\operatorname{Im}}}
+\DeclareMathOperator{\sinc}{sinc}
+\DeclareMathOperator{\Sa}{Sa}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\atantwo}{atan2}
+
+% Delimitadores
+\DeclarePairedDelimiter{\abs}{\lvert}{\rvert}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+\DeclarePairedDelimiter{\set}{\{}{\}}
+
+% Convolución (lineal y circular)
+\newcommand{\conv}{\ast}
+\newcommand{\cconv}[1]{\circledast_{#1}}
+
+% Sistemas
+\newcommand{\T}{\mathcal{T}}
+\newcommand{\sis}[1]{\T\set*{#1}}
+
+% Transformadas y pares transformados
+\newcommand{\Four}{\mathcal{F}}
+\newcommand{\Lap}{\mathcal{L}}
+\newcommand{\Zt}{\mathcal{Z}}
+\newcommand{\DFT}{\operatorname{DFT}}
+\newcommand{\IDFT}{\operatorname{IDFT}}
+\newcommand{\ROC}{\mathrm{ROC}}
+\newcommand{\parF}{\mathrel{\overset{\mathcal{F}}{\longleftrightarrow}}}
+\newcommand{\parL}{\mathrel{\overset{\mathcal{L}}{\longleftrightarrow}}}
+\newcommand{\parZ}{\mathrel{\overset{\mathcal{Z}}{\longleftrightarrow}}}
+\newcommand{\parSF}{\mathrel{\overset{\mathcal{SF}}{\longleftrightarrow}}}
+
+% Transformadas de Fourier
+\newcommand{\Xc}{X(j\omega)}           % CTFT
+\newcommand{\Xd}{X(\e^{j\Omega})}      % DTFT
+\newcommand{\ejw}{\e^{j\omega}}
+\newcommand{\ejW}{\e^{j\Omega}}
+
+% Señales básicas
+\newcommand{\escalon}{u}
+\newcommand{\rampa}{r}
+\newcommand{\rect}{\Pi}
+\newcommand{\tri}{\Lambda}
+
+% Unidades frecuentes (texto)
+\newcommand{\Hz}{\,\mathrm{Hz}}
+\newcommand{\kHz}{\,\mathrm{kHz}}
+\newcommand{\MHz}{\,\mathrm{MHz}}
+\newcommand{\GHz}{\,\mathrm{GHz}}
+\newcommand{\rads}{\,\mathrm{rad/s}}

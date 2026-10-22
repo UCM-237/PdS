@@ -1,0 +1,262 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T5 · Wavelets]{Aplicaciones}
+\subtitle{Tema 5 · Parte 2: análisis con wavelets}
+
+\begin{document}
+\portada
+
+% =====================================================================
+\section{De la STFT a las wavelets}
+
+\begin{frame}{Limitaciones de la STFT}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \small
+      \begin{itemize}
+        \item La ventana se elige antes de analizar y es la misma en todas las frecuencias.
+        \item Muchas señales tienen \alert{componentes lentas y largas} (tendencias, tonos graves) y \alert{detalles rápidos y breves} (clics, bordes, saltos).
+        \item Lo natural es una ventana larga para las bajas frecuencias y corta para las altas: misma cantidad de \emph{periodos} en cada análisis.
+        \item Y no siempre una sinusoide es la mejor forma con la que comparar: un latido o un escalón se parecen más a otras ondas.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \includegraphics[width=\linewidth]{teselas}
+      \nota{Cada rectángulo tiene la misma área $\Delta t\,\Delta f$: el principio de incertidumbre se sigue cumpliendo.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Wavelets: pequeñas ondas}
+  \begin{center}\includegraphics[width=\linewidth]{wavelets}\end{center}
+  \small
+  \begin{itemize}
+    \item Una \alert{wavelet madre} $\psi(t)$ es una onda de duración limitada (o que decae rápido) y media nula.
+    \item Se \alert{escala} con $a>0$ y se \alert{desplaza} con $b$:
+    \(
+      \psi_{a,b}(t)=\frac1{\sqrt a}\,\psi\!\left(\frac{t-b}a\right).
+    \)
+    El factor $1/\sqrt a$ mantiene la energía.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Escala y desplazamiento}
+  \begin{center}\includegraphics[width=\linewidth]{escalado_wavelet}\end{center}
+  \small
+  \begin{itemize}
+    \item $a$ pequeño: wavelet comprimida, oscila deprisa, ve detalles finos (alta frecuencia) con buena localización en el tiempo.
+    \item $a$ grande: wavelet dilatada, ve variaciones lentas (baja frecuencia) con buena resolución en frecuencia.
+    \item La escala es inversa a la frecuencia: si $\psi$ oscila a $\omega_0$, $\psi_{a,b}$ oscila a $\omega_0/a$.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Transformada wavelet continua}
+
+\begin{frame}{Definición}
+  \begin{definicion}[Transformada wavelet continua (CWT)]
+    \[
+      W_x(a,b)=\int_{-\infty}^{\infty}x(t)\,\psi_{a,b}^*(t)\dd t=\frac1{\sqrt a}\int_{-\infty}^{\infty}x(t)\,\psi^*\!\left(\frac{t-b}a\right)\dd t
+    \]
+  \end{definicion}
+  \small
+  \begin{itemize}
+    \item Es la \alert{correlación} de $x$ con la wavelet escalada: mide cuánto se parece $x$ a $\psi_{a,b}$ cerca de $t=b$.
+    \item Compárese con la STFT, que correla con $w(t-\tau)\e^{j\omega t}$: tres parámetros ($\tau$, $\omega$ y la longitud de ventana) frente a dos ($a$, $b$).
+    \item El \alert{escalograma} es $\abs{W_x(a,b)}^2$ en el plano $(b,a)$; se suele dibujar con la frecuencia equivalente en un eje logarítmico.
+    \item Para la Morlet $\psi(t)=\pi^{-1/4}\e^{j\omega_0t}\e^{-t^2/2}$, la escala $a$ (en segundos) corresponde a $f\approx\omega_0/(2\pi a)$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Escalograma frente a espectrograma}
+  \begin{center}\includegraphics[width=\linewidth]{escalograma}\end{center}
+  \small
+  \begin{itemize}
+    \item El espectrograma usa la misma ventana en todas las frecuencias: el clic se ve con la anchura de la ventana.
+    \item En el escalograma el clic se estrecha al subir la frecuencia, y el tono de 20\,Hz se ve con una resolución en frecuencia más fina que el de 120\,Hz.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Condiciones sobre la wavelet}
+  \small
+  \begin{itemize}
+    \item \alert{Admisibilidad}: con $\Psi(j\omega)$ la CTFT de $\psi$,
+    \[
+      C_\psi=\int_{-\infty}^{\infty}\frac{\abs{\Psi(j\omega)}^2}{\abs\omega}\dd\omega<\infty .
+    \]
+    Obliga a $\Psi(j0)=0$, es decir, \alert{media nula}: $\int\psi(t)\dd t=0$. Garantiza que la CWT se puede invertir:
+    \[
+      x(t)=\frac1{C_\psi}\int_0^\infty\!\!\int_{-\infty}^{\infty}W_x(a,b)\,\psi_{a,b}(t)\,\frac{\dd b\,\dd a}{a^2}.
+    \]
+    \item \alert{Momentos nulos}: $\psi$ tiene $P$ momentos nulos si $\int t^p\psi(t)\dd t=0$ para $p=0,1,\dots,P-1$. Entonces la transformada de un polinomio de grado menor que $P$ es cero: las zonas suaves dan coeficientes casi nulos y solo destacan los cambios bruscos.
+    \item Haar tiene 1 momento nulo; Daubechies db$P$ tiene $P$ (con $2P$ coeficientes); el sombrero mexicano, 2.
+  \end{itemize}
+  \nota{En versiones anteriores la admisibilidad aparecía con $\omega$ en lugar de $\abs\omega$ en el denominador, y los momentos nulos con $p=0,\dots,N$ para «$N$ momentos».}
+\end{frame}
+
+% =====================================================================
+\section{Transformada wavelet discreta}
+
+\begin{frame}{Escalas y desplazamientos diádicos}
+  \small
+  \begin{itemize}
+    \item La CWT es muy redundante. Basta tomar $a=2^j$ y $b=k\,2^j$, con $j,k\in\Z$:
+    \[
+      \psi_{j,k}(t)=2^{-j/2}\,\psi\!\left(2^{-j}t-k\right).
+    \]
+    \item Para algunas $\psi$ estas funciones son una \alert{base ortonormal}:
+    \[
+      \int_{-\infty}^{\infty}\psi_{j,k}(t)\,\psi_{j',k'}(t)\dd t=\delta[j-j']\,\delta[k-k'] .
+    \]
+    \item Entonces $x(t)=\sum_j\sum_k d_j[k]\,\psi_{j,k}(t)$, con coeficientes $d_j[k]=\int x(t)\psi_{j,k}(t)\dd t$, y la energía se reparte entre ellos (Parseval): $\int\abs{x}^2\dd t=\sum_{j,k}\abs{d_j[k]}^2$.
+  \end{itemize}
+  \nota{Las antiguas transparencias omitían el factor $2^{-j/2}$, sin el cual la base no es ortonormal, y el $\dd t$ de la integral.}
+\end{frame}
+
+\begin{frame}{Análisis multirresolución}
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      \small
+      \begin{itemize}
+        \item Se añade una \alert{función de escala} $\varphi$ (la «wavelet padre»), de media 1, que recoge lo que queda por encima de la escala $2^J$.
+        \item \alert{Detalle} del nivel $j$: $D_j(t)=\sum_kd_j[k]\psi_{j,k}(t)$.
+        \item \alert{Aproximación} del nivel $J$: $A_J(t)=\sum_ka_J[k]\varphi_{J,k}(t)$.
+        \item La señal es la aproximación más los detalles:
+        \[
+          x=A_J+D_J+\dots+D_1,\qquad A_{j-1}=A_j+D_j .
+        \]
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\linewidth]{multiresolucion}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{La wavelet de Haar}
+  \small
+  \[
+    \varphi(t)=\begin{cases}1,&0\le t<1\\0,&\text{resto}\end{cases}\qquad
+    \psi(t)=\begin{cases}1,&0\le t<\tfrac12\\-1,&\tfrac12\le t<1\\0,&\text{resto}\end{cases}
+  \]
+  \begin{columns}[T]
+    \begin{column}{0.6\textwidth}
+      Con una secuencia de longitud par, un nivel es:
+      \[
+        a_1[k]=\frac{x[2k]+x[2k+1]}{\sqrt2},\quad d_1[k]=\frac{x[2k]-x[2k+1]}{\sqrt2}.
+      \]
+      La inversa:
+      \[
+        x[2k]=\frac{a_1[k]+d_1[k]}{\sqrt2},\quad x[2k+1]=\frac{a_1[k]-d_1[k]}{\sqrt2}.
+      \]
+      Se repite sobre $a_1$ para obtener $a_2$ y $d_2$, y así hasta el nivel $J$.
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \begin{ejemplo}[Un nivel a mano]
+        \footnotesize
+        $x=(4,6,10,12)$:
+        \[
+          a_1=\tfrac1{\sqrt2}(10,22),\quad d_1=\tfrac1{\sqrt2}(-2,-2).
+        \]
+        Energía: $16+36+100+144=296$ y $\frac{100+484+4+4}{2}=296$.
+      \end{ejemplo}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{La DWT como banco de filtros}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \footnotesize
+      \begin{itemize}
+        \item Algoritmo de Mallat: filtrar con un paso bajo $h_0$ y un paso alto $h_1$ y \alert{diezmar por 2}:
+        \begin{align*}
+          a_j[k]&=\textstyle\sum_nh_0[n-2k]\,a_{j-1}[n],\\
+          d_j[k]&=\textstyle\sum_nh_1[n-2k]\,a_{j-1}[n].
+        \end{align*}
+        \item Haar: $h_0=\frac1{\sqrt2}(1,1)$, $h_1=\frac1{\sqrt2}(1,-1)$. En general $h_1[n]=(-1)^nh_0[L-1-n]$.
+        \item Cada nivel parte la banda en dos: $d_1$ ocupa $[\pi/2,\pi]$, $d_2$ $[\pi/4,\pi/2]$, …, $a_J$ $[0,\pi/2^J]$.
+        \item Coeficientes: $\tfrac N2+\frac N4+\dots+\frac N{2^J}+\frac N{2^J}=N$. Coste $O(N)$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{center}
+        \begin{tikzpicture}[>=latex, font=\scriptsize, x=1cm, y=0.8cm]
+          \node (x) at (0,0) {$a_{j-1}$};
+          \node[draw] (h0) at (1.4,0.6) {$h_0$};
+          \node[draw] (h1) at (1.4,-0.6) {$h_1$};
+          \node[draw, circle, inner sep=1pt] (d0) at (2.6,0.6) {$\downarrow2$};
+          \node[draw, circle, inner sep=1pt] (d1) at (2.6,-0.6) {$\downarrow2$};
+          \node (a) at (3.6,0.6) {$a_j$};
+          \node (d) at (3.6,-0.6) {$d_j$};
+          \draw[->] (x) -- (0.7,0) |- (h0);
+          \draw[->] (0.7,0) |- (h1);
+          \draw[->] (h0) -- (d0);
+          \draw[->] (h1) -- (d1);
+          \draw[->] (d0) -- (a);
+          \draw[->] (d1) -- (d);
+        \end{tikzpicture}
+      \end{center}
+      \includegraphics[width=\linewidth]{banco_filtros}
+      \nota{Con $h_0$ y $h_1$ invertidos en el tiempo. $\abs{H_0}^2+\abs{H_1}^2=2$: no se pierde energía.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{En código: DWT de Haar}
+  \codigo[basicstyle=\ttfamily\fontsize{6.1}{6.8}\selectfont]{haar_dwt}
+\end{frame}
+
+% =====================================================================
+\section{Aplicaciones}
+
+\begin{frame}{Eliminación de ruido}
+  \begin{center}\includegraphics[width=0.88\linewidth]{eliminacion_ruido}\end{center}
+  \small
+  \begin{itemize}
+    \item El ruido blanco reparte su energía entre todos los coeficientes; la señal la concentra en unos pocos grandes.
+    \item Se \alert{anulan los coeficientes de detalle pequeños} (umbral duro) o se encogen todos (umbral suave) y se reconstruye.
+    \item Umbral universal $u=\hat\sigma\sqrt{2\ln N}$, con $\hat\sigma=\operatorname{mediana}\abs{d_1}/0{,}6745$. Un paso bajo borra el ruido y también los saltos; las wavelets conservan los saltos.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{En código: eliminar ruido}
+  \codigo[basicstyle=\ttfamily\fontsize{6.5}{7.4}\selectfont]{eliminar_ruido}
+\end{frame}
+
+\begin{frame}{Compresión y otras aplicaciones}
+  \begin{center}\includegraphics[width=0.85\linewidth]{compresion}\end{center}
+  \small
+  \begin{itemize}
+    \item \alert{Compresión}: se guardan solo los coeficientes mayores. JPEG 2000 usa una DWT 2D (wavelets biortogonales 9/7) en lugar de la DCT por bloques de JPEG.
+    \item \alert{Detección}: los saltos y picos dan coeficientes grandes en todas las escalas (electrocardiogramas, fallos en máquinas).
+    \item \alert{Elección de la wavelet}: según la forma de lo que se busca y los momentos nulos necesarios.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item $\psi_{a,b}(t)=a^{-1/2}\psi((t-b)/a)$: escala inversa a la frecuencia.
+        \item CWT: correlación con la wavelet escalada; escalograma.
+        \item Admisible: media nula. $P$ momentos nulos anulan polinomios de grado $<P$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item DWT: escalas diádicas, base ortonormal, $x=A_J+\sum D_j$.
+        \item Banco de filtros $h_0$, $h_1$ con diezmado por 2; $N$ coeficientes, coste $O(N)$.
+        \item Umbralizar los detalles elimina ruido y comprime.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 5, sección 2 · Hoja de ejercicios, ejercicios 6–10.}
+\end{frame}
+
+\end{document}

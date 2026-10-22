@@ -1,0 +1,19 @@
+# Artefactos de compilación de LaTeX
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.xdv
+*.bbl
+*.blg
+# Los PDF se generan con «make»; los publicados se copian a clase/
+T*/transparencias/*.pdf
+T*/apuntes/*.pdf
+T*/ejercicios/*.pdf
+__pycache__/

@@ -1,0 +1,198 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T3 · Análisis espectral]{Transformada discreta de Fourier}
+\subtitle{Tema 3 · Parte 3: análisis espectral con la DFT}
+
+\begin{document}
+\portada
+
+% =====================================================================
+\section{Interpretar la DFT}
+
+\begin{frame}{Del índice $k$ a la frecuencia en hercios}
+  \begin{columns}[c]
+    \begin{column}{0.48\textwidth}
+      Si $x[n]=x(nT_s)$, la muestra $k$ corresponde a
+      \[
+        \Omega_k=\frac{2\pi k}{N},\qquad f_k=\frac{k}{N}f_s,\qquad \omega_k=\frac{2\pi k}{NT_s}
+      \]
+      \begin{itemize}\small
+        \item Separación entre muestras: $\Delta f=\dfrac{f_s}{N}=\dfrac{1}{NT_s}=\dfrac{1}{T_{\text{obs}}}$.
+        \item $k=0,\dots,N/2$: de 0 a $f_s/2$. \\ $k>N/2$: frecuencias negativas, $f_k-f_s$.
+        \item \texttt{fftshift} reordena a $[-f_s/2,f_s/2)$; \texttt{rfft} da solo $k\le N/2$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \includegraphics[width=\linewidth]{ejes_dft}
+      \begin{ejemplo}[$f_s=1$\,kHz, $N=16$]
+        \footnotesize
+        $\Delta f=62{,}5$\,Hz. Los tonos de 125 y 312,5\,Hz caen en $k=2$ y $k=5$, y sus imágenes en $k=14$ y $k=11$.
+      \end{ejemplo}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Amplitud de una sinusoide}
+  \begin{itemize}
+    \item Si $x[n]=A\cos(\Omega_0n+\phi)$ con $\Omega_0=2\pi k_0/N$ (un número entero de periodos en la ventana):
+    \[
+      x[n]=\frac A2\e^{j\phi}\e^{j\frac{2\pi}{N}k_0n}+\frac A2\e^{-j\phi}\e^{-j\frac{2\pi}{N}k_0n}
+      \ \longleftrightarrow\
+      X[k_0]=\frac{AN}{2}\e^{j\phi},\quad X[N-k_0]=\frac{AN}{2}\e^{-j\phi}
+    \]
+    y el resto de las muestras son nulas.
+  \end{itemize}
+  \begin{importante}[Lectura de amplitudes]
+    \[
+      A=\frac{2\,\abs{X[k_0]}}{N}\quad(0<k_0<N/2),\qquad \text{componente continua}=\frac{X[0]}{N}
+    \]
+  \end{importante}
+  \begin{itemize}
+    \item La fase $\phi=\arg X[k_0]$ solo tiene sentido donde $\abs{X[k]}$ no es despreciable.
+    \item Si $\Omega_0$ no coincide con una muestra, la amplitud se reparte: \alert{fuga espectral}.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Fuga espectral y ventanas}
+
+\begin{frame}{Fuga espectral}
+  \begin{center}\includegraphics[width=0.9\linewidth]{fuga_espectral}\end{center}
+  \begin{itemize}\small
+    \item La DFT muestrea $X_N(\e^{j\Omega})$, la DTFT de la señal \alert{truncada}: cada sinusoide aporta una copia de $W(\e^{j\Omega})$ centrada en $\Omega_0$.
+    \item Si $\Omega_0=2\pi k_0/N$, las demás muestras caen en los ceros de $W$ y no se ve la fuga.
+    \item Si no, aparecen muestras en todas las frecuencias y el pico baja (hasta $3{,}9$\,dB a media muestra).
+    \item Con datos reales casi nunca hay un número entero de periodos: la fuga es la norma.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ventanas}
+  \begin{columns}[c]
+    \begin{column}{0.56\textwidth}
+      \includegraphics[width=\linewidth]{ventanas}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \small
+      Se analiza $x[n]\,w[n]$ con una ventana que va suavemente a cero en los extremos:
+      \begin{itemize}\small
+        \item lóbulos secundarios mucho más bajos: \alert{menos fuga};
+        \item a cambio, lóbulo principal más ancho: \alert{peor resolución}.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \footnotesize
+  \renewcommand{\arraystretch}{1.15}
+  \begin{center}
+    \begin{tabular}{@{}lccc@{}}
+      \toprule
+      Ventana & anchura del lóbulo principal & primer lóbulo secundario & pérdida a media muestra\\\midrule
+      Rectangular & $4\pi/N$ & $-13$\,dB & $3{,}9$\,dB\\
+      Hann & $8\pi/N$ & $-31$\,dB & $1{,}4$\,dB\\
+      Hamming & $8\pi/N$ & $-42$\,dB & $1{,}7$\,dB\\
+      Blackman & $12\pi/N$ & $-58$\,dB & $1{,}1$\,dB\\\bottomrule
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Ventanas: tonos de amplitudes muy distintas}
+  \begin{center}\includegraphics[height=0.5\textheight]{ventana_tonos}\end{center}
+  \begin{itemize}\small
+    \item Con la rectangular, la fuga del tono fuerte ($-30$\,dB a 80\,Hz de distancia) tapa el débil ($-40$\,dB).
+    \item Hann y Blackman lo muestran. Para leer amplitudes con ventana: $A=2\abs{X[k_0]}/\sum_nw[n]$.
+    \item Regla práctica: Hann para uso general; rectangular solo si hay un número entero de periodos.
+  \end{itemize}
+  \herramienta{html/T3\_DFT\_Ventana\_dB.html}
+\end{frame}
+
+\begin{frame}{Resolución y relleno con ceros}
+  \begin{center}\includegraphics[width=0.94\linewidth]{resolucion}\end{center}
+  \begin{itemize}\small
+    \item Dos tonos se distinguen si los lóbulos principales no se funden: con la rectangular, $\abs{f_2-f_1}\gtrsim f_s/N$. Aquí, 200 y 220\,Hz a $f_s=1$\,kHz exigen $N\gtrsim50$.
+    \item \alert{Rellenar con ceros} hasta $N'>N$ interpola la DTFT (más puntos sobre la misma curva) pero \alert{no mejora la resolución}: no añade información.
+    \item La resolución solo mejora observando durante más tiempo: $\Delta f\approx1/T_{\text{obs}}$.
+  \end{itemize}
+  \herramienta{html/T3\_DFT\_Ventana.html}
+\end{frame}
+
+% =====================================================================
+\section{Potencia y densidad espectral}
+
+\begin{frame}{Potencia y densidad espectral de potencia}
+  \small
+  \begin{itemize}
+    \item Por Parseval, la potencia media de $N$ muestras se reparte entre las frecuencias:
+    \[
+      P=\frac1N\sum_{n=0}^{N-1}\abs{x[n]}^2=\sum_{k=0}^{N-1}\Big|\frac{X[k]}{N}\Big|^2
+    \]
+    \item \alert{Potencia en la muestra $k$}: $\abs{X[k]/N}^2$. Una sinusoide de amplitud $A$ aporta $A^2/4$ en $k_0$ y otro tanto en $N-k_0$.
+    \item \alert{Densidad espectral de potencia} (periodograma), en unidades$^2$/Hz:
+    \[
+      \hat\Phi_{xx}(f_k)=\frac{\abs{X[k]}^2}{N\,f_s},\qquad \sum_k\hat\Phi_{xx}(f_k)\,\Delta f=P
+    \]
+    \item En dB: $P_k=20\log_{10}\frac{\abs{X[k]}}{N}$; \ $\hat\Phi_{xx}=10\log_{10}\frac{\abs{X[k]}^2}{N f_s}$ dB/Hz.
+    \item Con ventana, $N$ se sustituye por $\sum w^2[n]$ en la densidad. El periodograma de una señal ruidosa fluctúa mucho: se promedian varios tramos (método de Welch, Tema~6).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{En código: espectro de amplitud con ventana}
+  \codigo{espectro_dft}
+  \nota{$\Delta f=5$\,Hz: el tono de 152\,Hz cae entre dos muestras, pero la ventana de Hann limita la fuga.}
+\end{frame}
+
+% =====================================================================
+\section{Espectrograma}
+
+\begin{frame}{Señales cuyo espectro cambia con el tiempo}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \small
+      La \alert{transformada de Fourier de tiempo corto} (STFT) calcula la DFT de tramos sucesivos:
+      \[
+        X_m[k]=\sum_{n=0}^{N_w-1}x[n+mR]\,w[n]\,W_{N_w}^{kn}
+      \]
+      \begin{itemize}\small
+        \item $N_w$: longitud del tramo; $R$: paso (con solape si $R<N_w$).
+        \item El \alert{espectrograma} es $\abs{X_m[k]}^2$ como imagen: tiempo $mR\,T_s$, frecuencia $kf_s/N_w$.
+        \item Tramos largos: buena resolución en frecuencia y mala en el tiempo, y al revés.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \includegraphics[width=\linewidth]{espectrograma}
+      \nota{$N_w=256$ a $f_s=8$\,kHz: $\Delta f=31{,}25$\,Hz y tramos de 32\,ms.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{En código: espectrograma}
+  \codigo[basicstyle=\ttfamily\fontsize{6.6}{7.6}\selectfont]{espectrograma}
+  \nota{\texttt{scipy.signal.spectrogram} y \texttt{spectrogram} de Matlab hacen lo mismo con más opciones.}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item $f_k=kf_s/N$, $\Delta f=f_s/N=1/T_{\text{obs}}$; $k>N/2$ son frecuencias negativas.
+        \item Amplitud de una sinusoide: $2\abs{X[k_0]}/N$.
+        \item Fuga espectral: el espectro de la señal truncada es el real convolucionado con $W$.
+        \item Ventanas: menos fuga, lóbulo más ancho.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item El relleno con ceros interpola, no resuelve.
+        \item Potencia por muestra $\abs{X[k]/N}^2$; periodograma $\abs{X[k]}^2/(Nf_s)$.
+        \item Espectrograma: DFT de tramos con ventana; compromiso tiempo–frecuencia.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 3, sección 4 · Hoja de ejercicios, ejercicios 10–13.}
+  \herramienta{html/T3\_DFT\_Editor\_Interactivo.html}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,200 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T6 · Varias variables]{Señales aleatorias}
+\subtitle{Tema 6 · Parte 2: varias variables aleatorias}
+
+\begin{document}
+\portada
+
+% =====================================================================
+\section{Distribución conjunta}
+
+\begin{frame}{Varias variables a la vez}
+  \small
+  \begin{itemize}
+    \item Muchas magnitudes aleatorias aparecen juntas: los valores de una señal en dos instantes, la entrada y la salida de un sistema, las coordenadas de un punto.
+    \item Se describen con la \alert{distribución conjunta}:
+    \[
+      F_{XY}(x,y)=P(X\le x,\,Y\le y),\qquad f_{XY}(x,y)=\frac{\partial^2F_{XY}}{\partial x\,\partial y},
+    \]
+    \[
+      P\big((X,Y)\in A\big)=\iint_Af_{XY}(x,y)\dd x\dd y .
+    \]
+    En discreto, $p_{XY}(x_i,y_j)=P(X=x_i,\,Y=y_j)$.
+    \item Para $M$ variables, $f_{X_1\cdots X_M}(x_1,\dots,x_M)$, o con notación vectorial $f_{\mathbf X}(\mathbf x)$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Marginales y condicionadas}
+  \small
+  \begin{itemize}
+    \item \alert{Marginalización}: la distribución de una variable se obtiene integrando (o sumando) las demás:
+    \[
+      f_X(x)=\int_{-\infty}^{\infty}f_{XY}(x,y)\dd y,\qquad p_X(x_i)=\sum_jp_{XY}(x_i,y_j).
+    \]
+    \item \alert{Condicionada}: la distribución de $Y$ sabiendo que $X=x$,
+    \[
+      f_{Y|X}(y|x)=\frac{f_{XY}(x,y)}{f_X(x)} .
+    \]
+    \item \alert{Regla de la cadena}: $f_{XY}=f_{Y|X}\,f_X=f_{X|Y}\,f_Y$. Con $M$ variables hay $M!$ órdenes posibles:
+    \(
+      f(x_1,\dots,x_M)=f(x_1)\,f(x_2|x_1)\cdots f(x_M|x_1,\dots,x_{M-1}).
+    \)
+    \item \alert{Teorema de Bayes}: $f_{X|Y}(x|y)=\dfrac{f_{Y|X}(y|x)\,f_X(x)}{f_Y(y)}$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo: una conjunta construida por partes}
+  \begin{center}\includegraphics[width=0.9\linewidth]{conjunta}\end{center}
+  \small
+  $X_1\sim\mathcal U[2,4]$ y, dado $X_1=x_1$, $X_2\sim\mathcal N(x_1,1)$. Por la regla de la cadena,
+  \(
+    f(x_1,x_2)=\frac12\cdot\frac1{\sqrt{2\pi}}\e^{-(x_2-x_1)^2/2}
+  \)
+  en $2\le x_1\le4$. Para muestrear se sigue el mismo orden: primero $x_1$, después $x_2$ con ese $x_1$.
+\end{frame}
+
+\begin{frame}{Independencia}
+  \begin{definicion}[Variables independientes]
+    $X$ e $Y$ son independientes si $f_{XY}(x,y)=f_X(x)\,f_Y(y)$ para todo $(x,y)$, es decir, si $f_{Y|X}(y|x)=f_Y(y)$: saber $X$ no dice nada de $Y$.
+  \end{definicion}
+  \small
+  \begin{itemize}
+    \item $M$ variables son independientes si la conjunta es el producto de las $M$ marginales. Entonces basta muestrear cada una por separado.
+    \item \alert{Independencia condicional}: $X$ e $Y$ son independientes dado $Z$ si $f_{XY|Z}=f_{X|Z}\,f_{Y|Z}$. Es la base de los modelos de Markov (parte~3).
+    \item En el ejemplo anterior $X_1$ y $X_2$ \emph{no} son independientes: la media de $X_2$ depende de $X_1$.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Correlación y covarianza}
+
+\begin{frame}{Estadísticos de un par de variables}
+  \small
+  \begin{itemize}
+    \item \alert{Correlación}: $R_{XY}=E\{XY\}=\iint xy\,f_{XY}(x,y)\dd x\dd y$.
+    \item \alert{Covarianza}: $C_{XY}=E\{(X-\mu_X)(Y-\mu_Y)\}=R_{XY}-\mu_X\mu_Y$. $C_{XX}=\sigma_X^2$.
+    \item \alert{Coeficiente de correlación}:
+    \[
+      \rho_{XY}=\frac{C_{XY}}{\sigma_X\sigma_Y},\qquad-1\le\rho_{XY}\le1 .
+    \]
+    Mide la dependencia \emph{lineal}: $\abs{\rho}=1$ si y solo si $Y=aX+b$; el signo es el de $a$.
+    \item $X$ e $Y$ son \alert{incorreladas} si $C_{XY}=0$ (es decir, $E\{XY\}=\mu_X\mu_Y$), y \alert{ortogonales} si $R_{XY}=0$.
+    \item Varianza de una suma: $\operatorname{Var}\{X+Y\}=\sigma_X^2+\sigma_Y^2+2C_{XY}$.
+  \end{itemize}
+  \nota{Las transparencias antiguas usaban $\phi$ para la correlación y $\psi$ para la covarianza; aquí $R$ y $C$, porque $\phi$ queda para las señales y $\psi$ para las wavelets (tema~5).}
+\end{frame}
+
+\begin{frame}{Incorreladas no es lo mismo que independientes}
+  \begin{center}\includegraphics[width=\linewidth]{correlacion}\end{center}
+  \small
+  \begin{itemize}
+    \item Independientes $\Rightarrow$ incorreladas: $E\{XY\}=\iint xy\,f_X f_Y=\mu_X\mu_Y$.
+    \item Al revés no: con $X\sim\mathcal U[-1,1]$ e $Y=X^2$, $C_{XY}=E\{X^3\}-0=0$, aunque $Y$ es función de $X$.
+    \item Por tanto: \alert{correladas $\Rightarrow$ dependientes}, pero la correlación nula no prueba la independencia. Excepción: variables \alert{conjuntamente gaussianas}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{En código: estimar media, covarianza y $\rho$}
+  \codigo{conjunta}
+  \nota{Teórico: $\mu_2=3$, $\sigma_2^2=1+\frac13$, $C_{12}=\operatorname{Var}\{X_1\}=\frac13$, $\rho=0{,}5$. \texttt{cov} divide por $N-1$; \texttt{corr} de Matlab necesita la Statistics Toolbox, \texttt{corrcoef} no.}
+\end{frame}
+
+% =====================================================================
+\section{Vectores aleatorios y gaussiana multivariable}
+
+\begin{frame}{Vector de medias y matriz de covarianza}
+  \small
+  Con $\mathbf X=(X_1,\dots,X_M)^T$:
+  \[
+    \boldsymbol\mu=E\{\mathbf X\},\qquad
+    \boldsymbol\Sigma=E\{(\mathbf X-\boldsymbol\mu)(\mathbf X-\boldsymbol\mu)^T\}=
+    \begin{bmatrix}\sigma_1^2&C_{12}&\cdots&C_{1M}\\C_{12}&\sigma_2^2&\cdots&C_{2M}\\\vdots&&\ddots&\vdots\\C_{1M}&C_{2M}&\cdots&\sigma_M^2\end{bmatrix}
+  \]
+  \begin{itemize}
+    \item $\boldsymbol\Sigma$ es simétrica y semidefinida positiva; diagonal si las variables están incorreladas.
+    \item \alert{Transformación lineal}: si $\mathbf Y=\mathbf A\mathbf X+\mathbf b$, entonces $\boldsymbol\mu_Y=\mathbf A\boldsymbol\mu+\mathbf b$ y $\boldsymbol\Sigma_Y=\mathbf A\boldsymbol\Sigma\mathbf A^T$.
+    \item Estimación con $N$ muestras en las filas de una matriz $N\times M$: \texttt{mean(X)}, \texttt{cov(X)}, \texttt{corrcoef(X)}. En numpy, \texttt{np.cov} espera las variables en las filas.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Gaussiana multivariable}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \small
+      \[
+        f_{\mathbf X}(\mathbf x)=\frac{\e^{-\frac12(\mathbf x-\boldsymbol\mu)^T\boldsymbol\Sigma^{-1}(\mathbf x-\boldsymbol\mu)}}{\sqrt{(2\pi)^M\det\boldsymbol\Sigma}}
+      \]
+      \begin{itemize}
+        \item Queda determinada por $\boldsymbol\mu$ y $\boldsymbol\Sigma$.
+        \item Curvas de nivel: elipses con ejes en los autovectores de $\boldsymbol\Sigma=\mathbf V\boldsymbol\Lambda\mathbf V^T$ y semiejes $\propto\sqrt{\lambda_k}$.
+        \item Marginales, condicionadas y transformaciones lineales son gaussianas.
+        \item Incorreladas $\Leftrightarrow$ $\boldsymbol\Sigma$ diagonal $\Leftrightarrow$ independientes.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \includegraphics[width=\linewidth]{gaussiana2d}
+      \nota{$\boldsymbol\mu=(1,2)$, $\boldsymbol\Sigma=\begin{bsmallmatrix}2&1{,}2\\1{,}2&1\end{bsmallmatrix}$: $\lambda=0{,}2$ y $2{,}8$, $\rho=0{,}85$.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Muestrear una gaussiana multivariable}
+  \small
+  \begin{itemize}
+    \item Se generan $M$ gaussianas $\mathcal N(0,1)$ independientes, $\mathbf z$, y se transforman: $\mathbf x=\boldsymbol\mu+\mathbf L\mathbf z$, con $\mathbf L\mathbf L^T=\boldsymbol\Sigma$. Por la transformación lineal, $\boldsymbol\Sigma_X=\mathbf L\mathbf I\mathbf L^T=\boldsymbol\Sigma$.
+    \item $\mathbf L$: la factorización de Cholesky (\texttt{chol}) o $\mathbf V\boldsymbol\Lambda^{1/2}$ (\texttt{eig}): rotar y escalar.
+  \end{itemize}
+  \codigo[basicstyle=\ttfamily\fontsize{6.6}{7.5}\selectfont]{gaussiana_nd}
+\end{frame}
+
+% =====================================================================
+\section{Suma de variables y teorema del límite central}
+
+\begin{frame}{Suma de variables independientes}
+  \begin{center}\includegraphics[width=0.8\linewidth]{tcl}\end{center}
+  \small
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      $S=X+Y$ con $X$ e $Y$ independientes:
+      \begin{itemize}
+        \item $\mu_S=\mu_X+\mu_Y$ (siempre); $\sigma_S^2=\sigma_X^2+\sigma_Y^2$ (basta incorreladas).
+        \item $f_S=f_X\conv f_Y$: la densidad de la suma es la \alert{convolución} de las densidades. Dos $\mathcal U[0,1]$ dan un triángulo en $[0,2]$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{importante}[Teorema del límite central]
+        La suma de muchas variables independientes con varianza finita, normalizada, tiende a una gaussiana, sea cual sea su distribución.
+      \end{importante}
+      \nota{En la figura, $Z=(S-n/2)/\sqrt{n/12}$. Por eso el ruido térmico es gaussiano.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Conjunta, marginal (integrar), condicionada; cadena y Bayes.
+        \item Independencia: la conjunta es el producto.
+        \item $R_{XY}$, $C_{XY}=R_{XY}-\mu_X\mu_Y$, $\rho\in[-1,1]$.
+        \item Independientes $\Rightarrow$ incorreladas; no al revés, salvo gaussianas.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item $\boldsymbol\mu$, $\boldsymbol\Sigma$; $\boldsymbol\Sigma_Y=\mathbf A\boldsymbol\Sigma\mathbf A^T$.
+        \item Gaussiana multivariable; muestreo $\boldsymbol\mu+\mathbf L\mathbf z$.
+        \item Suma: medias y varianzas se suman; densidades se convolucionan; TCL.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 6, sección 2 · Hoja de ejercicios, ejercicios 6–10.}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,260 @@
+\documentclass[11pt,a4paper]{scrartcl}
+\input{../../comun/pds-apuntes}
+\tema{3}{Transformada discreta de Fourier}
+
+\begin{document}
+\ifsoluciones\cabecera{Ejercicios resueltos}\else\cabecera{Ejercicios}\fi
+
+Los ejercicios 1–4 corresponden a la parte~1 del tema (de la DTFT a la DFT), los ejercicios 5–9 a la parte~2 (propiedades y convolución circular), los ejercicios 10–13 a la parte~3 (análisis espectral) y los ejercicios 14–16 a la parte~4 (FFT y convolución rápida). Se usa $W_N=\e^{-j2\pi/N}$ y $((n))_N=n\bmod N$. Las secuencias se dan como listas que empiezan en $n=0$. Muchos resultados se pueden comprobar con \texttt{fft} y con los ejemplos de \texttt{teoría/T3/codigo/}.
+
+% =====================================================================
+\section*{De la DTFT a la DFT}
+
+\begin{ejercicio}[DFT a mano]
+  Calcula la DFT de 4 puntos de $x=(1,2,0,1)$ con la matriz $\mathbf W_4$, y comprueba el resultado aplicando la IDFT.
+\end{ejercicio}
+\begin{solucion}
+  Con $W_4=-j$:
+  \[
+    \begin{pmatrix}X[0]\\X[1]\\X[2]\\X[3]\end{pmatrix}=
+    \begin{pmatrix}1&1&1&1\\1&-j&-1&j\\1&-1&1&-1\\1&j&-1&-j\end{pmatrix}
+    \begin{pmatrix}1\\2\\0\\1\end{pmatrix}=
+    \begin{pmatrix}4\\1-j\\-2\\1+j\end{pmatrix}.
+  \]
+  $X[3]=X^*[1]$ porque $x$ es real. La IDFT, $\frac14\mathbf W_4^*\mathbf X$, da por ejemplo $x[0]=\frac14(4+1-j-2+1+j)=1$ y $x[1]=\frac14\big(4+j(1-j)+2-j(1+j)\big)=\frac14(4+1+j+2+1-j)=2$.
+\end{solucion}
+
+\begin{ejercicio}[DFT de secuencias básicas]
+  Calcula, sin hacer las sumas término a término, la DFT de $N=8$ puntos de:
+  \begin{incisos}[3]
+    \item $\delta[n]$
+    \item $\delta[n-2]$
+    \item $1$ para todo $n$
+    \item $\cos(\pi n/2)$
+    \item $\e^{j\pi n/4}$
+    \item $(-1)^n$
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $X[k]=1$ para todo $k$.
+    \item $X[k]=W_8^{2k}=(-j)^k=(1,-j,-1,j,1,-j,-1,j)$.
+    \item $X[k]=8\,\delta[k]$: solo la componente continua.
+    \item $\cos(\pi n/2)=\frac12\big(\e^{j\frac{2\pi}{8}2n}+\e^{-j\frac{2\pi}{8}2n}\big)$ da dos vueltas en 8 muestras: $X[2]=X[6]=4$ y el resto, cero.
+    \item Da una vuelta: $X[k]=8\,\delta[k-1]$.
+    \item $(-1)^n=\e^{j\frac{2\pi}{8}4n}$: $X[k]=8\,\delta[k-4]$, la frecuencia $\Omega=\pi$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[aliasing temporal]
+  La secuencia $x=(1,2,3,4,5,6)$ tiene DTFT $\Xd$. Se toman $N=4$ muestras equiespaciadas de $\Xd$ en $[0,2\pi)$ y se calcula su IDFT.
+  \begin{incisos}[1]
+    \item ¿Qué secuencia se obtiene?
+    \item ¿Cuál es el menor $N$ que permite recuperar $x[n]$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Un periodo de la extensión periódica de periodo 4: $\tilde x[n]=x[n]+x[n+4]$, es decir, $(1+5,\ 2+6,\ 3,\ 4)=(6,8,3,4)$.
+    \item $N\ge L=6$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[DFT de una secuencia infinita]
+  Sea $x[n]=0{,}5^nu[n]$.
+  \begin{incisos}[1]
+    \item Obtén $X[k]$, las $N=4$ muestras de su DTFT en $\Omega_k=2\pi k/4$.
+    \item Calcula la IDFT de esas muestras y compárala con $x[n]$ para $n=0,\dots,3$.
+    \item ¿Qué $N$ hace falta para que el error sea menor que $10^{-3}$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $X[k]=\dfrac{1}{1-0{,}5W_4^k}$: $X=(2;\ 0{,}8-0{,}4j;\ 0{,}667;\ 0{,}8+0{,}4j)$.
+    \item $\tilde x[n]=\sum_mx[n+4m]=\frac{0{,}5^n}{1-0{,}5^4}=1{,}0667\cdot0{,}5^n$: $(1{,}067;\ 0{,}533;\ 0{,}267;\ 0{,}133)$, cada valor un $6{,}7$\,\% mayor que $x[n]$ por el aliasing temporal.
+    \item El error relativo es $\frac{0{,}5^N}{1-0{,}5^N}\approx0{,}5^N$, y el absoluto, como mucho en $n=0$, lo mismo. $0{,}5^N<10^{-3}$ exige $N\ge10$.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Propiedades y convolución circular}
+
+\begin{ejercicio}[simetría y Parseval]
+  Una secuencia real de longitud 8 tiene $X[0]=10$, $X[1]=2+j$, $X[2]=-1-2j$, $X[3]=3$ y $X[4]=-2$.
+  \begin{incisos}[1]
+    \item Completa $X[5]$, $X[6]$ y $X[7]$.
+    \item Calcula $x[0]$ y $\sum_nx[n]$ sin calcular la IDFT completa.
+    \item Calcula la energía $\sum_n\abs{x[n]}^2$.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $X[k]=X^*[8-k]$: $X[5]=X^*[3]=3$, $X[6]=X^*[2]=-1+2j$, $X[7]=X^*[1]=2-j$.
+    \item $\sum_nx[n]=X[0]=10$. $x[0]=\frac18\sum_kX[k]=\frac18(10+2+j-1-2j+3-2+3-1+2j+2-j)=\frac{16}{8}=2$.
+    \item Por Parseval, $\frac18\sum_k\abs{X[k]}^2=\frac18(100+5+5+9+4+9+5+5)=\frac{142}8=17{,}75$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[desplazamiento y modulación]
+  Para $x=(1,2,0,1)$, con la DFT del ejercicio~1, obtén sin calcular ninguna DFT nueva:
+  \begin{incisos}[1]
+    \item la DFT de $y[n]=x[((n-2))_4]$;
+    \item la DFT de $z[n]=(-1)^nx[n]$;
+    \item la secuencia cuya DFT es $X[((-k))_4]$.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $y=(0,1,1,2)$ y $Y[k]=W_4^{2k}X[k]=(-1)^kX[k]=(4,\ -1+j,\ -2,\ -1-j)$.
+    \item $(-1)^n=W_4^{-2n}$, así que $Z[k]=X[((k-2))_4]=(X[2],X[3],X[0],X[1])=(-2,\ 1+j,\ 4,\ 1-j)$; $z=(1,-2,0,-1)$.
+    \item La inversión circular $x[((-n))_4]=(x[0],x[3],x[2],x[1])=(1,1,0,2)$. Como $x$ es real, $X[((-k))_4]=X^*[k]$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[convolución circular a mano]
+  Sean $x=(1,2,3,4)$ y $h=(1,1)$.
+  \begin{incisos}[1]
+    \item Calcula la convolución lineal $x\conv h$.
+    \item Calcula la convolución circular de 4 puntos y compárala con la lineal.
+    \item ¿Qué $N$ hace falta para que coincidan?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $y[n]=x[n]+x[n-1]=(1,3,5,7,4)$.
+    \item $(x\cconv4h)[n]=x[n]+x[((n-1))_4]$: $(1+4,\ 2+1,\ 3+2,\ 4+3)=(5,3,5,7)$. Es la lineal plegada con periodo 4: la muestra $y[4]=4$ se suma a $y[0]=1$.
+    \item $N\ge L+M-1=5$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[longitud de la DFT para filtrar]
+  Una señal de $L=100$ muestras se filtra con un FIR de $M=30$ coeficientes usando la DFT.
+  \begin{incisos}[1]
+    \item ¿Cuál es el menor $N$ que da la convolución lineal? ¿Y la menor potencia de 2?
+    \item Si por error se usa $N=128$, ¿qué muestras de la salida son incorrectas?
+    \item Si se usa $N=100$, ¿qué muestras de la salida son correctas?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item La salida tiene $L+M-1=129$ muestras: $N\ge129$, y la menor potencia de 2 es 256.
+    \item La circular de 128 puntos es $y[n]+y[n+128]$, y solo $y[128]$ cae fuera: se suma a $y[0]$. Solo $y[0]$ es incorrecta.
+    \item Ahora $y_c[n]=y[n]+y[n+100]$ con $y[n+100]\ne0$ para $n+100\le128$, es decir, $n\le28$. Son correctas las muestras $n=29,\dots,99$: todas menos las $M-1=29$ primeras. Es el fundamento del solapamiento y almacenamiento.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[secuencias pares]
+  \begin{incisos}[1]
+    \item Calcula la DFT de 4 puntos de $x=(4,1,0,1)$ y explica por qué es real.
+    \item Demuestra que si $x[n]$ es real y par circular ($x[n]=x[((-n))_N]$), su DFT es real y par.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $X[k]=4+W_4^k+W_4^{3k}=4+2\cos(\pi k/2)$: $X=(6,4,2,4)$. Es real porque $x[1]=x[3]$: la secuencia es par circular.
+    \item Por la inversión, $x[((-n))_N]\leftrightarrow X[((-k))_N]$, así que $X[k]=X[((-k))_N]$ (par). Por ser real, $X[k]=X^*[((-k))_N]$. Juntando las dos, $X[k]=X^*[k]$: es real.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Análisis espectral}
+
+\begin{ejercicio}[eje de frecuencias]
+  Se calcula la DFT de $N=512$ muestras de una señal muestreada a $f_s=8$\,kHz.
+  \begin{incisos}[1]
+    \item ¿Cuál es la separación entre muestras de la DFT y la duración del registro?
+    \item ¿En qué muestras aparece un tono de 1\,kHz?
+    \item ¿A qué frecuencia corresponde la muestra $k=300$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\Delta f=8000/512=15{,}625$\,Hz; $T_{\text{obs}}=512/8000=64$\,ms $=1/\Delta f$.
+    \item $k_0=1000/15{,}625=64$ y su imagen $N-k_0=448$.
+    \item $k=300>N/2=256$: es una frecuencia negativa, $(300-512)\cdot15{,}625=-3312{,}5$\,Hz. Si la señal es real, $X[300]=X^*[212]$, que corresponde a $+3312{,}5$\,Hz.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[amplitudes con y sin ventana]
+  La señal $x(t)=3\cos(2\pi\,1000\,t)+\cos(2\pi\,2500\,t+\pi/4)$ se muestrea a $f_s=8$\,kHz y se toman $N=64$ muestras.
+  \begin{incisos}[1]
+    \item ¿En qué muestras $k\le N/2$ aparecen los tonos? ¿Cuánto valen $\abs{X[k]}$ y $\arg X[k]$ en ellas?
+    \item Repite el cálculo con la ventana de Hann periódica, $w[n]=\frac12-\frac12\cos(2\pi n/N)$. ¿Qué valen las muestras vecinas de cada pico?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\Delta f=125$\,Hz: los tonos caen exactamente en $k=8$ y $k=20$. $\abs{X[8]}=\frac{3\cdot64}2=96$ con fase 0, y $\abs{X[20]}=\frac{64}{2}=32$ con fase $\pi/4$. El resto de las muestras son nulas.
+    \item $w[n]=\frac12-\frac14\e^{j2\pi n/N}-\frac14\e^{-j2\pi n/N}$, así que cada línea se convierte en tres: $\frac12$ en $k_0$ y $-\frac14$ en $k_0\pm1$, multiplicando la DFT sin ventana. Con $\sum w=N/2=32$: $X_w[8]=48$, $X_w[7]=X_w[9]=-24$; $\abs{X_w[20]}=16$ y $\abs{X_w[19]}=\abs{X_w[21]}=8$. La amplitud se recupera con $2\abs{X_w[k_0]}/\sum w$: $2\cdot48/32=3$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[resolución]
+  Se quieren distinguir dos tonos de 1000 y 1030\,Hz muestreados a $f_s=8$\,kHz.
+  \begin{incisos}[1]
+    \item ¿Cuántas muestras hacen falta, aproximadamente, con la ventana rectangular? ¿Y con la de Hann?
+    \item ¿Se pueden distinguir con $N=128$ muestras rellenando con ceros hasta 4096? Justifícalo.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Con la rectangular, $f_s/N<30$\,Hz: $N>267$, unos 33\,ms de señal. Con Hann, el lóbulo principal es el doble de ancho: $N>533$, unos 67\,ms.
+    \item No. El relleno con ceros da más muestras de la DTFT de las mismas 128 muestras, cuyo lóbulo principal (semianchura $f_s/N=62{,}5$\,Hz) es mucho más ancho que la separación de los tonos. Se ve un único pico.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[potencia y densidad espectral]
+  La señal $x[n]=2\cos(2\pi\,100\,n/f_s)+v[n]$, con $f_s=1$\,kHz y $v[n]$ ruido blanco de varianza $\sigma^2=0{,}01$, se analiza con $N=1000$ muestras.
+  \begin{incisos}[1]
+    \item ¿Cuánto vale la potencia por muestra, $\abs{X[k]/N}^2$, en el tono y, en promedio, en el ruido? Exprésalo en dB.
+    \item ¿Y la densidad espectral estimada por el periodograma, en dB/Hz?
+    \item ¿Qué cambia si se duplica $N$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item El tono cae en $k_0=100$: $\abs{X[k_0]}=AN/2$ y la potencia por muestra es $A^2/4=1$, 0\,dB. Para el ruido, $E\abs{V[k]}^2=N\sigma^2$, así que la potencia media por muestra es $\sigma^2/N=10^{-5}$, $-50$\,dB.
+    \item Ruido: $\sigma^2/f_s=10^{-5}$\,/Hz, $-50$\,dB/Hz. Tono: $\frac{(AN/2)^2}{Nf_s}=\frac{A^2N}{4f_s}=1$, 0\,dB/Hz.
+    \item La potencia por muestra del tono sigue siendo 0\,dB y la del ruido baja a $-53$\,dB. En densidad, el ruido sigue en $-50$\,dB/Hz y el pico del tono sube a 3\,dB/Hz. En los dos casos el tono sobresale 3\,dB más: alargar el registro ayuda a detectar tonos en ruido. (Simulado promediando 200 realizaciones.)
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{FFT y convolución rápida}
+
+\begin{ejercicio}[coste de la FFT]
+  Un procesador hace un producto complejo cada nanosegundo. ¿Cuánto tarda en calcular una DFT de $N=4096$ puntos directamente y con una FFT en base 2? Ignora las sumas.
+\end{ejercicio}
+\begin{solucion}
+  Directa: $N^2=1{,}68\cdot10^7$ productos, $16{,}8$\,ms. FFT: $\frac N2\log_2N=2048\cdot12=24\,576$ productos, $24{,}6$\,µs. Es unas 680 veces más rápida.
+\end{solucion}
+
+\begin{ejercicio}[FFT de cuatro puntos]
+  Calcula la DFT de $x=(1,3,4,0)$ con el algoritmo de diezmado en el tiempo: separa las muestras pares e impares, calcula sus DFT de 2 puntos y combínalas con las mariposas. Dibuja el diagrama de flujo y cuenta los productos.
+\end{ejercicio}
+\begin{solucion}
+  Pares $(1,4)$: $F=(1+4,\ 1-4)=(5,-3)$. Impares $(3,0)$: $G=(3,3)$. Con $W_4^0=1$ y $W_4^1=-j$:
+  \begin{align*}
+    X[0]&=F[0]+G[0]=8, & X[1]&=F[1]-jG[1]=-3-3j,\\
+    X[2]&=F[0]-G[0]=2, & X[3]&=F[1]+jG[1]=-3+3j.
+  \end{align*}
+  Coincide con la DFT directa. Hay $\frac N2\log_2N=4$ productos, todos por $\pm1$ o $\pm j$, es decir, triviales; la DFT directa necesita 16.
+\end{solucion}
+
+\begin{ejercicio}[solapamiento y suma]
+  Un sistema de audio a 48\,kHz filtra en tiempo real con un FIR de $M=101$ coeficientes por solapamiento y suma con FFT de $N=1024$ puntos.
+  \begin{incisos}[1]
+    \item ¿Qué longitud $L$ deben tener los bloques? ¿Cuántos bloques se procesan por segundo?
+    \item ¿Cuántos productos complejos por muestra de salida necesita, si $H[k]$ se calcula una vez? Compáralo con la convolución directa.
+    \item ¿Qué retardo introduce el procesado por bloques?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $L=N-M+1=924$ muestras; $48\,000/924\approx52$ bloques por segundo.
+    \item Por bloque: una FFT, $N$ productos y una IFFT, $2\cdot512\cdot10+1024=11\,264$ productos complejos, unos $12{,}2$ por muestra de salida (unos 49 reales). La convolución directa necesita 101 productos reales por muestra: la FFT es unas dos veces más barata, y la ventaja crece con $M$.
+    \item Al menos un bloque, $924/48\,000\approx19$\,ms, más el tiempo de cálculo.
+  \end{enumerate}
+\end{solucion}
+
+\end{document}

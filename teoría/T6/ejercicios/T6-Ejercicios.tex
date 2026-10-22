@@ -1,0 +1,323 @@
+\documentclass[11pt,a4paper]{scrartcl}
+\input{../../comun/pds-apuntes}
+\tema{6}{Señales aleatorias}
+
+\begin{document}
+\ifsoluciones\cabecera{Ejercicios resueltos}\else\cabecera{Ejercicios}\fi
+
+Los ejercicios 1–5 corresponden a la parte~1 del tema (variables aleatorias y muestreo), los ejercicios 6–10 a la parte~2 (varias variables), los ejercicios 11–14 a la parte~3 (señales aleatorias) y los ejercicios 15–18 a la parte~4 (análisis espectral). Se usa la notación de los apuntes: $\phi_{xx}[l]=E\{x[n+l]x[n]\}$, $\phi_{yx}[l]=E\{y[n+l]x[n]\}$ y $\Phi_{xx}(\e^{j\Omega})$ para la densidad espectral de potencia. Los resultados se pueden comprobar con los ejemplos de \texttt{teoría/T6/codigo/}.
+
+% =====================================================================
+\section*{Variables aleatorias}
+
+\begin{ejercicio}[un dado cargado]
+  Un dado está cargado de forma que el seis sale la mitad de las veces y las otras caras son equiprobables.
+  \begin{incisos}[1]
+    \item Escribe su función de probabilidad $p_X(x)$ y dibuja su función de distribución $F_X(x)$.
+    \item Calcula la media, el valor cuadrático medio y la varianza. Compáralos con los de un dado equilibrado.
+    \item ¿Cuánto vale $P(X\ge5)$?
+    \item Con el método de la ruleta, ¿qué valor se obtiene para $u=0{,}37$? ¿Y para $u=0{,}62$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $p_X(x)=0{,}1$ para $x=1,\dots,5$ y $p_X(6)=0{,}5$. $F_X$ es una escalera con saltos de 0,1 en 1, 2, 3, 4 y 5 y un salto de 0,5 en 6: vale 0,1, 0,2, 0,3, 0,4, 0,5 y 1.
+    \item $\mu_X=0{,}1(1+2+3+4+5)+0{,}5\cdot6=4{,}5$; $E\{X^2\}=0{,}1(1+4+9+16+25)+0{,}5\cdot36=23{,}5$; $\sigma_X^2=23{,}5-4{,}5^2=3{,}25$. El dado equilibrado tiene $\mu=3{,}5$, $E\{X^2\}=91/6\approx15{,}2$ y $\sigma^2=35/12\approx2{,}92$.
+    \item $P(X\ge5)=0{,}1+0{,}5=0{,}6$.
+    \item Se busca el tramo $F_X(x_{i-1})\le u<F_X(x_i)$. Para $u=0{,}37$, $0{,}3\le0{,}37<0{,}4$ y sale un 4. Para $u=0{,}62$, $0{,}5\le0{,}62<1$ y sale un 6.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[variable uniforme]
+  \begin{incisos}[1]
+    \item Demuestra que si $X\sim\mathcal U[a,b]$, entonces $\mu_X=\frac{a+b}2$, $E\{X^2\}=\frac{a^2+ab+b^2}3$ y $\sigma_X^2=\frac{(b-a)^2}{12}$.
+    \item Para $X\sim\mathcal U[2,6]$, calcula $\mu_X$, $E\{X^2\}$, $\sigma_X^2$ y $P(X>5)$.
+    \item El error de cuantificación de un conversor con escalón $\Delta$ se modela como $\mathcal U[-\Delta/2,\Delta/2]$. ¿Qué potencia tiene?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Integrando,
+    \[
+      \mu_X=\frac1{b-a}\int_a^bx\dd x=\frac{b^2-a^2}{2(b-a)}=\frac{a+b}2,\qquad E\{X^2\}=\frac{b^3-a^3}{3(b-a)}=\frac{a^2+ab+b^2}3,
+    \]
+    y restando, $\sigma_X^2=\frac{4a^2+4ab+4b^2-3a^2-6ab-3b^2}{12}=\frac{(b-a)^2}{12}$.
+    \item $\mu_X=4$, $\sigma_X^2=16/12=4/3$, $E\{X^2\}=4/3+16=52/3\approx17{,}3$ y $P(X>5)=1/4$.
+    \item Media nula, así que la potencia es la varianza: $\Delta^2/12$, el resultado del Tema~2.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[variable gaussiana]
+  Sea $X\sim\mathcal N(5,4)$ (media 5 y varianza 4). Usa $\Phi(1)=0{,}8413$ y $\Phi(2)=0{,}9772$.
+  \begin{incisos}[1]
+    \item Calcula $P(3<X<9)$.
+    \item ¿Qué distribución tiene $Y=3X-2$?
+    \item ¿Entre qué valores cae $X$ el 95,4\,\% de las veces?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Con $\sigma=2$, $Z=(X-5)/2\sim\mathcal N(0,1)$ y $P(3<X<9)=P(-1<Z<2)=\Phi(2)-\Phi(-1)=0{,}9772-(1-0{,}8413)=0{,}8186$.
+    \item Una transformación lineal de una gaussiana es gaussiana: $Y\sim\mathcal N(3\cdot5-2,\ 9\cdot4)=\mathcal N(13,36)$.
+    \item En $\mu\pm2\sigma$, es decir, entre 1 y 9.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[generar muestras]
+  \begin{incisos}[1]
+    \item La distribución de Rayleigh tiene $F_X(x)=1-\e^{-x^2/(2\sigma^2)}$ para $x\ge0$. Obtén la fórmula para generarla con el método de la inversa a partir de $U\sim\mathcal U[0,1]$.
+    \item Se quiere muestrear $f_X(x)=6x(1-x)$ en $[0,1]$ por aceptación y rechazo con una propuesta uniforme. ¿Cuál es la menor constante $M$ válida? ¿Qué fracción de candidatos se acepta?
+    \item ¿Cuántos números aleatorios uniformes se gastan, en media, por cada muestra aceptada?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Se resuelve $u=1-\e^{-x^2/(2\sigma^2)}$: $x=\sigma\sqrt{-2\ln(1-u)}$. Como $1-U$ también es uniforme, vale igual $x=\sigma\sqrt{-2\ln u}$, que es el radio de Box–Muller.
+    \item Hace falta $Mq(x)\ge f_X(x)$ con $q=1$. El máximo de $6x(1-x)$ está en $x=1/2$ y vale $1{,}5$, así que $M=1{,}5$. Se acepta una fracción $1/M=2/3$.
+    \item Cada candidato gasta dos uniformes (uno para $x$ y otro para decidir), y hacen falta en media $M=1{,}5$ candidatos por muestra: tres uniformes por muestra aceptada.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[estimadores y Monte Carlo]
+  \begin{incisos}[1]
+    \item Con $N$ muestras independientes de una variable de desviación típica $\sigma=1$, ¿cuántas hacen falta para que la media estimada esté a menos de $\pm0{,}01$ de la verdadera con un 95\,\% de probabilidad?
+    \item ¿Por qué el estimador insesgado de la varianza divide entre $N-1$? ¿Qué dividen \texttt{var} de Matlab y \texttt{np.var} de Python?
+    \item Un histograma de 10\,000 muestras con intervalos de anchura $\Delta=0{,}5$ tiene 1\,200 muestras en un intervalo. ¿Qué altura tiene la barra normalizada como densidad?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item La media estimada tiene desviación típica $\sigma/\sqrt N$ y, por el teorema del límite central, es aproximadamente gaussiana. El 95\,\% cae en $\pm1{,}96\sigma/\sqrt N$, así que $1{,}96/\sqrt N\le0{,}01$ y $N\ge38\,416$: unas 40\,000 muestras. Cada cifra decimal más multiplica $N$ por cien.
+    \item Las desviaciones se miden respecto a $\hat\mu$, que está más cerca de las muestras que la media verdadera, y la suma de cuadrados sale en media $(N-1)\sigma^2$. \texttt{var(x)} divide entre $N-1$; \texttt{np.var(x)} divide entre $N$ salvo que se pida \texttt{ddof=1}.
+    \item $\hat f=\frac{n_j}{N\Delta}=\frac{1200}{10000\cdot0{,}5}=0{,}24$.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Varias variables aleatorias}
+
+\begin{ejercicio}[una conjunta discreta]
+  Las variables $X\in\{0,1\}$ e $Y\in\{0,1,2\}$ tienen la probabilidad conjunta del cuadro~\ref{tab:conjunta}.
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{c|ccc}
+      & $Y=0$ & $Y=1$ & $Y=2$\\\hline
+      $X=0$ & 0,1 & 0,2 & 0,1\\
+      $X=1$ & 0,2 & 0,1 & 0,3
+    \end{tabular}
+    \caption{Probabilidad conjunta $p_{XY}(x,y)$.}
+    \label{tab:conjunta}
+  \end{table}
+  \begin{incisos}[1]
+    \item Calcula las marginales. ¿Son independientes?
+    \item Calcula $p_{Y|X}(y\,|\,1)$.
+    \item Calcula $E\{X\}$, $E\{Y\}$, $R_{XY}$, $C_{XY}$ y $\rho_{XY}$.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Sumando filas y columnas, $p_X=(0{,}4;\,0{,}6)$ y $p_Y=(0{,}3;\,0{,}3;\,0{,}4)$. No son independientes: $p_{XY}(0,0)=0{,}1\ne p_X(0)p_Y(0)=0{,}12$.
+    \item Se divide la segunda fila entre $p_X(1)=0{,}6$: $p_{Y|X}(\cdot\,|\,1)=(1/3;\,1/6;\,1/2)$.
+    \item $E\{X\}=0{,}6$; $E\{Y\}=0{,}3+2\cdot0{,}4=1{,}1$; $R_{XY}=E\{XY\}=1\cdot0{,}1+2\cdot0{,}3=0{,}7$; $C_{XY}=0{,}7-0{,}6\cdot1{,}1=0{,}04$. Con $\sigma_X^2=0{,}6-0{,}36=0{,}24$ y $\sigma_Y^2=1{,}9-1{,}21=0{,}69$, $\rho_{XY}=0{,}04/\sqrt{0{,}24\cdot0{,}69}=0{,}098$: casi incorreladas, aunque dependientes.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[una conjunta construida por partes]
+  Sea $X_1\sim\mathcal U[2,4]$ y, dado $X_1=x_1$, $X_2\sim\mathcal N(x_1,1)$ (el ejemplo de los apuntes).
+  \begin{incisos}[1]
+    \item Escribe $X_2=X_1+Z$. ¿Qué distribución tiene $Z$ y es independiente de $X_1$?
+    \item Calcula $\mu_2$, $\sigma_2^2$, $C_{12}$ y $\rho_{12}$.
+    \item ¿Es $X_2$ gaussiana?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $Z=X_2-X_1\sim\mathcal N(0,1)$ para cualquier valor de $X_1$; como su distribución condicionada no depende de $x_1$, $Z$ es independiente de $X_1$.
+    \item $\mu_2=\mu_1+0=3$. Por independencia, $\sigma_2^2=\sigma_1^2+1=\frac{4}{12}+1=\frac43$. $C_{12}=E\{(X_1-3)(X_1-3+Z)\}=\sigma_1^2=\frac13$. $\rho_{12}=\frac{1/3}{\sqrt{(1/3)(4/3)}}=\frac12$.
+    \item No: su densidad es la convolución de la uniforme con la gaussiana, una gaussiana «ensanchada» con la parte central plana.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[incorreladas pero dependientes]
+  Sea $X\sim\mathcal U[-1,1]$ e $Y=X^2$.
+  \begin{incisos}[1]
+    \item Calcula $C_{XY}$.
+    \item ¿Son independientes? Razónalo con $P(Y>1/4\,|\,X=0)$.
+    \item ¿Puede pasar lo mismo con dos variables conjuntamente gaussianas?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $C_{XY}=E\{X^3\}-E\{X\}E\{X^2\}=0-0=0$, porque la densidad de $X$ es par.
+    \item No: $P(Y>1/4)=P(\abs X>1/2)=1/2$, pero $P(Y>1/4\,|\,X=0)=0$. Conocer $X$ fija $Y$ por completo. La correlación solo mide dependencia lineal.
+    \item No. Si son conjuntamente gaussianas e incorreladas, $\boldsymbol\Sigma$ es diagonal, la densidad conjunta se factoriza y son independientes.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[sumas y teorema del límite central]
+  \begin{incisos}[1]
+    \item Calcula la densidad de $S=X_1+X_2$ con $X_1,X_2\sim\mathcal U[0,1]$ independientes.
+    \item Se suman 12 uniformes $\mathcal U[0,1]$ independientes y se resta 6. ¿Qué media y varianza tiene el resultado? ¿Por qué es un generador aproximado de $\mathcal N(0,1)$?
+    \item ¿Qué le falta a esa aproximación en las colas?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item La convolución de dos pulsos de anchura 1 es un triángulo: $f_S(s)=s$ en $[0,1]$, $2-s$ en $[1,2]$ y cero fuera.
+    \item Media $12\cdot\frac12-6=0$ y varianza $12\cdot\frac1{12}=1$. Por el teorema del límite central, la suma de 12 variables independientes es ya casi gaussiana (figura de los apuntes).
+    \item El resultado está acotado en $[-6,6]$, así que $P(\abs Z>6)=0$, mientras que la gaussiana da unos $2\cdot10^{-9}$. Para simular sucesos muy raros no sirve.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[gaussiana bidimensional]
+  Un vector gaussiano tiene media nula y covarianza $\boldsymbol\Sigma=\begin{pmatrix}2&1{,}2\\1{,}2&1\end{pmatrix}$.
+  \begin{incisos}[1]
+    \item Calcula el coeficiente de correlación.
+    \item Calcula los autovalores de $\boldsymbol\Sigma$. ¿Qué forma tienen las curvas de nivel?
+    \item Calcula el factor de Cholesky $\mathbf L$ y explica cómo generar muestras a partir de dos $\mathcal N(0,1)$ independientes.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\rho=1{,}2/\sqrt{2\cdot1}=0{,}849$.
+    \item $\lambda^2-3\lambda+0{,}56=0$, de donde $\lambda=2{,}8$ y $\lambda=0{,}2$. Las curvas de nivel son elipses con los ejes en la dirección de los autovectores y semiejes proporcionales a $\sqrt{2{,}8}=1{,}67$ y $\sqrt{0{,}2}=0{,}45$: muy alargadas, inclinadas hacia la diagonal.
+    \item $L_{11}=\sqrt2=1{,}414$, $L_{21}=1{,}2/\sqrt2=0{,}849$, $L_{22}=\sqrt{1-0{,}72}=0{,}529$. Con $\mathbf z\sim\mathcal N(\mathbf0,\mathbf I)$, $\mathbf x=\mathbf L\mathbf z$ tiene covarianza $\mathbf L\mathbf L^T=\boldsymbol\Sigma$: $x_1=1{,}414z_1$ y $x_2=0{,}849z_1+0{,}529z_2$.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Señales aleatorias}
+
+\begin{ejercicio}[estacionariedad y ergodicidad]
+  Sea $w[n]$ ruido blanco gaussiano de media nula y varianza $\sigma^2$, $A\sim\mathcal N(0,1)$ y $\theta\sim\mathcal U[0,2\pi)$, independientes. Para cada señal, di si es estacionaria en sentido amplio y si es ergódica en media:
+  \begin{incisos}[2]
+    \item $x[n]=A\cos(\Omega_0n)$.
+    \item $x[n]=\cos(\Omega_0n+\theta)$, $0<\Omega_0<\pi$.
+    \item $x[n]=A$.
+    \item $x[n]=w[n]+w[n-1]$.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Media nula, pero $E\{x[n+l]x[n]\}=\cos(\Omega_0(n+l))\cos(\Omega_0n)$ depende de $n$: no es ESA. Cada realización es un coseno de amplitud fija.
+    \item Es ESA: media nula y $\phi_{xx}[l]=\frac12\cos(\Omega_0l)$ (sinusoide de fase aleatoria). Es ergódica en media: el promedio temporal de cualquier coseno es cero.
+    \item ESA (media 0, $\phi_{xx}[l]=1$) pero no ergódica: cada realización es una constante distinta y su promedio temporal es $A$, no 0.
+    \item ESA, con media nula, $\phi_{xx}[0]=2\sigma^2$, $\phi_{xx}[\pm1]=\sigma^2$ y cero para $\abs l\ge2$. Es ergódica: muestras separadas más de una posición son independientes.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[paseo aleatorio]
+  Sea $x[n]=\sum_{k=1}^nw[k]$ para $n\ge1$, con $w[k]$ i.i.d. de media $\mu$ y varianza $\sigma^2$.
+  \begin{incisos}[1]
+    \item Calcula la media y la varianza de $x[n]$.
+    \item Con $\mu=0$, demuestra que $\phi_{xx}[n_1,n_2]=\sigma^2\min(n_1,n_2)$.
+    \item ¿Es estacionaria? ¿Es un proceso de Markov?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $E\{x[n]\}=n\mu$ y, por independencia, $\sigma_x^2[n]=n\sigma^2$: la dispersión crece como $\sqrt n$.
+    \item $E\{x[n_1]x[n_2]\}=\sum_{k=1}^{n_1}\sum_{m=1}^{n_2}E\{w[k]w[m]\}$. Solo sobreviven los términos con $k=m$, que hay $\min(n_1,n_2)$, y cada uno vale $\sigma^2$.
+    \item No es estacionaria: la varianza depende de $n$ y la autocorrelación no depende solo de $n_1-n_2$. Sí es de Markov: $x[n]=x[n-1]+w[n]$ y $w[n]$ es independiente del pasado.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[proceso AR(1)]
+  Sea $x[n]=a\,x[n-1]+w[n]$, con $\abs a<1$ y $w[n]$ ruido blanco de media $\mu_w$ y varianza $\sigma_w^2$, en régimen estacionario.
+  \begin{incisos}[1]
+    \item Calcula la media de $x[n]$.
+    \item Con $\mu_w=0$, calcula la varianza y la autocorrelación $\phi_{xx}[l]$.
+    \item Para $a=0{,}9$ y $\sigma_w^2=1$, ¿cuánto valen $\phi_{xx}[0]$ y $\phi_{xx}[10]$? ¿Qué cambia con $a=-0{,}9$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Tomando esperanzas, $\mu_x=a\mu_x+\mu_w$, de donde $\mu_x=\mu_w/(1-a)$, que es $H(\e^{j0})\mu_w$ con $H(z)=1/(1-az^{-1})$.
+    \item $\sigma_x^2=a^2\sigma_x^2+\sigma_w^2$ porque $x[n-1]$ y $w[n]$ son independientes: $\sigma_x^2=\sigma_w^2/(1-a^2)$. Para $l>0$, multiplicando por $x[n]$ y tomando esperanzas, $\phi_{xx}[l]=a\phi_{xx}[l-1]$, y por paridad $\phi_{xx}[l]=\sigma_x^2a^{\abs l}$.
+    \item $\phi_{xx}[0]=1/0{,}19=5{,}26$ y $\phi_{xx}[10]=5{,}26\cdot0{,}9^{10}=1{,}83$. Con $a=-0{,}9$ la potencia es la misma, pero $\phi_{xx}[l]$ alterna de signo: la señal cambia de signo casi en cada muestra.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[eco y retardo]
+  Un sensor recibe $y[n]=\alpha x[n-D]+v[n]$, donde $x[n]$ es ruido blanco de varianza $\sigma^2$ y $v[n]$ es ruido independiente de varianza $\sigma_v^2$.
+  \begin{incisos}[1]
+    \item Calcula la correlación cruzada $\phi_{yx}[l]$.
+    \item Comprueba la cota $\abs{\phi_{yx}[l]}^2\le\phi_{xx}[0]\phi_{yy}[0]$.
+    \item ¿Cómo se estima $D$ con una sola realización? ¿Qué pasaría si $x[n]$ fuese un AR(1) con $a=0{,}95$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\phi_{yx}[l]=E\{(\alpha x[n+l-D]+v[n+l])x[n]\}=\alpha\phi_{xx}[l-D]=\alpha\sigma^2\delta[l-D]$.
+    \item $\phi_{yy}[0]=\alpha^2\sigma^2+\sigma_v^2$, así que $\phi_{xx}[0]\phi_{yy}[0]=\alpha^2\sigma^4+\sigma^2\sigma_v^2\ge\alpha^2\sigma^4=\abs{\phi_{yx}[D]}^2$. La igualdad solo se da sin ruido.
+    \item Se estima $\hat\phi_{yx}[l]$ con \texttt{xcorr(y, x)} o \texttt{np.correlate(y, x, 'full')} y se busca la posición del máximo. Con un AR(1), $\phi_{yx}[l]=\alpha\sigma_x^20{,}95^{\abs{l-D}}$: el máximo sigue en $D$, pero el pico es mucho más ancho y con ruido cuesta más localizarlo. Por eso conviene que la señal de prueba sea de banda ancha.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Análisis espectral}
+
+\begin{ejercicio}[DEP de un AR(1)]
+  Para el AR(1) $x[n]=0{,}8\,x[n-1]+w[n]$ con $\sigma_w^2=1$:
+  \begin{incisos}[1]
+    \item Calcula $\Phi_{xx}(\e^{j\Omega})$ como DTFT de $\phi_{xx}[l]$ y como $\abs{H(\e^{j\Omega})}^2\sigma_w^2$. Comprueba que coinciden.
+    \item Calcula $\Phi_{xx}$ en $\Omega=0$ y $\Omega=\pi$. ¿Es paso bajo o paso alto?
+    \item Comprueba que $\frac1{2\pi}\int_{-\pi}^{\pi}\Phi_{xx}\dd\Omega=\phi_{xx}[0]$.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Con $H=1/(1-a\e^{-j\Omega})$, $\abs H^2=\frac1{1-2a\cos\Omega+a^2}$. Por la otra vía, sumando las dos series geométricas, $\sigma_x^2\big(\frac1{1-a\e^{-j\Omega}}+\frac1{1-a\e^{j\Omega}}-1\big)=\sigma_x^2\frac{1-a^2}{1-2a\cos\Omega+a^2}$, y con $\sigma_x^2=1/(1-a^2)$ es lo mismo.
+    \item $\Phi_{xx}(\e^{j0})=1/0{,}2^2=25$ y $\Phi_{xx}(\e^{j\pi})=1/1{,}8^2=0{,}309$: paso bajo, con 80 veces más densidad en continua que en $\pi$.
+    \item La integral de $\frac1{1+a^2-2a\cos\Omega}$ en un periodo vale $\frac{2\pi}{1-a^2}$, así que la potencia es $1/0{,}36=2{,}78=\phi_{xx}[0]$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[media móvil de ruido blanco]
+  Se filtra ruido blanco de varianza $\sigma^2=2$ con la media móvil $y[n]=\frac13(x[n]+x[n-1]+x[n-2])$.
+  \begin{incisos}[1]
+    \item Calcula $\phi_{yy}[l]$ y la potencia de la salida.
+    \item Calcula $\Phi_{yy}(\e^{j\Omega})$. ¿En qué frecuencias se anula?
+    \item Calcula $\phi_{yx}[l]$.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\phi_{yy}=\sigma^2(h*\tilde h)[l]$ con $h=\frac13(1,1,1)$: $\phi_{yy}[0]=\frac69=\frac23$, $\phi_{yy}[\pm1]=\frac49$, $\phi_{yy}[\pm2]=\frac29$ y cero fuera. La potencia, $2/3$, es un tercio de la de entrada.
+    \item $H(\e^{j\Omega})=\frac13\e^{-j\Omega}(1+2\cos\Omega)$, así que $\Phi_{yy}=\frac29(1+2\cos\Omega)^2$. Se anula en $\cos\Omega=-\frac12$, es decir, en $\Omega=\pm2\pi/3$.
+    \item $\phi_{yx}[l]=\sigma^2h[l]$: vale $\frac23$ en $l=0,1,2$ y cero en el resto.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[identificación de un sistema]
+  Se excita un sistema LTI desconocido con ruido blanco $x[n]$ de varianza $\sigma^2$ y se mide $y[n]=(h*x)[n]+v[n]$, con $v[n]$ ruido de medida independiente de $x$.
+  \begin{incisos}[1]
+    \item Demuestra que $\phi_{yx}[l]=\sigma^2h[l]$.
+    \item ¿Por qué $\hat H=\Phi_{yx}/\Phi_{xx}$ no está sesgado por el ruido de medida y $\sqrt{\Phi_{yy}/\Phi_{xx}}$ sí?
+    \item ¿Qué información da $\Phi_{yx}$ que no da $\Phi_{yy}$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\phi_{yx}[l]=E\{\sum_kh[k]x[n+l-k]x[n]\}+E\{v[n+l]x[n]\}=\sum_kh[k]\sigma^2\delta[l-k]+0=\sigma^2h[l]$.
+    \item $v$ es independiente de $x$ y no contribuye a $\phi_{yx}$, así que $\Phi_{yx}=H\Phi_{xx}$ exactamente. En cambio $\Phi_{yy}=\abs H^2\Phi_{xx}+\Phi_{vv}$: el ruido se suma y $\abs H$ sale por exceso, sobre todo donde $\abs H$ es pequeño.
+    \item La fase: $\Phi_{yx}$ es compleja y su argumento es el de $H$, mientras que $\Phi_{yy}$ solo da $\abs H^2$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[estimación de la DEP y ruido térmico]
+  \begin{incisos}[1]
+    \item Con $N=16\,384$ muestras, segmentos de $L=256$ y solapamiento del 50\,\%, ¿cuántos segmentos promedia Welch? ¿En qué factor reduce la varianza respecto al periodograma, aproximadamente?
+    \item ¿Qué resolución en frecuencia tiene esa estimación?
+    \item Un ruido blanco en tiempo continuo con $N_0/2=10^{-9}$\,W/Hz pasa por un filtro antialiasing ideal de $B=10$\,kHz y se muestrea a $f_s=20$\,kHz. ¿Qué potencia tiene y qué varianza tienen las muestras?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $K=\lfloor(16384-256)/128\rfloor+1=127$ segmentos. Si fuesen independientes, la varianza se dividiría por 127; con el solapamiento del 50\,\% y Hann la reducción real es algo menor, del orden de 100.
+    \item La de la ventana: el lóbulo principal de Hann mide $8\pi/L$ entre ceros, una resolución del orden de $4\pi/L\approx0{,}05$\,rad/muestra (frente a $2\pi/N$ del periodograma completo).
+    \item La potencia es el área de la DEP bilateral en $[-B,B]$: $10^{-9}\cdot2\cdot10^4=2\cdot10^{-5}$\,W. Como $f_s=2B$, las muestras son incorreladas, es decir, ruido blanco discreto de varianza $2\cdot10^{-5}$.
+  \end{enumerate}
+\end{solucion}
+
+\end{document}

@@ -1,0 +1,239 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T6 · Señales aleatorias]{Señales aleatorias}
+\subtitle{Tema 6 · Parte 3: señales aleatorias en el dominio del tiempo}
+
+\begin{document}
+\portada
+
+% =====================================================================
+\section{Definición}
+
+\begin{frame}{Señal aleatoria}
+  \begin{definicion}[Señal aleatoria (proceso estocástico)]
+    Una familia de variables aleatorias indexadas por el tiempo: $x[n]$ en discreto, $x(t)$ en continuo.
+  \end{definicion}
+  \begin{center}\includegraphics[width=0.74\linewidth]{realizaciones}\end{center}
+  \footnotesize
+  \begin{itemize}
+    \item Fijado el resultado del experimento se obtiene una \alert{realización}, una señal determinista; fijado el instante $n$, $x[n]$ es una \alert{variable aleatoria}. El conjunto de todas las realizaciones es el \alert{conjunto} (\emph{ensemble}).
+    \item En la figura, paseo aleatorio $x[n]=x[n-1]+w[n]$ con $w[n]\sim\mathcal N(0;0{,}25)$: la dispersión crece con $n$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Cómo se describe}
+  \footnotesize
+  \begin{itemize}
+    \item Completamente: con la distribución conjunta de $x[n_1],\dots,x[n_k]$ para cualesquiera instantes. Casi nunca se conoce.
+    \item En la práctica, con los \alert{momentos de primer y segundo orden}:
+  \end{itemize}
+  \begin{definicion}[Estadísticos de una señal aleatoria]
+    \begin{tabular}{@{}ll@{}}
+      Media & $\mu_x[n]=E\{x[n]\}$\\[2pt]
+      Valor cuadrático medio (potencia instantánea) & $E\{x^2[n]\}$\\[2pt]
+      Autocorrelación & $\phi_{xx}[n_1,n_2]=E\{x[n_1]\,x[n_2]\}$\\[2pt]
+      Autocovarianza & $\gamma_{xx}[n_1,n_2]=\phi_{xx}[n_1,n_2]-\mu_x[n_1]\mu_x[n_2]$\\[2pt]
+      Correlación cruzada de $x$ e $y$ & $\phi_{xy}[n_1,n_2]=E\{x[n_1]\,y[n_2]\}$
+    \end{tabular}
+  \end{definicion}
+  \begin{itemize}
+    \item Son los estadísticos de la parte~2 aplicados a las variables $x[n_1]$ y $x[n_2]$. En continuo, igual con $x(t_1)$ y $x(t_2)$.
+    \item Si la señal es \alert{gaussiana} (toda conjunta es gaussiana), media y autocorrelación la describen por completo.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Algunos tipos de señales aleatorias}
+  \small
+  \begin{itemize}
+    \item \alert{Independiente e idénticamente distribuida} (i.i.d.): todas las $x[n]$ independientes y con la misma distribución. Con media nula es \alert{ruido blanco}.
+    \item \alert{De Markov} (de primer orden): $x[n]$ solo depende del pasado a través de $x[n-1]$:
+    \[
+      f(x[n]\,|\,x[n-1],x[n-2],\dots)=f(x[n]\,|\,x[n-1]),
+    \]
+    y la conjunta se factoriza: $f(x[0],\dots,x[n])=f(x[0])\prod_{k=1}^nf(x[k]\,|\,x[k-1])$.
+    \begin{itemize}
+      \item Paseo aleatorio: $x[n]=x[n-1]+w[n]$, con $w$ ruido blanco.
+      \item Autorregresiva de orden 1, AR(1): $x[n]=a\,x[n-1]+w[n]$, $\abs a<1$. Es ruido blanco filtrado por $1/(1-az^{-1})$.
+    \end{itemize}
+    \item En continuo, el papel del retardo lo hace la derivada: una señal de Markov continua cumple $\dv{x}{t}=-\alpha x(t)+w(t)$.
+  \end{itemize}
+  \nota{Las transparencias antiguas factorizaban la Markov sin el término $f(x[0])$ y escribían $p(\dot x(t)|x(t))$ sin decir de qué modelo salía.}
+\end{frame}
+
+% =====================================================================
+\section{Estacionariedad y ergodicidad}
+
+\begin{frame}{Estacionariedad}
+  \small
+  \begin{itemize}
+    \item \alert{Estacionaria en sentido estricto}: ninguna distribución conjunta cambia al desplazar el origen de tiempos.
+    \item \alert{Estacionaria en sentido amplio} (ESA): basta con los momentos de orden 1 y 2:
+    \[
+      \mu_x[n]=\mu_x\ \text{constante},\qquad\phi_{xx}[n+l,n]=\phi_{xx}[l]\ \text{solo depende de la separación }l.
+    \]
+    Entonces también $E\{x^2[n]\}=\phi_{xx}[0]$ y $\sigma_x^2$ son constantes.
+    \item Dos señales son \alert{conjuntamente ESA} si cada una lo es y $\phi_{xy}[n+l,n]=\phi_{xy}[l]$.
+  \end{itemize}
+  \begin{definicion}[Notación para señales ESA]
+    \[
+      \phi_{xx}[l]=E\{x[n+l]\,x[n]\},\qquad\phi_{xy}[l]=E\{x[n+l]\,y[n]\},\qquad\gamma_{xx}[l]=\phi_{xx}[l]-\mu_x^2 .
+    \]
+    En continuo, $\phi_{xx}(\tau)=E\{x(t+\tau)\,x(t)\}$.
+  \end{definicion}
+  \nota{Errata antigua: se definía la estacionariedad en sentido amplio con $p(x(t_1))=p(x(t_2))$, que es una condición sobre toda la distribución de primer orden, ni necesaria ni suficiente para la ESA.}
+\end{frame}
+
+\begin{frame}{¿Cuáles son estacionarias?}
+  \begin{center}\includegraphics[width=\linewidth]{estacionariedad}\end{center}
+  \footnotesize
+  \begin{enumerate}
+    \item i.i.d.\ $\mathcal U[0,1]$: \alert{sí}; misma distribución siempre y $\phi_{xx}[l]=\mu^2$ para $l\ne0$.
+    \item Independientes $\mathcal N(0,\sigma^2[n])$ con varianza que cambia: \alert{no}; la varianza depende de $n$.
+    \item Paseo aleatorio con $x[0]=0$: \alert{no}; $\operatorname{Var}\{x[n]\}=n\sigma_w^2$ crece.
+    \item Constante aleatoria $x[n]=A$, $A\sim\mathcal U[0,1]$: \alert{sí}; $\mu_x=\frac12$ y $\phi_{xx}[l]=E\{A^2\}=\frac13$.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Sinusoide de fase aleatoria}
+  \begin{center}\includegraphics[width=0.9\linewidth]{fase_aleatoria}\end{center}
+  \small
+  Con $\theta\sim\mathcal U[0,2\pi)$:
+  \(
+    \mu_x=E\{A\cos(\Omega_0n+\theta)\}=0
+  \)
+  y
+  \[
+    \phi_{xx}[n+l,n]=\frac{A^2}2E\{\cos(\Omega_0(2n+l)+2\theta)+\cos(\Omega_0l)\}=\frac{A^2}2\cos(\Omega_0l).
+  \]
+  Es ESA. La autocorrelación de una componente periódica es periódica y no se amortigua.
+\end{frame}
+
+\begin{frame}{Ergodicidad}
+  \small
+  \begin{itemize}
+    \item En la práctica solo se dispone de \alert{una} realización. ¿Se pueden obtener los estadísticos promediando en el tiempo en lugar de sobre el conjunto?
+    \item Una señal ESA es \alert{ergódica} (en media y en autocorrelación) si
+    \[
+      \lim_{N\to\infty}\frac1{2N+1}\sum_{n=-N}^Nx[n]=\mu_x,\qquad
+      \lim_{N\to\infty}\frac1{2N+1}\sum_{n=-N}^Nx[n+l]\,x[n]=\phi_{xx}[l]
+    \]
+    para casi todas las realizaciones. En continuo, igual con $\frac1{2T}\int_{-T}^T$.
+    \item Ejemplos:
+    \begin{itemize}
+      \item i.i.d.\ y AR(1) estacionaria: ergódicas.
+      \item Sinusoide de fase aleatoria: ergódica.
+      \item Constante aleatoria: estacionaria pero \alert{no} ergódica; cada realización da su propia $A$, no $\frac12$.
+      \item Las no estacionarias no se consideran ergódicas.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Autocorrelación}
+
+\begin{frame}{Propiedades de la autocorrelación (señales ESA)}
+  \small
+  \begin{itemize}
+    \item $\phi_{xx}[0]=E\{x^2[n]\}=\sigma_x^2+\mu_x^2$: la \alert{potencia} media.
+    \item Par: $\phi_{xx}[-l]=\phi_{xx}[l]$.
+    \item Máximo en el origen: $\abs{\phi_{xx}[l]}\le\phi_{xx}[0]$.
+    \item Si no hay componentes periódicas ni constantes aleatorias, los valores alejados son incorrelados: $\gamma_{xx}[l]\to0$ y $\phi_{xx}[l]\to\mu_x^2$ cuando $\abs l\to\infty$.
+  \end{itemize}
+  \begin{importante}[¿Tiene la señal una componente determinista?]
+    Si $\phi_{xx}[l]$ no tiende a $\mu_x^2$, sí; si la parte determinista es periódica, $\phi_{xx}$ oscila con el mismo periodo. Es un modo de detectar periodicidades enterradas en ruido.
+  \end{importante}
+  \nota{Erratas antiguas: «$\phi_{XX}(0)>\phi_{XX}(\tau)$» debe ser $\phi_{xx}(0)\ge\abs{\phi_{xx}(\tau)}$ (una sinusoide alcanza el máximo en cada periodo), y el límite es para $\abs\tau\to\infty$, no «para $t\gg0$».}
+\end{frame}
+
+\begin{frame}{Estimar la autocorrelación}
+  \footnotesize
+  Con una realización de $N$ muestras (señal ergódica):
+  \[
+    \hat\phi_{xx}[l]=\frac1{N-\abs l}\sum_{n=0}^{N-1-\abs l}x[n+\abs l]\,x[n]\quad\text{(insesgado)},\qquad
+    \check\phi_{xx}[l]=\frac1N\sum_{n=0}^{N-1-\abs l}x[n+\abs l]\,x[n]\quad\text{(sesgado)}.
+  \]
+  \begin{itemize}
+    \item El insesgado acierta en media, pero con $\abs l$ cerca de $N$ promedia pocos productos y es muy ruidoso. El sesgado se amortigua hacia los extremos y tiene menos varianza.
+    \item Se usa solo hasta $\abs l$ bastante menor que $N$.
+    \item Matlab: \texttt{xcorr(x, L, 'unbiased')} o \texttt{'biased'}; Python: \texttt{np.correlate(x, x, 'full')} dividido por el número de productos.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{En código: autocorrelación de ruido i.i.d.}
+  \codigo[basicstyle=\ttfamily\fontsize{6.6}{7.5}\selectfont]{autocorrelacion}
+\end{frame}
+
+\begin{frame}{Ejemplos}
+  \begin{center}\includegraphics[width=0.84\linewidth]{autocorrelacion_ejemplos}\end{center}
+  \footnotesize
+  $T_s=0{,}01$\,s, 10\,s de señal. $\mathcal N(5,1)$: pico de $\sigma^2+\mu^2=26$ y $\mu^2=25$ fuera. $\mathcal U[2,6]$: $E\{X^2\}=\frac{52}3=17{,}3$ y $\mu^2=16$. El seno: oscila sin amortiguarse. AR(1): $\phi_{xx}[l]=\frac{a^{\abs l}}{1-a^2}\sigma_w^2$ (rojo).
+\end{frame}
+
+\begin{frame}{En código: AR(1)}
+  \codigo{ar1}
+  \nota{$x[n]=ax[n-1]+w[n]$ estacionaria: $\sigma_x^2=\sigma_w^2/(1-a^2)$ y $\phi_{xx}[l]=\sigma_x^2a^{\abs l}$. Con $a=0{,}9$, $\sigma_x^2=5{,}26$: el filtro amplifica el ruido.}
+\end{frame}
+
+% =====================================================================
+\section{Correlación cruzada}
+
+\begin{frame}{Correlación cruzada}
+  \small
+  \begin{itemize}
+    \item $\phi_{xy}[l]=E\{x[n+l]\,y[n]\}$: cuánto se parece $x$ desplazada $l$ muestras a $y$.
+    \item No tiene por qué tener el máximo en $l=0$ ni ser par: $\phi_{xy}[l]=\phi_{yx}[-l]$.
+    \item Cotas: $\abs{\phi_{xy}[l]}^2\le\phi_{xx}[0]\,\phi_{yy}[0]$ y $\abs{\phi_{xy}[l]}\le\frac12\big(\phi_{xx}[0]+\phi_{yy}[0]\big)$.
+    \item Si $x$ e $y$ son independientes, $\phi_{xy}[l]=\mu_x\mu_y$ para todo $l$.
+  \end{itemize}
+  \begin{ejemplo}[Eco]
+    $y[n]=\alpha\,x[n-D]+v[n]$, con $x$ blanco de varianza $\sigma_x^2$ y $v$ independiente:
+    \[
+      \phi_{yx}[l]=E\{y[n+l]\,x[n]\}=\alpha\,\phi_{xx}[l-D]=\alpha\sigma_x^2\,\delta[l-D].
+    \]
+    El pico de la correlación cruzada está en el retardo $D$.
+  \end{ejemplo}
+  \nota{Convenio de Oppenheim y Schafer, y de \texttt{xcorr(x, y)} en Matlab. Otros textos (y la versión antigua) definen $E\{x(t)\,y(t+\tau)\}$, que es la misma función reflejada.}
+\end{frame}
+
+\begin{frame}{Aplicación: medir un retardo}
+  \begin{center}\includegraphics[width=0.68\linewidth]{retardo}\end{center}
+  \codigo[basicstyle=\ttfamily\fontsize{6.3}{7}\selectfont]{retardo}
+\end{frame}
+
+\begin{frame}{Otras aplicaciones}
+  \begin{itemize}
+    \item \alert{Radar y sonar}: se emite un pulso conocido y se correla el eco recibido con él (filtro adaptado); el retardo da la distancia.
+    \item \alert{Localización}: con dos micrófonos, el retardo entre sus señales da la dirección de la fuente.
+    \item \alert{Caminos múltiples}: un pico por cada camino de propagación.
+    \item \alert{Sincronización}: encontrar el inicio de una trama en comunicaciones (GPS, Wi-Fi).
+    \item \alert{Identificación de sistemas}: con entrada blanca, $\phi_{yx}[l]=\sigma_x^2h[l]$ (parte~4).
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Señal aleatoria: variables indexadas por $n$; realizaciones y conjunto.
+        \item $\mu_x[n]$, $\phi_{xx}[n_1,n_2]$, $\gamma_{xx}$, $\phi_{xy}$.
+        \item ESA: media constante, $\phi_{xx}[l]=E\{x[n+l]x[n]\}$.
+        \item Ergódica: promedios temporales = de conjunto.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item $\phi_{xx}[0]$ potencia; par; $\abs{\phi_{xx}[l]}\le\phi_{xx}[0]$; $\to\mu_x^2$.
+        \item Estimadores sesgado e insesgado (\texttt{xcorr}).
+        \item Correlación cruzada: retardos y ecos.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 6, sección 3 · Hoja de ejercicios, ejercicios 11–14.}
+\end{frame}
+
+\end{document}
