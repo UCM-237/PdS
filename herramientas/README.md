@@ -15,7 +15,7 @@ cálculos que dependen de los controles se hacen en el propio navegador.
 | `comun/pds_bokeh.py` | Estilo común (paleta y notación de `teoría/comun`), controles y plantilla de página |
 | `generar.py` | Ejecuta todas las fuentes y escribe el índice |
 | `html/` | Páginas generadas (`Tn-nombre.html`) e índice (`index.html`) |
-| `server/` | Apps del Tema 4 que aún necesitan Python en marcha (`bokeh serve`); se irán pasando a `fuentes/`, salvo el filtrado de audio |
+| `server/` | Filtrado de audio (T4), la única app que necesita Python en marcha (`bokeh serve`) porque reproduce sonido filtrado |
 
 ## Uso
 
@@ -26,7 +26,7 @@ make sin-red    # igual, con Bokeh incrustado en cada página (para clase sin re
 ```
 
 Para comprobar una página sin red, genera con `make sin-red` y ábrela con el navegador.
-Las apps de `server/` se lanzan con `bokeh serve --show server/<app>.py`.
+La app de `server/` se lanza con `bokeh serve --show server/T4_05_FIR_Audio.py`.
 No guardan nada salvo que se pida con `PDS_REGISTRO=1`, que escribe un
 registro de interacciones en `logs/`; si se usa con alumnos, hay que
 avisarles.
@@ -41,6 +41,14 @@ avisarles.
    controles=[…], graficas=[…], referencia=…)`. La referencia indica la
    transparencia y la sección de los apuntes que la usan.
 4. `make` y comprueba la página en el navegador.
+
+La biblioteca de JavaScript de `pds_bokeh.JS` está disponible en todos los
+`pb.js(...)`: FFT y DFT, ventanas, números complejos (`cmul`, `cdiv`,
+`cexp`…), polinomios y sus raíces, `zpk`, `filtrar` (ecuación en
+diferencias), `continua` (respuesta de H(s) al escalón o al impulso) y
+Butterworth analógico y digital. Un argumento de `pb.js` no puede llamarse
+como una de esas funciones. `pb.editable()` deja modificar una secuencia
+con el ratón y `pb.plano_pz()`, mover, añadir y borrar polos y ceros.
 
 Notación: ω (rad/s) y f (Hz) en tiempo continuo; Ω (rad/muestra) y
 F (ciclos/muestra) en tiempo discreto.

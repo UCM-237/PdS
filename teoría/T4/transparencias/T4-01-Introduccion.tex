@@ -53,6 +53,7 @@
       \]
     \end{column}
   \end{columns}
+  \herramienta{T4-media-movil}
 \end{frame}
 
 \begin{frame}{Los cuatro filtros ideales}
@@ -145,8 +146,9 @@
     \item Un sistema sin distorsión solo escala y retrasa: $y[n]=K\,x[n-n_0]\ \Rightarrow\ H(\e^{j\Omega})=K\e^{-j\Omega n_0}$. Su fase es \alert{lineal}.
     \item \alert{Retardo de grupo}: $\tau(\Omega)=-\dfrac{\dd\arg H(\e^{j\Omega})}{\dd\Omega}$, en muestras. Si es constante, todas las frecuencias se retrasan lo mismo.
   \end{itemize}
-  \begin{center}\includegraphics[height=0.4\textheight]{retardo_grupo}\end{center}
+  \begin{center}\includegraphics[height=0.34\textheight]{retardo_grupo}\end{center}
   \nota{Misma señal cuadrada, dos paso bajo parecidos en módulo. El IIR retrasa más las frecuencias cercanas al corte y deforma la onda; el FIR de fase lineal la retrasa en bloque.}
+  \herramienta{T4-fase-lineal}
 \end{frame}
 
 % =====================================================================
@@ -183,7 +185,7 @@
       \includegraphics[width=\linewidth]{notch_discreto}
     \end{column}
   \end{columns}
-  \herramientaservidor{server/T4\_Filtros\_Discretos\_PZMap.py}
+  \herramienta{T4-polos-ceros-z}
 \end{frame}
 
 % =====================================================================
