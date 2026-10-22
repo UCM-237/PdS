@@ -1,6 +1,6 @@
 # Material de teoría: transparencias, apuntes y ejercicios (XeLaTeX).
 #
-#   make T1 ... make T4 compila todo el tema
+#   make T1 ... make T6 compila todo el tema
 #   make figuras        regenera las figuras de todos los temas (Python)
 #   make prueba-codigo  ejecuta los ejemplos en Python y en Matlab/Octave
 #   make publicar       copia los PDF a clase/
@@ -10,7 +10,7 @@
 # Python 3 con numpy, scipy y matplotlib, y Octave con los paquetes
 # signal y control (solo para probar el código Matlab).
 
-TEMAS   := T1 T2 T3 T4
+TEMAS   := T1 T2 T3 T4 T5 T6
 LATEXMK := latexmk -xelatex -interaction=nonstopmode -halt-on-error -silent
 
 .PHONY: all $(TEMAS) figuras prueba-codigo publicar limpiar
@@ -64,6 +64,19 @@ publicar: $(TEMAS)
 	cp "T4/apuntes/T4-Apuntes.pdf"                "clase/T4 - Apuntes.pdf"
 	cp "T4/ejercicios/T4-Ejercicios.pdf"          "clase/T4 - Ejercicios.pdf"
 	cp "T4/ejercicios/T4-Ejercicios-Soluciones.pdf" "clase/T4 - Ejercicios resueltos.pdf"
+	cp "T5/transparencias/T5-01-STFT.pdf"         "clase/T5 - 01 - STFT.pdf"
+	cp "T5/transparencias/T5-02-Wavelets.pdf"     "clase/T5 - 02 - Wavelets.pdf"
+	cp "T5/transparencias/T5-03-Imagenes.pdf"     "clase/T5 - 03 - Imágenes.pdf"
+	cp "T5/apuntes/T5-Apuntes.pdf"                "clase/T5 - Apuntes.pdf"
+	cp "T5/ejercicios/T5-Ejercicios.pdf"          "clase/T5 - Ejercicios.pdf"
+	cp "T5/ejercicios/T5-Ejercicios-Soluciones.pdf" "clase/T5 - Ejercicios resueltos.pdf"
+	cp "T6/transparencias/T6-01-VariablesAleatorias.pdf" "clase/T6 - 01 - Variables aleatorias.pdf"
+	cp "T6/transparencias/T6-02-VariasVariables.pdf" "clase/T6 - 02 - Varias variables.pdf"
+	cp "T6/transparencias/T6-03-SenalesAleatorias.pdf" "clase/T6 - 03 - Señales aleatorias.pdf"
+	cp "T6/transparencias/T6-04-AnalisisEspectral.pdf" "clase/T6 - 04 - Análisis espectral.pdf"
+	cp "T6/apuntes/T6-Apuntes.pdf"                "clase/T6 - Apuntes.pdf"
+	cp "T6/ejercicios/T6-Ejercicios.pdf"          "clase/T6 - Ejercicios.pdf"
+	cp "T6/ejercicios/T6-Ejercicios-Soluciones.pdf" "clase/T6 - Ejercicios resueltos.pdf"
 
 limpiar:
 	@for t in $(TEMAS); do \

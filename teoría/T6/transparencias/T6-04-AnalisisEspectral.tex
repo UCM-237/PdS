@@ -1,0 +1,227 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T6 · Análisis espectral]{Señales aleatorias}
+\subtitle{Tema 6 · Parte 4: análisis espectral y sistemas LTI}
+
+\begin{document}
+\portada
+
+% =====================================================================
+\section{Densidad espectral de potencia}
+
+\begin{frame}{El espectro de una señal aleatoria}
+  \small
+  \begin{itemize}
+    \item Una realización de una señal estacionaria no se apaga: tiene energía infinita y su DTFT no existe en sentido ordinario. Además, cada realización tendría un espectro distinto.
+    \item Lo que sí está bien definido es su \alert{potencia} media:
+    \[
+      P_x=E\Big\{\lim_{N\to\infty}\frac1{2N+1}\sum_{n=-N}^Nx^2[n]\Big\}=E\{x^2[n]\}=\phi_{xx}[0]\quad\text{(ESA)}.
+    \]
+    \item La autocorrelación es una «potencia generalizada» que depende de la separación $l$. Su transformada dice cómo se reparte la potencia en frecuencia.
+  \end{itemize}
+  \begin{definicion}[Densidad espectral de potencia (DEP)]
+    \[
+      \Phi_{xx}(\e^{j\Omega})=\sum_{l=-\infty}^{\infty}\phi_{xx}[l]\,\e^{-j\Omega l},\qquad
+      \phi_{xx}[l]=\frac1{2\pi}\int_{-\pi}^{\pi}\Phi_{xx}(\e^{j\Omega})\,\e^{j\Omega l}\dd\Omega .
+    \]
+  \end{definicion}
+  \nota{Es el teorema de Wiener-Khinchin. En continuo: $\Phi_{xx}(j\omega)=\int\phi_{xx}(\tau)\e^{-j\omega\tau}\dd\tau$.}
+\end{frame}
+
+\begin{frame}{Propiedades}
+  \small
+  \begin{itemize}
+    \item \alert{Potencia}: con $l=0$,
+    \[
+      P_x=\phi_{xx}[0]=\frac1{2\pi}\int_{-\pi}^{\pi}\Phi_{xx}(\e^{j\Omega})\dd\Omega .
+    \]
+    La potencia en una banda $[\Omega_1,\Omega_2]$ es $\frac1{2\pi}\int$ sobre $\pm[\Omega_1,\Omega_2]$: por eso es una \emph{densidad}.
+    \item $\Phi_{xx}$ es \alert{real} (porque $\phi_{xx}$ es par), \alert{par} si $x$ es real, y \alert{no negativa}.
+    \item Interpretación: $\Phi_{xx}(\e^{j\Omega})=\lim_{N\to\infty}\frac1{N}E\big\{\abs{X_N(\e^{j\Omega})}^2\big\}$, con $X_N$ la DTFT de $N$ muestras: el módulo al cuadrado del espectro, promediado.
+    \item En continuo: $P_x=\frac1{2\pi}\int\Phi_{xx}(j\omega)\dd\omega=\int\Phi_{xx}(j2\pi f)\dd f$, en W/Hz si $x$ está en voltios sobre 1\,$\Omega$.
+  \end{itemize}
+  \nota{Las transparencias antiguas usaban $\omega$ también para la frecuencia discreta; aquí, como en todo el curso, $\Omega$.}
+\end{frame}
+
+\begin{frame}{Ejemplos}
+  \begin{columns}[c]
+    \begin{column}{0.47\textwidth}
+      \footnotesize
+      \begin{itemize}
+        \item \alert{Ruido blanco}: $\phi_{xx}[l]=\sigma^2\delta[l]$ $\Rightarrow$ $\Phi_{xx}=\sigma^2$, plana.
+        \item \alert{AR(1)}: $\phi_{xx}[l]=\frac{\sigma_w^2a^{\abs l}}{1-a^2}$ $\Rightarrow$
+        \[
+          \Phi_{xx}=\frac{\sigma_w^2}{\abs{1-a\e^{-j\Omega}}^2}=\frac{\sigma_w^2}{1-2a\cos\Omega+a^2}.
+        \]
+        Paso bajo si $a>0$, paso alto si $a<0$.
+        \item \alert{Constante}: $\phi_{xx}[l]=\mu^2$ $\Rightarrow$ $\Phi_{xx}=2\pi\mu^2\delta(\Omega)$ en $[-\pi,\pi]$.
+        \item \alert{Sinusoide de fase aleatoria}: $\frac{A^2}2\cos\Omega_0l$ $\Rightarrow$ $\frac{\pi A^2}2[\delta(\Omega-\Omega_0)+\delta(\Omega+\Omega_0)]$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.51\textwidth}
+      \includegraphics[width=\linewidth]{dep_ejemplos}
+    \end{column}
+  \end{columns}
+  \nota{Errata antigua: la DEP de la constante se escribía $\mu^2\delta(\omega)$, sin el factor $2\pi$.}
+\end{frame}
+
+\begin{frame}{Clasificación y ruido blanco continuo}
+  \small
+  \begin{itemize}
+    \item Según la forma de la DEP: \alert{blanca} (plana), \alert{de banda ancha}, \alert{de banda estrecha}, \alert{paso bajo}, \alert{paso banda}. «Coloreada» es cualquiera que no sea blanca.
+    \item Una señal con DEP no nula en todas las frecuencias tiene muestras correladas a corta distancia: la anchura de $\phi_{xx}$ es inversa al ancho de banda.
+  \end{itemize}
+  \begin{importante}[Ruido blanco continuo]
+    $\phi_{xx}(\tau)=\frac{N_0}2\delta(\tau)$ y $\Phi_{xx}=\frac{N_0}2$: tendría potencia $\phi_{xx}(0)=\infty$, así que no existe físicamente. Es un modelo para ruido cuya DEP es plana en toda la banda que interesa, por ejemplo el ruido térmico de una resistencia ($N_0/2=2kTR$\,V$^2$/Hz). Tras un paso bajo ideal de ancho $B$\,Hz, la potencia es $N_0B$.
+  \end{importante}
+  \nota{Al muestrear a $f_s=2B$ ruido blanco limitado a $B$\,Hz se obtiene ruido blanco discreto de varianza $N_0B$.}
+\end{frame}
+
+\begin{frame}{Densidad espectral cruzada}
+  \small
+  \[
+    \Phi_{xy}(\e^{j\Omega})=\sum_{l=-\infty}^{\infty}\phi_{xy}[l]\,\e^{-j\Omega l}
+  \]
+  \begin{itemize}
+    \item En general es \alert{compleja}: $\phi_{xy}$ no es par. Como $\phi_{yx}[l]=\phi_{xy}[-l]$, $\Phi_{yx}=\Phi_{xy}^*$ para señales reales.
+    \item Su módulo dice en qué frecuencias $x$ e $y$ tienen potencia común; su fase, el desfase entre ellas.
+    \item \alert{Coherencia}: $C_{xy}=\dfrac{\abs{\Phi_{xy}}^2}{\Phi_{xx}\Phi_{yy}}\in[0,1]$; vale 1 en las frecuencias donde $y$ es una versión filtrada de $x$ sin ruido.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section{Respuesta de un sistema LTI}
+
+\begin{frame}{Señal aleatoria a través de un sistema LTI}
+  \small
+  $y[n]=\sum_kh[k]\,x[n-k]$, con $h$ real y estable y $x$ ESA. La salida también es ESA y:
+  \begin{itemize}
+    \item \alert{Media}: $\mu_y=E\{\sum_kh[k]x[n-k]\}=\mu_x\sum_kh[k]=H(\e^{j0})\,\mu_x$.
+    \item \alert{Correlación cruzada}:
+    \(
+      \phi_{yx}[l]=E\{y[n+l]x[n]\}=\sum_kh[k]\,\phi_{xx}[l-k]=(h\conv\phi_{xx})[l]
+    \)
+    \item \alert{Autocorrelación}:
+    \(
+      \phi_{yy}[l]=\sum_k\sum_rh[k]h[r]\,\phi_{xx}[l-k+r]=(h\conv\tilde h\conv\phi_{xx})[l],\quad\tilde h[n]=h[-n].
+    \)
+  \end{itemize}
+  \begin{importante}[En frecuencia]
+    \[
+      \Phi_{yx}(\e^{j\Omega})=H(\e^{j\Omega})\,\Phi_{xx}(\e^{j\Omega}),\qquad
+      \Phi_{yy}(\e^{j\Omega})=\abs{H(\e^{j\Omega})}^2\,\Phi_{xx}(\e^{j\Omega}).
+    \]
+  \end{importante}
+  \nota{Las convoluciones se convierten en productos y $H(\e^{-j\Omega})=H^*(\e^{j\Omega})$. Potencia de salida: $\frac1{2\pi}\int\abs H^2\Phi_{xx}\dd\Omega$; con entrada blanca, $\sigma_x^2\sum_kh^2[k]$.}
+\end{frame}
+
+\begin{frame}{Ruido coloreado}
+  \begin{center}\includegraphics[width=0.95\linewidth]{filtrado_ruido}\end{center}
+  \small
+  \begin{itemize}
+    \item Filtrar ruido blanco da ruido con la DEP que se quiera: $\Phi_{yy}=\sigma_x^2\abs H^2$. Así se simulan perturbaciones realistas, y el AR(1) es ruido blanco tras $1/(1-az^{-1})$.
+    \item Al revés, un filtro \alert{blanqueador} $1/H$ convierte ruido coloreado en blanco.
+    \item El filtro solo cambia la potencia de cada frecuencia; no puede crear frecuencias que no estaban.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Identificación de sistemas}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \footnotesize
+      \begin{itemize}
+        \item Se excita un sistema desconocido con ruido de DEP conocida y se miden entrada y salida:
+        \[
+          \hat H(\e^{j\Omega})=\frac{\Phi_{yx}(\e^{j\Omega})}{\Phi_{xx}(\e^{j\Omega})}
+        \]
+        da módulo \alert{y fase}.
+        \item $\abs H^2=\Phi_{yy}/\Phi_{xx}$ da solo el módulo, y el ruido de medida a la salida lo sesga; en $\Phi_{yx}$ ese ruido, incorrelado con $x$, desaparece al promediar.
+        \item Con entrada blanca, $\phi_{yx}[l]=\sigma_x^2\,h[l]$: la correlación cruzada \emph{es} la respuesta al impulso.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \includegraphics[width=\linewidth]{identificacion}
+      \nota{$H(z)=\frac{0{,}2+0{,}3z^{-1}}{1-1{,}2z^{-1}+0{,}72z^{-2}}$, ruido de medida de $\sigma=0{,}3$. Donde $\abs H$ es pequeño, la fase se estima peor.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{En código: identificar un sistema}
+  \codigo{identificacion}
+  \nota{\texttt{scipy.signal.csd(x, y)} calcula $X^*Y$, que es $\Phi_{yx}$ con nuestro convenio.}
+\end{frame}
+
+% =====================================================================
+\section{Estimación de la DEP}
+
+\begin{frame}{Periodograma}
+  \footnotesize
+  \begin{itemize}
+    \item Con $N$ muestras, lo inmediato es el \alert{periodograma}:
+    \[
+      I_N(\e^{j\Omega})=\frac1N\abs{\sum_{n=0}^{N-1}x[n]\,\e^{-j\Omega n}}^2,
+    \]
+    que es la DTFT de la autocorrelación estimada con el estimador sesgado. Se calcula con la FFT.
+    \item Es asintóticamente insesgado (su media tiende a $\Phi_{xx}$), pero su varianza \alert{no disminuye} con $N$: es del orden de $\Phi_{xx}^2$. Más muestras dan más frecuencias, igual de ruidosas.
+  \end{itemize}
+  \begin{center}\includegraphics[width=0.78\linewidth]{periodograma}\end{center}
+\end{frame}
+
+\begin{frame}{Método de Welch}
+  \small
+  \begin{itemize}
+    \item Se divide la señal en $K$ tramos de $L$ muestras (con solapamiento, típicamente del 50\,\%), se enventana cada uno, se calcula su periodograma y se \alert{promedian}.
+    \item La varianza baja aproximadamente en un factor $K$ (algo menos con solapamiento); la resolución en frecuencia empeora a la de una ventana de $L$ muestras. Es el compromiso de la STFT del tema~5.
+    \item Bartlett: lo mismo sin ventana ni solapamiento.
+    \item Matlab: \texttt{pwelch}, \texttt{cpsd}, \texttt{tfestimate}, \texttt{mscohere}. Python: \texttt{scipy.signal.welch}, \texttt{csd}, \texttt{coherence}.
+  \end{itemize}
+  \begin{importante}[Escalas]
+    Por defecto devuelven la DEP \emph{unilateral} (doble en $0<f<f_s/2$) y por unidad de frecuencia (Hz, o rad/muestra si no se da $f_s$). Con la opción bilateral y $f_s=1$ se obtiene $\Phi_{xx}(\e^{j2\pi f})$.
+  \end{importante}
+\end{frame}
+
+\begin{frame}{En código: DEP de un AR(1) con Welch}
+  \codigo{welch}
+  \nota{Teórico, con $a=0{,}8$: $\Phi_{xx}(\e^{j0})=1/(1-a)^2=25$, $\Phi_{xx}(\e^{j\pi/2})=1/(1+a^2)=0{,}61$ y potencia $1/(1-a^2)=2{,}78$. El valor en 0 se estima peor porque la ventana ensancha el pico.}
+\end{frame}
+
+\begin{frame}{Aplicaciones}
+  \begin{itemize}
+    \item \alert{Medir el ruido} de un sistema y su relación señal a ruido por bandas.
+    \item \alert{Detectar tonos} débiles en ruido: tras promediar, un tono destaca sobre un fondo cuya varianza se ha reducido.
+    \item \alert{Identificar sistemas} y medir su respuesta en frecuencia en funcionamiento, sin desconectarlos.
+    \item \alert{Filtro de Wiener}: para separar una señal $s$ de un ruido aditivo $v$ incorrelado, el filtro lineal óptimo es
+    \[
+      H(\e^{j\Omega})=\frac{\Phi_{ss}(\e^{j\Omega})}{\Phi_{ss}(\e^{j\Omega})+\Phi_{vv}(\e^{j\Omega})}:
+    \]
+    deja pasar las frecuencias donde domina la señal y atenúa donde domina el ruido.
+  \end{itemize}
+\end{frame}
+
+% =====================================================================
+\section*{Resumen}
+\begin{frame}{Conceptos importantes}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item DEP: $\Phi_{xx}=\text{DTFT}\{\phi_{xx}\}$; real, par, $\ge0$.
+        \item $P_x=\phi_{xx}[0]=\frac1{2\pi}\int\Phi_{xx}\dd\Omega$.
+        \item Blanco: plana. AR(1): $\sigma_w^2/\abs{1-a\e^{-j\Omega}}^2$.
+        \item DEP cruzada $\Phi_{xy}$, compleja; coherencia.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item LTI: $\mu_y=H(\e^{j0})\mu_x$, $\Phi_{yx}=H\Phi_{xx}$, $\Phi_{yy}=\abs H^2\Phi_{xx}$.
+        \item Identificación: $\hat H=\Phi_{yx}/\Phi_{xx}$.
+        \item Periodograma: varianza que no baja; Welch promedia tramos.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \gris{Apuntes del Tema 6, sección 4 · Hoja de ejercicios, ejercicios 15–18.}
+\end{frame}
+
+\end{document}

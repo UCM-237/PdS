@@ -21,3 +21,13 @@ conservan como referencia; no se compilan ni se mantienen.
 - `T4/Problemas`: `Tema4_Ejercicios.tex`, que pese al nombre es una hoja
   de ejercicios de la DFT (cuyo título dice «Muestreo en el dominio de la
   frecuencia»). Sus ideas están recogidas en la hoja del Tema 3.
+- `T5/Teoría`: antiguas fuentes del tema de aplicaciones
+  (`src/06 - Aplicaciones/Source`: presentaciones «Aplicaciones» y
+  «Aplicaciones_wavelet», partes, figuras y ejemplos de Matlab).
+  Sustituidas por `teoría/T5/`, que sigue el orden de la guía docente
+  (Tema 5, Aplicaciones). La práctica sigue en `src/06 - Aplicaciones/`.
+- `T6/Teoría`: antiguas fuentes del tema de señales aleatorias
+  (`src/05 - Señales Aleatorias/Teoria`: presentaciones «T5 -
+  Introduccion», «T5 - Variables Aleatorias», «T5 - Señales Aleatorias»
+  y borradores). Sustituidas por `teoría/T6/` (Tema 6 de la guía). Las
+  prácticas siguen en `src/05 - Señales Aleatorias/Practicas/`.

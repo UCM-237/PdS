@@ -1,0 +1,276 @@
+\documentclass[11pt,a4paper]{scrartcl}
+\input{../../comun/pds-apuntes}
+\tema{5}{Aplicaciones}
+
+\begin{document}
+\ifsoluciones\cabecera{Ejercicios resueltos}\else\cabecera{Ejercicios}\fi
+
+Los ejercicios 1–5 corresponden a la parte~1 del tema (transformada de Fourier de tiempo corto y espectrograma), los ejercicios 6–10 a la parte~2 (wavelets) y los ejercicios 11–16 a la parte~3 (procesamiento de imágenes). Se usa $\Omega$ para la frecuencia discreta y $f$ en hercios; $L$ es la longitud de la ventana, $R$ el salto entre tramos y $N$ el número de puntos de la DFT. Los resultados se pueden comprobar con los ejemplos de \texttt{teoría/T5/codigo/}.
+
+% =====================================================================
+\section*{Transformada de Fourier de tiempo corto}
+
+\begin{ejercicio}[parámetros de un espectrograma]
+  Una grabación de voz de 1\,s se muestrea a $f_s=8$\,kHz y se analiza con una ventana de Hann de $L=256$ muestras, salto $R=64$ y DFT de $N=512$ puntos.
+  \begin{incisos}[1]
+    \item ¿Qué duración tiene cada tramo y qué solapamiento hay entre tramos consecutivos?
+    \item ¿Cuántos tramos completos hay?
+    \item ¿Qué separación en hercios hay entre dos frecuencias consecutivas de la DFT? ¿Y cuál es la mínima separación entre dos tonos que se pueden distinguir?
+    \item ¿Mejoraría esa separación mínima con $N=2048$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $L/f_s=32$\,ms. Dos tramos consecutivos comparten $L-R=192$ muestras: un 75\,\%. Hay un espectro cada $R/f_s=8$\,ms.
+    \item $M=\lfloor(8000-256)/64\rfloor+1=\lfloor121\rfloor+1=122$.
+    \item Las frecuencias de la DFT están separadas $f_s/N=15{,}6$\,Hz. La separación mínima la fija la ventana: el lóbulo principal de Hann mide $4f_s/L=125$\,Hz entre ceros, y dos tonos se separan si distan al menos la mitad, unos 62,5\,Hz.
+    \item No. Más puntos de DFT muestrean más densamente el mismo espectro del tramo (separación de 3,9\,Hz), pero el lóbulo principal sigue midiendo 125\,Hz. Para separar tonos más próximos hay que alargar la ventana, a costa de la resolución temporal.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[elegir la longitud de la ventana]
+  Una señal muestreada a $f_s=1$\,kHz contiene dos tonos de 200 y 220\,Hz y, más tarde, dos clics separados 10\,ms. Se usa una ventana de Hann.
+  \begin{incisos}[1]
+    \item ¿Qué longitud mínima necesita la ventana para separar los tonos?
+    \item ¿Qué longitud máxima permite ver los clics como dos sucesos distintos?
+    \item ¿Hay una STFT que resuelva las dos cosas? ¿Qué alternativas hay?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Hace falta $2f_s/L\le20$\,Hz, es decir, $L\ge100$ muestras (100\,ms).
+    \item Cada clic se extiende en el espectrograma lo que dura la ventana. Para que no se solapen, $L/f_s\lesssim10$\,ms, es decir, $L\lesssim10$ muestras.
+    \item No: las dos condiciones son incompatibles por el principio de incertidumbre. Se pueden calcular dos espectrogramas, uno con ventana larga para los tonos y otro con ventana corta para los clics, o usar una transformada wavelet, que analiza las altas frecuencias con ventanas cortas y las bajas con ventanas largas. (Aun así, separar 200 y 220\,Hz exige unos 100\,ms de señal con cualquier método.)
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[STFT de un tono y de un chirp]
+  \begin{incisos}[1]
+    \item Demuestra que la STFT de $x[n]=\e^{j\Omega_0n}$ con una ventana $w[n]$ es
+    \[
+      X(m,\Omega)=\e^{-j(\Omega-\Omega_0)mR}\,W\!\left(\e^{j(\Omega-\Omega_0)}\right),
+    \]
+    donde $W$ es la DTFT de la ventana. ¿Cómo es el espectrograma?
+    \item Un chirp lineal $x(t)=\cos\!\big(2\pi(f_0t+\frac k2t^2)\big)$ tiene frecuencia instantánea $f_0+kt$. Para el chirp de 50 a 400\,Hz en 2\,s, ¿cuánto vale $k$ y qué frecuencia debe tener el máximo del tramo centrado en $t=1$\,s?
+    \item ¿Cuánto cambia la frecuencia del chirp durante una ventana de 128 muestras a $f_s=1$\,kHz? Compáralo con la anchura del lóbulo principal de Hann.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $X(m,\Omega)=\sum_n\e^{j\Omega_0n}w[n-mR]\e^{-j\Omega n}$. Con $r=n-mR$: $\e^{-j(\Omega-\Omega_0)mR}\sum_rw[r]\e^{-j(\Omega-\Omega_0)r}=\e^{-j(\Omega-\Omega_0)mR}\,W(\e^{j(\Omega-\Omega_0)})$. El módulo no depende de $m$: el espectrograma es una banda horizontal en $\Omega_0$ con la forma de $\abs{W}^2$, igual en todos los tramos. Un coseno da dos bandas, en $\pm\Omega_0$.
+    \item $k=(400-50)/2=175$\,Hz/s. En $t=1$\,s, $f=50+175=225$\,Hz. El ejemplo \texttt{stft\_manual} da 230\,Hz para el tramo centrado en 1,024\,s ($50+175\cdot1{,}024=229$\,Hz, redondeado a la rejilla de 3,9\,Hz).
+    \item En 128\,ms la frecuencia cambia $175\cdot0{,}128=22$\,Hz, menos que el lóbulo de Hann, $4f_s/L=31$\,Hz. El chirp se ve como una recta fina; con $L=512$ cambiaría 90\,Hz y se ensancharía.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[solapamiento y suma]
+  \begin{incisos}[1]
+    \item Demuestra que la ventana de Hann periódica $w[n]=\frac12-\frac12\cos\frac{2\pi n}L$, $0\le n<L$ ($L$ par), cumple $\sum_mw[n-mL/2]=1$.
+    \item ¿Cuánto suma la ventana de Hamming periódica $0{,}54-0{,}46\cos\frac{2\pi n}L$ con el mismo salto?
+    \item ¿Qué salto hace falta con la ventana rectangular?
+    \item ¿Por qué la reconstrucción solo necesita que la suma sea constante, y no que valga 1?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item En cada instante $n$ se solapan exactamente dos ventanas, una en la posición $r$ y otra en $r+L/2$ (módulo $L$). Como $\cos\frac{2\pi(r+L/2)}L=-\cos\frac{2\pi r}L$, la suma es $\frac12-\frac12\cos\frac{2\pi r}L+\frac12+\frac12\cos\frac{2\pi r}L=1$.
+    \item Por el mismo argumento, $0{,}54+0{,}54=1{,}08$, constante.
+    \item $R=L$: los tramos no se solapan y se tocan.
+    \item Si la suma es $C$, la reconstrucción da $C\,x[n]$ y basta dividir por $C$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[detección DTMF]
+  Un receptor DTMF trabaja a $f_s=8$\,kHz. Los tonos de fila son 697, 770, 852 y 941\,Hz, y los de columna 1209, 1336 y 1477\,Hz.
+  \begin{incisos}[1]
+    \item ¿Cuál es la pareja de tonos más próximos? ¿Qué longitud mínima de ventana necesita una ventana rectangular para separarlos? ¿Y una de Hamming?
+    \item Si se usa una DFT de $N=256$ puntos, ¿qué índice $k$ y qué frecuencia de la DFT quedan más cerca de 852\,Hz y de 1336\,Hz?
+    \item La norma exige reconocer tonos de 40\,ms. ¿Es compatible con el apartado~a?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item 697 y 770\,Hz, a 73\,Hz. La rectangular tiene un lóbulo de $2f_s/L$ entre ceros y separa tonos a $\approx f_s/L$: $L\ge8000/73\approx110$ muestras (14\,ms). La de Hamming, como la de Hann, separa a $\approx2f_s/L$: $L\ge220$ muestras (27\,ms).
+    \item $f_s/N=31{,}25$\,Hz. $852/31{,}25=27{,}3$, así que $k=27$, que es 843,75\,Hz. $1336/31{,}25=42{,}75$, así que $k=43$, que es 1343,75\,Hz.
+    \item Sí: 27\,ms caben en un tono de 40\,ms. La rejilla de la DFT no coincide con los tonos, por eso se usa el algoritmo de Goertzel, que evalúa la DTFT exactamente en las 7 frecuencias.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Wavelets}
+
+\begin{ejercicio}[DWT de Haar a mano]
+  Calcula la DWT de Haar de tres niveles de $x=(4,6,10,12,8,6,5,5)$ y comprueba que se conserva la energía.
+\end{ejercicio}
+\begin{solucion}
+  Nivel 1: $a_1=\frac1{\sqrt2}(10,22,14,10)=(7{,}07;\ 15{,}56;\ 9{,}90;\ 7{,}07)$ y $d_1=\frac1{\sqrt2}(-2,-2,2,0)$.
+  Nivel 2, sobre $a_1$: $a_2=\frac1{\sqrt2}\cdot\frac1{\sqrt2}(10+22,\,14+10)=(16,12)$ y $d_2=\frac12(10-22,\,14-10)=(-6,2)$.
+  Nivel 3: $a_3=\frac{16+12}{\sqrt2}=19{,}80$ y $d_3=\frac{16-12}{\sqrt2}=2{,}83$.
+
+  Energía: $\sum x^2=16+36+100+144+64+36+25+25=446$. En los coeficientes: $a_3^2=392$, $d_3^2=8$, $\sum d_2^2=40$ y $\sum d_1^2=\frac{4+4+4+0}2=6$; total 446. El 88\,\% está en $a_3$, que es la media de la señal multiplicada por $\sqrt8$.
+\end{solucion}
+
+\begin{ejercicio}[reconstrucción aproximada]
+  Con los coeficientes del ejercicio anterior:
+  \begin{incisos}[1]
+    \item Reconstruye la señal anulando $d_1$. ¿Qué operación sencilla se obtiene?
+    \item ¿Cuánto vale la energía del error? Compárala con $\sum d_1^2$.
+    \item Si además se anula $d_2$, ¿qué señal queda?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Con $d_1=0$, $x[2k]=x[2k+1]=a_1[k]/\sqrt2$, la media de cada pareja: $(5,5,11,11,7,7,5,5)$.
+    \item El error es $(-1,1,-1,1,1,-1,0,0)$, de energía 6, igual a $\sum d_1^2$. Por ser la base ortonormal, la energía del error es la de los coeficientes anulados.
+    \item $A_2$: la media de cada grupo de cuatro, $(8,8,8,8,6,6,6,6)$. El error tiene energía $6+40=46$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[escalas y frecuencias de la Morlet]
+  Se quiere analizar una señal muestreada a $f_s=1$\,kHz entre 10 y 200\,Hz con la wavelet de Morlet de $\omega_0=6$.
+  \begin{incisos}[1]
+    \item ¿Qué escalas $a$ (en segundos y en muestras) corresponden a 10 y a 200\,Hz?
+    \item La envolvente de $\psi_{a,b}$ es una gaussiana de desviación típica $a$, y la de su espectro, de desviación típica $1/a$ en rad/s. Calcula $\sigma_t$ y $\sigma_f$ a 10 y a 200\,Hz. ¿Qué producto se mantiene constante?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $a=\omega_0/(2\pi f)$: a 10\,Hz, $a=95{,}5$\,ms (95,5 muestras); a 200\,Hz, $a=4{,}77$\,ms (4,8 muestras).
+    \item $\sigma_t=a$ y $\sigma_f=1/(2\pi a)=f/\omega_0$. A 10\,Hz: $\sigma_t=95{,}5$\,ms y $\sigma_f=1{,}7$\,Hz. A 200\,Hz: $\sigma_t=4{,}8$\,ms y $\sigma_f=33$\,Hz. El producto $\sigma_t\sigma_f=1/(2\pi)$ es el mismo; también la resolución relativa $\sigma_f/f=1/\omega_0$.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[momentos nulos]
+  \begin{incisos}[1]
+    \item Comprueba que la wavelet de Haar tiene un momento nulo y no dos.
+    \item Los coeficientes del paso alto de db2 son $h_1=\frac1{4\sqrt2}\big(1-\sqrt3,\ -(3-\sqrt3),\ 3+\sqrt3,\ -(1+\sqrt3)\big)$. Comprueba que $\sum_nh_1[n]=0$ y $\sum_nn\,h_1[n]=0$.
+    \item ¿Qué detalles $d_1$ dan Haar y db2 para la rampa $x[n]=n$?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\int\psi\dd t=\frac12-\frac12=0$, pero $\int t\,\psi\dd t=\int_0^{1/2}t\dd t-\int_{1/2}^1t\dd t=\frac18-\frac38=-\frac14\ne0$.
+    \item Sin el factor común: $(1-\sqrt3)-(3-\sqrt3)+(3+\sqrt3)-(1+\sqrt3)=0$, y $0-(3-\sqrt3)+2(3+\sqrt3)-3(1+\sqrt3)=-3+\sqrt3+6+2\sqrt3-3-3\sqrt3=0$.
+    \item Haar: $d_1[k]=(2k-(2k+1))/\sqrt2=-1/\sqrt2$ en todos los $k$. db2: cada detalle es una combinación $\sum_nh_1[n]\,x[2k+n]$; con $x$ una rampa vale $2k\sum h_1+\sum n\,h_1=0$, salvo en los extremos, donde el filtro se sale de la señal. Por eso db2 representa con menos coeficientes las señales suaves.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[banco de filtros y umbral]
+  \begin{incisos}[1]
+    \item Con $H_0(z)=\frac{1+z^{-1}}{\sqrt2}$ y $H_1(z)=\frac{1-z^{-1}}{\sqrt2}$, calcula $\abs{H_0(\e^{j\Omega})}^2+\abs{H_1(\e^{j\Omega})}^2$. ¿Dónde están sus ceros?
+    \item Una señal de $N=1024$ muestras se descompone en $J=5$ niveles. ¿Cuántos coeficientes hay en cada nivel y en total? ¿Qué banda de frecuencias recoge aproximadamente $a_5$ si $f_s=1$\,kHz?
+    \item La mediana de $\abs{d_1}$ vale 0,27. Estima la desviación típica del ruido y el umbral universal.
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $\abs{H_0}^2=\frac12\abs{1+\e^{-j\Omega}}^2=1+\cos\Omega$ y $\abs{H_1}^2=1-\cos\Omega$: suman 2 en todas las frecuencias. $H_0$ tiene un cero en $\Omega=\pi$ (paso bajo) y $H_1$ en $\Omega=0$ (paso alto).
+    \item $d_1$: 512, $d_2$: 256, $d_3$: 128, $d_4$: 64, $d_5$: 32 y $a_5$: 32; en total 1024, las mismas que muestras. $a_5$ recoge $[0,\pi/32]$, es decir, de 0 a $500/32\approx16$\,Hz.
+    \item $\hat\sigma=0{,}27/0{,}6745=0{,}40$ y $u=0{,}40\sqrt{2\ln1024}=0{,}40\cdot3{,}72=1{,}49$, como en el ejemplo \texttt{eliminar\_ruido}.
+  \end{enumerate}
+\end{solucion}
+
+% =====================================================================
+\section*{Procesamiento de imágenes}
+
+\begin{ejercicio}[tamaño y muestreo de una imagen]
+  \begin{incisos}[1]
+    \item ¿Cuánto ocupa sin comprimir una imagen en color de $4000\times3000$ píxeles con 8 bits por canal? ¿Y en escala de grises con 16 bits?
+    \item Un sensor tiene píxeles de $4\,\mu$m. ¿Cuál es la máxima frecuencia espacial que puede representar sin aliasing, en ciclos por milímetro?
+    \item Se fotografía una tela con rayas de periodo $6\,\mu$m en el plano del sensor. ¿Qué se ve?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $4000\cdot3000\cdot3=36\cdot10^6$ bytes, 36\,MB. En grises con 16 bits, $4000\cdot3000\cdot2=24$\,MB.
+    \item La frecuencia de muestreo es $1/4\,\mu\text{m}=250$ muestras/mm; la de Nyquist, 125 ciclos/mm.
+    \item Las rayas tienen $1/0{,}006=167$ ciclos/mm, por encima de 125: aparece aliasing a $250-167=83$ ciclos/mm, unas rayas falsas de periodo 12\,$\mu$m (3 píxeles): el efecto moiré. Las cámaras ponen un filtro óptico paso bajo delante del sensor para evitarlo.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[ecualización a mano]
+  Una imagen de $4\times4$ píxeles con 8 niveles ($L=8$, de 0 a 7) tiene el histograma
+  \[
+    h=(0,\ 0,\ 6,\ 5,\ 3,\ 2,\ 0,\ 0).
+  \]
+  \begin{incisos}[1]
+    \item Calcula $F(r)$ y la transformación de ecualización $s=\operatorname{round}(7F(r))$.
+    \item Da el histograma de la imagen ecualizada. ¿Es plano?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $F(2)=6/16=0{,}375$, $F(3)=11/16=0{,}6875$, $F(4)=14/16=0{,}875$ y $F(5)=1$. Entonces $T(2)=\operatorname{round}(2{,}625)=3$, $T(3)=\operatorname{round}(4{,}81)=5$, $T(4)=\operatorname{round}(6{,}125)=6$ y $T(5)=7$.
+    \item Seis píxeles en el nivel 3, cinco en el 5, tres en el 6 y dos en el 7. No es plano, porque todos los píxeles de un nivel van al mismo nivel nuevo, pero ahora ocupa de 3 a 7 en lugar de 2 a 5: el contraste ha aumentado.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[convolución 2D a mano]
+  La imagen de $5\times5$
+  \[
+    f=\begin{bmatrix}0&0&0&0&0\\0&9&9&9&0\\0&9&9&9&0\\0&9&9&9&0\\0&0&0&0&0\end{bmatrix}
+  \]
+  se convoluciona (opción \texttt{'same'}, con ceros fuera) con:
+  \begin{incisos}[3]
+    \item la media de $3\times3$;
+    \item el laplaciano;
+    \item el Sobel $S_x$.
+  \end{incisos}
+  Calcula la fila central ($m=2$) del resultado en los tres casos e interprétala.
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Cada salida es la media de su entorno de $3\times3$: $(3,6,9,6,3)$. El borde del cuadrado se suaviza.
+    \item $f[m-1,n]+f[m+1,n]+f[m,n-1]+f[m,n+1]-4f[m,n]$: $(9,-9,0,-9,9)$. Es nula en el interior uniforme y cambia de signo al cruzar el borde: los bordes son los pasos por cero.
+    \item Con la convolución, $S_x$ calcula $\sum_i(1,2,1)_i\,(f[m-i+1,n+1]-f[m-i+1,n-1])$: $(36,36,0,-36,-36)$. Positiva donde la imagen crece hacia la derecha (borde izquierdo), negativa donde decrece, y nula en el centro. Con \texttt{filter2} o \texttt{imfilter} (correlación) los signos se invierten.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[separabilidad]
+  \begin{incisos}[1]
+    \item Escribe el núcleo de media de $3\times3$ y el de Sobel $S_y$ (derivada vertical) como producto de un vector columna por un vector fila.
+    \item ¿Cuántos productos por píxel cuesta filtrar con un gaussiano de $15\times15$ directamente y de forma separable?
+    \item ¿Es separable el laplaciano $\begin{bsmallmatrix}0&1&0\\1&-4&1\\0&1&0\end{bsmallmatrix}$? ¿Se puede calcular con filtros 1D?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Media: $\frac19\mathbf1_{3\times3}=\frac13(1,1,1)^T\cdot\frac13(1,1,1)$. $S_y=S_x^T=(1,0,-1)^T(1,2,1)$.
+    \item $15^2=225$ directamente y $2\cdot15=30$ de forma separable.
+    \item No: una matriz separable tiene rango 1 y esta tiene rango 2 (sus filas $(0,1,0)$ y $(1,-4,1)$ no son proporcionales). Pero es la suma de dos núcleos separables, la segunda derivada en filas $(1,-2,1)$ y en columnas $(1,-2,1)^T$, así que se calcula con dos filtros 1D y una suma.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[DFT 2D de una onda plana]
+  Sea la imagen de $8\times8$ $f[m,n]=\cos\!\big(2\pi\frac{3m+n}8\big)$.
+  \begin{incisos}[1]
+    \item Calcula su DFT 2D. ¿En qué posiciones es distinta de cero y cuánto vale?
+    \item ¿Cómo están orientadas las franjas de la imagen?
+    \item Si la imagen se desplaza circularmente dos columnas, ¿qué le pasa a la DFT?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item $f=\frac12\e^{j2\pi(3m/8+n/8)}+\frac12\e^{-j2\pi(3m/8+n/8)}$. Cada exponencial da un único coeficiente igual a $MN=64$ por su amplitud: $F[3,1]=F[5,7]=32$ (la segunda está en $(-3,-1)$, es decir, en $(5,7)$ módulo 8), y cero en el resto.
+    \item La fase es constante sobre las rectas $3m+n=\text{cte}$: franjas perpendiculares al vector $(3,1)$, inclinadas, con 3 ciclos a lo largo de cada columna y 1 a lo largo de cada fila.
+    \item Se multiplica por $\e^{-j2\pi l\cdot2/8}$: $F[3,1]$ queda multiplicado por $\e^{-j\pi/2}=-j$ y $F[5,7]$ por $\e^{-j7\pi/2}=j$. El módulo no cambia.
+  \end{enumerate}
+\end{solucion}
+
+\begin{ejercicio}[filtro gaussiano en frecuencia]
+  Se filtra una imagen de $N\times N$ con $H[k,l]=\e^{-D^2/(2D_0^2)}$, $D^2=k^2+l^2$ (con $k,l$ entre $-N/2$ y $N/2-1$).
+  \begin{incisos}[1]
+    \item La CTFT de $\e^{-x^2/(2\sigma^2)}$ en función de la frecuencia $u$ (ciclos por píxel) es proporcional a $\e^{-2\pi^2\sigma^2u^2}$, y el índice $k$ corresponde a $u=k/N$. ¿A qué $\sigma$ espacial equivale el filtro? Calcúlalo para $N=256$ y $D_0=20$.
+    \item ¿Por qué un paso bajo ideal con el mismo $D_0$ produce anillos y este no?
+    \item Para filtrar con la DFT y obtener la convolución lineal con un núcleo de $K\times K$, ¿de qué tamaño deben ser las DFT?
+  \end{incisos}
+\end{ejercicio}
+\begin{solucion}
+  \begin{enumerate}[label=\alph*)]
+    \item Igualando exponentes, $2\pi^2\sigma^2k^2/N^2=k^2/(2D_0^2)$, de donde $\sigma=\frac{N}{2\pi D_0}$. Con $N=256$ y $D_0=20$, $\sigma=2{,}04$ píxeles: el mismo suavizado que el gaussiano de $\sigma=2$ de la figura de filtros espaciales de los apuntes.
+    \item La respuesta al impulso del ideal es la transformada de un disco, un «$\sinc$ circular» con lóbulos que cambian de signo: cada borde se convoluciona con ellos y aparecen anillos. La del gaussiano es otra gaussiana, positiva y sin lóbulos.
+    \item El producto de DFT da la convolución circular. Para que coincida con la lineal, hay que rellenar imagen y núcleo con ceros hasta al menos $(N+K-1)\times(N+K-1)$.
+  \end{enumerate}
+\end{solucion}
+
+\end{document}
