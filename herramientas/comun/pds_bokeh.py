@@ -25,9 +25,11 @@ import json
 import os
 import pathlib
 
+from bokeh.document import Document
 from bokeh.embed import file_html
+from bokeh.events import DocumentReady
 from bokeh.layouts import column, row
-from bokeh.models import Div, Slider, InlineStyleSheet
+from bokeh.models import CustomJS, Div, InlineStyleSheet, RadioButtonGroup, Select, Slider
 from bokeh.plotting import figure as _figure
 from bokeh.resources import CDN, INLINE
 from jinja2 import Template
@@ -81,21 +83,21 @@ _PLANTILLA = Template("""<!DOCTYPE html>
 </html>
 """)
 
-_CSS = InlineStyleSheet(css=f"""
+_CSS = f"""
 :host {{ font-family: {FUENTE}; }}
 .pds-tema {{ color: {GRIS}; font-size: 13px; margin: 0; }}
 .pds-titulo {{ color: {AZUL}; font-size: 22px; font-weight: 600; margin: 2px 0 6px; }}
 .pds-texto {{ max-width: 760px; font-size: 14px; line-height: 1.45; margin: 0; }}
 .pds-ref {{ color: {GRIS}; font-size: 12px; margin-top: 6px; }}
-""")
+"""
 
 
-def figura(titulo: str, eje_x: str, eje_y: str, ancho: int = 520, alto: int = 280,
+def figura(titulo: str, eje_x: str, eje_y: str, ancho: int = 520, alto: int = 260,
            **kw):
-    """Figura con el estilo común: sin borde, rejilla suave, Fira Sans."""
+    """Figura con el estilo común; ``ancho`` y ``alto`` son los de la zona de datos."""
     kw.setdefault("tools", "pan,wheel_zoom,box_zoom,reset,save")
     p = _figure(title=titulo, x_axis_label=eje_x, y_axis_label=eje_y,
-                width=ancho, height=alto, **kw)
+                frame_width=ancho, frame_height=alto, **kw)
     p.toolbar.logo = None
     p.outline_line_color = None
     p.title.text_font = FUENTE
@@ -115,18 +117,313 @@ def figura(titulo: str, eje_x: str, eje_y: str, ancho: int = 520, alto: int = 28
     return p
 
 
+def leyenda(p, lugar: str = "right") -> None:
+    """Saca la leyenda fuera de los ejes; un clic en una entrada la oculta."""
+    if not p.legend:
+        return
+    lg = p.legend[0]
+    lg.click_policy = "hide"
+    lg.label_text_font = FUENTE
+    lg.label_text_font_size = "12px"
+    lg.border_line_color = None
+    lg.background_fill_alpha = 0.0
+    if lugar in ("right", "below", "above", "left"):
+        if lugar in ("below", "above"):
+            lg.orientation = "horizontal"
+        p.add_layout(lg, lugar)
+    else:
+        lg.location = lugar
+
+
 def deslizador(titulo: str, inicio: float, fin: float, valor: float, paso: float,
                **kw) -> Slider:
     return Slider(title=titulo, start=inicio, end=fin, value=valor, step=paso,
                   width=kw.pop("width", 240), bar_color=AZUL, **kw)
 
 
+def selector(titulo: str, opciones, valor=None, **kw) -> Select:
+    """Lista desplegable; ``opciones`` es una lista de textos."""
+    return Select(title=titulo, options=list(opciones), value=valor or opciones[0],
+                  width=kw.pop("width", 240), **kw)
+
+
+def botones(opciones, activo: int = 0, **kw) -> RadioButtonGroup:
+    """Grupo de botones excluyentes (por ejemplo, escala lineal o en dB)."""
+    return RadioButtonGroup(labels=list(opciones), active=activo, width=kw.pop("width", 240), **kw)
+
+
+def tallos(p, x: str, y: str, fuente, color: str = AZUL, base: float = 0.0, **kw):
+    """Gráfica de tallos (stem) para señales discretas."""
+    p.segment(x0=x, y0=base, x1=x, y1=y, source=fuente, line_color=color, line_width=1.5)
+    return p.scatter(x, y, source=fuente, size=6, color=color, **kw)
+
+
+def editable(p, fuente, x: str = "n", y: str = "x", callback=None) -> None:
+    """Permite cambiar los valores de una secuencia haciendo clic o arrastrando
+    sobre la figura ``p``: el punto más cercano en ``x`` toma el valor de ``y``.
+    ``callback`` se ejecuta después de cada cambio."""
+    editar = CustomJS(args=dict(f=fuente, cx=x, cy=y, siguiente=callback), code="""
+        const xs = f.data[cx], ys = f.data[cy].slice();
+        let i = 0, mejor = Infinity;
+        for (let j = 0; j < xs.length; j++) { const d = Math.abs(xs[j] - cb_obj.x); if (d < mejor) { mejor = d; i = j; } }
+        if (mejor > 0.6) return;
+        ys[i] = Math.round(cb_obj.y * 20) / 20;
+        const nuevo = Object.assign({}, f.data); nuevo[cy] = ys; f.data = nuevo;
+        if (siguiente) siguiente.execute(cb_obj);
+    """)
+    for evento in ("tap", "pan", "panstart"):
+        p.js_on_event(evento, editar)
+    p.toolbar.active_drag = None
+
+
+
+def plano_pz(p, fuente, modo, callback=None, real_tol: float = 0.04) -> None:
+    """Polos y ceros editables en la figura ``p``.
+
+    ``fuente`` tiene las columnas x, y, t ("polo" o "cero") y par (los dos de
+    un par conjugado comparten número). ``modo`` es un selector con las
+    opciones "Mover", "Añadir polo", "Añadir cero" y "Borrar": un clic
+    añade o borra (los complejos van siempre con su conjugado) y arrastrar
+    mueve un punto y su pareja. ``callback`` se ejecuta tras cada cambio.
+    """
+    from bokeh.models import CDSView, ColumnDataSource, GroupFilter
+    estado = ColumnDataSource(dict(i=[-1]))
+    for t, marca in (("polo", "x"), ("cero", "circle")):
+        vista = CDSView(filter=GroupFilter(column_name="t", group=t))
+        p.scatter("x", "y", source=fuente, view=vista, marker=marca, size=13, line_width=2.5,
+                  line_color=ROJO if t == "polo" else AZUL, fill_color=None,
+                  legend_label="polos" if t == "polo" else "ceros")
+    comun = """
+        const d = f.data, n = d.x.length, ancho = (p.x_range.end - p.x_range.start), tol = TOL * ancho;
+        function cercano() {
+            let i = -1, mejor = 0.06 * ancho;
+            for (let j = 0; j < n; j++) { const r = Math.hypot(d.x[j] - cb_obj.x, d.y[j] - cb_obj.y); if (r < mejor) { mejor = r; i = j; } }
+            return i;
+        }
+        function publicar(x, y, t, par) { f.data = {x: x, y: y, t: t, par: par}; if (siguiente) siguiente.execute(cb_obj); }
+    """
+    pulsar = CustomJS(args=dict(f=fuente, p=p, modo=modo, siguiente=callback, TOL=real_tol), code=comun + """
+        const x = d.x.slice(), y = d.y.slice(), t = d.t.slice(), par = d.par.slice();
+        if (modo.value === "Borrar") {
+            const i = cercano(); if (i < 0) return;
+            const q = par[i], keep = [...Array(n).keys()].filter(j => par[j] !== q);
+            publicar(keep.map(j => x[j]), keep.map(j => y[j]), keep.map(j => t[j]), keep.map(j => par[j]));
+        } else if (modo.value.startsWith("Añadir")) {
+            const tipo = modo.value.endsWith("polo") ? "polo" : "cero", q = Math.max(0, ...par) + 1;
+            const yy = Math.abs(cb_obj.y) < tol ? 0 : Math.abs(cb_obj.y);
+            x.push(cb_obj.x); y.push(yy); t.push(tipo); par.push(q);
+            if (yy !== 0) { x.push(cb_obj.x); y.push(-yy); t.push(tipo); par.push(q); }
+            publicar(x, y, t, par);
+        }
+    """)
+    empezar = CustomJS(args=dict(f=fuente, p=p, e=estado, modo=modo, siguiente=None, TOL=real_tol),
+                       code=comun + 'e.data = {i: [modo.value === "Mover" ? cercano() : -1]};')
+    arrastrar = CustomJS(args=dict(f=fuente, p=p, e=estado, siguiente=callback, TOL=real_tol), code=comun + """
+        const i = e.data.i[0]; if (i < 0 || i >= n) return;
+        const x = d.x.slice(), y = d.y.slice(), j = [...Array(n).keys()].find(k => k !== i && d.par[k] === d.par[i]);
+        x[i] = cb_obj.x;
+        if (j === undefined) y[i] = 0;
+        else { const yy = Math.max(Math.abs(cb_obj.y), tol) * (cb_obj.y < 0 ? -1 : 1); y[i] = yy; x[j] = cb_obj.x; y[j] = -yy; }
+        publicar(x, y, d.t.slice(), d.par.slice());
+    """)
+    p.js_on_event("tap", pulsar)
+    p.js_on_event("panstart", empezar)
+    p.js_on_event("pan", arrastrar)
+    p.toolbar.active_drag = None
+
+
+def js(codigo: str, **args) -> CustomJS:
+    """CustomJS con la biblioteca común ``JS`` (FFT, ventanas…) delante."""
+    # Un argumento con el nombre de una función de JS la taparía (o al revés).
+    import re
+    choques = set(args) & set(re.findall(r"^(?:function|const)\s+(\w+)", JS, re.M))
+    if choques:
+        raise ValueError(f"argumentos con nombre de función de la biblioteca JS: {sorted(choques)}")
+    # El try/catch hace visible en la consola cualquier error del cálculo.
+    return CustomJS(args=args, code=JS + "try {\n" + codigo + "\n} catch (e) { console.error('PDS: ' + e); }")
+
+
+def conectar(callback, *controles) -> None:
+    """Ejecuta ``callback`` cuando cambia cualquiera de los controles."""
+    for c in controles:
+        if isinstance(c, Slider):
+            c.js_on_change("value", callback)
+        elif isinstance(c, Select):
+            c.js_on_change("value", callback)
+        elif isinstance(c, RadioButtonGroup):
+            c.js_on_change("active", callback)
+
+
+# Funciones de JavaScript que comparten las herramientas.
+JS = r"""
+const PI = Math.PI;
+function rango(a, b, n) { const r = []; for (let i = 0; i < n; i++) r.push(a + (b - a) * i / (n - 1)); return r; }
+function enteros(a, b) { const r = []; for (let i = a; i <= b; i++) r.push(i); return r; }
+function sinc(x) { return Math.abs(x) < 1e-12 ? 1 : Math.sin(PI * x) / (PI * x); }
+function db(x, suelo = -120) { return Math.max(20 * Math.log10(Math.max(x, 1e-300)), suelo); }
+function mod(a, n) { return ((a % n) + n) % n; }
+// FFT de base 2 (re, im de longitud potencia de 2); devuelve [re, im].
+function fft(re, im) {
+    const n = re.length; re = re.slice(); im = im ? im.slice() : new Array(n).fill(0);
+    for (let i = 1, j = 0; i < n; i++) {
+        let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit;
+        if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; }
+    }
+    for (let len = 2; len <= n; len <<= 1) {
+        const a = -2 * PI / len, wr = Math.cos(a), wi = Math.sin(a);
+        for (let i = 0; i < n; i += len) {
+            let cr = 1, ci = 0;
+            for (let k = 0; k < len / 2; k++) {
+                const ur = re[i + k], ui = im[i + k];
+                const vr = re[i + k + len / 2] * cr - im[i + k + len / 2] * ci;
+                const vi = re[i + k + len / 2] * ci + im[i + k + len / 2] * cr;
+                re[i + k] = ur + vr; im[i + k] = ui + vi;
+                re[i + k + len / 2] = ur - vr; im[i + k + len / 2] = ui - vi;
+                const t = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = t;
+            }
+        }
+    }
+    return [re, im];
+}
+// DFT directa de N puntos (cualquier N); devuelve [re, im].
+function dft(x, N) {
+    const re = [], im = [];
+    for (let k = 0; k < N; k++) {
+        let a = 0, b = 0;
+        for (let n = 0; n < x.length; n++) { const w = -2 * PI * k * n / N; a += x[n] * Math.cos(w); b += x[n] * Math.sin(w); }
+        re.push(a); im.push(b);
+    }
+    return [re, im];
+}
+// DTFT de x[0..L-1] en M frecuencias de [0, 2π) mediante FFT con ceros.
+function dtft(x, M = 2048) {
+    const re = new Array(M).fill(0); for (let n = 0; n < x.length; n++) re[n % M] += x[n];
+    return fft(re);
+}
+function ventana(tipo, L) {
+    const w = [];
+    for (let n = 0; n < L; n++) {
+        const c = L > 1 ? 2 * PI * n / (L - 1) : 0;
+        if (tipo === "Hann") w.push(0.5 - 0.5 * Math.cos(c));
+        else if (tipo === "Hamming") w.push(0.54 - 0.46 * Math.cos(c));
+        else if (tipo === "Blackman") w.push(0.42 - 0.5 * Math.cos(c) + 0.08 * Math.cos(2 * c));
+        else w.push(1);
+    }
+    return w;
+}
+// Números complejos como [re, im].
+function cmul(a, b) { return [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]]; }
+function cdiv(a, b) { const d = b[0] * b[0] + b[1] * b[1]; return [(a[0] * b[0] + a[1] * b[1]) / d, (a[1] * b[0] - a[0] * b[1]) / d]; }
+function csum(a, b) { return [a[0] + b[0], a[1] + b[1]]; }
+function cres(a, b) { return [a[0] - b[0], a[1] - b[1]]; }
+function cabs(a) { return Math.hypot(a[0], a[1]); }
+function cexp(a) { const m = Math.exp(a[0]); return [m * Math.cos(a[1]), m * Math.sin(a[1])]; }
+function cesc(k, a) { return [k * a[0], k * a[1]]; }
+// Coeficientes (de mayor a menor grado) del polinomio mónico con esas raíces.
+function poli(raices) {
+    let c = [[1, 0]];
+    for (const r of raices) {
+        const n = c.map(v => v.slice()); n.push([0, 0]);
+        for (let i = 1; i < n.length; i++) n[i] = cres(n[i], cmul(r, c[i - 1]));
+        c = n;
+    }
+    return c;
+}
+// Raíces de un polinomio real o complejo (coeficientes de mayor a menor grado),
+// por el método de Durand–Kerner; los coeficientes iniciales nulos se descartan.
+function raices(c) {
+    c = c.map(v => Array.isArray(v) ? v : [v, 0]);
+    const top = Math.max(...c.map(cabs)); while (c.length && cabs(c[0]) < 1e-9 * top) c = c.slice(1);
+    const n = c.length - 1; if (n < 1) return [];
+    const m = c.map(v => cdiv(v, c[0]));
+    let r = enteros(0, n - 1).map(i => cexp([Math.log(0.9), 2 * PI * i / n + 0.4]));
+    for (let it = 0; it < 500; it++) r = r.map((ri, i) => {
+        let den = [1, 0]; r.forEach((rj, j) => { if (j !== i) den = cmul(den, cres(ri, rj)); });
+        return cres(ri, cdiv(evalpoli(m, ri), den));
+    });
+    return r;
+}
+function polireal(raices) { return poli(raices).map(v => v[0]); }
+function evalpoli(c, s) { let y = [0, 0]; for (const v of c) y = csum(cmul(y, s), Array.isArray(v) ? v : [v, 0]); return y; }
+// k·Π(s − ceros)/Π(s − polos) en el punto complejo s.
+function zpk(ceros, polos, k, s) {
+    let y = [k, 0];
+    for (const z of ceros) y = cmul(y, cres(s, z));
+    for (const p of polos) y = cdiv(y, cres(s, p));
+    return y;
+}
+// Ecuación en diferencias: a[0]y[n] = Σ b[k]x[n−k] − Σ a[k]y[n−k].
+function filtrar(b, a, x) {
+    const y = new Array(x.length).fill(0);
+    for (let n = 0; n < x.length; n++) {
+        let v = 0;
+        for (let k = 0; k < b.length && k <= n; k++) v += b[k] * x[n - k];
+        for (let k = 1; k < a.length && k <= n; k++) v -= a[k] * y[n - k];
+        y[n] = v / a[0];
+    }
+    return y;
+}
+// Coeficientes en z^-1 de k·Π(z − ceros)/Π(z − polos) (más polos que ceros, o igual).
+function ba(ceros, polos, k) {
+    const b = new Array(polos.length - ceros.length).fill(0).concat(polireal(ceros).map(v => k * v));
+    return [b, polireal(polos)];
+}
+function desenrollar(f) {
+    const r = f.slice();
+    for (let i = 1; i < r.length; i++) { let d = r[i] - r[i - 1]; d -= 2 * PI * Math.round(d / (2 * PI)); r[i] = r[i - 1] + d; }
+    return r;
+}
+// Respuesta de H(s) = b(s)/a(s) (coeficientes de mayor a menor grado) en los
+// instantes t (equiespaciados desde 0): "escalon" o "impulso" (sin la parte δ).
+function continua(b, a, t, tipo) {
+    const n = a.length - 1, a0 = a[0];
+    const an = a.map(v => v / a0), bn = new Array(n + 1 - b.length).fill(0).concat(b.map(v => v / a0));
+    const D = bn[0], c = []; for (let k = 1; k <= n; k++) c.push(bn[k] - an[k] * D);
+    const u = tipo === "impulso" ? 0 : 1;
+    const f = x => { const d = x.slice(1); let v = u; for (let k = 1; k <= n; k++) v -= an[k] * x[n - k]; d.push(v); return d; };
+    const sal = x => { let y = u * D; for (let k = 1; k <= n; k++) y += c[k - 1] * x[n - k]; return y; };
+    let x = new Array(n).fill(0); if (tipo === "impulso" && n > 0) x[n - 1] = 1;
+    const rapido = Math.max(1, ...an.slice(1).map(v => Math.pow(Math.abs(v), 1 / n)));
+    const T = t.length > 1 ? t[1] - t[0] : 0, pasos = Math.max(1, Math.ceil(T * rapido * 20)), h = T / pasos;
+    const y = [];
+    for (let i = 0; i < t.length; i++) {
+        y.push(n ? sal(x) : (tipo === "impulso" ? 0 : D));
+        for (let s = 0; s < pasos && n; s++) {
+            const k1 = f(x), k2 = f(x.map((v, j) => v + h / 2 * k1[j])), k3 = f(x.map((v, j) => v + h / 2 * k2[j])), k4 = f(x.map((v, j) => v + h * k3[j]));
+            x = x.map((v, j) => v + h / 6 * (k1[j] + 2 * k2[j] + 2 * k3[j] + k4[j]));
+        }
+    }
+    return y;
+}
+// Polos del Butterworth analógico de orden N y pulsación de corte wc.
+function polos_butter(N, wc = 1) {
+    const p = []; for (let k = 1; k <= N; k++) p.push(cesc(wc, cexp([0, PI * (2 * k + N - 1) / (2 * N)])));
+    return p;
+}
+// Butterworth digital paso bajo por transformación bilineal con predistorsión
+// (Ωc en rad/muestra): devuelve [ceros, polos, k] en z con ganancia 1 en Ω = 0.
+function butter_z(N, Wc) {
+    const wc = 2 * Math.tan(Wc / 2), polos = polos_butter(N, wc).map(p => cdiv(csum([2, 0], p), cres([2, 0], p)));
+    const ceros = new Array(N).fill(0).map(() => [-1, 0]);
+    return [ceros, polos, 1 / cabs(zpk(ceros, polos, 1, [1, 0]))];
+}
+// Generador pseudoaleatorio con semilla (ruido reproducible), normal de varianza 1.
+function ruido(L, semilla = 1) {
+    let s = semilla >>> 0; const u = () => { s = (1664525 * s + 1013904223) >>> 0; return (s + 0.5) / 4294967296; };
+    const r = []; for (let i = 0; i < L; i++) r.push(Math.sqrt(-2 * Math.log(u())) * Math.cos(2 * PI * u()));
+    return r;
+}
+"""
+
+
 def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
-           graficas, referencia: str = "", columnas: int = 1) -> pathlib.Path:
+           graficas, referencia: str = "", columnas: int = 1, inicio=None) -> pathlib.Path:
     """Escribe html/<nombre de la fuente>.html y su entrada del índice.
 
-    ``graficas`` es una lista de figuras (o de filas ya montadas) que se
-    colocan en ``columnas`` columnas; ``controles`` va a la izquierda.
+    ``graficas`` es una lista de figuras (una lista dentro de ella es una
+    fila) que se colocan en ``columnas`` columnas; ``controles`` va a la izquierda.
+    ``inicio`` es un CustomJS que se ejecuta al abrir la página (suele ser el
+    mismo que el de los controles, para no repetir el cálculo en Python).
     """
     nombre = pathlib.Path(fuente).stem.replace("_", "-")
     cab = (f'<p class="pds-tema">Tema {tema} · {html.escape(TEMAS[tema])}</p>'
@@ -134,10 +431,14 @@ def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
            f'<p class="pds-texto">{descripcion}</p>')
     if referencia:
         cab += f'<p class="pds-ref">{html.escape(referencia)}</p>'
-    cabecera = Div(text=cab, stylesheets=[_CSS])
+    cabecera = Div(text=cab, stylesheets=[InlineStyleSheet(css=_CSS)])
+    graficas = [row(*g) if isinstance(g, (list, tuple)) else g for g in graficas]
     filas = [row(*graficas[i:i + columnas]) for i in range(0, len(graficas), columnas)]
     cuerpo = row(column(*controles, width=260), column(*filas))
-    doc = column(cabecera, cuerpo)
+    doc = Document()
+    doc.add_root(column(cabecera, cuerpo))
+    if inicio is not None:
+        doc.js_on_event(DocumentReady, inicio)
     SALIDA.mkdir(exist_ok=True)
     destino = SALIDA / f"T{tema}-{nombre}.html"
     destino.write_text(file_html(doc, RECURSOS, title=f"PdS · {titulo}", template=_PLANTILLA,

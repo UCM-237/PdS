@@ -170,7 +170,7 @@
       \displaystyle\int_0^1\e^{-(t-\tau)}\dd\tau=(\e-1)\,\e^{-t} & t>1 \quad\text{(pulso completo)}
     \end{cases}
   \]
-  \herramienta{html/T1\_Convolucion continua.html}
+  \herramienta{T1-convolucion-continua}
 \end{frame}
 
 \begin{frame}{Convolución discreta: ejemplo}
@@ -200,7 +200,7 @@
 \begin{frame}{En código: convolución discreta}
   \codigo{convolucion}
   \nota{\texttt{np.convolve} y \texttt{conv} no saben dónde empieza cada señal: el índice inicial del resultado es la suma de los índices iniciales.}
-  \herramienta{html/T1\_Convolucion discreta.html}
+  \herramienta{T1-convolucion-discreta}
 \end{frame}
 
 % =====================================================================
@@ -263,6 +263,7 @@
 \begin{frame}{En código: suma parcial de la serie de Fourier}
   \codigo{serie_fourier}
   \nota{Prueba con $K=1,3,19,99$ y observa que el pico de Gibbs no desaparece: solo se estrecha.}
+  \herramienta{T1-serie-fourier}
 \end{frame}
 
 \begin{frame}{Serie de Fourier discreta (DFS): $x[n]=x[n+N]$}
