@@ -95,7 +95,7 @@ Modela el error de cuantificación (Tema~2), la fase de una portadora desconocid
 \[
   f_X(x)=\frac1{\sqrt{2\pi}\,\sigma}\,\e^{-\frac{(x-\mu)^2}{2\sigma^2}} .
 \]
-Su media es $\mu$ y su varianza $\sigma^2$. La variable $Z=(X-\mu)/\sigma$ es $\mathcal N(0,1)$, cuya función de distribución $\Phi(z)$ está tabulada; así $P(X\le x)=\Phi\big((x-\mu)/\sigma\big)$. A una, dos y tres desviaciones típicas de la media queda el 68,3, el 95,4 y el 99,7\,\% de la probabilidad (\cref{fig:gaussiana}). Una transformación lineal de una gaussiana es gaussiana: $aX+b\sim\mathcal N(a\mu+b,\,a^2\sigma^2)$. Su importancia se debe al teorema central del límite (sección~\ref{sec:tcl}): el ruido que resulta de sumar muchas contribuciones pequeñas e independientes, como el ruido térmico, es gaussiano.
+Su media es $\mu$ y su varianza $\sigma^2$. La variable $Z=(X-\mu)/\sigma$ es $\mathcal N(0,1)$, cuya función de distribución $\Phi(z)$ está tabulada; así $P(X\le x)=\Phi\big((x-\mu)/\sigma\big)$. A una, dos y tres desviaciones típicas de la media queda el 68,3, el 95,4 y el 99,7\,\% de la probabilidad (\cref{fig:gaussiana}). Una transformación lineal de una gaussiana es gaussiana: $aX+b\sim\mathcal N(a\mu+b,\,a^2\sigma^2)$. Su importancia se debe al teorema del límite central (sección~\ref{sec:tcl}): el ruido que resulta de sumar muchas contribuciones pequeñas e independientes, como el ruido térmico, es gaussiano.
 
 \begin{figure}[ht]
   \centering
@@ -362,7 +362,7 @@ porque entonces $\boldsymbol\Sigma_X=\mathbf L\mathbf I\mathbf L^T=\boldsymbol\S
   La gaussiana multivariable se escribía con $\mathbf x$ como vector fila, $(\mathbf x-\mathbf\mu)\mathbf\Sigma^{-1}(\mathbf x-\mathbf\mu)^T$, y la descomposición de $\mathbf\Sigma$ con \texttt{svd}, sin explicar que para una matriz simétrica definida positiva coincide con la de autovalores. Se decía que la matriz de rotación $\mathbf R$ y la diagonal $\mathbf D$ dan $\mathbf\Sigma=\mathbf R\mathbf D\mathbf R'$, pero no cómo muestrear con ellas: hace falta $\mathbf R\mathbf D^{1/2}$.
 \end{nota}
 
-\subsection{Suma de variables y teorema central del límite}\label{sec:tcl}
+\subsection{Suma de variables y teorema del límite central}\label{sec:tcl}
 
 Sea $S=X+Y$. Por la linealidad, $\mu_S=\mu_X+\mu_Y$ siempre, y $\sigma_S^2=\sigma_X^2+\sigma_Y^2$ si las variables están incorreladas. Si además son independientes, la densidad de la suma es la \emph{convolución} de las densidades:
 \[
@@ -370,7 +370,7 @@ Sea $S=X+Y$. Por la linealidad, $\mu_S=\mu_X+\mu_Y$ siempre, y $\sigma_S^2=\sigm
 \]
 porque para que la suma valga $s$ con $X=x$ tiene que ser $Y=s-x$. Por ejemplo, la suma de dos $\mathcal U[0,1]$ independientes tiene densidad triangular en $[0,2]$, la convolución de dos pulsos.
 
-\begin{propiedad}{Teorema central del límite}{tcl}
+\begin{propiedad}{Teorema del límite central}{tcl}
   Si $X_1,\dots,X_n$ son independientes, con la misma distribución, media $\mu$ y varianza $\sigma^2$ finita, la suma normalizada
   \[
     Z_n=\frac{\sum_{i=1}^nX_i-n\mu}{\sqrt n\,\sigma}

@@ -87,7 +87,7 @@ Los ejercicios 1–5 corresponden a la parte~1 del tema (variables aleatorias y 
 \end{ejercicio}
 \begin{solucion}
   \begin{enumerate}[label=\alph*)]
-    \item La media estimada tiene desviación típica $\sigma/\sqrt N$ y, por el teorema central del límite, es aproximadamente gaussiana. El 95\,\% cae en $\pm1{,}96\sigma/\sqrt N$, así que $1{,}96/\sqrt N\le0{,}01$ y $N\ge38\,416$: unas 40\,000 muestras. Cada cifra decimal más multiplica $N$ por cien.
+    \item La media estimada tiene desviación típica $\sigma/\sqrt N$ y, por el teorema del límite central, es aproximadamente gaussiana. El 95\,\% cae en $\pm1{,}96\sigma/\sqrt N$, así que $1{,}96/\sqrt N\le0{,}01$ y $N\ge38\,416$: unas 40\,000 muestras. Cada cifra decimal más multiplica $N$ por cien.
     \item Las desviaciones se miden respecto a $\hat\mu$, que está más cerca de las muestras que la media verdadera, y la suma de cuadrados sale en media $(N-1)\sigma^2$. \texttt{var(x)} divide entre $N-1$; \texttt{np.var(x)} divide entre $N$ salvo que se pida \texttt{ddof=1}.
     \item $\hat f=\frac{n_j}{N\Delta}=\frac{1200}{10000\cdot0{,}5}=0{,}24$.
   \end{enumerate}
@@ -154,7 +154,7 @@ Los ejercicios 1–5 corresponden a la parte~1 del tema (variables aleatorias y 
   \end{enumerate}
 \end{solucion}
 
-\begin{ejercicio}[sumas y teorema central del límite]
+\begin{ejercicio}[sumas y teorema del límite central]
   \begin{incisos}[1]
     \item Calcula la densidad de $S=X_1+X_2$ con $X_1,X_2\sim\mathcal U[0,1]$ independientes.
     \item Se suman 12 uniformes $\mathcal U[0,1]$ independientes y se resta 6. ¿Qué media y varianza tiene el resultado? ¿Por qué es un generador aproximado de $\mathcal N(0,1)$?
@@ -164,7 +164,7 @@ Los ejercicios 1–5 corresponden a la parte~1 del tema (variables aleatorias y 
 \begin{solucion}
   \begin{enumerate}[label=\alph*)]
     \item La convolución de dos pulsos de anchura 1 es un triángulo: $f_S(s)=s$ en $[0,1]$, $2-s$ en $[1,2]$ y cero fuera.
-    \item Media $12\cdot\frac12-6=0$ y varianza $12\cdot\frac1{12}=1$. Por el teorema central del límite, la suma de 12 variables independientes es ya casi gaussiana (figura de los apuntes).
+    \item Media $12\cdot\frac12-6=0$ y varianza $12\cdot\frac1{12}=1$. Por el teorema del límite central, la suma de 12 variables independientes es ya casi gaussiana (figura de los apuntes).
     \item El resultado está acotado en $[-6,6]$, así que $P(\abs Z>6)=0$, mientras que la gaussiana da unos $2\cdot10^{-9}$. Para simular sucesos muy raros no sirve.
   \end{enumerate}
 \end{solucion}
