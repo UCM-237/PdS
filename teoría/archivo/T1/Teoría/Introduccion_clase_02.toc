@@ -1,5 +1,0 @@
-\babel@toc {spanish}{}\relax 
-\beamer@sectionintoc {1}{Objetivos}{2}{0}{1}
-\beamer@sectionintoc {2}{Señales}{2}{0}{2}
-\beamer@subsectionintoc {2}{1}{Tipos de señales}{2}{0}{2}
-\beamer@subsectionintoc {2}{2}{Operaciones con señales}{2}{0}{2}

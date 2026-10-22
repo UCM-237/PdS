@@ -1,108 +1,52 @@
-# 🛠️ Herramientas Interactivas de Procesamiento de Señales
+# Herramientas interactivas
 
-Este repositorio contiene un laboratorio virtual interactivo diseñado para explorar conceptos avanzados de procesamiento digital de señales (DSP), tales como el diseño de filtros FIR/IIR, análisis de fase lineal, retardo de grupo y manipulación de audio.
+Páginas web interactivas que acompañan a las transparencias de teoría. Cada
+herramienta es una página HTML autónoma: se abre en el navegador, desde el
+enlace de la transparencia o desde el índice, sin instalar Python. Los
+cálculos que dependen de los controles se hacen en el propio navegador.
 
-El objetivo de las herramientas es ayudar 
-a visualizar gráfica e interactivamente conceptos importantes del procesamiento de señales. Todo el código proporcionado es experimental y está en constante desarrollo y mejora, y puede contener errores o imprecisiones. 
+Índice publicado: `https://ucm-237.github.io/PdS/` (ver «Publicación»).
 
-## 📋 Requisitos Previos
-Antes de ejecutar las herramientas, asegúrate de tener instalado Python 3.8+ y las dependencias necesarias. Se recomienda encarecidamente el uso de un entorno virtual.
+## Estructura
 
-Instalación de dependencias
-Bash
-### Actualizar pip
-python -m pip install --upgrade pip
+| Carpeta | Contenido |
+| --- | --- |
+| `fuentes/Tn/` | Un script de Python por herramienta, ordenados por tema |
+| `comun/pds_bokeh.py` | Estilo común (paleta y notación de `teoría/comun`), controles y plantilla de página |
+| `generar.py` | Ejecuta todas las fuentes y escribe el índice |
+| `html/` | Páginas generadas (`Tn-nombre.html`) e índice (`index.html`) |
+| `server/` | Apps que necesitan Python en marcha (`bokeh serve`), como el filtrado de audio |
+| `standalone/`, `notebook/` | Herramientas antiguas, pendientes de pasar a `fuentes/` |
 
-### Instalar librerías base
-pip install numpy scipy bokeh pandas librosa
+## Uso
 
-### 1. Instalación de librerías base
 ```bash
-pip install numpy scipy bokeh pandas
-```
-```
-
-## 🚀 Formas de Ejecución
-El proyecto está organizado en tres formatos para adaptarse a diferentes necesidades de desarrollo y presentación:
-
-1. Formato Notebook (/notebook)
-Ideal para entornos educativos y prototipado rápido.
-
-Archivos: .ipynb
-
-Ejecución: Abrir con Jupyter Lab, Jupyter Notebook o VS Code (con extensión de Jupyter). Las gráficas de Bokeh se renderizarán directamente en las celdas de salida.
-
-2. Formato Standalone (/standalone y /html)
-Visualizaciones portátiles que no requieren un servidor de Python activo para ser consultadas.
-
-Archivos: .py (generadores) y .html (resultados).
-
-Ejecución: - Abre los archivos .html directamente en cualquier navegador.
-
-Para generar un nuevo HTML desde el código, ejecuta: python standalone/nombre_app.py.
-
-3. Formato Server (/server) 🌟
-Es el modo más robusto. Permite cálculos pesados en tiempo real (filtrado dinámico de audio, animaciones complejas) conectando el front-end con el motor de Python.
-
-Archivos: .py
-
-Ejecución: ```bash
-bokeh serve --show server/nombre_app.py
-
-La aplicación se abrirá automáticamente en http://localhost:5006.
-
-
-# 🛠️ Estructura del Proyecto
-tool.py: Clase base ITApp que gestiona el layout, el logging de interacción y la estructura común de las aplicaciones.
-
-/server: Aplicaciones que requieren el motor de Python activo para cálculos dinámicos.
-
-/notebook: Guías interactivas para uso educativo.
-
-/html: Versiones exportadas de las herramientas para consulta rápida sin dependencias.
-
-📝 Guía Paso a Paso (Inicio Rápido)
-Clona el repositorio:
-
-```Bash
-git clone https://github.com/tu-usuario/nombre-del-repo.git
-cd nombre-del-repo
-```
-Configura el entorno:
-
-``Bash
-python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
 pip install -r requirements.txt
+make            # genera html/ con Bokeh desde la CDN (para publicar)
+make sin-red    # igual, con Bokeh incrustado en cada página (para clase sin red)
 ```
-Lanza tu primera herramienta (ejemplo de Fase Lineal):
 
+Las apps de `server/` se lanzan con `bokeh serve --show server/<app>.py`.
+No guardan nada salvo que se pida con `PDS_REGISTRO=1`, que escribe un
+registro de interacciones en `logs/`; si se usa con alumnos, hay que
+avisarles.
 
-#### 📋 Requisitos Previos
+## Añadir una herramienta
 
-Las herramientas requieren **Python 3.8+**. Se recomienda el uso de un entorno virtual para gestionar las dependencias.
+1. Crea `fuentes/Tn/nombre.py` a partir de `fuentes/T1/exponencial_continua.py`.
+2. Construye las figuras con `pb.figura()` y los controles con
+   `pb.deslizador()`; actualiza los datos con `CustomJS`, no con callbacks
+   de Python, para que la página funcione sin servidor.
+3. Termina con `pb.pagina(__file__, titulo, tema=n, descripcion=…,
+   controles=[…], graficas=[…], referencia=…)`. La referencia indica la
+   transparencia y la sección de los apuntes que la usan.
+4. `make` y comprueba la página en el navegador.
 
+Notación: ω (rad/s) y f (Hz) en tiempo continuo; Ω (rad/muestra) y
+F (ciclos/muestra) en tiempo discreto.
 
-📂 Estructura del Repositorio
-tool.py: Núcleo del proyecto. Contiene la clase ITApp que estandariza el layout, la gestión de fuentes de datos (ColumnDataSource) y el registro automático de eventos.
+## Publicación
 
-/server: Scripts optimizados para el servidor de Bokeh (ej. Comparativa FIR/IIR, Análisis de Fase).
-
-/notebook: Tutoriales interactivos y experimentos de diseño.
-
-/html: Exportaciones estáticas listas para su visualización.
-
-interaccion_usuario.log: Archivo generado automáticamente que registra cambios en sliders, carga de archivos y telemetría de las gráficas.
-
-📝 Guía de Inicio Rápido
-Clonar el repositorio:
-
-Bash
-git clone [https://github.com/tu-usuario/dsp-interactive-lab.git](https://github.com/tu-usuario/dsp-interactive-lab.git)
-cd dsp-interactive-lab
-Ejecutar el explorador de Fase Lineal:
-
-Bash
-bokeh serve --show server/FIRPhaseLinearityApp.py
-Consultar logs:
-Después de interactuar con la herramienta, abre session_log_YYYYMMDD.log para revisar la trazabilidad de los parámetros ajustados.
+El flujo `.github/workflows/herramientas.yml` publica `herramientas/html`
+en GitHub Pages cada vez que cambia en `main`. Hay que activarlo una vez en
+*Settings → Pages → Build and deployment → Source: GitHub Actions*.

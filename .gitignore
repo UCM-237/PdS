@@ -1,2 +1,18 @@
 logs/
 descartar/
+# Artefactos de compilación y ficheros del sistema
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.dvi
+*.xdv
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/

@@ -1,6 +1,0 @@
-\beamer@sectionintoc {1}{Introducción}{2}{0}{1}
-\beamer@sectionintoc {2}{Comunicaciones}{3}{0}{2}
-\beamer@sectionintoc {3}{Audio y Música}{4}{0}{3}
-\beamer@sectionintoc {4}{Señales Biomédicas}{5}{0}{4}
-\beamer@sectionintoc {5}{Sistemas de Control y Robótica}{6}{0}{5}
-\beamer@sectionintoc {6}{Geofísica y Sismología}{8}{0}{6}

@@ -1,2 +1,0 @@
-\beamer@sectionintoc {1}{Introducción}{2}{0}{1}
-\beamer@sectionintoc {2}{Análisis Espectral con la DFT}{8}{0}{2}

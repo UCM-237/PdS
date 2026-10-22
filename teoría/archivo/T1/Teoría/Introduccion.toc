@@ -1,6 +1,0 @@
-\babel@toc {spanish}{}\relax 
-\beamer@sectionintoc {1}{Definiciones y notación}{3}{0}{1}
-\beamer@sectionintoc {2}{Señales}{6}{0}{2}
-\beamer@sectionintoc {3}{Sistemas}{57}{0}{3}
-\beamer@subsectionintoc {3}{1}{Tipos de Sistemas}{58}{0}{3}
-\beamer@subsectionintoc {3}{2}{Sistemas LTI}{67}{0}{3}

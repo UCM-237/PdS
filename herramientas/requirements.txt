@@ -1,0 +1,5 @@
+numpy
+scipy
+bokeh>=3.6,<4
+# Solo para la herramienta de audio del Tema 4 (server/T4_05_FIR_Audio.py)
+librosa

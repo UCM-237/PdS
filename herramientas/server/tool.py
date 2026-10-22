@@ -1,5 +1,6 @@
 import logging
 import json
+import os
 from datetime import datetime
 
 from bokeh.plotting import figure, curdoc
@@ -27,12 +28,19 @@ class ITApp:
         self.logger = logging.getLogger(self.title)
         self.logger.setLevel(logging.INFO)
         
+        # El registro de interacciones solo se guarda si se pide con
+        # PDS_REGISTRO=1; si se usa con alumnos, hay que avisarles.
         # Evitar duplicados si se reinicia la app en el mismo proceso
         if not self.logger.handlers:
-            fh = logging.FileHandler(f'logs/session_log_{datetime.now().strftime("%Y%m%d_%H%M")}.log')
-            formatter = logging.Formatter('%(asctime)s | %(message)s')
-            fh.setFormatter(formatter)
-            self.logger.addHandler(fh)
+            if os.environ.get("PDS_REGISTRO"):
+                os.makedirs("logs", exist_ok=True)
+                fh = logging.FileHandler(f'logs/session_log_{datetime.now().strftime("%Y%m%d_%H%M")}.log')
+                formatter = logging.Formatter('%(asctime)s | %(message)s')
+                fh.setFormatter(formatter)
+                self.logger.addHandler(fh)
+            else:
+                self.logger.addHandler(logging.NullHandler())
+            self.logger.propagate = False
         
         action = {
             'event': 'SESSION_START',
