@@ -1,0 +1,5 @@
+# Páginas generadas por generar.py (se publican desde GitHub Actions)
+html/T[1-6]-*.html
+html/index.html
+html/indice/
+logs/
