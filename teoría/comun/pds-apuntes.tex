@@ -9,7 +9,10 @@
 %  Compilar con:  latexmk -xelatex  (o «make» desde teoría/)
 % =====================================================================
 
-\input{../../comun/pds-comun.tex}
+% \rutacomun se puede definir antes para compilar desde otra carpeta
+% (lo hace el documento completo, ver completo.py)
+\providecommand{\rutacomun}{../../comun/}
+\input{\rutacomun pds-comun.tex}
 
 \usepackage[a4paper, top=2.6cm, bottom=2.6cm, left=2.5cm, right=2.5cm,
             headheight=1.1cm]{geometry}
@@ -63,7 +66,7 @@
   \thispagestyle{plain.scrheadings}%
   \noindent
   \begin{minipage}[c]{2.2cm}
-    \includegraphics[width=1.9cm]{../../comun/ucm.png}
+    \includegraphics[width=1.9cm]{\rutacomun ucm.png}
   \end{minipage}%
   \begin{minipage}[c]{\dimexpr\linewidth-2.2cm}
     \sffamily
@@ -94,6 +97,10 @@
   title={#1}, borderline west={2.5pt}{0pt}{pdsrojo}}
 \newtcolorbox{encodigo}[1][En código]{pdsbase, colback=white, colframe=pdsgris,
   title={#1}, borderline west={2.5pt}{0pt}{pdsgris}}
+% \begin{errata}[título] ... \end{errata}: nota sobre erratas de versiones
+% anteriores; solo se imprime con \ERRATAS (ver pds-comun.tex)
+\NewDocumentEnvironment{errata}{O{Erratas de versiones anteriores} +b}
+  {\iferratas\begin{nota}[#1]#2\end{nota}\fi}{}
 
 \lstset{basicstyle=\ttfamily\small}
 \renewcommand{\codigoetiqueta}[1]{{\sffamily\small\bfseries\color{pdsgris}#1}}

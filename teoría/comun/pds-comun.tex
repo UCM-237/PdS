@@ -18,8 +18,13 @@
 \usepackage{siunitx}
 \sisetup{output-decimal-marker={,}, group-separator={\,}, per-mode=symbol}
 
+% Notas de erratas de versiones anteriores: no se imprimen salvo que se
+% defina \ERRATAS antes de cargar el estilo (make ERRATAS=1)
+\newif\iferratas
+\ifdefined\ERRATAS \erratastrue \fi
+
 % Ruta común (logo y figuras compartidas)
-\newcommand{\rutacomun}{../../comun/}
+\providecommand{\rutacomun}{../../comun/}
 \input{\rutacomun datos.tex}
 
 % ---------------------------------------------------------------------

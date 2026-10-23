@@ -161,7 +161,7 @@
       \end{ejemplo}
     \end{column}
   \end{columns}
-  \nota{Erratas antiguas: la condición de la ruleta debe incluir la igualdad en un extremo; si no, los $u$ que caen justo en un borde no tienen valor asignado.}
+  \errata{la condición de la ruleta debe incluir la igualdad en un extremo; si no, los $u$ que caen justo en un borde no tienen valor asignado.}
 \end{frame}
 
 \begin{frame}{En código: método de la ruleta}
@@ -242,7 +242,7 @@
     \end{column}
     \begin{column}{0.56\textwidth}
       \includegraphics[width=\linewidth]{rechazo}
-      \nota{Errata antigua: la condición es $Mq(x)\ge f(x)$, con igualdad permitida, y no $Mq(x)-f(x)>0$.}
+      \errata{la condición es $Mq(x)\ge f(x)$, con igualdad permitida, y no $Mq(x)-f(x)>0$.}
     \end{column}
   \end{columns}
 \end{frame}
@@ -290,7 +290,7 @@
     \item Con $N-1$ el estimador de la varianza es insesgado; con $N$ (el de máxima verosimilitud para la gaussiana) se queda corto en un factor $(N-1)/N$.
     \item \alert{Monte Carlo}: $E\{g(X)\}=\int g(x)f_X(x)\dd x$ se aproxima por la media de $g$ sobre las muestras, aunque la integral no tenga solución cerrada.
   \end{itemize}
-  \nota{Erratas antiguas: la suma de Monte Carlo usaba el índice $n$ y escribía $x_i$, y el estimador de la varianza dividía por $N$ sin advertir el sesgo.}
+  \errata{la suma de Monte Carlo usaba el índice $n$ y escribía $x_i$, y el estimador de la varianza dividía por $N$ sin advertir el sesgo.}
 \end{frame}
 
 \begin{frame}{Monte Carlo}

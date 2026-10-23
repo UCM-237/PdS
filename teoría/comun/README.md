@@ -52,6 +52,23 @@ imprimen si se define `\SOLUCIONES` antes de cargar el estilo (lo hace
 `Tx-Ejercicios-Soluciones.tex`). `make publicar` copia a `clase/` la hoja
 con y sin soluciones.
 
+## Erratas de versiones anteriores
+
+Las notas sobre erratas de versiones antiguas van en el entorno `errata`
+de los apuntes y las hojas (`\begin{errata}[título] … \end{errata}`, con
+el título «Erratas de versiones anteriores» por defecto) y en `\errata{…}`
+de las transparencias. Solo se imprimen si se define `\ERRATAS`:
+`make T4 ERRATAS=1` genera aparte los PDF con erratas (`*-Erratas.pdf`).
+Por defecto, y en `make publicar`, no aparecen.
+
+## Documento completo
+
+`make completo` genera con `comun/completo.py` un solo documento con los
+apuntes de los seis temas, cada uno seguido de su hoja de ejercicios con
+las soluciones (`completo/PdS-Completo.pdf`). La carpeta `completo/` se
+genera entera y no se guarda en el repositorio; no se edita a mano.
+`make publicar` lo copia a `clase/PdS - Apuntes y ejercicios.pdf`.
+
 ## Numeración de los temas
 
 Se sigue la guía docente: T1 Introducción, T2 Muestreo, T3 DFT, T4 Filtros,

@@ -273,9 +273,9 @@ Para demostrarlo, se calcula la IDFT del producto y se usa \eqref{eq:ortogonalid
 \]
 porque la suma interior vale 1 solo cuando $l=((n-m))_N$.
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   En algunas transparencias antiguas la IDFT aparecía con la suma en $n$ en lugar de en $k$, y en la última línea de esta demostración se intercambiaban los papeles de $n$ y $m$. Las expresiones correctas son las de arriba.
-\end{nota}
+\end{errata}
 
 \subsection{Convolución circular y convolución lineal}\label{sec:lineal}
 
@@ -458,9 +458,9 @@ La diferencia importa con señales de banda ancha. Para un ruido blanco de varia
 
 Con ventana, la densidad se normaliza con $\sum w^2[n]$ en lugar de $N$: $\hat\Phi_{xx}=\abs{X_w[k]}^2/(f_s\sum_nw^2[n])$. El periodograma de una señal aleatoria fluctúa mucho alrededor de su valor medio y no mejora al aumentar $N$; se reduce la varianza promediando los periodogramas de varios tramos (método de Welch, Tema~6).
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   En algunas transparencias antiguas se llamaba $\Phi_{xx}$ en dB a la potencia por muestra $20\log_{10}(\abs{X[k]}/N)$, y la autocorrelación aparecía sin el factor $1/T$ y con $\dd\tau$ en lugar de $\dd t$. Las definiciones correctas son las de esta sección y del Tema~6.
-\end{nota}
+\end{errata}
 
 \subsection{Espectrograma}
 
@@ -511,9 +511,9 @@ donde $F[k]$ y $G[k]$ son las DFT de $N/2$ puntos de las muestras pares e impare
   \]
 \end{propiedad}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   En algunas transparencias antiguas el factor $W_N^k$ aparecía como $W_{N/2}^r$ fuera del sumatorio, y la segunda mitad se escribía para $k=N/2,\dots,N-1$. Las fórmulas correctas son las de arriba: $k$ recorre solo la primera mitad y la segunda se obtiene con el signo cambiado.
-\end{nota}
+\end{errata}
 
 Cada par de salidas cuesta un producto complejo ($W_N^kG[k]$) y dos sumas: es la \emph{mariposa}. Las DFT de $N/2$ puntos se descomponen del mismo modo en DFT de $N/4$, y así hasta DFT de un punto, que son la propia muestra. Hay $\log_2N$ etapas de $N/2$ mariposas, lo que da
 \[
@@ -581,9 +581,9 @@ Los dos métodos dan el mismo resultado con un coste parecido, y el retardo es d
 
 Si $h[n]$ tiene duración infinita, las muestras $H[k]=H(\e^{j2\pi k/N})$ existen, pero su IDFT es la extensión periódica $h_N[n]=\sum_rh[n-rN]$ (propiedad~\ref{prop:muestreo-frecuencia}). Para $h[n]=a^nu[n]$ es $h_N[n]=a^n/(1-a^N)$ (ejemplo~\ref{ej:alias-temporal}), y la DFT filtra con un error del orden de $a^N$ (\cref{fig:iir}). Con $N$ suficientemente grande el error es despreciable, y por eso el filtrado en frecuencia con la FFT se usa también con sistemas IIR o con respuestas medidas, que son largas. Pero lo exacto, y normalmente mucho más barato, es implementar el sistema con su ecuación en diferencias (Tema~4).
 
-\begin{nota}[Errata de versiones anteriores]
+\begin{errata}[Errata de versiones anteriores]
   Algunas transparencias antiguas afirmaban que la DFT no se puede usar con sistemas IIR ni con entradas de duración infinita. Con entradas largas se usa el procesado por bloques; con sistemas IIR, la DFT da una aproximación cuyo error se controla con $N$.
-\end{nota}
+\end{errata}
 
 \begin{figure}[ht]
   \centering
