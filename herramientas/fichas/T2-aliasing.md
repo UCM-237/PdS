@@ -1,12 +1,40 @@
 ## Introducción
 
-Muestrear una sinusoide de frecuencia f₀ cada Ts = 1/fs segundos da la secuencia x[n] = cos(2π f₀ n / fs), de frecuencia discreta Ω₀ = 2π f₀ / fs. Como las frecuencias discretas Ω₀ y Ω₀ + 2πk dan las mismas muestras, también las dan todas las sinusoides de frecuencias f₀ + k fs (y, por ser el coseno par, −f₀ + k fs). Cada una es un **alias** de las demás.
+### Muestrear es quedarse con unos pocos valores
 
-De todas ellas, la única con |f| ≤ fs/2 es el **alias fundamental**. Un reconstructor que solo produce frecuencias por debajo de fs/2, como el filtro ideal, devuelve siempre esa. Si la sinusoide original estaba por encima de fs/2, aparece en la **frecuencia aparente**
+Un conversor A/D toma un valor de la señal continua x(t) cada Ts segundos, el **periodo de muestreo**. Su inverso, fs = 1/Ts, es la **frecuencia de muestreo**, en muestras por segundo. El resultado es la secuencia x[n] = x(nTs). Entre dos muestras la señal puede hacer cualquier cosa: la pregunta es cuándo esos valores bastan para saber qué señal había.
 
-> f_a = |f₀ − k fs|, con k el entero más próximo a f₀ / fs,
+### Por qué aparecen los alias
 
-y el eje de frecuencias se «pliega» en los múltiplos de fs/2, la **frecuencia de Nyquist**. En el espectro, el muestreo repite X(f) cada fs; hay aliasing cuando una réplica cae dentro de la banda [−fs/2, fs/2].
+Para una sinusoide x(t) = cos(2π f₀ t), las muestras son
+
+> x[n] = cos(2π f₀ n Ts) = cos(Ω₀ n), con Ω₀ = 2π f₀ / fs (rad/muestra).
+
+La frecuencia discreta Ω₀ solo importa salvo múltiplos de 2π, porque cos((Ω₀ + 2πk) n) = cos(Ω₀ n) para todo entero n. Deshaciendo el cambio Ω = 2π f / fs, todas las sinusoides de frecuencias
+
+> f₀ + k fs, con k entero,
+
+dan exactamente las mismas muestras. Como el coseno es par, también las de frecuencias −f₀ + k fs. Cada una es un **alias** de las demás: una vez muestreadas, no hay forma de distinguirlas.
+
+### Alias fundamental y frecuencia aparente
+
+De toda la familia de alias, solo uno cumple |f| ≤ fs/2: es el **alias fundamental**. Un reconstructor que solo genera frecuencias por debajo de fs/2, como el filtro ideal del Tema 2, devuelve siempre ese. Si la sinusoide original ya estaba por debajo de fs/2, es su propio alias fundamental y se recupera sin error. Si estaba por encima, aparece en la **frecuencia aparente**
+
+> f_a = |f₀ − k fs|, con k el entero más próximo a f₀ / fs.
+
+Al crecer f₀, f_a sube de 0 a fs/2, baja a 0 en fs, vuelve a subir y así sucesivamente: el eje de frecuencias se «pliega» en los múltiplos de fs/2, que se llama **frecuencia de Nyquist**. En el caso límite f₀ = fs/2, un coseno da las muestras ±1 alternadas, pero un seno de esa frecuencia da todas las muestras nulas: por eso el teorema del muestreo pide una desigualdad estricta.
+
+### La misma idea en el espectro
+
+El muestreo ideal multiplica x(t) por un tren de impulsos de periodo Ts. En frecuencia, eso repite el espectro X(f) cada fs (y lo escala por 1/Ts). Una sinusoide de frecuencia f₀ tiene dos rayas, en ±f₀; tras muestrear, tiene rayas en ±f₀ + k fs. Si alguna de esas réplicas cae dentro de la banda [−fs/2, fs/2], el reconstructor la toma como si fuera parte de la señal: eso es el **aliasing**.
+
+Para una señal cualquiera con banda limitada a f_m, las réplicas no se solapan si fs > 2 f_m. Es el **teorema del muestreo**, y 2 f_m es la **tasa de Nyquist** de la señal.
+
+### Consecuencias prácticas
+
+- El aliasing no se puede deshacer después de muestrear: las muestras de la señal original y las de su alias son idénticas. Por eso los conversores llevan un **filtro antialiasing** analógico que elimina lo que está por encima de fs/2 *antes* de muestrear.
+- Un tono de 30 kHz grabado a 48 kHz sin ese filtro se oye a 18 kHz. Las ruedas de un coche que en un vídeo parecen girar despacio o hacia atrás son el mismo fenómeno: la cámara muestrea a unos 25 imágenes por segundo.
+- El mismo plegado aparece al reducir la frecuencia de muestreo de una secuencia (diezmado) y al submuestrear una imagen (muaré).
 
 ## Guía de uso
 

@@ -76,6 +76,7 @@ _PLANTILLA = Template("""<!DOCTYPE html>
                 border-top: 2px solid #E3E4EC; padding-top: 8px; }
   .pds-ficha h1 { color: #2B3A8C; font-size: 20px; font-weight: 600; margin: 12px 0 4px; }
   .pds-ficha h2 { color: #2B3A8C; font-size: 17px; font-weight: 600; margin: 22px 0 6px; }
+  .pds-ficha h3 { color: #222; font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
   .pds-ficha p, .pds-ficha li { margin: 6px 0; }
   .pds-ficha blockquote { margin: 8px 0; padding: 4px 14px; border-left: 3px solid #2B3A8C; background: #F4F5FA; }
   .pds-ficha details { margin: 4px 0 14px; padding: 6px 12px; background: #F4F5FA; border-radius: 6px; }
