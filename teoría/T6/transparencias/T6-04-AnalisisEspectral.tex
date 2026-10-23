@@ -115,6 +115,7 @@
     \]
   \end{importante}
   \nota{Las convoluciones se convierten en productos y $H(\e^{-j\Omega})=H^*(\e^{j\Omega})$. Potencia de salida: $\frac1{2\pi}\int\abs H^2\Phi_{xx}\dd\Omega$; con entrada blanca, $\sigma_x^2\sum_kh^2[k]$.}
+  \herramienta{T6-ruido-lti}
 \end{frame}
 
 \begin{frame}{Ruido coloreado}
@@ -125,6 +126,7 @@
     \item Al revés, un filtro \alert{blanqueador} $1/H$ convierte ruido coloreado en blanco.
     \item El filtro solo cambia la potencia de cada frecuencia; no puede crear frecuencias que no estaban.
   \end{itemize}
+  \herramienta{T6-ruido-lti}
 \end{frame}
 
 \begin{frame}{Identificación de sistemas}
@@ -146,6 +148,7 @@
       \nota{$H(z)=\frac{0{,}2+0{,}3z^{-1}}{1-1{,}2z^{-1}+0{,}72z^{-2}}$, ruido de medida de $\sigma=0{,}3$. Donde $\abs H$ es pequeño, la fase se estima peor.}
     \end{column}
   \end{columns}
+  \herramienta{T6-ruido-lti}
 \end{frame}
 
 \begin{frame}{En código: identificar un sistema}
@@ -167,6 +170,7 @@
     \item Es asintóticamente insesgado (su media tiende a $\Phi_{xx}$), pero su varianza \alert{no disminuye} con $N$: es del orden de $\Phi_{xx}^2$. Más muestras dan más frecuencias, igual de ruidosas.
   \end{itemize}
   \begin{center}\includegraphics[width=0.78\linewidth]{periodograma}\end{center}
+  \herramienta{T6-periodograma-welch}
 \end{frame}
 
 \begin{frame}{Método de Welch}
@@ -180,6 +184,7 @@
   \begin{importante}[Escalas]
     Por defecto devuelven la DEP \emph{unilateral} (doble en $0<f<f_s/2$) y por unidad de frecuencia (Hz, o rad/muestra si no se da $f_s$). Con la opción bilateral y $f_s=1$ se obtiene $\Phi_{xx}(\e^{j2\pi f})$.
   \end{importante}
+  \herramienta{T6-periodograma-welch}
 \end{frame}
 
 \begin{frame}{En código: DEP de un AR(1) con Welch}

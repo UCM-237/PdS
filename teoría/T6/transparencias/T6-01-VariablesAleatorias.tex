@@ -70,6 +70,7 @@
       \includegraphics[width=\linewidth]{pmf_pdf_cdf}
     \end{column}
   \end{columns}
+  \herramienta{T6-distribuciones}
 \end{frame}
 
 \begin{frame}{Esperanza, media y varianza}
@@ -119,6 +120,7 @@
       \end{itemize}
     \end{column}
   \end{columns}
+  \herramienta{T6-distribuciones}
 \end{frame}
 
 % =====================================================================
@@ -162,6 +164,7 @@
     \end{column}
   \end{columns}
   \errata{la condición de la ruleta debe incluir la igualdad en un extremo; si no, los $u$ que caen justo en un borde no tienen valor asignado.}
+  \herramienta{T6-generacion-muestras}
 \end{frame}
 
 \begin{frame}{En código: método de la ruleta}
@@ -188,6 +191,7 @@
       \nota{El método de la ruleta es la versión discreta de este. Aplicado al revés, $F_X(X)$ es uniforme: es la ecualización del histograma (tema~5).}
     \end{column}
   \end{columns}
+  \herramienta{T6-generacion-muestras}
 \end{frame}
 
 \begin{frame}{En código: exponencial e inversa}
@@ -220,6 +224,7 @@
       \nota{La versión antigua decía «se genera un par…» sin terminar la frase.}
     \end{column}
   \end{columns}
+  \herramienta{T6-generacion-muestras}
 \end{frame}
 
 \begin{frame}{En código: Box-Muller}
@@ -245,6 +250,7 @@
       \errata{la condición es $Mq(x)\ge f(x)$, con igualdad permitida, y no $Mq(x)-f(x)>0$.}
     \end{column}
   \end{columns}
+  \herramienta{T6-generacion-muestras}
 \end{frame}
 
 \begin{frame}{Mezclas}
@@ -264,6 +270,7 @@
       \nota{La transparencia antigua dejaba la mezcla sin terminar: «$p_X(x)=0{,}4\mathcal N(x,3,0{,}5)+$».}
     \end{column}
   \end{columns}
+  \herramienta{T6-generacion-muestras}
 \end{frame}
 
 % =====================================================================
@@ -277,6 +284,7 @@
     \item $\hat f_X(x)=\frac{n_j}{N\Delta}$ en el intervalo $j$ estima la densidad (el área total es 1). Más muestras, mejor estimación; intervalos más estrechos, más detalle pero más ruido.
   \end{itemize}
   \nota{Matlab: \texttt{histogram(x, 'Normalization', 'pdf')}; Python: \texttt{plt.hist(x, density=True)}.}
+  \herramienta{T6-distribuciones}
 \end{frame}
 
 \begin{frame}{Estimadores}
@@ -296,6 +304,7 @@
 \begin{frame}{Monte Carlo}
   \begin{center}\includegraphics[width=0.72\linewidth]{montecarlo}\end{center}
   \codigo[basicstyle=\ttfamily\fontsize{6.3}{7.1}\selectfont]{montecarlo}
+  \herramienta{T6-monte-carlo}
 \end{frame}
 
 % =====================================================================

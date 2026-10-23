@@ -36,6 +36,7 @@
     \item Matlab: \texttt{imread}, \texttt{imshow}, \texttt{imwrite}. Python: \texttt{matplotlib.pyplot.imread} y \texttt{imshow}, o el paquete Pillow.
   \end{itemize}
   \nota{Los ejemplos del tema usan una imagen sintética, \texttt{imagen\_prueba}, para no depender de ficheros externos.}
+  \herramienta{T5-muestreo-imagen}
 \end{frame}
 
 % =====================================================================
@@ -48,6 +49,7 @@
     \item Cada píxel se transforma con la misma función de su valor: $s=T(r)$. No intervienen los vecinos.
     \item Negativo $s=1-r$; corrección gamma $s=r^\gamma$ ($\gamma<1$ aclara, $\gamma>1$ oscurece); estiramiento lineal de $[r_1,r_2]$ a $[0,1]$; umbralización, que da una imagen binaria.
   \end{itemize}
+  \herramienta{T5-histograma}
 \end{frame}
 
 \begin{frame}{Histograma}
@@ -73,6 +75,7 @@
     \item Se aplica la transformación $s=T(r)=\operatorname{round}\big((L-1)\,F(r)\big)$, que es creciente.
     \item Si $r$ fuera continua, $s$ tendría distribución uniforme (tema~6: la distribución aplicada a su propia variable es uniforme). Con niveles discretos el histograma no queda plano, pero se reparte por todo el rango.
   \end{itemize}
+  \herramienta{T5-histograma}
 \end{frame}
 
 \begin{frame}{En código: ecualización}
@@ -110,6 +113,7 @@
     \end{column}
   \end{columns}
   \nota{\texttt{conv2} (Matlab), \texttt{convolve2d} (Python). \texttt{filter2} e \texttt{imfilter} calculan la correlación.}
+  \herramienta{T5-convolucion-2d}
 \end{frame}
 
 \begin{frame}{Núcleos habituales}
@@ -128,6 +132,7 @@
       \end{itemize}
     \end{column}
   \end{columns}
+  \herramienta{T5-convolucion-2d}
 \end{frame}
 
 \begin{frame}{En código: bordes con Sobel}
@@ -168,6 +173,7 @@
       \end{itemize}
     \end{column}
   \end{columns}
+  \herramienta{T5-dft-2d}
 \end{frame}
 
 \begin{frame}{Propiedades}
@@ -215,6 +221,7 @@
       \includegraphics[width=\linewidth]{filtrado_frecuencia}
     \end{column}
   \end{columns}
+  \herramienta{T5-dft-2d}
 \end{frame}
 
 \begin{frame}{En código: paso bajo gaussiano con la DFT}

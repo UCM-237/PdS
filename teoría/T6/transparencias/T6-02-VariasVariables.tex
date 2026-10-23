@@ -44,6 +44,7 @@
     \)
     \item \alert{Teorema de Bayes}: $f_{X|Y}(x|y)=\dfrac{f_{Y|X}(y|x)\,f_X(x)}{f_Y(y)}$.
   \end{itemize}
+  \herramienta{T6-gaussiana-bivariante}
 \end{frame}
 
 \begin{frame}{Ejemplo: una conjunta construida por partes}
@@ -95,6 +96,7 @@
     \item Al revés no: con $X\sim\mathcal U[-1,1]$ e $Y=X^2$, $C_{XY}=E\{X^3\}-0=0$, aunque $Y$ es función de $X$.
     \item Por tanto: \alert{correladas $\Rightarrow$ dependientes}, pero la correlación nula no prueba la independencia. Excepción: variables \alert{conjuntamente gaussianas}.
   \end{itemize}
+  \herramienta{T6-gaussiana-bivariante}
 \end{frame}
 
 \begin{frame}{En código: estimar media, covarianza y $\rho$}
@@ -139,6 +141,7 @@
       \nota{$\boldsymbol\mu=(1,2)$, $\boldsymbol\Sigma=\begin{bsmallmatrix}2&1{,}2\\1{,}2&1\end{bsmallmatrix}$: $\lambda=0{,}2$ y $2{,}8$, $\rho=0{,}85$.}
     \end{column}
   \end{columns}
+  \herramienta{T6-gaussiana-bivariante}
 \end{frame}
 
 \begin{frame}{Muestrear una gaussiana multivariable}
@@ -148,6 +151,7 @@
     \item $\mathbf L$: la factorización de Cholesky (\texttt{chol}) o $\mathbf V\boldsymbol\Lambda^{1/2}$ (\texttt{eig}): rotar y escalar.
   \end{itemize}
   \codigo[basicstyle=\ttfamily\fontsize{6.6}{7.5}\selectfont]{gaussiana_nd}
+  \herramienta{T6-gaussiana-bivariante}
 \end{frame}
 
 % =====================================================================
@@ -171,6 +175,7 @@
       \nota{En la figura, $Z=(S-n/2)/\sqrt{n/12}$. Por eso el ruido térmico es gaussiano.}
     \end{column}
   \end{columns}
+  \herramienta{T6-limite-central}
 \end{frame}
 
 % =====================================================================
