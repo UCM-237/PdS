@@ -126,4 +126,17 @@
   \else\def\finincisos{}\fi
   \begin{enumerate}[label=\alph*), itemsep=3pt, topsep=0pt]}%
   {\end{enumerate}\finincisos\vspace{-4pt}}
-\newcommand{\herramienta}[1]{\emph{Herramienta interactiva:} \texttt{herramientas/#1}}
+% \herramienta{T1-convolucion-continua, T1-convolucion-discreta}: enlaces a las
+% páginas publicadas de herramientas/html (se abren en el navegador).
+\newcommand{\urlherramientas}{https://ucm-237.github.io/PdS/}
+\newcommand{\enlaceherramienta}[1]{\href{\urlherramientas#1.html}{\texttt{#1}}}
+\ExplSyntaxOn
+\seq_new:N \l__pds_herr_seq
+\NewDocumentCommand{\herramienta}{m}{
+  \seq_clear:N \l__pds_herr_seq
+  \clist_map_inline:nn {#1} { \seq_put_right:Nn \l__pds_herr_seq { \enlaceherramienta{##1} } }
+  \emph{ \int_compare:nNnTF { \seq_count:N \l__pds_herr_seq } > 1
+    { Herramientas~interactivas: } { Herramienta~interactiva: } }~
+  \seq_use:Nnnn \l__pds_herr_seq { ~y~ } { ,~ } { ~y~ }
+}
+\ExplSyntaxOff

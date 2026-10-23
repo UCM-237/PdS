@@ -139,7 +139,7 @@ Si algún $a_k\ne0$ hay realimentación y la respuesta al impulso es infinita: f
   \end{tabular}
 \end{table}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 1–3. \herramienta{server/T4\_Filtros\_Discretos\_PZMap.py}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 1–3. \herramienta{T4-media-movil, T4-polos-ceros-z, T4-fase-lineal}.\end{flushright}
 
 % =====================================================================
 \section{Filtros continuos}\label{sec:continuos}
@@ -355,7 +355,7 @@ El paso banda que resulta es geométricamente simétrico respecto a $\hat\omega_
   Los ejemplos de paso banda y supresor antiguos decían «convertir el filtro paso bajo a paso alta» antes de usar \texttt{lp2bp} y \texttt{lp2bs}, hablaban de «atenuación superiora» (supresora) y de «rizo baso banda» (paso banda), y la frase «el filtro paso baja asociado al filtro paso baja» quería decir «el prototipo paso bajo asociado al filtro de destino». El ejemplo de paso banda antiguo llegaba a $\omega_s=1{,}4$ estrechando un borde de paso para hacer la plantilla simétrica; el resultado es más exigente que el necesario, pero válido.
 \end{nota}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 4–7. \herramienta{server/T4\_Filtros\_Continuos.py}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 4–7. \herramienta{T4-polos-ceros-s, T4-filtros-continuos, T4-transformaciones-frecuencia}.\end{flushright}
 
 % =====================================================================
 \section{Filtros IIR}\label{sec:iir}
@@ -502,7 +502,7 @@ Un IIR de orden alto en forma directa (los coeficientes $a_k$ y $b_k$ del polino
   \end{tabular}
 \end{table}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 8–11. \herramienta{server/T4\_Filtros\_IIR\_Discretizacion.py}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 8–11. \herramienta{T4-discretizacion-iir, T4-cuantificacion-coeficientes}.\end{flushright}
 
 % =====================================================================
 \section{Filtros FIR}\label{sec:fir}
@@ -707,7 +707,7 @@ En el \emph{muestreo en frecuencia} se fija la respuesta deseada en $N$ frecuenc
 
 Un FIR de $N$ coeficientes cuesta $N$ productos por muestra (la mitad aprovechando la simetría) y retrasa $(N-1)/2$ muestras. En audio a 44,1--48\,kHz son habituales 50--200 coeficientes en filtros básicos, 100--500 en filtros de cruce de altavoces, 500--2000 en cancelación de eco y hasta varios miles en procesado de alta calidad, con retardos de unos pocos a decenas de milisegundos. Para órdenes altos se filtra por bloques con la FFT (solapamiento y suma, Tema~3). En aplicaciones en tiempo real el retardo limita el orden; un IIR, o un FIR de fase mínima (\cref{sec:especiales}), retrasan mucho menos.
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 12–15. \herramienta{server/T4\_01\_FIR\_Ventana\_Fija.py} y \texttt{T4\_02\_FIR\_Kaiser.py}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 12–15. \herramienta{T4-tipos-fir, T4-fir-ventana, T4-parks-mcclellan}.\end{flushright}
 
 % =====================================================================
 \section{Filtros especiales}\label{sec:especiales}
@@ -802,7 +802,7 @@ Sus ceros son las $L$ raíces de la unidad, en $\Omega=2\pi k/L$, es decir, en $
   \codigo{peine_50hz}
 \end{encodigo}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 16–18. \herramienta{server/T4\_05\_FIR\_Fase\_Cero.py}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 16–18. \herramienta{T4-fase-cero, T4-fase-minima-paso-todo, T4-peine}.\end{flushright}
 
 % =====================================================================
 \section*{Bibliografía}
