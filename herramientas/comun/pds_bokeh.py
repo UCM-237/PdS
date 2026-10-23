@@ -24,6 +24,7 @@ import html
 import json
 import os
 import pathlib
+import re
 
 from bokeh.document import Document
 from bokeh.embed import file_html
@@ -83,6 +84,8 @@ _PLANTILLA = Template("""<!DOCTYPE html>
   .pds-ficha summary { cursor: pointer; color: #1E7B4F; font-weight: 600; }
   .pds-ficha a { color: #2B3A8C; }
   .pds-ficha code { font-size: 13px; background: #F4F5FA; padding: 1px 4px; border-radius: 3px; }
+  .pds-ficha table { border-collapse: collapse; margin: 8px 0; font-size: 14px; }
+  .pds-ficha th, .pds-ficha td { text-align: left; padding: 4px 12px 4px 0; border-bottom: 1px solid #E3E4EC; vertical-align: top; }
 </style>
 {{ bokeh_css | indent(2) }}
 {{ bokeh_js | indent(2) }}
@@ -259,7 +262,6 @@ def plano_pz(p, fuente, modo, callback=None, real_tol: float = 0.04) -> None:
 def js(codigo: str, **args) -> CustomJS:
     """CustomJS con la biblioteca común ``JS`` (FFT, ventanas…) delante."""
     # Un argumento con el nombre de una función de JS la taparía (o al revés).
-    import re
     choques = set(args) & set(re.findall(r"^(?:function|const)\s+(\w+)", JS, re.M))
     if choques:
         raise ValueError(f"argumentos con nombre de función de la biblioteca JS: {sorted(choques)}")
@@ -462,7 +464,9 @@ def _ficha(tema: int, nombre: str) -> str:
     if not fichero.exists():
         return ""
     import markdown
-    return markdown.markdown(fichero.read_text(encoding="utf-8"), extensions=["tables", "md_in_html"])
+    # Los exponentes se escriben e^{…} en el Markdown y se muestran como superíndices
+    texto = re.sub(r"\^\{([^{}]*)\}", r"<sup>\1</sup>", fichero.read_text(encoding="utf-8"))
+    return markdown.markdown(texto, extensions=["tables", "md_in_html"])
 
 
 def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
