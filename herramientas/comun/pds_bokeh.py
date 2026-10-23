@@ -72,6 +72,16 @@ _PLANTILLA = Template("""<!DOCTYPE html>
 <style>
   body { margin: 0; padding: 16px 24px; font-family: {{ fuente }}; color: #222;
          background: #fff; }
+  .pds-ficha { max-width: 820px; font-size: 14.5px; line-height: 1.55; color: #222; margin-top: 28px;
+                border-top: 2px solid #E3E4EC; padding-top: 8px; }
+  .pds-ficha h1 { color: #2B3A8C; font-size: 20px; font-weight: 600; margin: 12px 0 4px; }
+  .pds-ficha h2 { color: #2B3A8C; font-size: 17px; font-weight: 600; margin: 22px 0 6px; }
+  .pds-ficha p, .pds-ficha li { margin: 6px 0; }
+  .pds-ficha blockquote { margin: 8px 0; padding: 4px 14px; border-left: 3px solid #2B3A8C; background: #F4F5FA; }
+  .pds-ficha details { margin: 4px 0 14px; padding: 6px 12px; background: #F4F5FA; border-radius: 6px; }
+  .pds-ficha summary { cursor: pointer; color: #1E7B4F; font-weight: 600; }
+  .pds-ficha a { color: #2B3A8C; }
+  .pds-ficha code { font-size: 13px; background: #F4F5FA; padding: 1px 4px; border-radius: 3px; }
 </style>
 {{ bokeh_css | indent(2) }}
 {{ bokeh_js | indent(2) }}
@@ -79,6 +89,12 @@ _PLANTILLA = Template("""<!DOCTYPE html>
 <body>
 {{ plot_div | indent(2) }}
 {{ plot_script | indent(2) }}
+{% if ficha %}
+<section class="pds-ficha" id="ficha">
+<h1>Ficha de uso</h1>
+{{ ficha }}
+</section>
+{% endif %}
 </body>
 </html>
 """)
@@ -89,6 +105,7 @@ _CSS = f"""
 .pds-titulo {{ color: {AZUL}; font-size: 22px; font-weight: 600; margin: 2px 0 6px; }}
 .pds-texto {{ max-width: 760px; font-size: 14px; line-height: 1.45; margin: 0; }}
 .pds-ref {{ color: {GRIS}; font-size: 12px; margin-top: 6px; }}
+.pds-ref a {{ color: {AZUL}; }}
 """
 
 
@@ -416,6 +433,19 @@ function ruido(L, semilla = 1) {
 """
 
 
+FICHAS = RAIZ / "fichas"
+
+
+def _ficha(tema: int, nombre: str) -> str:
+    """HTML de ``fichas/T<tema>-<nombre>.md`` si existe (introducción teórica,
+    guía de uso, ejercicios, recursos y relación con otros conceptos)."""
+    fichero = FICHAS / f"T{tema}-{nombre}.md"
+    if not fichero.exists():
+        return ""
+    import markdown
+    return markdown.markdown(fichero.read_text(encoding="utf-8"), extensions=["tables", "md_in_html"])
+
+
 def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
            graficas, referencia: str = "", columnas: int = 1, inicio=None) -> pathlib.Path:
     """Escribe html/<nombre de la fuente>.html y su entrada del índice.
@@ -429,8 +459,10 @@ def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
     cab = (f'<p class="pds-tema">Tema {tema} · {html.escape(TEMAS[tema])}</p>'
            f'<p class="pds-titulo">{html.escape(titulo)}</p>'
            f'<p class="pds-texto">{descripcion}</p>')
-    if referencia:
-        cab += f'<p class="pds-ref">{html.escape(referencia)}</p>'
+    ficha = _ficha(tema, nombre)
+    if referencia or ficha:
+        enlace = ' · <a href="#ficha">Ficha de uso: teoría, guía, ejercicios y recursos ↓</a>' if ficha else ""
+        cab += f'<p class="pds-ref">{html.escape(referencia)}{enlace}</p>'
     cabecera = Div(text=cab, stylesheets=[InlineStyleSheet(css=_CSS)])
     graficas = [row(*g) if isinstance(g, (list, tuple)) else g for g in graficas]
     filas = [row(*graficas[i:i + columnas]) for i in range(0, len(graficas), columnas)]
@@ -442,7 +474,7 @@ def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
     SALIDA.mkdir(exist_ok=True)
     destino = SALIDA / f"T{tema}-{nombre}.html"
     destino.write_text(file_html(doc, RECURSOS, title=f"PdS · {titulo}", template=_PLANTILLA,
-                                 template_variables={"fuente": FUENTE}),
+                                 template_variables={"fuente": FUENTE, "ficha": ficha}),
                        encoding="utf-8")
     indice = SALIDA / "indice"
     indice.mkdir(exist_ok=True)

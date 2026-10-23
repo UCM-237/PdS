@@ -14,6 +14,7 @@ cálculos que dependen de los controles se hacen en el propio navegador.
 | `fuentes/Tn/` | Un script de Python por herramienta, ordenados por tema |
 | `comun/pds_bokeh.py` | Estilo común (paleta y notación de `teoría/comun`), controles y plantilla de página |
 | `generar.py` | Ejecuta todas las fuentes y escribe el índice |
+| `fichas/` | Ficha de uso de cada herramienta (`Tn-nombre.md`): introducción, guía de uso, ejercicios, recursos y relación con otros conceptos; se añade al pie de la página |
 | `html/` | Páginas generadas (`Tn-nombre.html`) e índice (`index.html`) |
 | `server/` | Filtrado de audio (T4), la única app que necesita Python en marcha (`bokeh serve`) porque reproduce sonido filtrado |
 
@@ -40,7 +41,10 @@ avisarles.
 3. Termina con `pb.pagina(__file__, titulo, tema=n, descripcion=…,
    controles=[…], graficas=[…], referencia=…)`. La referencia indica la
    transparencia y la sección de los apuntes que la usan.
-4. `make` y comprueba la página en el navegador.
+4. Escribe su ficha en `fichas/Tn-nombre.md` (Markdown) con los apartados de
+   `fichas/T2-aliasing.md`. Las soluciones de los ejercicios van dentro de
+   `<details><summary>Solución</summary>…</details>`.
+5. `make` y comprueba la página en el navegador.
 
 La biblioteca de JavaScript de `pds_bokeh.JS` está disponible en todos los
 `pb.js(...)`: FFT y DFT, ventanas, números complejos (`cmul`, `cdiv`,
