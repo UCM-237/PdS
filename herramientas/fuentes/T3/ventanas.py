@@ -47,4 +47,4 @@ pb.pagina(__file__, "Ventanas y fuga espectral", tema=3,
                       "tonos próximos) y los lóbulos secundarios, la fuga (ver un tono débil junto a uno fuerte). "
                       "La rectangular tiene el lóbulo más estrecho y la peor fuga.",
           controles=[tipo, L, F2, A2, escala, info], graficas=[[p1, p2], p3], inicio=cb,
-          referencia="Transparencias T3-03, ventanas y resolución · Apuntes del Tema 3, sección 3")
+          referencia="Transparencias T3-03, ventanas y resolución · Apuntes del Tema 3, sección 4")

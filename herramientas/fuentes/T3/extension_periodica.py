@@ -44,4 +44,4 @@ pb.pagina(__file__, "Extensión periódica", tema=3,
                       "desplazadas N: la secuencia que devuelve la IDFT es la extensión periódica x̃[n]. "
                       "Si la secuencia dura más de N muestras, las copias se solapan.",
           controles=[L, N, info], graficas=[p1, p2, p3], inicio=cb,
-          referencia="Transparencias T3-01, muestreo en frecuencia · Apuntes del Tema 3, sección 1")
+          referencia="Transparencias T3-01, muestreo en frecuencia · Apuntes del Tema 3, secciones 1 y 2")

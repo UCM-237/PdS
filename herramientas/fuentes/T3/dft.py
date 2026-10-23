@@ -66,4 +66,4 @@ pb.pagina(__file__, "DFT, fuga y relleno con ceros", tema=3,
                       "Ωk, su energía se reparte entre varias (fuga). El eje se puede ver en Ω, en el índice k o en "
                       "hercios, y 2|X[k]|/L estima la amplitud de cada tono.",
           controles=[L, N, F1, F2, A2, eje, fs, escala, info], graficas=[p1, p2], inicio=cb,
-          referencia="Transparencias T3-01 y T3-03 · Apuntes del Tema 3, secciones 1 y 3")
+          referencia="Transparencias T3-01 y T3-03 · Apuntes del Tema 3, secciones 2 y 4")

@@ -466,6 +466,7 @@ def _ficha(tema: int, nombre: str) -> str:
     import markdown
     # Los exponentes se escriben e^{…} en el Markdown y se muestran como superíndices
     texto = re.sub(r"\^\{([^{}]*)\}", r"<sup>\1</sup>", fichero.read_text(encoding="utf-8"))
+    texto = re.sub(r"_\{([^{}]*)\}", r"<sub>\1</sub>", texto)
     return markdown.markdown(texto, extensions=["tables", "md_in_html"])
 
 

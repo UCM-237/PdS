@@ -60,4 +60,4 @@ pb.pagina(__file__, "Convolución circular", tema=3,
                       "izquierda. Para obtener la convolución lineal hay que rellenar con ceros hasta "
                       "N ≥ L + P − 1.",
           controles=[sx, sh, N, n, info], graficas=[p1, p2], inicio=cb,
-          referencia="Transparencias T3-02, convolución circular · Apuntes del Tema 3, sección 2")
+          referencia="Transparencias T3-02, convolución circular · Apuntes del Tema 3, sección 3")
