@@ -30,6 +30,27 @@ p3.line("W", "f", source=F, color=pb.ROJO, line_width=2)
 p4 = pb.figura("Respuesta al impulso h[n]", "n", "", ancho=380, alto=150)
 pb.tallos(p4, "n", "h", R)
 
+# Ejemplos: (polos, ceros) con un elemento por punto del semiplano superior o del eje real
+def _pares(polos, ceros):
+    x, y, t, par = [], [], [], []
+    for tipo, lista in (("polo", polos), ("cero", ceros)):
+        for z in lista:
+            grupo = [z, np.conj(z)] if abs(np.imag(z)) > 1e-9 else [z]
+            n = len(set(par)) + 1
+            for v in grupo:
+                x.append(round(float(np.real(v)), 4)); y.append(round(float(np.imag(v)), 4)); t.append(tipo); par.append(n)
+    return dict(x=x, y=y, t=t, par=par)
+e = np.exp(1j)
+EJEMPLOS = {
+    "Paso bajo de un polo": _pares([0.8], []),
+    "Paso alto de un polo": _pares([-0.8], []),
+    "Resonador (polos cerca de la circunferencia)": _pares([0.95 * e], []),
+    "Muesca (ceros sobre la circunferencia)": _pares([0.9 * e], [e]),
+    "Paso todo de primer orden": _pares([0.7], [1 / 0.7]),
+    "Media móvil de 5 muestras (FIR)": _pares([], [np.exp(2j * np.pi / 5), np.exp(4j * np.pi / 5)]),
+    "Inestable (polos fuera)": _pares([1.1 * np.exp(0.6j)], [-1]),
+}
+ejemplo = pb.selector("Cargar un ejemplo", ["—"] + list(EJEMPLOS))
 modo = pb.selector("Al hacer clic en el plano", ["Mover", "Añadir polo", "Añadir cero", "Borrar"])
 W0 = pb.deslizador("Ω₀ (punto de prueba e^jΩ₀)", 0, 3.14, 1, 0.01)
 info = Div(text="", width=240)
@@ -61,11 +82,14 @@ cb = pb.js("""
 pb.plano_pz(p1, pz, modo, callback=cb, real_tol=0.02)
 pb.leyenda(p1, "below")
 pb.conectar(cb, W0)
+ejemplo.js_on_change("value", pb.js("""
+    if (ejemplo.value in E) { pz.data = Object.assign({}, E[ejemplo.value]); cb.execute(); }
+""", ejemplo=ejemplo, E=EJEMPLOS, pz=pz, cb=cb))
 
 pb.pagina(__file__, "Polos y ceros en el plano z", tema=4,
           descripcion="La respuesta en frecuencia se lee sobre la circunferencia unidad: |H(e^jΩ)| es el cociente "
                       "entre el producto de distancias de e^jΩ a los ceros y el de distancias a los polos. Un polo "
                       "cerca de la circunferencia da un pico estrecho y una h[n] que tarda en extinguirse; fuera de ella, "
-                      "el sistema es inestable.",
-          controles=[modo, W0, info], graficas=[[p1, column(p2, p3, p4)]], inicio=cb,
+                      "el sistema es inestable. Carga un ejemplo para empezar.",
+          controles=[ejemplo, modo, W0, info], graficas=[[p1, column(p2, p3, p4)]], inicio=cb,
           referencia="Transparencias T4-01, polos, ceros y respuesta en frecuencia · Apuntes del Tema 4")
