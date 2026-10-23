@@ -303,6 +303,17 @@ function fft(re, im) {
     }
     return [re, im];
 }
+// FFT inversa (misma longitud, potencia de 2); devuelve [re, im].
+function ifft(re, im) {
+    const n = re.length, [a, b] = fft(re, (im || new Array(n).fill(0)).map(v => -v));
+    return [a.map(v => v / n), b.map(v => -v / n)];
+}
+// Convolución lineal directa.
+function conv(x, h) {
+    const y = new Array(x.length + h.length - 1).fill(0);
+    for (let i = 0; i < x.length; i++) for (let j = 0; j < h.length; j++) y[i + j] += x[i] * h[j];
+    return y;
+}
 // DFT directa de N puntos (cualquier N); devuelve [re, im].
 function dft(x, N) {
     const re = [], im = [];
