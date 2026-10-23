@@ -24,12 +24,13 @@ import html
 import json
 import os
 import pathlib
+import re
 
 from bokeh.document import Document
 from bokeh.embed import file_html
 from bokeh.events import DocumentReady
 from bokeh.layouts import column, row
-from bokeh.models import CustomJS, Div, InlineStyleSheet, RadioButtonGroup, Select, Slider
+from bokeh.models import CheckboxGroup, CustomJS, Div, InlineStyleSheet, RadioButtonGroup, Select, Slider
 from bokeh.plotting import figure as _figure
 from bokeh.resources import CDN, INLINE
 from jinja2 import Template
@@ -72,6 +73,19 @@ _PLANTILLA = Template("""<!DOCTYPE html>
 <style>
   body { margin: 0; padding: 16px 24px; font-family: {{ fuente }}; color: #222;
          background: #fff; }
+  .pds-ficha { max-width: 820px; font-size: 14.5px; line-height: 1.55; color: #222; margin-top: 28px;
+                border-top: 2px solid #E3E4EC; padding-top: 8px; }
+  .pds-ficha h1 { color: #2B3A8C; font-size: 20px; font-weight: 600; margin: 12px 0 4px; }
+  .pds-ficha h2 { color: #2B3A8C; font-size: 17px; font-weight: 600; margin: 22px 0 6px; }
+  .pds-ficha h3 { color: #222; font-size: 15px; font-weight: 600; margin: 16px 0 4px; }
+  .pds-ficha p, .pds-ficha li { margin: 6px 0; }
+  .pds-ficha blockquote { margin: 8px 0; padding: 4px 14px; border-left: 3px solid #2B3A8C; background: #F4F5FA; }
+  .pds-ficha details { margin: 4px 0 14px; padding: 6px 12px; background: #F4F5FA; border-radius: 6px; }
+  .pds-ficha summary { cursor: pointer; color: #1E7B4F; font-weight: 600; }
+  .pds-ficha a { color: #2B3A8C; }
+  .pds-ficha code { font-size: 13px; background: #F4F5FA; padding: 1px 4px; border-radius: 3px; }
+  .pds-ficha table { border-collapse: collapse; margin: 8px 0; font-size: 14px; }
+  .pds-ficha th, .pds-ficha td { text-align: left; padding: 4px 12px 4px 0; border-bottom: 1px solid #E3E4EC; vertical-align: top; }
 </style>
 {{ bokeh_css | indent(2) }}
 {{ bokeh_js | indent(2) }}
@@ -79,6 +93,12 @@ _PLANTILLA = Template("""<!DOCTYPE html>
 <body>
 {{ plot_div | indent(2) }}
 {{ plot_script | indent(2) }}
+{% if ficha %}
+<section class="pds-ficha" id="ficha">
+<h1>Ficha de uso</h1>
+{{ ficha }}
+</section>
+{% endif %}
 </body>
 </html>
 """)
@@ -89,6 +109,7 @@ _CSS = f"""
 .pds-titulo {{ color: {AZUL}; font-size: 22px; font-weight: 600; margin: 2px 0 6px; }}
 .pds-texto {{ max-width: 760px; font-size: 14px; line-height: 1.45; margin: 0; }}
 .pds-ref {{ color: {GRIS}; font-size: 12px; margin-top: 6px; }}
+.pds-ref a {{ color: {AZUL}; }}
 """
 
 
@@ -152,10 +173,16 @@ def botones(opciones, activo: int = 0, **kw) -> RadioButtonGroup:
     return RadioButtonGroup(labels=list(opciones), active=activo, width=kw.pop("width", 240), **kw)
 
 
+def casillas(opciones, activas=(), **kw) -> CheckboxGroup:
+    """Casillas de verificación independientes."""
+    return CheckboxGroup(labels=list(opciones), active=list(activas), width=kw.pop("width", 240), **kw)
+
+
 def tallos(p, x: str, y: str, fuente, color: str = AZUL, base: float = 0.0, **kw):
     """Gráfica de tallos (stem) para señales discretas."""
     p.segment(x0=x, y0=base, x1=x, y1=y, source=fuente, line_color=color, line_width=1.5)
-    return p.scatter(x, y, source=fuente, size=6, color=color, **kw)
+    kw.setdefault("size", 6)
+    return p.scatter(x, y, source=fuente, color=color, **kw)
 
 
 def editable(p, fuente, x: str = "n", y: str = "x", callback=None) -> None:
@@ -235,7 +262,6 @@ def plano_pz(p, fuente, modo, callback=None, real_tol: float = 0.04) -> None:
 def js(codigo: str, **args) -> CustomJS:
     """CustomJS con la biblioteca común ``JS`` (FFT, ventanas…) delante."""
     # Un argumento con el nombre de una función de JS la taparía (o al revés).
-    import re
     choques = set(args) & set(re.findall(r"^(?:function|const)\s+(\w+)", JS, re.M))
     if choques:
         raise ValueError(f"argumentos con nombre de función de la biblioteca JS: {sorted(choques)}")
@@ -250,7 +276,7 @@ def conectar(callback, *controles) -> None:
             c.js_on_change("value", callback)
         elif isinstance(c, Select):
             c.js_on_change("value", callback)
-        elif isinstance(c, RadioButtonGroup):
+        elif isinstance(c, (RadioButtonGroup, CheckboxGroup)):
             c.js_on_change("active", callback)
 
 
@@ -284,6 +310,17 @@ function fft(re, im) {
         }
     }
     return [re, im];
+}
+// FFT inversa (misma longitud, potencia de 2); devuelve [re, im].
+function ifft(re, im) {
+    const n = re.length, [a, b] = fft(re, (im || new Array(n).fill(0)).map(v => -v));
+    return [a.map(v => v / n), b.map(v => -v / n)];
+}
+// Convolución lineal directa.
+function conv(x, h) {
+    const y = new Array(x.length + h.length - 1).fill(0);
+    for (let i = 0; i < x.length; i++) for (let j = 0; j < h.length; j++) y[i + j] += x[i] * h[j];
+    return y;
 }
 // DFT directa de N puntos (cualquier N); devuelve [re, im].
 function dft(x, N) {
@@ -319,6 +356,7 @@ function cres(a, b) { return [a[0] - b[0], a[1] - b[1]]; }
 function cabs(a) { return Math.hypot(a[0], a[1]); }
 function cexp(a) { const m = Math.exp(a[0]); return [m * Math.cos(a[1]), m * Math.sin(a[1])]; }
 function cesc(k, a) { return [k * a[0], k * a[1]]; }
+function csqrt(a) { const m = Math.sqrt(cabs(a)), f = Math.atan2(a[1], a[0]) / 2; return [m * Math.cos(f), m * Math.sin(f)]; }
 // Coeficientes (de mayor a menor grado) del polinomio mónico con esas raíces.
 function poli(raices) {
     let c = [[1, 0]];
@@ -416,6 +454,22 @@ function ruido(L, semilla = 1) {
 """
 
 
+FICHAS = RAIZ / "fichas"
+
+
+def _ficha(tema: int, nombre: str) -> str:
+    """HTML de ``fichas/T<tema>-<nombre>.md`` si existe (introducción teórica,
+    guía de uso, ejercicios, recursos y relación con otros conceptos)."""
+    fichero = FICHAS / f"T{tema}-{nombre}.md"
+    if not fichero.exists():
+        return ""
+    import markdown
+    # Los exponentes se escriben e^{…} en el Markdown y se muestran como superíndices
+    texto = re.sub(r"\^\{([^{}]*)\}", r"<sup>\1</sup>", fichero.read_text(encoding="utf-8"))
+    texto = re.sub(r"_\{([^{}]*)\}", r"<sub>\1</sub>", texto)
+    return markdown.markdown(texto, extensions=["tables", "md_in_html"])
+
+
 def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
            graficas, referencia: str = "", columnas: int = 1, inicio=None) -> pathlib.Path:
     """Escribe html/<nombre de la fuente>.html y su entrada del índice.
@@ -429,8 +483,10 @@ def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
     cab = (f'<p class="pds-tema">Tema {tema} · {html.escape(TEMAS[tema])}</p>'
            f'<p class="pds-titulo">{html.escape(titulo)}</p>'
            f'<p class="pds-texto">{descripcion}</p>')
-    if referencia:
-        cab += f'<p class="pds-ref">{html.escape(referencia)}</p>'
+    ficha = _ficha(tema, nombre)
+    if referencia or ficha:
+        enlace = ' · <a href="#ficha">Ficha de uso: teoría, guía, ejercicios y recursos ↓</a>' if ficha else ""
+        cab += f'<p class="pds-ref">{html.escape(referencia)}{enlace}</p>'
     cabecera = Div(text=cab, stylesheets=[InlineStyleSheet(css=_CSS)])
     graficas = [row(*g) if isinstance(g, (list, tuple)) else g for g in graficas]
     filas = [row(*graficas[i:i + columnas]) for i in range(0, len(graficas), columnas)]
@@ -442,7 +498,7 @@ def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
     SALIDA.mkdir(exist_ok=True)
     destino = SALIDA / f"T{tema}-{nombre}.html"
     destino.write_text(file_html(doc, RECURSOS, title=f"PdS · {titulo}", template=_PLANTILLA,
-                                 template_variables={"fuente": FUENTE}),
+                                 template_variables={"fuente": FUENTE, "ficha": ficha}),
                        encoding="utf-8")
     indice = SALIDA / "indice"
     indice.mkdir(exist_ok=True)

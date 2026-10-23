@@ -197,7 +197,7 @@ Con $x=a+jb$ y $^*$ el conjugado, se definen las siguientes simetrías:
 
 La importancia de la simetría hermítica es que la transformada de Fourier de una señal \emph{real} es hermítica, $X(-j\omega)=X^*(j\omega)$: su módulo es par y su fase impar, y basta representar las frecuencias positivas.
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 1–4.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 1–4. \herramienta{T1-par-impar-energia}.\end{flushright}
 
 % =====================================================================
 \section{Señales básicas}\label{sec:basicas}
@@ -336,7 +336,7 @@ Las ondas cuadrada y triangular son periódicas y solo contienen armónicos impa
   \codigo{senales_basicas}
 \end{encodigo}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 1, 2 y 9.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 1, 2 y 9. \herramienta{T1-exponencial-continua, T1-exponencial-discreta, T1-continua-discreta}.\end{flushright}
 
 % =====================================================================
 \section{Operaciones con señales}\label{sec:operaciones}
@@ -383,6 +383,8 @@ La diferencia es la versión discreta de la derivada y la acumulación, la de la
 \begin{nota}[Producto y convolución]
   El producto $x_1(t)\,x_2(t)$ y la convolución $(x_1\conv x_2)(t)$ son operaciones muy distintas. En estos apuntes el producto se escribe por yuxtaposición o con un punto, y el asterisco $\conv$ se reserva siempre para la convolución.
 \end{nota}
+
+\begin{flushright}\small\color{pdsgris}\herramienta{T1-variable-independiente}.\end{flushright}
 
 % =====================================================================
 \section{Convolución}\label{sec:convolucion}
@@ -444,7 +446,7 @@ A medida que $t$ avanza, la versión reflejada de $h$ se desliza sobre $x$ y con
   \codigo{convolucion}
 \end{encodigo}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 5 y 6. \herramienta{html/T1\_Convolucion continua.html} y \texttt{T1\_Convolucion discreta.html}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 5 y 6. \herramienta{T1-convolucion-continua, T1-convolucion-discreta}.\end{flushright}
 
 % =====================================================================
 \section{Representación en frecuencia}\label{sec:frecuencia}
@@ -696,7 +698,7 @@ Si la ROC contiene la circunferencia unidad, la DTFT existe y $\Xd=X(z)|_{z=\e^{
 
 Laplace y Z se usan para resolver ecuaciones diferenciales y en diferencias y para estudiar la función de transferencia, los polos, los ceros y la estabilidad de los sistemas LTI. Fourier se usa para describir el contenido en frecuencia de las señales y la respuesta en frecuencia de los sistemas estables. La relación $z=\e^{sT_s}$ entre los planos $s$ y $z$, que aparece al muestrear, transforma el semiplano izquierdo en el interior de la circunferencia unidad y el eje $j\omega$ en la propia circunferencia; se estudia en el Tema~2 y se usa en el diseño de filtros IIR.
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 7 y 8.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 7 y 8. \herramienta{T1-serie-fourier, T1-propiedades-fourier, T1-region-convergencia}.\end{flushright}
 
 % =====================================================================
 \section{Propiedades de los sistemas}\label{sec:propiedades}
@@ -788,7 +790,7 @@ Los sistemas se combinan en serie (cascada), en paralelo o con realimentación. 
 \end{itemize}
 La conmutatividad de la cascada solo vale para sistemas LTI: por ejemplo, elevar al cuadrado y después retrasar no es lo mismo que retrasar y después multiplicar por $n$.
 
-\begin{flushright}\small\color{pdsgris}Ejercicio 10.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicio 10. \herramienta{T1-propiedades-sistemas}.\end{flushright}
 
 % =====================================================================
 \section{Sistemas LTI}\label{sec:lti}
@@ -998,7 +1000,7 @@ Su respuesta al impulso tiene $M+1$ muestras: es un sistema de \emph{respuesta a
 \]
 pero su función de transferencia no es racional y no se puede construir con un número finito de resistencias, condensadores y bobinas; solo se aproxima. En discreto, en cambio, un FIR es trivial: basta una línea de retardos. Es una de las ventajas del procesado digital, porque los FIR, siempre estables y con fase lineal posible, solo son prácticos en tiempo discreto.
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 11–16.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 11–16. \herramienta{T1-respuesta-lti-continua, T1-respuesta-lti-discreta}.\end{flushright}
 
 % =====================================================================
 \section{Contenido en frecuencia de señales reales}\label{sec:aplicaciones}

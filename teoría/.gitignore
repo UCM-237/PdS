@@ -16,4 +16,6 @@
 T*/transparencias/*.pdf
 T*/apuntes/*.pdf
 T*/ejercicios/*.pdf
+# Documento completo: lo genera comun/completo.py («make completo»)
+completo/
 __pycache__/

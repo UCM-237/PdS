@@ -81,4 +81,4 @@ pb.pagina(__file__, "Diseño FIR por ventanas", tema=4,
                       "alargar la rectangular no quita el rizado de Gibbs. Con Kaiser, β y L salen de las fórmulas "
                       "empíricas a partir de la atenuación α_s y la transición ΔΩ pedidas.",
           controles=[tipo, diseno, vent, Wc, L, beta, As, dW, escala, info], graficas=[[p1, p2]], inicio=cb,
-          referencia="Transparencias T4-04, ventanas fijas y ventana de Kaiser · Apuntes del Tema 4")
+          referencia="Transparencias T4-04, ventanas fijas y ventana de Kaiser · Apuntes del Tema 4, sección 4")

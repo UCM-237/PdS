@@ -1,6 +1,11 @@
 # Material de teoría: transparencias, apuntes y ejercicios (XeLaTeX).
 #
 #   make T1 ... make T6 compila todo el tema
+#   make completo       apuntes y ejercicios resueltos de todos los temas
+#                       en un solo documento (completo/PdS-Completo.pdf)
+#   make ... ERRATAS=1  versión con las notas de erratas de versiones
+#                       anteriores, en PDF aparte (*-Erratas.pdf); por
+#                       defecto no se imprimen
 #   make figuras        regenera las figuras de todos los temas (Python)
 #   make prueba-codigo  ejecuta los ejemplos en Python y en Matlab/Octave
 #   make publicar       copia los PDF a clase/
@@ -12,8 +17,12 @@
 
 TEMAS   := T1 T2 T3 T4 T5 T6
 LATEXMK := latexmk -xelatex -interaction=nonstopmode -halt-on-error -silent
+ERRATAS ?= 0
+ifeq ($(ERRATAS),1)
+LATEXMK += -usepretex='\def\ERRATAS{}' -jobname=%A-Erratas
+endif
 
-.PHONY: all $(TEMAS) figuras prueba-codigo publicar limpiar
+.PHONY: all $(TEMAS) completo figuras prueba-codigo publicar limpiar
 
 all: $(TEMAS)
 
@@ -27,6 +36,12 @@ $(TEMAS):
 	  done; \
 	done
 
+# Documento completo: lo genera comun/completo.py a partir de los
+# apuntes y las hojas de ejercicios de cada tema
+completo:
+	python3 comun/completo.py
+	cd completo && $(LATEXMK) PdS-Completo.tex
+
 figuras:
 	@for t in $(TEMAS); do (cd $$t/figuras && python3 generar_figuras.py); done
 
@@ -34,7 +49,7 @@ prueba-codigo:
 	@for t in $(TEMAS); do comun/probar_codigo.sh $$t || exit 1; done
 
 # Nombres de los PDF publicados en clase/
-publicar: $(TEMAS)
+publicar: $(TEMAS) completo
 	cp "T1/transparencias/T1-01-Senales.pdf"      "clase/T1 - 01 - Señales.pdf"
 	cp "T1/transparencias/T1-02-Operaciones.pdf"  "clase/T1 - 02 - Operaciones.pdf"
 	cp "T1/transparencias/T1-03-Sistemas.pdf"     "clase/T1 - 03 - Sistemas.pdf"
@@ -77,10 +92,12 @@ publicar: $(TEMAS)
 	cp "T6/apuntes/T6-Apuntes.pdf"                "clase/T6 - Apuntes.pdf"
 	cp "T6/ejercicios/T6-Ejercicios.pdf"          "clase/T6 - Ejercicios.pdf"
 	cp "T6/ejercicios/T6-Ejercicios-Soluciones.pdf" "clase/T6 - Ejercicios resueltos.pdf"
+	cp "completo/PdS-Completo.pdf"                "clase/PdS - Apuntes y ejercicios.pdf"
 
 limpiar:
 	@for t in $(TEMAS); do \
 	  for d in transparencias apuntes ejercicios; do \
 	    [ -d $$t/$$d ] && (cd $$t/$$d && latexmk -c -silent >/dev/null 2>&1); \
 	  done; \
-	done; true
+	done; \
+	[ -d completo ] && (cd completo && latexmk -c -silent >/dev/null 2>&1); true

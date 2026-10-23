@@ -40,9 +40,9 @@ con el paso alto $H_{\text{PA}}=1-H_{\text{PB}}$ y el supresor de banda $H_{\tex
   \caption{Los cuatro filtros ideales en discreto.}\label{fig:ideales}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   En las transparencias antiguas el paso banda y el supresor ideales se escribían como $\omega_{c1}<\omega<\omega_{c2}$, sin valor absoluto, y el paso alto de la parte FIR como «$1$ si $\abs\omega<\omega_c$». Las definiciones correctas son las de arriba.
-\end{nota}
+\end{errata}
 
 Ningún filtro ideal se puede construir. La respuesta al impulso del paso bajo ideal es
 \[
@@ -99,9 +99,9 @@ La respuesta en frecuencia de un sistema racional queda determinada por la posic
   \caption{Efecto de un polo real, de un par de polos complejos y de un par de ceros imaginarios compensado con dos polos.}\label{fig:pz-continuo}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Las transparencias antiguas decían que $\omega_n^2/(s^2+\omega_n^2)$ «es inestable para $\omega=\omega_n$»: el sistema es marginalmente estable (lo es o no para todas las frecuencias a la vez) y, en todo caso, queda fuera de los filtros que estudiamos, que son estables. También mezclaban $w_a$ y $\omega_a$ en la misma expresión.
-\end{nota}
+\end{errata}
 
 En discreto se razona igual con la circunferencia unidad en lugar del eje $j\omega$. Un \emph{filtro de muesca} que elimine $\Omega_0$ tiene ceros en $\e^{\pm j\Omega_0}$ y polos en el mismo ángulo con radio $r<1$:
 \[
@@ -139,7 +139,7 @@ Si algún $a_k\ne0$ hay realimentación y la respuesta al impulso es infinita: f
   \end{tabular}
 \end{table}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 1–3. \herramienta{server/T4\_Filtros\_Discretos\_PZMap.py}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 1–3. \herramienta{T4-media-movil, T4-polos-ceros-z, T4-fase-lineal}.\end{flushright}
 
 % =====================================================================
 \section{Filtros continuos}\label{sec:continuos}
@@ -152,9 +152,9 @@ Diseñamos un paso bajo continuo, el \emph{prototipo}, y obtendremos los demás 
 \]
 con $P$ pequeño en la banda de paso y grande en la de supresión. Cada familia de filtros corresponde a una elección de $P$. Conocido $\abs{H(j\omega)}^2=H(s)H(-s)\big|_{s=j\omega}$, se calculan las raíces de $H(s)H(-s)$, que aparecen en parejas simétricas respecto al eje imaginario, y se asignan a $H(s)$ las del semiplano izquierdo: el filtro resulta estable.
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Las transparencias antiguas escribían $\abs{H(j\omega)}=1/(1+P(\omega))$. Lo que se diseña es el cuadrado del módulo y $P$ depende de $\omega^2$; con la forma antigua no salen las fórmulas de Butterworth y Chebyshev que siguen.
-\end{nota}
+\end{errata}
 
 Los datos del diseño son $\omega_p$, $\omega_s$, $\alpha_p$ y $\alpha_s$, y de ellos se derivan
 \[
@@ -241,9 +241,9 @@ El tipo~I tiene rizado entre $1$ y $1/E$ en la banda de paso (equirrizado) y cae
 
 Con las especificaciones comunes, $1/k_1=196{,}5$ y $N\ge\mathrm{arccosh}(196{,}5)/\mathrm{arccosh}(5)=5{,}97/2{,}29=2{,}61$, de modo que $N=3$: uno menos que Butterworth. En Matlab y en \texttt{scipy.signal}, \texttt{cheby1(N,Rp,Wp)} recibe el rizado de la banda de paso y su borde, y \texttt{cheby2(N,Rs,Ws)} la atenuación de la banda de supresión y el suyo.
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   En el resumen de órdenes de Matlab de las transparencias antiguas aparecía \texttt{cheby2(N,ap,wc,...)}; el segundo argumento de \texttt{cheby2} es la atenuación de la banda de supresión, \texttt{Rs}. La expresión del tipo II con $\cos^2(N\arccos1)$ en el denominador tampoco era correcta; la forma habitual es la de la definición~\ref{def:chebyshev}.
-\end{nota}
+\end{errata}
 
 \subsection{Elíptico}
 
@@ -261,9 +261,9 @@ con $K$ la integral elíptica completa de primera especie. Una aproximación muy
 \]
 Para las especificaciones comunes, $k=\omega_p/\omega_s=0{,}2$, $k'=0{,}9798$, $\rho=0{,}002551$ y $N\ge2{,}23$, así que $N=3$, el mismo orden que Chebyshev pero con más margen.
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   El ejemplo elíptico antiguo escribía $k=\omega_s/\omega_p=1/5$: el valor $1/5$ es correcto, pero corresponde a $k=\omega_p/\omega_s$. Además, la llamada \texttt{ellip(N,as,ap,wp,...)} tenía los dos primeros parámetros intercambiados: es \texttt{ellip(N,Rp,Rs,Wp)}.
-\end{nota}
+\end{errata}
 
 \subsection{Comparación}
 
@@ -351,11 +351,11 @@ El paso banda que resulta es geométricamente simétrico respecto a $\hat\omega_
   y $\omega_s=2{,}25$. El orden de Chebyshev es $N\ge\mathrm{arccosh}(41{,}3)/\mathrm{arccosh}(2{,}25)=3{,}02$, es decir, $N=4$. \texttt{cheb2ord} aplicada a las especificaciones originales da $N=3$, porque busca los bordes de paso que minimizan el orden: también es un diseño válido.
 \end{ejemplo}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Los ejemplos de paso banda y supresor antiguos decían «convertir el filtro paso bajo a paso alta» antes de usar \texttt{lp2bp} y \texttt{lp2bs}, hablaban de «atenuación superiora» (supresora) y de «rizo baso banda» (paso banda), y la frase «el filtro paso baja asociado al filtro paso baja» quería decir «el prototipo paso bajo asociado al filtro de destino». El ejemplo de paso banda antiguo llegaba a $\omega_s=1{,}4$ estrechando un borde de paso para hacer la plantilla simétrica; el resultado es más exigente que el necesario, pero válido.
-\end{nota}
+\end{errata}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 4–7. \herramienta{server/T4\_Filtros\_Continuos.py}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 4–7. \herramienta{T4-polos-ceros-s, T4-filtros-continuos, T4-transformaciones-frecuencia}.\end{flushright}
 
 % =====================================================================
 \section{Filtros IIR}\label{sec:iir}
@@ -408,9 +408,9 @@ La compresión deforma las frecuencias (\cref{fig:bilineal}), pero conserva los 
   \caption{Relación de frecuencias de la bilineal ($T=1$) y transformación del semiplano izquierdo en el interior del círculo unidad.}\label{fig:bilineal}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Las transparencias antiguas decían que la bilineal lleva «el semiplano izquierdo al círculo unidad»: lo lleva al \emph{interior}; es el eje $j\omega$ el que va a la circunferencia. Usaban $\omega_d$ y $\omega_a$ para las frecuencias discreta y continua; aquí son $\Omega$ y $\omega$.
-\end{nota}
+\end{errata}
 
 \subsection{Procedimiento de diseño}
 
@@ -447,9 +447,9 @@ La compresión deforma las frecuencias (\cref{fig:bilineal}), pero conserva los 
 
 Si se omite \texttt{'s'} (o \texttt{analog=True}), las funciones de orden y diseño de Matlab y \texttt{scipy.signal} hacen la predistorsión y la bilineal internamente; las frecuencias se dan normalizadas a la de Nyquist, $\Omega/\pi\in[0,1]$, o en hercios con el argumento \texttt{fs} de \texttt{scipy}. El tipo se indica con \texttt{'high'} y \texttt{'stop'} en Matlab, y con \texttt{'highpass'}, \texttt{'bandpass'} y \texttt{'bandstop'} en Python.
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Una transparencia antigua decía que, con $T=2$, la orden \texttt{bilinear} se llama con tercer parámetro 0,5. Es correcto, pero la frase estaba incompleta («hacen de la orden bilineal se llamen»).
-\end{nota}
+\end{errata}
 
 \begin{ejemplo}{Paso alto de Chebyshev I y paso banda de Butterworth}{iir-otros}
   \emph{Paso alto}, $f_s=2$\,kHz: paso desde 700\,Hz con 1\,dB, supresión por debajo de 500\,Hz con 32\,dB. $\Omega_p=0{,}7\pi$ y $\Omega_s=0{,}5\pi$ dan $\hat\omega_p=\tan(0{,}35\pi)=1{,}9626$ y $\hat\omega_s=1$. En el prototipo, $\omega_s=\hat\omega_p/\hat\omega_s=1{,}9626$ y, con $\sqrt{A^2-1}/\varepsilon=78{,}2$,
@@ -480,9 +480,9 @@ Alternativamente, se puede diseñar un paso bajo discreto con corte $\Omega_c$ y
 \]
 Hay transformaciones de orden 2 a paso banda y supresor (Oppenheim y Schafer, capítulo 7). En Matlab están en \texttt{iirlp2hp}, \texttt{iirlp2bp} e \texttt{iirlp2bs}, con frecuencias normalizadas en $[0,1]$.
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La transparencia antigua daba para el paso alto $\lambda=-\cos\big((\omega_c-\hat\omega_c)/2\big)/\cos\big((\omega_c+\hat\omega_c)/2\big)$, con numerador y denominador intercambiados; en el supresor aparecía $\tan((\hat\omega_{c2}-\hat\omega_{c2})/2)$ en lugar de $\tan((\hat\omega_{c2}-\hat\omega_{c1})/2)$, y la función de Matlab \texttt{iirlp2sp} es \texttt{iirlp2bs}.
-\end{nota}
+\end{errata}
 
 \subsection{Implementación}
 
@@ -502,7 +502,7 @@ Un IIR de orden alto en forma directa (los coeficientes $a_k$ y $b_k$ del polino
   \end{tabular}
 \end{table}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 8–11. \herramienta{server/T4\_Filtros\_IIR\_Discretizacion.py}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 8–11. \herramienta{T4-discretizacion-iir, T4-cuantificacion-coeficientes}.\end{flushright}
 
 % =====================================================================
 \section{Filtros FIR}\label{sec:fir}
@@ -545,9 +545,9 @@ En el dominio $z$, la simetría equivale a $H(z)=\pm z^{-(N-1)}H(z^{-1})$: si $z
   \caption{Un ejemplo de cada tipo y sus ceros. Obsérvense los ceros en $z=-1$ (tipos II y III) y en $z=1$ (tipos III y IV).}\label{fig:tipos-fir}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   En la transparencia antigua de los ceros, los tipos aparecían con la paridad de $N$ cambiada («Tipo 1 ($N$ par)») y con números de ceros en $\pm1$ que no correspondían; la tabla resumen tenía el mismo problema. Lo correcto es el \cref{tab:tipos-fir}: en $z=-1$ hay un número impar de ceros en los tipos II y III, y en $z=1$ en los tipos III y IV. La nota a pie que decía que el desfase es $-\omega N/2$ se refiere a un filtro de $N+1$ coeficientes.
-\end{nota}
+\end{errata}
 
 \subsection{Método de las ventanas}
 
@@ -583,9 +583,9 @@ el filtro ideal suavizado por la transformada de la ventana, igual que en el an�
   \caption{Método de las ventanas: respuesta ideal, truncada y ponderada (Hamming, $L=12$), y retrasada.}\label{fig:metodo-ventana}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La expresión antigua del filtro multibanda ponderaba los senos con $A_k-A_{k-1}$; como $H=\sum_kA_k(H_{\text{PB},\Omega_k}-H_{\text{PB},\Omega_{k-1}})$, el coeficiente de $\sin(\Omega_kn)$ es $A_k-A_{k+1}$. En la diapositiva del procedimiento FIR, la ecuación $y[n]=\sum x[n-k]$ había perdido los coeficientes $b_k$, y se hablaba de «un FIR de orden $N+1$» con $N+1$ coeficientes (es de orden $N$).
-\end{nota}
+\end{errata}
 
 \subsection{Fenómeno de Gibbs y ventanas fijas}
 
@@ -634,9 +634,9 @@ Con una ventana fija el rizado es el mismo en las dos bandas, $\delta_p\approx\d
   $\Omega_p=0{,}3\pi$, $\Omega_s=0{,}5\pi$, $\alpha_s=40$\,dB. $\Omega_c=0{,}4\pi$ y $\Delta\Omega=0{,}2\pi$. Sirven Hann, Hamming y Blackman; con Hann, $L\ge3{,}11\pi/0{,}2\pi=15{,}6$, así que $L=16$ y $N=33$ coeficientes; Hamming pediría $L=17$ y Blackman $L=28$. La atenuación conseguida es de 44\,dB, con un retardo de 16 muestras.
 \end{ejemplo}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   El ejemplo antiguo decía «filtros posibles son Hann, Hamming y Hamming»: el tercero es Blackman. En la fórmula de la ventana de Dolph–Chebyshev aparecía $T_{2N}$ (es $T_{2L}$), y en la definición de $T_l$ las dos ramas tenían la condición $\abs x<1$ (la segunda es $\abs x>1$).
-\end{nota}
+\end{errata}
 
 \begin{encodigo}
   El ejemplo~\ref{ej:fir-hann} construyendo $h[n]$ a mano y con \texttt{firwin}/\texttt{fir1}.
@@ -672,9 +672,9 @@ Para el ejemplo~\ref{ej:fir-hann}, $\beta=0{,}5842\cdot19^{0,4}+0{,}07886\cdot19
   \caption{El paso bajo del ejemplo~\ref{ej:fir-hann} con Hann ($L=16$) y con Kaiser ($L=12$).}\label{fig:ejemplo-fir}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Las transparencias antiguas daban $0{,}5482$ en lugar de $0{,}5842$ en la fórmula de $\beta$, con lo que el ejemplo obtenía $\beta=3{,}278$ en lugar de $3{,}395$, y el intervalo intermedio aparecía como $50\le\alpha_s\le21$. El coeficiente del primer tramo es $0{,}1102$, no $0{,}11102$.
-\end{nota}
+\end{errata}
 
 \begin{encodigo}
   Paso alto con $\Omega_s=0{,}4\pi$, $\Omega_p=0{,}55\pi$ y $\delta=0{,}01$ con \texttt{kaiserord}, y el mismo filtro con Parks–McClellan. El paso alto debe ser de tipo I: si \texttt{kaiserord} propone un número par de coeficientes, se añade uno.
@@ -707,7 +707,7 @@ En el \emph{muestreo en frecuencia} se fija la respuesta deseada en $N$ frecuenc
 
 Un FIR de $N$ coeficientes cuesta $N$ productos por muestra (la mitad aprovechando la simetría) y retrasa $(N-1)/2$ muestras. En audio a 44,1--48\,kHz son habituales 50--200 coeficientes en filtros básicos, 100--500 en filtros de cruce de altavoces, 500--2000 en cancelación de eco y hasta varios miles en procesado de alta calidad, con retardos de unos pocos a decenas de milisegundos. Para órdenes altos se filtra por bloques con la FFT (solapamiento y suma, Tema~3). En aplicaciones en tiempo real el retardo limita el orden; un IIR, o un FIR de fase mínima (\cref{sec:especiales}), retrasan mucho menos.
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 12–15. \herramienta{server/T4\_01\_FIR\_Ventana\_Fija.py} y \texttt{T4\_02\_FIR\_Kaiser.py}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 12–15. \herramienta{T4-tipos-fir, T4-fir-ventana, T4-parks-mcclellan}.\end{flushright}
 
 % =====================================================================
 \section{Filtros especiales}\label{sec:especiales}
@@ -745,9 +745,9 @@ Hay por tanto muchos sistemas con el mismo $\abs H$ y distinta fase. Un sistema 
   \caption{Tres sistemas con los mismos polos y el mismo módulo y ceros reflejados: fase mínima, mixta y máxima.}\label{fig:fase-minima}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Las transparencias antiguas definían $H_{\text{MAX}}$ como un sistema «con todos sus ceros simétricos respecto al círculo unidad y el caso anterior»; quiere decir con los ceros de $H_{\text{MIN}}$ reflejados, todos fuera del círculo. La variación de fase adicional del de fase máxima está entre 0 y $N\pi$ en $[0,\pi]$, con $N$ el número de ceros reflejados.
-\end{nota}
+\end{errata}
 
 \subsection{Filtros paso todo}
 
@@ -793,16 +793,16 @@ Sus ceros son las $L$ raíces de la unidad, en $\Omega=2\pi k/L$, es decir, en $
   \caption{Peine FIR $\frac12(1+z^{-L})$ y peine de muescas para 50\,Hz y sus armónicos con $f_s=5$\,kHz.}\label{fig:peine}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   El ejemplo antiguo de la red de 50\,Hz con $f_s=5$\,kHz calculaba $L=f_s/f_0=50$; es $L=5000/50=100$. El código asociado usaba además \texttt{iircomb(20,...)} y representaba la respuesta con $f_s=300$\,Hz, que no corresponden al enunciado.
-\end{nota}
+\end{errata}
 
 \begin{encodigo}
   Peine de muescas para 50\,Hz con $f_s=5$\,kHz y su respuesta en la componente útil (7\,Hz), en 50 y 150\,Hz y en 175\,Hz.
   \codigo{peine_50hz}
 \end{encodigo}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 16–18. \herramienta{server/T4\_05\_FIR\_Fase\_Cero.py}.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 16–18. \herramienta{T4-fase-cero, T4-fase-minima-paso-todo, T4-peine}.\end{flushright}
 
 % =====================================================================
 \section*{Bibliografía}

@@ -73,4 +73,4 @@ pb.pagina(__file__, "Fase lineal y retardo de grupo", tema=4,
                       "el retardo de la envolvente; una fase no lineal (IIR) retrasa cada frecuencia de forma distinta "
                       "y deforma los pulsos.",
           controles=[filtro, senal, Wc, alfa, beta, N, info], graficas=[p1, [p2, p3, p4]], inicio=cb,
-          referencia="Transparencias T4-04, simetría y fase lineal · Apuntes del Tema 4")
+          referencia="Transparencias T4-04, simetría y fase lineal · Apuntes del Tema 4, secciones 1 y 4")

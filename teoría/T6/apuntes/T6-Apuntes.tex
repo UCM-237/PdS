@@ -31,9 +31,9 @@ Hasta ahora todas las señales han sido \emph{deterministas}: su valor en cada i
 
 Una señal aleatoria no se describe valor a valor, sino estadísticamente: qué valores son más probables, cuánto se alejan de su media, cómo se parecen los valores próximos en el tiempo, cómo se reparte su potencia en frecuencia. Para ello se necesita el lenguaje de la probabilidad, que se repasa en esta sección y en la siguiente. Las dos últimas lo aplican a las señales.
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La introducción antigua tenía varias faltas: «cuantitiva», «guassiana», «area», «Una análisis», «sen» por «seno», y preguntas sin signo de apertura ni tilde («Que», «Como podemos»).
-\end{nota}
+\end{errata}
 
 \subsection{Variable aleatoria}
 
@@ -175,9 +175,9 @@ que modela poblaciones formadas por varios grupos. Se muestrea en dos pasos: se 
   \caption{Histograma de 5000 muestras de una mezcla de dos gaussianas.}\label{fig:mezcla}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   En la ruleta la condición se escribía con desigualdades estrictas en los dos extremos, de modo que un $u$ igual a un $F_X(x_i)$ no tenía valor asignado. La condición de aceptación y rechazo se escribía $Mq(x)-p(x)>0$; basta $Mq(x)\ge f(x)$. La frase de Box-Muller («Se genera un par…») quedaba sin terminar, y la mezcla del ejemplo, también: «$p_X(x)=0{,}4\mathcal N(x,3,0{,}5)+$».
-\end{nota}
+\end{errata}
 
 \subsection{Análisis de muestras}
 
@@ -216,9 +216,9 @@ con un error típico de $\sigma_g/\sqrt N$. Así se calculan integrales sin solu
   \codigo{montecarlo}
 \end{encodigo}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La suma de Monte Carlo antigua usaba el índice $n$ y escribía $x_i$ dentro, y el estimador de la varianza dividía por $N$ sin advertir que es sesgado.
-\end{nota}
+\end{errata}
 
 \begin{flushright}\small\color{pdsgris}Ejercicios 4–5.\end{flushright}
 
@@ -310,9 +310,13 @@ así que las varianzas se suman cuando las variables están incorreladas.
 
 Con $X\sim\mathcal U[-1,1]$ e $Y=X^2$, $C_{XY}=E\{X^3\}-\mu_X E\{X^2\}=0-0=0$, aunque $Y$ es función de $X$. Por tanto, una correlación distinta de cero prueba que hay dependencia, pero una correlación nula no prueba la independencia. La excepción importante son las variables conjuntamente gaussianas, para las que incorrelación e independencia son equivalentes.
 
-\begin{nota}[Notación y erratas de versiones anteriores]
-  Las transparencias antiguas usaban $\phi_{X_iX_j}$ para la correlación y $\psi_{X_iX_j}$ para la covarianza. Aquí se usan $R$ y $C$, porque $\phi$ se reserva para las señales (sección~\ref{sec:senales}) y $\psi$ es la wavelet del Tema~5. Llamaban «independencia lineal» a la incorrelación, que no debe confundirse con la independencia lineal de vectores del álgebra, y escribían $E(X_i,X_j)$ con una coma. La función \texttt{corr} de Matlab que citaban necesita la Statistics Toolbox; \texttt{corrcoef} no.
+\begin{nota}[Notación]
+  Aquí se usan $R$ para la correlación y $C$ para la covarianza, porque $\phi$ se reserva para las señales (sección~\ref{sec:senales}) y $\psi$ es la wavelet del Tema~5.
 \end{nota}
+
+\begin{errata}
+  Las transparencias antiguas usaban $\phi_{X_iX_j}$ para la correlación y $\psi_{X_iX_j}$ para la covarianza. Llamaban «independencia lineal» a la incorrelación, que no debe confundirse con la independencia lineal de vectores del álgebra, y escribían $E(X_i,X_j)$ con una coma. La función \texttt{corr} de Matlab que citaban necesita la Statistics Toolbox; \texttt{corrcoef} no.
+\end{errata}
 
 \begin{encodigo}
   Estimación de medias, matriz de covarianza y coeficiente de correlación del ejemplo~\ref{ej:conjunta}. Teóricamente $\mu_1=\mu_2=3$, $\sigma_1^2=\frac13$, $\sigma_2^2=1+\frac13$ (la varianza de $X_1$ más la del ruido), $C_{12}=E\{(X_1-3)(X_1-3+Z)\}=\frac13$ y $\rho=\frac{1/3}{\sqrt{1/3\cdot4/3}}=0{,}5$.
@@ -358,9 +362,9 @@ porque entonces $\boldsymbol\Sigma_X=\mathbf L\mathbf I\mathbf L^T=\boldsymbol\S
   \codigo{gaussiana_nd}
 \end{encodigo}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La gaussiana multivariable se escribía con $\mathbf x$ como vector fila, $(\mathbf x-\mathbf\mu)\mathbf\Sigma^{-1}(\mathbf x-\mathbf\mu)^T$, y la descomposición de $\mathbf\Sigma$ con \texttt{svd}, sin explicar que para una matriz simétrica definida positiva coincide con la de autovalores. Se decía que la matriz de rotación $\mathbf R$ y la diagonal $\mathbf D$ dan $\mathbf\Sigma=\mathbf R\mathbf D\mathbf R'$, pero no cómo muestrear con ellas: hace falta $\mathbf R\mathbf D^{1/2}$.
-\end{nota}
+\end{errata}
 
 \subsection{Suma de variables y teorema del límite central}\label{sec:tcl}
 
@@ -430,9 +434,9 @@ En tiempo continuo se definen igual con $x(t_1)$ y $x(t_2)$. Si la señal es \em
   \item En tiempo continuo el papel del retardo lo hace la derivada. El equivalente del AR(1) es la señal que cumple $\dv{x}{t}=-\alpha x(t)+w(t)$ (proceso de Ornstein-Uhlenbeck): ruido blanco a través de un sistema de primer orden.
 \end{itemize}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La factorización de la señal de Markov omitía el factor $f(x[0])$, y la versión continua se presentaba como «$p(\dot x(t)|x(t))$» sin decir de qué modelo provenía. La primera transparencia decía que la conjunta $p(x(0),\dots,x(10))$ define la señal; hacen falta las conjuntas de cualquier número de instantes.
-\end{nota}
+\end{errata}
 
 \subsection{Estacionariedad}
 
@@ -480,9 +484,9 @@ y en tiempo continuo $\phi_{xx}(\tau)=E\{x(t+\tau)\,x(t)\}$.
   \caption{Realizaciones de una sinusoide de fase aleatoria y su autocorrelación.}\label{fig:fase}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La definición antigua de estacionariedad en sentido amplio era «la función de probabilidad no depende del tiempo: $p(x(t_1))=p(x(t_2))$». Eso es una condición sobre la distribución de primer orden completa, que no basta para la ESA (no dice nada de la autocorrelación) ni es necesaria (una señal ESA puede cambiar de distribución si conserva media y varianza). Los ejemplos hablaban de «sistema discreto» donde querían decir señal.
-\end{nota}
+\end{errata}
 
 \subsection{Ergodicidad}
 
@@ -518,9 +522,9 @@ La última propiedad sirve para detectar componentes deterministas: si la autoco
   \caption{Cuatro señales y su autocorrelación estimada. En rojo, los valores teóricos.}\label{fig:autocorr}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Se escribía «$\phi_{XX}(0)>\phi_{XX}(\tau)$»; la desigualdad correcta es $\phi_{xx}(0)\ge\abs{\phi_{xx}(\tau)}$, con igualdad posible (una sinusoide la alcanza en cada periodo). El límite $\phi_{xx}\to\mu_x^2$ se daba «para $t\gg0$» en lugar de para $\abs\tau\to\infty$, se presentaba como una propiedad de toda señal estacionaria, y la nota de la deducción de la salida de un sistema LTI llamaba $\psi_{XX}$ a la autocorrelación.
-\end{nota}
+\end{errata}
 
 \paragraph{Estimación.} Con una realización de $N$ muestras $x[0],\dots,x[N-1]$ de una señal ergódica, hay $N-\abs l$ productos $x[n+\abs l]\,x[n]$ disponibles para la separación $l$. Su media es el estimador \emph{insesgado}
 \[
@@ -648,9 +652,9 @@ Según la forma de su DEP, las señales se clasifican en \emph{blancas} (DEP pla
   El ruido blanco continuo tiene $\phi_{xx}(\tau)=\frac{N_0}2\delta(\tau)$ y $\Phi_{xx}(j\omega)=\frac{N_0}2$. Su potencia, $\phi_{xx}(0)$, es infinita, así que no existe físicamente: es un modelo de un ruido cuya DEP es plana en toda la banda que interesa. El ruido térmico de una resistencia $R$ a temperatura $T$ tiene $N_0/2=2kTR$\,V$^2$/Hz hasta frecuencias de teraherzios. Tras un paso bajo ideal de $B$\,Hz la potencia es $\frac{N_0}2\cdot2B=N_0B$, y si esa señal se muestrea a $f_s=2B$ resulta ruido blanco discreto de varianza $N_0B$.
 \end{importante}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Las transparencias antiguas usaban $\omega$ para la frecuencia discreta, escribían la DEP de una constante como $\mu^2\delta(\omega)$, sin el factor $2\pi$, y llamaban «bias constante» a la componente continua.
-\end{nota}
+\end{errata}
 
 \paragraph{Densidad espectral cruzada.} Es la DTFT de la correlación cruzada:
 \[
@@ -701,9 +705,9 @@ En tiempo continuo se cumple lo mismo con $H(j\omega)$. Un filtro no crea potenc
   \caption{Ruido blanco a través de un Butterworth discreto de orden 4: realización y DEP de la salida estimada con el método de Welch.}\label{fig:filtrado}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La relación se escribía $\Phi_{YY}=\abs{H(\e^{j\omega})H(\e^{-j\omega})}\Phi_{XX}$: el resultado es correcto para $h$ real, pero el valor absoluto sobra y oculta que $H(\e^{-j\Omega})=H^*(\e^{j\Omega})$. La deducción usaba $\psi_{XX}$ para la autocorrelación, y la diapositiva decía «Ss pueden procesar» y «aleatoreidad».
-\end{nota}
+\end{errata}
 
 \paragraph{Identificación de sistemas.} Las relaciones anteriores permiten medir la respuesta en frecuencia de un sistema desconocido: se le aplica una entrada aleatoria y se miden entrada y salida. De $\Phi_{yx}=H\Phi_{xx}$,
 \[

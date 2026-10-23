@@ -52,4 +52,4 @@ pb.pagina(__file__, "Editor de la DFT", tema=3,
                       "desplazar un impulso (cambia solo la fase), a hacer la secuencia par o impar, o a "
                       "poner una sinusoide que no complete un número entero de periodos.",
           controles=[inicial, vista, info], graficas=[p1, [p2, p3]], inicio=calc,
-          referencia="Transparencias T3-02, propiedades de la DFT · Apuntes del Tema 3, sección 2")
+          referencia="Transparencias T3-02, propiedades de la DFT · Apuntes del Tema 3, secciones 2 y 3")

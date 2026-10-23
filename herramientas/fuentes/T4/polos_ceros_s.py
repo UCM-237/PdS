@@ -65,4 +65,4 @@ pb.pagina(__file__, "Polos y ceros en el plano s", tema=4,
                       "distancias a los polos. Un polo cerca del eje jω produce un pico; un cero sobre el eje, un "
                       "nulo. Arrastra los polos y ceros (los complejos se mueven con su conjugado) o añade otros con un clic.",
           controles=[modo, w0, info], graficas=[[p1, column(p2, p3, p4)]], inicio=cb,
-          referencia="Transparencias T4-02, polos, ceros y respuesta en frecuencia · Apuntes del Tema 4")
+          referencia="Transparencias T4-02, polos, ceros y respuesta en frecuencia · Apuntes del Tema 4, secciones 1 y 2")

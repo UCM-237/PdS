@@ -39,9 +39,9 @@ La voz, la música, las vibraciones de una máquina que arranca o los ecos de un
   \caption{Tres ventanas de Hann sobre la señal $x_1$ y el espectro de cada tramo. El tramo central contiene el cambio de frecuencia y muestra los dos tonos.}\label{fig:stft_tramos}
 \end{figure}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Las transparencias antiguas hablaban de «envenenamiento» de la señal donde quería decir \emph{enventanado}, y llamaban \texttt{espectrogram} a la función \texttt{spectrogram} de Matlab.
-\end{nota}
+\end{errata}
 
 \subsection{Definición}
 
@@ -239,9 +239,9 @@ donde $\Psi(j\omega)$ es la CTFT de $\psi$. Si $\Psi$ es continua, la integral s
 
 Si $\psi$ tiene $P$ momentos nulos, la transformada de cualquier polinomio de grado menor que $P$ es cero. Una señal suave se parece localmente a un polinomio, así que sus coeficientes son casi nulos en las escalas finas, y solo destacan las discontinuidades y los cambios bruscos. Haar tiene un momento nulo ($\int t\,\psi(t)\dd t=\frac18-\frac38=-\frac14\ne0$), el sombrero mexicano dos y db$P$, $P$.
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La admisibilidad aparecía con $\omega$ en el denominador, sin valor absoluto, y explicada como que $\abs{\Psi}^2$ «decae más rápidamente que $1/\omega$»; lo que exige en realidad es que $\Psi$ se anule en $\omega=0$. Los momentos nulos se definían con $p=0,\dots,N$ para «$N$ momentos», que son $N+1$ condiciones. Y se decía que la wavelet es «irregular y asimétrica», que no es una condición: el sombrero mexicano y la Morlet son simétricas.
-\end{nota}
+\end{errata}
 
 \subsection{Transformada wavelet discreta}
 
@@ -259,9 +259,9 @@ Cualquier señal de energía finita se escribe entonces como
 \]
 y, por ser la base ortonormal, se cumple la igualdad de Parseval: $\int\abs{x(t)}^2\dd t=\sum_{j,k}\abs{d_j[k]}^2$.
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Las transparencias antiguas definían $\psi_{j,k}(t)=\psi(2^{-j}t-k)$, sin el factor $2^{-j/2}$, con lo que la base no es ortonormal, y escribían la ortonormalidad sin el $\dd t$ y con deltas de Dirac en lugar de deltas de Kronecker. En la descomposición por niveles llamaban a la señal unas veces $x(t)$ y otras $f(t)$.
-\end{nota}
+\end{errata}
 
 \paragraph{Análisis multirresolución.} Además de la wavelet se define una \emph{función de escala} $\varphi(t)$ (a veces llamada «wavelet padre»), de media 1, cuyas versiones $\varphi_{j,k}(t)=2^{-j/2}\varphi(2^{-j}t-k)$ recogen lo que queda de la señal por encima de una escala. Para Haar, $\varphi$ es el pulso rectangular de $[0,1)$. Se definen:
 \begin{itemize}
@@ -393,9 +393,9 @@ Sin comprimir, una imagen ocupa $M\cdot N\cdot c\cdot b/8$ bytes, con $c$ canale
   \codigo{imagen_prueba}
 \end{encodigo}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   Las transparencias antiguas decían «Introducciónn», «repesentación» y «perdida» por «pérdida», y ponían «(ej: \emph{tiff})» como ejemplo de los formatos con pérdidas, además de los sin pérdidas.
-\end{nota}
+\end{errata}
 
 \subsection{Operaciones puntuales}
 
@@ -460,9 +460,9 @@ El núcleo es \emph{separable} si $h[i,j]=u[i]\,v[j]$. Entonces basta filtrar ca
   \texttt{conv2} de Matlab y \texttt{scipy.signal.convolve2d} calculan la convolución; \texttt{filter2} e \texttt{imfilter} de Matlab calculan la \emph{correlación}, $\sum_{i,j}h[i,j]f[m+i,n+j]$, que equivale a convolucionar con el núcleo girado 180°. Para núcleos simétricos dan lo mismo; para el de Sobel, el signo cambia.
 \end{nota}
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La definición antigua de la convolución 1D escribía $(x*y)(m)$ en lugar de $(x*h)[m]$, y la de la 2D tenía un paréntesis de más y quedaba sin completar.
-\end{nota}
+\end{errata}
 
 \paragraph{Núcleos habituales.} (\Cref{fig:espaciales})
 \begin{itemize}
@@ -532,9 +532,9 @@ Para dibujarla se lleva el origen al centro con \texttt{fftshift} (las frecuenci
 
 La periodicidad y la simetría son las que permiten centrar la DFT. La fase es tan importante como en 1D: en la \cref{fig:dft2_imagen}, la imagen reconstruida con $\abs F=1$ y la fase original conserva los bordes de los objetos, mientras que con el módulo y una fase cualquiera no se reconoce nada.
 
-\begin{nota}[Erratas de versiones anteriores]
+\begin{errata}
   La propiedad de desplazamiento aparecía como $\e^{-j2\pi(u\,m_0+v\,n_0)}F(u,v)$, sin dividir por $M$ y $N$. Se incluía una propiedad de escalado, $\DFT\{f(am,bn)\}=\frac1{ab}F(u/a,v/b)$, que es la de la transformada continua y no tiene sentido para la DFT. La separabilidad se escribía con factores $1/M$ y $1/N$ que no estaban en la definición, y la inversa como «$\IDFT(f(u,v))$» en lugar de $\IDFT\{F\}$. Además, la DFT 1D se presentaba como «FFT», que es el algoritmo que la calcula.
-\end{nota}
+\end{errata}
 
 \subsection{Filtrado en el dominio de la frecuencia}
 

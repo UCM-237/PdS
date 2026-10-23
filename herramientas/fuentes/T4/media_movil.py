@@ -48,4 +48,4 @@ pb.pagina(__file__, "Filtro de media móvil", tema=4,
                       "(su varianza se divide por L) a cambio de suavizar los cambios bruscos y retrasar la señal "
                       "(L − 1)/2 muestras. Es un paso bajo con ceros en múltiplos de 2π/L y fase lineal.",
           controles=[tipo, L, A, escala, info], graficas=[p1, [p2, p3]], inicio=cb,
-          referencia="Transparencias T4-01, filtros discretos · Apuntes del Tema 4")
+          referencia="Transparencias T4-01, filtros discretos · Apuntes del Tema 4, sección 1")
