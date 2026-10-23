@@ -30,7 +30,7 @@ jobs:
       - name: Generar las páginas
         working-directory: herramientas
         run: |
-          pip install numpy scipy "bokeh>=3.6,<4"
+          pip install numpy scipy "bokeh>=3.6,<4" markdown
           python3 generar.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
