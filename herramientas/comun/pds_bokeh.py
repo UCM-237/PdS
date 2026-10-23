@@ -29,7 +29,7 @@ from bokeh.document import Document
 from bokeh.embed import file_html
 from bokeh.events import DocumentReady
 from bokeh.layouts import column, row
-from bokeh.models import CustomJS, Div, InlineStyleSheet, RadioButtonGroup, Select, Slider
+from bokeh.models import CheckboxGroup, CustomJS, Div, InlineStyleSheet, RadioButtonGroup, Select, Slider
 from bokeh.plotting import figure as _figure
 from bokeh.resources import CDN, INLINE
 from jinja2 import Template
@@ -170,10 +170,16 @@ def botones(opciones, activo: int = 0, **kw) -> RadioButtonGroup:
     return RadioButtonGroup(labels=list(opciones), active=activo, width=kw.pop("width", 240), **kw)
 
 
+def casillas(opciones, activas=(), **kw) -> CheckboxGroup:
+    """Casillas de verificación independientes."""
+    return CheckboxGroup(labels=list(opciones), active=list(activas), width=kw.pop("width", 240), **kw)
+
+
 def tallos(p, x: str, y: str, fuente, color: str = AZUL, base: float = 0.0, **kw):
     """Gráfica de tallos (stem) para señales discretas."""
     p.segment(x0=x, y0=base, x1=x, y1=y, source=fuente, line_color=color, line_width=1.5)
-    return p.scatter(x, y, source=fuente, size=6, color=color, **kw)
+    kw.setdefault("size", 6)
+    return p.scatter(x, y, source=fuente, color=color, **kw)
 
 
 def editable(p, fuente, x: str = "n", y: str = "x", callback=None) -> None:
@@ -268,7 +274,7 @@ def conectar(callback, *controles) -> None:
             c.js_on_change("value", callback)
         elif isinstance(c, Select):
             c.js_on_change("value", callback)
-        elif isinstance(c, RadioButtonGroup):
+        elif isinstance(c, (RadioButtonGroup, CheckboxGroup)):
             c.js_on_change("active", callback)
 
 
@@ -348,6 +354,7 @@ function cres(a, b) { return [a[0] - b[0], a[1] - b[1]]; }
 function cabs(a) { return Math.hypot(a[0], a[1]); }
 function cexp(a) { const m = Math.exp(a[0]); return [m * Math.cos(a[1]), m * Math.sin(a[1])]; }
 function cesc(k, a) { return [k * a[0], k * a[1]]; }
+function csqrt(a) { const m = Math.sqrt(cabs(a)), f = Math.atan2(a[1], a[0]) / 2; return [m * Math.cos(f), m * Math.sin(f)]; }
 // Coeficientes (de mayor a menor grado) del polinomio mónico con esas raíces.
 function poli(raices) {
     let c = [[1, 0]];
