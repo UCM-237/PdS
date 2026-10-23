@@ -78,4 +78,4 @@ Con L = M = 2 el filtro corta en π/2 del espectro expandido, que corresponde a 
 - **Aliasing.** El compresor es un muestreo y pliega el espectro igual. Herramienta: [Aliasing](T2-aliasing.html).
 - **Sobremuestreo.** Los conversores sobremuestrean y después diezman. Herramienta: [Sobremuestreo y conformado de ruido](T2-sobremuestreo.html).
 - **Retenedores.** Interpolar antes del D/A aleja las imágenes del retenedor. Herramienta: [Retenedores](T2-retenedores.html).
-- **Diseño FIR (Tema 4).** El filtro es un FIR paso bajo por ventanas. Herramienta: [FIR por el método de ventanas](T4-fir-ventana.html).
+- **Diseño FIR (Tema 4).** El filtro es un FIR paso bajo por ventanas. Herramienta: [Diseño FIR por ventanas](T4-fir-ventana.html).

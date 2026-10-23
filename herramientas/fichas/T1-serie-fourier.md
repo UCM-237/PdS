@@ -81,4 +81,4 @@ Con K = 60 la cuadrada llega a algo más de 0,99 de 1 (la suma de 1/k² converge
 - **Transformada de Fourier.** Cuando el periodo tiende a infinito, los armónicos se juntan y la serie se convierte en la transformada. Herramienta: [Propiedades de la transformada de Fourier](T1-propiedades-fourier.html).
 - **Sistemas LTI.** Una señal periódica a la entrada de un LTI sale con cada armónico multiplicado por H(jkω₀). Herramienta: [Respuesta de un sistema LTI continuo](T1-respuesta-lti-continua.html).
 - **DFT (Tema 3).** La DFT es la serie de Fourier de una secuencia periódica de periodo N. Herramientas: [DFT, fuga y relleno con ceros](T3-dft.html) y [Extensión periódica](T3-extension-periodica.html).
-- **Ventanas (Tema 3) y FIR por ventanas (Tema 4).** El fenómeno de Gibbs es la causa del rizado de los filtros diseñados truncando la respuesta ideal. Herramienta: [FIR por el método de ventanas](T4-fir-ventana.html).
+- **Ventanas (Tema 3) y FIR por ventanas (Tema 4).** El fenómeno de Gibbs es la causa del rizado de los filtros diseñados truncando la respuesta ideal. Herramienta: [Diseño FIR por ventanas](T4-fir-ventana.html).

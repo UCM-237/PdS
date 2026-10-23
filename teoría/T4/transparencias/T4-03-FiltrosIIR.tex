@@ -182,6 +182,7 @@
 \begin{frame}{En código: paso banda en secciones de orden 2}
   \codigo[basicstyle=\ttfamily\fontsize{6.8}{7.8}\selectfont]{iir_paso_banda}
   \nota{En forma directa, un IIR de orden alto es muy sensible al redondeo de los coeficientes: se implementa como cascada de secciones de orden 2.}
+  \herramienta{T4-cuantificacion-coeficientes}
 \end{frame}
 
 % =====================================================================
@@ -203,6 +204,7 @@
     \item Hay transformaciones análogas de orden 2 a paso banda y supresor (Oppenheim y Schafer, capítulo 7).
     \item Con $\Omega_c=\hat\Omega_c=\pi/2$, el paso alto es $\alpha=0$: $z\to-z$, que invierte el espectro ($h[n]\to(-1)^nh[n]$).
   \end{itemize}
+  \herramienta{T4-transformaciones-frecuencia}
 \end{frame}
 
 \begin{frame}{Invarianza al impulso y bilineal}

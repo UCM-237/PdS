@@ -80,7 +80,7 @@ x̃[0] = 1 + 0,5⁴ + 0,5⁸ + … ≈ 1/(1 − 0,5⁴) ≈ 1,067: cada valor sa
 
 ## Relación con otros conceptos
 
-- **Muestreo ideal (Tema 2).** El mismo fenómeno con los papeles de tiempo y frecuencia cambiados. Herramienta: [Muestreo ideal](T2-muestreo-ideal.html).
+- **Muestreo ideal (Tema 2).** El mismo fenómeno con los papeles de tiempo y frecuencia cambiados. Herramienta: [Espectro de una señal muestreada](T2-muestreo-ideal.html).
 - **Serie de Fourier discreta.** Los X[k] son, salvo el factor 1/N, los coeficientes de la serie de x̃[n]. Herramienta: [Serie de Fourier](T1-serie-fourier.html).
 - **DFT.** La DFT de N puntos son estas muestras. Herramienta: [DFT, fuga y relleno con ceros](T3-dft.html).
 - **Convolución circular.** El aliasing temporal es lo que separa la convolución circular de la lineal. Herramienta: [Convolución circular](T3-convolucion-circular.html).

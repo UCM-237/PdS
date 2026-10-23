@@ -80,5 +80,5 @@ f = 2,5 da F = 1/4: periódica con N = 4. f = 10/(2π) da Ω = 1 rad/muestra y F
 
 - **Exponenciales complejas.** cos(Ωn) es la parte real de e^{jΩn}. Herramientas: [Exponencial compleja continua](T1-exponencial-continua.html) y [Exponencial compleja discreta](T1-exponencial-discreta.html).
 - **Aliasing (Tema 2).** Que Ω y Ω + 2π sean la misma frecuencia es, en hercios, que f y f + fs den las mismas muestras. Herramienta: [Aliasing](T2-aliasing.html).
-- **Teorema del muestreo (Tema 2).** Para que cada f tenga su propia Ω hay que muestrear con fs > 2f. Herramienta: [Muestreo ideal](T2-muestreo-ideal.html).
+- **Teorema del muestreo (Tema 2).** Para que cada f tenga su propia Ω hay que muestrear con fs > 2f. Herramienta: [Espectro de una señal muestreada](T2-muestreo-ideal.html).
 - **Respuesta en frecuencia discreta.** Como la frecuencia discreta es periódica, H(e^{jΩ}) también lo es. Herramienta: [Respuesta de un sistema LTI discreto](T1-respuesta-lti-discreta.html).

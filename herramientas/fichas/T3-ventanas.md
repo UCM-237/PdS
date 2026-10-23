@@ -83,6 +83,6 @@ La herramienta normaliza por Σw[n], así que el pico vale 1 con cualquier venta
 ## Relación con otros conceptos
 
 - **DFT y fuga.** Herramienta: [DFT, fuga y relleno con ceros](T3-dft.html).
-- **Diseño FIR por ventanas (Tema 4).** Las mismas ventanas, aplicadas a la respuesta al impulso ideal: el lóbulo principal fija la banda de transición y los secundarios, el rizado. Herramienta: [FIR por el método de ventanas](T4-fir-ventana.html).
+- **Diseño FIR por ventanas (Tema 4).** Las mismas ventanas, aplicadas a la respuesta al impulso ideal: el lóbulo principal fija la banda de transición y los secundarios, el rizado. Herramienta: [Diseño FIR por ventanas](T4-fir-ventana.html).
 - **Propiedades de la transformada de Fourier (Tema 1).** Multiplicar en el tiempo es convolucionar en frecuencia. Herramienta: [Propiedades de la transformada de Fourier](T1-propiedades-fourier.html).
 - **Espectrograma y densidad espectral (Tema 6).** Se calculan con ventanas deslizantes.

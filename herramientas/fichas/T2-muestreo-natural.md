@@ -73,7 +73,7 @@ En el natural, la banda base es 0,6·X(f), sin deformar: un paso bajo la recuper
 
 ## Relación con otros conceptos
 
-- **Muestreo ideal.** El límite τ → 0. Herramienta: [Muestreo ideal](T2-muestreo-ideal.html).
+- **Muestreo ideal.** El límite τ → 0. Herramienta: [Espectro de una señal muestreada](T2-muestreo-ideal.html).
 - **Serie de Fourier.** El factor d·sinc(kd) son los coeficientes del tren de pulsos. Herramienta: [Serie de Fourier](T1-serie-fourier.html), con el tren de pulsos.
 - **Retenedores.** Techo plano con τ = Ts es el ZOH. Herramienta: [Retenedores](T2-retenedores.html).
 - **Reconstrucción.** Herramienta: [Reconstrucción](T2-reconstruccion.html).

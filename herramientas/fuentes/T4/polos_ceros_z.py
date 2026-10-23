@@ -92,4 +92,4 @@ pb.pagina(__file__, "Polos y ceros en el plano z", tema=4,
                       "cerca de la circunferencia da un pico estrecho y una h[n] que tarda en extinguirse; fuera de ella, "
                       "el sistema es inestable. Carga un ejemplo para empezar.",
           controles=[ejemplo, modo, W0, info], graficas=[[p1, column(p2, p3, p4)]], inicio=cb,
-          referencia="Transparencias T4-01, polos, ceros y respuesta en frecuencia · Apuntes del Tema 4")
+          referencia="Transparencias T4-01, polos, ceros y respuesta en frecuencia · Apuntes del Tema 4, sección 1")

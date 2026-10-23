@@ -85,5 +85,5 @@ El triángulo de anchura 2 y altura 1, el mismo que la segunda señal de la list
 - **Serie de Fourier.** La transformada es el límite de la serie cuando el periodo tiende a infinito. Herramienta: [Serie de Fourier](T1-serie-fourier.html).
 - **Operaciones sobre la variable independiente.** Desplazar y escalar en el tiempo son las operaciones de la herramienta. Herramienta: [Operaciones sobre la variable independiente](T1-variable-independiente.html).
 - **Convolución.** El producto de espectros es la base del filtrado. Herramienta: [Convolución continua](T1-convolucion-continua.html).
-- **Muestreo (Tema 2).** Muestrear multiplica por un tren de impulsos y repite el espectro, que es la modulación aplicada a todos los múltiplos de fs. Herramienta: [Muestreo ideal](T2-muestreo-ideal.html).
+- **Muestreo (Tema 2).** Muestrear multiplica por un tren de impulsos y repite el espectro, que es la modulación aplicada a todos los múltiplos de fs. Herramienta: [Espectro de una señal muestreada](T2-muestreo-ideal.html).
 - **Fase lineal (Tema 4).** Un filtro con fase lineal retrasa la señal sin deformarla, por la propiedad de desplazamiento. Herramienta: [Fase lineal y retardo de grupo](T4-fase-lineal.html).

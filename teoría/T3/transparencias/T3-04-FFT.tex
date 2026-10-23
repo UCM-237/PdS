@@ -132,6 +132,7 @@
     \end{tikzpicture}
   \end{center}
   \nota{Tres etapas de cuatro mariposas. En cada mariposa, la rama inferior se multiplica por $W_m^{k}$ y la salida inferior lleva un signo menos.}
+  \herramienta{T3-fft-mariposa}
 \end{frame}
 
 \begin{frame}{Variantes y la FFT en la práctica}
@@ -217,6 +218,7 @@
     \end{tabular}
   \end{center}
   \nota{Las dos dan el mismo resultado con el mismo coste. \texttt{scipy.signal.oaconvolve} y \texttt{fftfilt} de Matlab las implementan.}
+  \herramienta{T3-solapamiento-suma}
 \end{frame}
 
 \begin{frame}{En código: solapamiento y suma}

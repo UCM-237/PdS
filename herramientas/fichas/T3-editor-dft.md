@@ -83,7 +83,7 @@ El coseno ya no completa un número entero de periodos en los 16 puntos: deja de
 ## Relación con otros conceptos
 
 - **Serie de Fourier (Tema 1).** La DFT es la serie de Fourier de la extensión periódica. Herramienta: [Serie de Fourier](T1-serie-fourier.html).
-- **Exponenciales discretas.** Las funciones base de la DFT. Herramienta: [Exponencial discreta](T1-exponencial-discreta.html).
+- **Exponenciales discretas.** Las funciones base de la DFT. Herramienta: [Exponencial compleja discreta](T1-exponencial-discreta.html).
 - **Propiedades de la DFT.** Desplazamientos, inversión y modulación, con comprobación. Herramienta: [Propiedades de la DFT](T3-propiedades-dft.html).
 - **Fuga y relleno con ceros.** Herramienta: [DFT, fuga y relleno con ceros](T3-dft.html).
 - **Par, impar y energía.** Las mismas descomposiciones en versión circular. Herramienta: [Par, impar, energía y potencia](T1-par-impar-energia.html).

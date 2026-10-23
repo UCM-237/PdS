@@ -72,7 +72,7 @@ Hace falta σ < 0: la respuesta se extingue. Con σ > 0 crece sin límite y el s
 
 ## Relación con otros conceptos
 
-- **Exponencial discreta.** Al muestrear e^{st} se obtiene zⁿ con z = e^{sTs}. Herramientas: [Exponencial compleja discreta](T1-exponencial-discreta.html) y [Continua frente a discreta](T1-continua-discreta.html).
+- **Exponencial discreta.** Al muestrear e^{st} se obtiene zⁿ con z = e^{sTs}. Herramientas: [Exponencial compleja discreta](T1-exponencial-discreta.html) y [Exponencial continua frente a discreta](T1-continua-discreta.html).
 - **Respuesta en frecuencia.** Con s = jω, la salida de un sistema LTI es H(jω) e^{jωt}. Herramienta: [Respuesta de un sistema LTI continuo](T1-respuesta-lti-continua.html).
 - **Polos de un sistema continuo (Tema 4).** Cada polo p aporta un término e^{pt} a la respuesta libre; su posición en el plano s decide si se amortigua. Herramienta: [Polos y ceros en el plano s](T4-polos-ceros-s.html).
 - **Serie y transformada de Fourier.** Descomponen una señal en exponenciales complejas con σ = 0. Herramienta: [Serie de Fourier](T1-serie-fourier.html).

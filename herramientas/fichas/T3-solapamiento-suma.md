@@ -77,4 +77,4 @@ L = 1024 − 101 + 1 = 924 muestras, unos 52 bloques por segundo. Cada bloque cu
 - **Convolución circular.** Por qué se rellena con ceros o se descartan P − 1 muestras. Herramienta: [Convolución circular](T3-convolucion-circular.html).
 - **FFT.** El coste de cada bloque. Herramienta: [FFT: el grafo de mariposas](T3-fft-mariposa.html).
 - **Linealidad e invarianza (Tema 1).** Lo que permite filtrar por trozos y sumar. Herramienta: [Propiedades de los sistemas](T1-propiedades-sistemas.html).
-- **Filtros FIR (Tema 4).** Un FIR de muchos coeficientes se aplica así. Herramienta: [FIR por el método de ventanas](T4-fir-ventana.html).
+- **Filtros FIR (Tema 4).** Un FIR de muchos coeficientes se aplica así. Herramienta: [Diseño FIR por ventanas](T4-fir-ventana.html).

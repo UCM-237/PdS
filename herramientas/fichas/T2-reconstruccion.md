@@ -72,7 +72,7 @@ fs > 12 muestras/s, el doble de la componente más alta (6 Hz). Con fs = 20, el 
 
 ## Relación con otros conceptos
 
-- **Muestreo ideal.** El paso bajo se queda con la réplica central. Herramienta: [Muestreo ideal](T2-muestreo-ideal.html).
+- **Muestreo ideal.** El paso bajo se queda con la réplica central. Herramienta: [Espectro de una señal muestreada](T2-muestreo-ideal.html).
 - **Retenedores en frecuencia.** Herramienta: [Retenedores](T2-retenedores.html).
 - **Aliasing.** La reconstrucción ideal devuelve el alias fundamental de cada componente. Herramienta: [Aliasing](T2-aliasing.html).
 - **Convolución.** Reconstruir es convolucionar el tren de muestras con h(t). Herramienta: [Convolución continua](T1-convolucion-continua.html).

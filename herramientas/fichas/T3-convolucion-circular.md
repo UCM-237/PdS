@@ -77,4 +77,4 @@ El pulso se pliega: (1 + 1, 1 + 1, 1, 1) = (2, 2, 1, 1). La suma de la salida es
 - **Extensión periódica.** El plegado es el aliasing temporal. Herramienta: [Extensión periódica](T3-extension-periodica.html).
 - **Convolución por bloques.** Solapamiento-suma y solapamiento-almacenamiento. Herramienta: [Convolución por bloques](T3-solapamiento-suma.html).
 - **FFT.** Lo que hace rentable filtrar en frecuencia. Herramienta: [FFT: el grafo de mariposas](T3-fft-mariposa.html).
-- **Filtros FIR (Tema 4).** Un FIR largo se aplica con FFT. Herramienta: [FIR por el método de ventanas](T4-fir-ventana.html).
+- **Filtros FIR (Tema 4).** Un FIR largo se aplica con FFT. Herramienta: [Diseño FIR por ventanas](T4-fir-ventana.html).

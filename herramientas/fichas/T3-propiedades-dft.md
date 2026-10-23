@@ -82,4 +82,4 @@ x_e = (1; 0,4; 0,25; 0,1; 0; 0,1; 0,25; 0,4), simétrica respecto a n = 0 en sen
 - **Par, impar y energía.** La descomposición no circular. Herramienta: [Par, impar, energía y potencia](T1-par-impar-energia.html).
 - **Convolución circular.** La propiedad más importante de la tabla. Herramienta: [Convolución circular](T3-convolucion-circular.html).
 - **Editor de la DFT.** Pares básicos y simetrías con 16 puntos. Herramienta: [Editor de la DFT](T3-editor-dft.html).
-- **Fase lineal (Tema 4).** El retardo de un filtro FIR simétrico es la propiedad del desplazamiento. Herramienta: [Fase lineal](T4-fase-lineal.html).
+- **Fase lineal (Tema 4).** El retardo de un filtro FIR simétrico es la propiedad del desplazamiento. Herramienta: [Fase lineal y retardo de grupo](T4-fase-lineal.html).

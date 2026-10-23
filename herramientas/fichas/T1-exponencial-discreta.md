@@ -69,6 +69,6 @@ La primera no es periódica: Ω/2π = 3/(8π) es irracional. La segunda tiene Ω
 ## Relación con otros conceptos
 
 - **Exponencial continua.** zⁿ es la versión discreta de e^{st}, con z = e^{sTs}. Herramienta: [Exponencial compleja continua](T1-exponencial-continua.html).
-- **Muestreo.** El valor principal de Ω explica por qué frecuencias separadas fs dan las mismas muestras. Herramientas: [Continua frente a discreta](T1-continua-discreta.html) y [Aliasing](T2-aliasing.html).
+- **Muestreo.** El valor principal de Ω explica por qué frecuencias separadas fs dan las mismas muestras. Herramientas: [Exponencial continua frente a discreta](T1-continua-discreta.html) y [Aliasing](T2-aliasing.html).
 - **Polos de un sistema discreto (Tema 4).** Cada polo p aporta pⁿ a la respuesta libre; con |p| < 1 se extingue. Herramienta: [Polos y ceros en el plano z](T4-polos-ceros-z.html).
 - **DFT (Tema 3).** La DFT descompone una secuencia en exponenciales de frecuencias 2πk/N, todas periódicas de periodo N. Herramienta: [DFT, fuga y relleno con ceros](T3-dft.html).

@@ -88,9 +88,9 @@ La componente de 15 Hz aparece en 5 Hz y se suma con la de 5 Hz, como en la solu
 
 ## Relación con otros conceptos
 
-- **Frecuencias discretas equivalentes (Tema 1).** El aliasing es la versión en hercios de que Ω y Ω + 2πk son la misma frecuencia discreta. Herramienta: [Continua frente a discreta](T1-continua-discreta.html).
-- **Espectro de la señal muestreada y teorema del muestreo.** Las réplicas grises son las del espectro de la señal muestreada. Herramienta: [Muestreo ideal](T2-muestreo-ideal.html).
+- **Frecuencias discretas equivalentes (Tema 1).** El aliasing es la versión en hercios de que Ω y Ω + 2πk son la misma frecuencia discreta. Herramienta: [Exponencial continua frente a discreta](T1-continua-discreta.html).
+- **Espectro de la señal muestreada y teorema del muestreo.** Las réplicas grises son las del espectro de la señal muestreada. Herramienta: [Espectro de una señal muestreada](T2-muestreo-ideal.html).
 - **Reconstrucción.** La curva roja es la salida del reconstructor ideal; con retenedores aparecen además otras distorsiones. Herramientas: [Reconstrucción](T2-reconstruccion.html) y [Retenedores](T2-retenedores.html).
 - **Muestreo no ideal y filtro antialiasing.** Herramienta: [Muestreo natural y de techo plano](T2-muestreo-natural.html).
 - **Diezmado (T2-04).** Reducir la frecuencia de muestreo de una secuencia produce el mismo plegado si no se filtra antes.
-- **Análisis espectral con la DFT (Tema 3).** El eje de la DFT solo cubre [0, fs): una raya en k puede venir de cualquier alias. Herramienta: [DFT](T3-dft.html).
+- **Análisis espectral con la DFT (Tema 3).** El eje de la DFT solo cubre [0, fs): una raya en k puede venir de cualquier alias. Herramienta: [DFT, fuga y relleno con ceros](T3-dft.html).
