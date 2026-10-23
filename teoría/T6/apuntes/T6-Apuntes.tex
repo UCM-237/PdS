@@ -105,7 +105,7 @@ Su media es $\mu$ y su varianza $\sigma^2$. La variable $Z=(X-\mu)/\sigma$ es $\
 
 \paragraph{Exponencial.} $f_X(x)=\lambda\e^{-\lambda x}$ para $x\ge0$, con $\mu_X=1/\lambda$ y $\sigma_X^2=1/\lambda^2$. Modela tiempos de espera entre sucesos independientes.
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 1–3.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 1–3. \herramienta{T6-distribuciones}.\end{flushright}
 
 \subsection{Muestreo de variables aleatorias}
 
@@ -220,7 +220,7 @@ con un error típico de $\sigma_g/\sqrt N$. Así se calculan integrales sin solu
   La suma de Monte Carlo antigua usaba el índice $n$ y escribía $x_i$ dentro, y el estimador de la varianza dividía por $N$ sin advertir que es sesgado.
 \end{errata}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 4–5.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 4–5. \herramienta{T6-generacion-muestras, T6-monte-carlo}.\end{flushright}
 
 % =====================================================================
 \section{Varias variables aleatorias}\label{sec:varias}
@@ -390,7 +390,7 @@ La convergencia es rápida (\cref{fig:tcl}): la suma de doce uniformes $\mathcal
   \caption{Histograma de la suma normalizada de $n$ uniformes y la densidad $\mathcal N(0,1)$.}\label{fig:tcl}
 \end{figure}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 6–10.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 6–10. \herramienta{T6-gaussiana-bivariante, T6-limite-central}.\end{flushright}
 
 % =====================================================================
 \section{Señales aleatorias}\label{sec:senales}
@@ -592,7 +592,7 @@ Esta es la base de muchas aplicaciones: medir distancias con radar o sonar (se c
   Las transparencias antiguas, y otros textos, definen $\phi_{xy}(\tau)=E\{x(t)\,y(t+\tau)\}$, que es la función de estos apuntes reflejada, $\phi_{xy}(-\tau)$, o lo que es lo mismo, $\phi_{yx}(\tau)$. Con aquel convenio la relación de un sistema LTI se escribe $\Phi_{xy}=H\Phi_{xx}$; con este, $\Phi_{yx}=H\Phi_{xx}$. Seguimos el de Oppenheim y Schafer y Matlab.
 \end{nota}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 11–14.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 11–14. \herramienta{T6-realizaciones, T6-autocorrelacion, T6-retardo-correlacion}.\end{flushright}
 
 % =====================================================================
 \section{Análisis espectral de señales aleatorias}\label{sec:espectral}
@@ -762,7 +762,7 @@ En Matlab: \texttt{periodogram}, \texttt{pwelch}, \texttt{cpsd}, \texttt{tfestim
   que deja pasar las frecuencias en las que domina la señal y atenúa aquellas en las que domina el ruido. Es la idea de los reductores de ruido y de la restauración de imágenes del Tema~5.
 \end{itemize}
 
-\begin{flushright}\small\color{pdsgris}Ejercicios 15–18.\end{flushright}
+\begin{flushright}\small\color{pdsgris}Ejercicios 15–18. \herramienta{T6-ruido-lti, T6-periodograma-welch}.\end{flushright}
 
 % =====================================================================
 \section*{Bibliografía}

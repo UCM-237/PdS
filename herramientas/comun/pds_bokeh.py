@@ -259,6 +259,52 @@ def plano_pz(p, fuente, modo, callback=None, real_tol: float = 0.04) -> None:
     p.toolbar.active_drag = None
 
 
+# Mapas de color: los de las figuras del Tema 5 (viridis para espectrogramas y
+# escalogramas, magma para el módulo de una DFT 2D y grises para imágenes).
+def _paleta(nombre: str):
+    from bokeh.palettes import Greys256, Magma256, Viridis256
+    return {"grises": Greys256, "viridis": Viridis256, "magma": Magma256}[nombre]
+
+
+def figura_imagen(titulo: str, lado: int = 256, ancho: int = 260, ejes: bool = False):
+    """Figura cuadrada para una imagen de ``lado``×``lado`` píxeles, con la fila 0
+    arriba (como en Matlab y NumPy)."""
+    from bokeh.models import Range1d
+    p = figura(titulo, "", "", ancho=ancho, alto=ancho, x_range=Range1d(0, lado),
+               y_range=Range1d(lado, 0), tools="pan,wheel_zoom,reset,save")
+    p.grid.visible = False
+    if not ejes:
+        p.axis.visible = False
+    return p
+
+
+def imagen(p, fuente, x=0, y=0, dw=256, dh=256, paleta: str = "grises", bajo=0.0, alto=1.0,
+           barra: bool = False):
+    """Dibuja la columna ``img`` de ``fuente`` (una matriz, lista de filas) con un
+    mapa de color; devuelve el ``LinearColorMapper`` para cambiar ``low`` y ``high``
+    desde JS. ``x``, ``y``, ``dw`` y ``dh`` pueden ser columnas de la fuente."""
+    from bokeh.models import ColorBar, LinearColorMapper
+    mapa = LinearColorMapper(palette=_paleta(paleta), low=bajo, high=alto)
+    p.image(image="img", x=x, y=y, dw=dw, dh=dh, source=fuente, color_mapper=mapa)
+    if barra:
+        cb = ColorBar(color_mapper=mapa, width=10, major_label_text_font=FUENTE,
+                      major_label_text_font_size="11px", padding=4)
+        p.add_layout(cb, "right")
+    return mapa
+
+
+def foto(titulo: str = "Foto propia (se procesa en el navegador)"):
+    """Selector de fichero de imagen. Con ``foto_cargar`` de la biblioteca JS se
+    convierte en una matriz de grises; la foto no sale del navegador."""
+    from bokeh.models import FileInput
+    return FileInput(title=titulo, accept="image/*", width=240)
+
+
+def boton(texto: str, **kw):
+    from bokeh.models import Button
+    return Button(label=texto, width=kw.pop("width", 240), **kw)
+
+
 def js(codigo: str, **args) -> CustomJS:
     """CustomJS con la biblioteca común ``JS`` (FFT, ventanas…) delante."""
     # Un argumento con el nombre de una función de JS la taparía (o al revés).
@@ -278,6 +324,10 @@ def conectar(callback, *controles) -> None:
             c.js_on_change("value", callback)
         elif isinstance(c, (RadioButtonGroup, CheckboxGroup)):
             c.js_on_change("active", callback)
+        elif type(c).__name__ == "FileInput":
+            c.js_on_change("value", callback)
+        elif type(c).__name__ == "Button":
+            c.js_on_event("button_click", callback)
 
 
 # Funciones de JavaScript que comparten las herramientas.
@@ -450,6 +500,240 @@ function ruido(L, semilla = 1) {
     let s = semilla >>> 0; const u = () => { s = (1664525 * s + 1013904223) >>> 0; return (s + 0.5) / 4294967296; };
     const r = []; for (let i = 0; i < L; i++) r.push(Math.sqrt(-2 * Math.log(u())) * Math.cos(2 * PI * u()));
     return r;
+}
+// ---- Temas 5 y 6 -----------------------------------------------------
+// Generador con semilla (mulberry32): devuelve una función que da uniformes en (0, 1).
+function generador(semilla = 1) {
+    let s = (semilla >>> 0) || 1;
+    return function () {
+        s = (s + 0x6D2B79F5) >>> 0; let t = s;
+        t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return (((t ^ (t >>> 14)) >>> 0) + 0.5) / 4294967296;
+    };
+}
+// Muestra N(0, 1) a partir de un generador de uniformes (Box-Muller).
+function gauss(u) { return Math.sqrt(-2 * Math.log(u())) * Math.cos(2 * PI * u()); }
+function media(x) { let s = 0; for (const v of x) s += v; return s / x.length; }
+function varianza(x) { const m = media(x); let s = 0; for (const v of x) s += (v - m) * (v - m); return s / (x.length - 1); }
+function maximo(x) { let m = -Infinity; for (const v of x) if (v > m) m = v; return m; }
+function minimo(x) { let m = Infinity; for (const v of x) if (v < m) m = v; return m; }
+// Histograma normalizado como densidad (área 1 sobre las N muestras) en nb
+// intervalos de [a, b]: {c: centros, d: alturas, ancho}.
+function histo(x, a, b, nb) {
+    const ancho = (b - a) / nb, n = new Array(nb).fill(0);
+    for (const v of x) { const i = Math.floor((v - a) / ancho); if (i >= 0 && i < nb) n[i]++; else if (v === b) n[nb - 1]++; }
+    return {c: n.map((_, i) => a + (i + 0.5) * ancho), d: n.map(v => v / (x.length * ancho)), ancho: ancho};
+}
+function pot2(n) { let p = 1; while (p < n) p <<= 1; return p; }
+// FFT 2D de una matriz M×N (lista de filas; M y N potencias de 2); devuelve [re, im].
+function fft2d(re, im, inversa = false) {
+    const M = re.length, N = re[0].length, f = inversa ? ifft : fft;
+    const R = [], I = [];
+    for (let m = 0; m < M; m++) { const [a, b] = f(re[m], im ? im[m] : null); R.push(a); I.push(b); }
+    for (let n = 0; n < N; n++) {
+        const [a, b] = f(R.map(r => r[n]), I.map(r => r[n]));
+        for (let m = 0; m < M; m++) { R[m][n] = a[m]; I[m][n] = b[m]; }
+    }
+    return [R, I];
+}
+function ifft2d(re, im) { return fft2d(re, im, true); }
+// Lleva el origen de frecuencias al centro (fftshift 2D).
+function centrar2d(A) {
+    const M = A.length, N = A[0].length;
+    return enteros(0, M - 1).map(m => enteros(0, N - 1).map(n => A[(m + M / 2) % M][(n + N / 2) % N]));
+}
+// Convolución 2D con salida del tamaño de f ('same'); h es K×K con K impar y el
+// borde se completa con "ceros", repitiendo el borde ("repetir") o reflejando ("reflejar").
+function conv2d(f, h, borde = "repetir") {
+    const M = f.length, N = f[0].length, K = h.length, c = (K - 1) / 2;
+    const idx = (i, L) => borde === "repetir" ? Math.min(Math.max(i, 0), L - 1)
+        : borde === "reflejar" ? (i < 0 ? -i - 1 : i >= L ? 2 * L - i - 1 : i) : i;
+    const g = [];
+    for (let m = 0; m < M; m++) {
+        const fila = new Array(N).fill(0);
+        for (let i = 0; i < K; i++) {
+            const mm = idx(m - (i - c), M); if (mm < 0 || mm >= M) continue;
+            const fm = f[mm], hi = h[i];
+            for (let j = 0; j < K; j++) {
+                const hij = hi[j]; if (hij === 0) continue;
+                for (let n = 0; n < N; n++) {
+                    const nn = idx(n - (j - c), N); if (nn < 0 || nn >= N) continue;
+                    fila[n] += hij * fm[nn];
+                }
+            }
+        }
+        g.push(fila);
+    }
+    return g;
+}
+// STFT de x con la ventana w (L muestras), salto R y DFT de N puntos (potencia
+// de 2): {S: |X[m,k]|² de cada tramo para k = 0..N/2, ini: muestra inicial de cada tramo}.
+function stft_pot(x, w, R, N) {
+    const L = w.length, S = [], ini = [];
+    for (let s = 0; s + L <= x.length; s += R) {
+        const re = new Array(N).fill(0);
+        for (let r = 0; r < L; r++) re[r] = x[s + r] * w[r];
+        const [a, b] = fft(re); S.push(a.slice(0, N / 2 + 1).map((v, k) => v * v + b[k] * b[k])); ini.push(s);
+    }
+    return {S: S, ini: ini};
+}
+// Filtros paso bajo h0 de la DWT ortogonal (los de reconstrucción de PyWavelets).
+const DWT_H0 = {
+    "Haar": [Math.SQRT1_2, Math.SQRT1_2],
+    "db2": [0.48296291314453416, 0.8365163037378079, 0.2241438680420134, -0.12940952255126037],
+    "db4": [0.2303778133088965, 0.7148465705529157, 0.6308807679298589, -0.027983769416859854,
+            -0.18703481171909309, 0.030841381835560764, 0.0328830116668852, -0.010597401785069032],
+};
+function dwt_h1(h0) { const L = h0.length; return h0.map((_, n) => (n % 2 ? -1 : 1) * h0[L - 1 - n]); }
+// Un nivel de la DWT con extensión periódica: a[k] = Σ h0[n] x[2k+n−o], d[k] = Σ h1[n] x[2k+n−o],
+// con o = L/2 − 1 (0 en Haar), el mismo origen que el modo "periodization" de PyWavelets.
+function dwt_nivel(x, h0) {
+    const N = x.length, h1 = dwt_h1(h0), o = h0.length / 2 - 1, a = [], d = [];
+    for (let k = 0; k < N / 2; k++) {
+        let sa = 0, sd = 0;
+        for (let n = 0; n < h0.length; n++) { const v = x[mod(2 * k + n - o, N)]; sa += h0[n] * v; sd += h1[n] * v; }
+        a.push(sa); d.push(sd);
+    }
+    return [a, d];
+}
+// Inversa de un nivel: x[m] = Σ_k a[k] h0[m − 2k + o] + d[k] h1[m − 2k + o].
+function idwt_nivel(a, d, h0) {
+    const N = 2 * a.length, h1 = dwt_h1(h0), o = h0.length / 2 - 1, x = new Array(N).fill(0);
+    for (let k = 0; k < a.length; k++)
+        for (let n = 0; n < h0.length; n++) { const m = mod(2 * k + n - o, N); x[m] += h0[n] * a[k] + h1[n] * d[k]; }
+    return x;
+}
+// DWT de J niveles: {a: aproximación a_J, d: [d_1, …, d_J]} (longitud de x divisible por 2^J).
+function dwt_dec(x, nombre, J) {
+    const h0 = DWT_H0[nombre], d = []; let a = x.slice();
+    for (let j = 0; j < J; j++) { const [aa, dd] = dwt_nivel(a, h0); d.push(dd); a = aa; }
+    return {a: a, d: d};
+}
+function dwt_rec(c, nombre) {
+    const h0 = DWT_H0[nombre]; let a = c.a.slice();
+    for (let j = c.d.length - 1; j >= 0; j--) a = idwt_nivel(a, c.d[j], h0);
+    return a;
+}
+// Componentes de la descomposición, cada una de la longitud de la señal:
+// {A: A_J, D: [D_1, …, D_J]}, con x = A_J + D_J + … + D_1.
+function dwt_componentes(c, nombre) {
+    const cero = v => v.map(() => 0);
+    const A = dwt_rec({a: c.a, d: c.d.map(cero)}, nombre);
+    const D = c.d.map((_, j) => dwt_rec({a: cero(c.a), d: c.d.map((v, i) => i === j ? v : cero(v))}, nombre));
+    return {A: A, D: D};
+}
+// Wavelets madre continuas: valor complejo [re, im] en t.
+function wavelet(nombre, t) {
+    if (nombre === "Morlet") { const g = Math.pow(PI, -0.25) * Math.exp(-t * t / 2); return [g * Math.cos(6 * t), g * Math.sin(6 * t)]; }
+    return [2 / (Math.sqrt(3) * Math.pow(PI, 0.25)) * (1 - t * t) * Math.exp(-t * t / 2), 0];
+}
+// Frecuencia (Hz) equivalente a la escala a (s): ω₀/(2πa) para Morlet y √2/(2πa) para el sombrero mexicano.
+function wavelet_frec(nombre, a) { return (nombre === "Morlet" ? 6 : Math.SQRT2) / (2 * PI * a); }
+// CWT W(a, b) = (1/√a) ∫ x(t) ψ*((t − b)/a) dt de x muestreada con periodo T, para
+// cada escala de "escalas" (s) y cada b = nT; devuelve |W|² (una fila por escala).
+function cwt_pot(x, T, escalas, nombre) {
+    const L = x.length, P = pot2(2 * L), xr = new Array(P).fill(0);
+    for (let n = 0; n < L; n++) xr[n] = x[n];
+    const [Xr, Xi] = fft(xr);
+    return escalas.map(a => {
+        // g[n] = (T/√a) ψ*(−nT/a), con los índices negativos al final (correlación = convolución con g)
+        const gr = new Array(P).fill(0), gi = new Array(P).fill(0), M = Math.min(P / 2 - 1, Math.ceil(6 * a / T));
+        for (let n = -M; n <= M; n++) { const v = wavelet(nombre, -n * T / a), i = mod(n, P); gr[i] = T / Math.sqrt(a) * v[0]; gi[i] = -T / Math.sqrt(a) * v[1]; }
+        const [Gr, Gi] = fft(gr, gi);
+        const [wr, wi] = ifft(Xr.map((v, k) => v * Gr[k] - Xi[k] * Gi[k]), Xr.map((v, k) => v * Gi[k] + Xi[k] * Gr[k]));
+        return wr.slice(0, L).map((v, n) => v * v + wi[n] * wi[n]);
+    });
+}
+// Imagen de prueba de los apuntes del Tema 5 (N×N, valores en [0, 1], fila 0 arriba).
+function imagen_prueba(N = 256) {
+    const f = [];
+    for (let i = 0; i < N; i++) {
+        const y = i / N, fila = [];
+        for (let j = 0; j < N; j++) {
+            const x = j / N; let v = 0.35 + 0.25 * x;
+            if ((x - 0.3) ** 2 + (y - 0.32) ** 2 < 0.18 ** 2) v = 0.85;
+            if (x > 0.58 && x < 0.9 && y > 0.12 && y < 0.45) v = 0.12;
+            if (y > 0.6 && y < 0.9 && x > 0.08 && x < 0.48) v = 0.5 + 0.4 * Math.cos(2 * PI * 16 * x);
+            const r = Math.hypot(x - 0.73, y - 0.75);
+            if (r < 0.16) v = 0.5 + 0.4 * Math.cos(2 * PI * 120 * r * r);
+            fila.push(v);
+        }
+        f.push(fila);
+    }
+    return f;
+}
+// Otras imágenes generadas: "Tablero", "Anillos" (frecuencia espacial creciente
+// desde el centro), "Rayas" (finas, oblicuas) y "Texto".
+function imagen_patron(nombre, N = 256) {
+    if (nombre === "Prueba") return imagen_prueba(N);
+    if (nombre === "Texto" && typeof document !== "undefined") {
+        const cv = document.createElement("canvas"); cv.width = cv.height = N;
+        const cx = cv.getContext("2d"); cx.fillStyle = "#fff"; cx.fillRect(0, 0, N, N); cx.fillStyle = "#000";
+        cx.font = `600 ${Math.round(N / 4.2)}px Fira Sans, Helvetica, sans-serif`; cx.textAlign = "center"; cx.textBaseline = "middle";
+        cx.fillText("Señales", N / 2, N * 0.32); cx.font = `${Math.round(N / 9)}px Fira Sans, Helvetica, sans-serif`;
+        cx.fillText("Procesamiento de", N / 2, N * 0.62); cx.fillText("señales · UCM", N / 2, N * 0.8);
+        const d = cx.getImageData(0, 0, N, N).data;
+        return enteros(0, N - 1).map(i => enteros(0, N - 1).map(j => d[4 * (i * N + j)] / 255));
+    }
+    return enteros(0, N - 1).map(i => enteros(0, N - 1).map(j => {
+        const x = (j + 0.5) / N - 0.5, y = (i + 0.5) / N - 0.5;
+        if (nombre === "Tablero") return (Math.floor(8 * (x + 0.5)) + Math.floor(8 * (y + 0.5))) % 2 ? 0.85 : 0.15;
+        if (nombre === "Anillos") return 0.5 + 0.5 * Math.cos(PI * N * (x * x + y * y));
+        return 0.5 + 0.5 * Math.cos(2 * PI * 0.42 * N * (0.8 * x + 0.6 * y));
+    }));
+}
+// Lee la foto de un FileInput, la recorta al cuadrado central, la reduce a N×N en
+// grises ([0, 1]) y llama a siguiente(imagen). La foto no sale del navegador.
+function foto_cargar(fi, N, siguiente) {
+    if (!fi.value) return;
+    const img = new Image();
+    img.onload = () => {
+        const cv = document.createElement("canvas"); cv.width = cv.height = N;
+        const cx = cv.getContext("2d"), lado = Math.min(img.width, img.height);
+        cx.drawImage(img, (img.width - lado) / 2, (img.height - lado) / 2, lado, lado, 0, 0, N, N);
+        const d = cx.getImageData(0, 0, N, N).data;
+        siguiente(enteros(0, N - 1).map(i => enteros(0, N - 1).map(j => {
+            const k = 4 * (i * N + j); return (0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2]) / 255;
+        })));
+    };
+    img.src = "data:" + (fi.mime_type || "image/png") + ";base64," + fi.value;
+}
+// Método de Welch con tramos de L muestras que avanzan R, ventana w y DFT de N ≥ L
+// puntos: estima la DEP bilateral Φ_xx(e^{jΩ}) en Ω_k = 2πk/N, k = 0..N/2 (y, si se da
+// y, también Φ_yy y la cruzada Φ_yx, que promedia Y·X*). Sin restar la media.
+function welch(x, y, w, R, N) {
+    const L = w.length, U = w.reduce((a, v) => a + v * v, 0), K = N / 2 + 1;
+    const Pxx = new Array(K).fill(0), Pyy = new Array(K).fill(0), Cr = new Array(K).fill(0), Ci = new Array(K).fill(0);
+    let M = 0;
+    for (let s = 0; s + L <= x.length; s += R) {
+        const a = new Array(N).fill(0); for (let r = 0; r < L; r++) a[r] = x[s + r] * w[r];
+        const [Xr, Xi] = fft(a);
+        let Yr, Yi;
+        if (y) { const b = new Array(N).fill(0); for (let r = 0; r < L; r++) b[r] = y[s + r] * w[r]; [Yr, Yi] = fft(b); }
+        for (let k = 0; k < K; k++) {
+            Pxx[k] += Xr[k] * Xr[k] + Xi[k] * Xi[k];
+            if (y) { Pyy[k] += Yr[k] * Yr[k] + Yi[k] * Yi[k]; Cr[k] += Yr[k] * Xr[k] + Yi[k] * Xi[k]; Ci[k] += Yi[k] * Xr[k] - Yr[k] * Xi[k]; }
+        }
+        M++;
+    }
+    const e = v => v.map(z => z / (M * U));
+    return {W: enteros(0, K - 1).map(k => 2 * PI * k / N), Pxx: e(Pxx), Pyy: e(Pyy), Pyx: [e(Cr), e(Ci)], tramos: M};
+}
+// Matriz (lista de filas) en el formato que necesita el glifo image de Bokeh.
+function matriz(A) {
+    const M = A.length, N = M ? A[0].length : 0, f = new Float32Array(M * N);
+    for (let m = 0; m < M; m++) for (let n = 0; n < N; n++) f[m * N + n] = A[m][n];
+    return Bokeh.require("core/util/ndarray").ndarray(f.buffer, {dtype: "float32", shape: [M, N]});
+}
+// Reproduce x (frecuencia de muestreo fs) por los altavoces, normalizada.
+function sonar(x, fs) {
+    const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
+    const ctx = window.__pds_audio || (window.__pds_audio = new C());
+    if (ctx.state === "suspended") ctx.resume();
+    let m = 1e-9; for (const v of x) m = Math.max(m, Math.abs(v));
+    const b = ctx.createBuffer(1, x.length, fs), d = b.getChannelData(0);
+    for (let i = 0; i < x.length; i++) d[i] = 0.8 * x[i] / m;
+    const s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination); s.start();
 }
 """
 

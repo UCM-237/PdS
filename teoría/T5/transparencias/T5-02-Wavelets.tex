@@ -77,6 +77,7 @@
     \item El espectrograma usa la misma ventana en todas las frecuencias: el clic se ve con la anchura de la ventana.
     \item En el escalograma el clic se estrecha al subir la frecuencia, y el tono de 20\,Hz se ve con una resolución en frecuencia más fina que el de 120\,Hz.
   \end{itemize}
+  \herramienta{T5-escalograma}
 \end{frame}
 
 \begin{frame}{Condiciones sobre la wavelet}
@@ -133,6 +134,7 @@
       \includegraphics[width=\linewidth]{multiresolucion}
     \end{column}
   \end{columns}
+  \herramienta{T5-dwt-multirresolucion}
 \end{frame}
 
 \begin{frame}{La wavelet de Haar}
@@ -203,6 +205,7 @@
       \nota{Con $h_0$ y $h_1$ invertidos en el tiempo. $\abs{H_0}^2+\abs{H_1}^2=2$: no se pierde energía.}
     \end{column}
   \end{columns}
+  \herramienta{T5-dwt-multirresolucion}
 \end{frame}
 
 \begin{frame}[t]{En código: DWT de Haar}
@@ -220,6 +223,7 @@
     \item Se \alert{anulan los coeficientes de detalle pequeños} (umbral duro) o se encogen todos (umbral suave) y se reconstruye.
     \item Umbral universal $u=\hat\sigma\sqrt{2\ln N}$, con $\hat\sigma=\operatorname{mediana}\abs{d_1}/0{,}6745$. Un paso bajo borra el ruido y también los saltos; las wavelets conservan los saltos.
   \end{itemize}
+  \herramienta{T5-ruido-wavelet}
 \end{frame}
 
 \begin{frame}{En código: eliminar ruido}
@@ -234,6 +238,7 @@
     \item \alert{Detección}: los saltos y picos dan coeficientes grandes en todas las escalas (electrocardiogramas, fallos en máquinas).
     \item \alert{Elección de la wavelet}: según la forma de lo que se busca y los momentos nulos necesarios.
   \end{itemize}
+  \herramienta{T5-ruido-wavelet}
 \end{frame}
 
 % =====================================================================

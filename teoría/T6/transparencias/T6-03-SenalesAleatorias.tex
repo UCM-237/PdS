@@ -21,6 +21,7 @@
     \item Fijado el resultado del experimento se obtiene una \alert{realización}, una señal determinista; fijado el instante $n$, $x[n]$ es una \alert{variable aleatoria}. El conjunto de todas las realizaciones es el \alert{conjunto} (\emph{ensemble}).
     \item En la figura, paseo aleatorio $x[n]=x[n-1]+w[n]$ con $w[n]\sim\mathcal N(0;0{,}25)$: la dispersión crece con $n$.
   \end{itemize}
+  \herramienta{T6-realizaciones}
 \end{frame}
 
 \begin{frame}{Cómo se describe}
@@ -83,6 +84,7 @@
     En continuo, $\phi_{xx}(\tau)=E\{x(t+\tau)\,x(t)\}$.
   \end{definicion}
   \errata{se definía la estacionariedad en sentido amplio con $p(x(t_1))=p(x(t_2))$, que es una condición sobre toda la distribución de primer orden, ni necesaria ni suficiente para la ESA.}
+  \herramienta{T6-realizaciones}
 \end{frame}
 
 \begin{frame}{¿Cuáles son estacionarias?}
@@ -108,6 +110,7 @@
     \phi_{xx}[n+l,n]=\frac{A^2}2E\{\cos(\Omega_0(2n+l)+2\theta)+\cos(\Omega_0l)\}=\frac{A^2}2\cos(\Omega_0l).
   \]
   Es ESA. La autocorrelación de una componente periódica es periódica y no se amortigua.
+  \herramienta{T6-realizaciones}
 \end{frame}
 
 \begin{frame}{Ergodicidad}
@@ -128,6 +131,7 @@
       \item Las no estacionarias no se consideran ergódicas.
     \end{itemize}
   \end{itemize}
+  \herramienta{T6-realizaciones}
 \end{frame}
 
 % =====================================================================
@@ -159,6 +163,7 @@
     \item Se usa solo hasta $\abs l$ bastante menor que $N$.
     \item Matlab: \texttt{xcorr(x, L, 'unbiased')} o \texttt{'biased'}; Python: \texttt{np.correlate(x, x, 'full')} dividido por el número de productos.
   \end{itemize}
+  \herramienta{T6-autocorrelacion}
 \end{frame}
 
 \begin{frame}{En código: autocorrelación de ruido i.i.d.}
@@ -169,6 +174,7 @@
   \begin{center}\includegraphics[width=0.84\linewidth]{autocorrelacion_ejemplos}\end{center}
   \footnotesize
   $T_s=0{,}01$\,s, 10\,s de señal. $\mathcal N(5,1)$: pico de $\sigma^2+\mu^2=26$ y $\mu^2=25$ fuera. $\mathcal U[2,6]$: $E\{X^2\}=\frac{52}3=17{,}3$ y $\mu^2=16$. El seno: oscila sin amortiguarse. AR(1): $\phi_{xx}[l]=\frac{a^{\abs l}}{1-a^2}\sigma_w^2$ (rojo).
+  \herramienta{T6-autocorrelacion}
 \end{frame}
 
 \begin{frame}{En código: AR(1)}
@@ -195,11 +201,13 @@
     El pico de la correlación cruzada está en el retardo $D$.
   \end{ejemplo}
   \nota{Convenio de Oppenheim y Schafer, y de \texttt{xcorr(x, y)} en Matlab. Otros textos (y la versión antigua) definen $E\{x(t)\,y(t+\tau)\}$, que es la misma función reflejada.}
+  \herramienta{T6-retardo-correlacion}
 \end{frame}
 
 \begin{frame}{Aplicación: medir un retardo}
   \begin{center}\includegraphics[width=0.68\linewidth]{retardo}\end{center}
   \codigo[basicstyle=\ttfamily\fontsize{6.3}{7}\selectfont]{retardo}
+  \herramienta{T6-retardo-correlacion}
 \end{frame}
 
 \begin{frame}{Otras aplicaciones}

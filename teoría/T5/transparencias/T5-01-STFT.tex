@@ -101,6 +101,7 @@
     \item El \alert{espectrograma} es $\abs{X[m,k]}^2$ representado en el plano tiempo-frecuencia con un mapa de colores, normalmente en dB.
     \item Se ven el chirp (recta), el tono de 300\,Hz entre 0,6 y 1,2\,s y el clic (línea vertical: un impulso contiene todas las frecuencias).
   \end{itemize}
+  \herramienta{T5-stft}
 \end{frame}
 
 \begin{frame}{En código: STFT paso a paso}
@@ -141,6 +142,7 @@
       \end{ejemplo}
     \end{column}
   \end{columns}
+  \herramienta{T5-resolucion-tiempo-frecuencia}
 \end{frame}
 
 % =====================================================================
@@ -165,6 +167,7 @@
       \nota{Hann periódica: $w[n]=\frac12-\frac12\cos\frac{2\pi n}{L}$, $0\le n<L$.}
     \end{column}
   \end{columns}
+  \herramienta{T5-stft}
 \end{frame}
 
 % =====================================================================
@@ -184,6 +187,7 @@
       \includegraphics[width=\linewidth]{dtmf_espectrograma}
     \end{column}
   \end{columns}
+  \herramienta{T5-dtmf}
 \end{frame}
 
 \begin{frame}{En código: reconocer una tecla}
