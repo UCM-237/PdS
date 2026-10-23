@@ -310,8 +310,12 @@ así que las varianzas se suman cuando las variables están incorreladas.
 
 Con $X\sim\mathcal U[-1,1]$ e $Y=X^2$, $C_{XY}=E\{X^3\}-\mu_X E\{X^2\}=0-0=0$, aunque $Y$ es función de $X$. Por tanto, una correlación distinta de cero prueba que hay dependencia, pero una correlación nula no prueba la independencia. La excepción importante son las variables conjuntamente gaussianas, para las que incorrelación e independencia son equivalentes.
 
-\begin{errata}[Notación y erratas de versiones anteriores]
-  Las transparencias antiguas usaban $\phi_{X_iX_j}$ para la correlación y $\psi_{X_iX_j}$ para la covarianza. Aquí se usan $R$ y $C$, porque $\phi$ se reserva para las señales (sección~\ref{sec:senales}) y $\psi$ es la wavelet del Tema~5. Llamaban «independencia lineal» a la incorrelación, que no debe confundirse con la independencia lineal de vectores del álgebra, y escribían $E(X_i,X_j)$ con una coma. La función \texttt{corr} de Matlab que citaban necesita la Statistics Toolbox; \texttt{corrcoef} no.
+\begin{nota}[Notación]
+  Aquí se usan $R$ para la correlación y $C$ para la covarianza, porque $\phi$ se reserva para las señales (sección~\ref{sec:senales}) y $\psi$ es la wavelet del Tema~5.
+\end{nota}
+
+\begin{errata}
+  Las transparencias antiguas usaban $\phi_{X_iX_j}$ para la correlación y $\psi_{X_iX_j}$ para la covarianza. Llamaban «independencia lineal» a la incorrelación, que no debe confundirse con la independencia lineal de vectores del álgebra, y escribían $E(X_i,X_j)$ con una coma. La función \texttt{corr} de Matlab que citaban necesita la Statistics Toolbox; \texttt{corrcoef} no.
 \end{errata}
 
 \begin{encodigo}
