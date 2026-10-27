@@ -1,0 +1,79 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T6 · Estimadores robustos]{Señales aleatorias}
+\subtitle{Tema 6 · Cápsula: estimadores robustos, MAD y filtro de Hampel}
+
+\begin{document}
+\portada
+
+\begin{frame}{Un solo atípico basta para estropear la media}
+  \footnotesize
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+      \begin{itemize}
+        \item La media y la desviación típica usan todas las muestras con el mismo peso: un valor enorme las arrastra sin límite.
+        \item \alert{Punto de ruptura}: fracción de datos contaminados que un estimador aguanta antes de dar cualquier valor. Media: 0\,\%. Mediana: 50\,\%.
+        \item Para la dispersión, la \alert{desviación absoluta mediana}:
+        \[
+          \mathrm{MAD}=\operatorname{med}\set*{\abs{x_i-\operatorname{med}\set{x}}}
+        \]
+        \item Con datos gaussianos, $\hat\sigma=1{,}4826\cdot\mathrm{MAD}$ estima $\sigma$ sin sesgo (el factor es $1/\Phi^{-1}(3/4)$).
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \includegraphics[width=\linewidth]{robusto_sigma}
+      \nota{Ruido gaussiano de $\sigma=1$ con una fracción de muestras desplazadas $\pm8$. La desviación típica se dispara; la MAD casi no se mueve.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{El filtro de Hampel}
+  \footnotesize
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+      Con una ventana de $2K+1$ muestras centrada en $n$:
+      \begin{enumerate}
+        \item $m[n]$: mediana de la ventana.
+        \item $S[n]=1{,}4826\cdot\mathrm{MAD}$ de la ventana.
+        \item Si $\abs{x[n]-m[n]}>t\,S[n]$, la muestra es \alert{atípica} y se sustituye por $m[n]$; si no, se deja.
+      \end{enumerate}
+      \begin{itemize}
+        \item Es una mediana \alert{condicionada}: con $t=0$ coincide con el filtro de mediana; con $t$ grande no toca nada.
+        \item $t=3$ es lo habitual. El umbral fija la tasa de \alert{falsas alarmas}: con ruido gaussiano, $\Pr\set{\abs{z}>3}\approx0{,}27\,\%$, y algo más con ventanas cortas, porque $S$ se estima con pocas muestras.
+        \item $K$: bastantes muestras para estimar $S$ (10–20) y menos que la escala de los cambios reales de la señal.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \includegraphics[width=\linewidth]{hampel_ejemplo}
+      \nota{$K=10$, $t=3$. Detecta los atípicos y respeta el escalón.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{En los proyectos}
+  \footnotesize
+  \begin{itemize}
+    \item \alert{Umbral robusto de cualquier detector}: $u=k\cdot1{,}4826\cdot\mathrm{MAD}$ del estadístico. Los eventos que se buscan no inflan el umbral, como sí harían con $k\sigma$.
+    \item \alert{Estimar el ruido sin la señal limpia}: la MAD de las diferencias o de los coeficientes de detalle de una wavelet da $\sigma$ aunque haya bordes o picos.
+    \item \alert{Curtosis}: $E\set{(x-\mu)^4}/\sigma^4$ vale 3 para una gaussiana y crece mucho con colas pesadas: indica que hay impulsos antes de buscarlos.
+  \end{itemize}
+  \medskip
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    Proyecto & Uso \\ \midrule
+    Registro de carrera (H3) & Hampel para velocidades imposibles; FC congelada \\
+    Audio con ruido (H3) & umbral robusto sobre el residuo; curtosis de los clics \\
+    Imagen con ruido (H3) & estimador de $\sigma$ sin la imagen limpia \\
+    Códigos de barras (H3) & $\sigma$ del ruido en una zona blanca \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{En código: MAD y filtro de Hampel}
+  \codigo[basicstyle=\ttfamily\fontsize{6.6}{7.4}\selectfont]{hampel_movil}
+  \nota{Desviación típica 1,29 y MAD escalada 1,05. Hampel marca los 10 atípicos alejados de los extremos y 16 muestras normales (1,6\,\%).}
+\end{frame}
+
+\end{document}

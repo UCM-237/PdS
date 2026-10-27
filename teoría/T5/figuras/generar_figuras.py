@@ -669,6 +669,78 @@ def filtrado_frecuencia():
     guardar(fig, "filtrado_frecuencia")
 
 
+# ---------------------------------------------------------------------
+# Cápsulas: deconvolución y sustracción espectral
+# ---------------------------------------------------------------------
+@figura
+def deconvolucion_wiener():
+    rng = np.random.default_rng(5)
+    N, L = 512, 9
+    x = np.repeat(rng.integers(0, 2, 64), 8).astype(float)
+    h = np.zeros(N)
+    h[:L] = 1 / L
+    H = np.fft.fft(h)
+    y = np.real(np.fft.ifft(np.fft.fft(x) * H)) + 0.02 * rng.standard_normal(N)
+    Y = np.fft.fft(y)
+    k = np.arange(N // 2)
+    fig, axs = pe.figura(1, 3, ancho=6.4, alto=1.8)
+    ax = axs[0]
+    ax.plot(k / N, db(H[:N // 2]), color=pe.AZUL, label=r"$|H|$")
+    ax.plot(k / N, db(1 / (np.abs(H[:N // 2]) + 1e-12)), color=pe.ROJO, lw=0.8, label=r"$1/|H|$")
+    for m in range(1, 5):
+        ax.axvline(m / L, color=pe.GRIS_CLARO, lw=0.6, ls="--")
+    ax.set_ylim(-60, 60)
+    ax.set_xlabel("$F$ (ciclos/muestra)")
+    ax.set_ylabel("dB")
+    ax.set_title(r"Ceros en $F=m/L$")
+    ax.legend(loc="upper left", ncol=2)
+    n = np.arange(N)
+    sl = slice(100, 260)
+    for ax, K, c, tit in ((axs[1], 1e-6, pe.ROJO, r"Casi inversa, $K=10^{-6}$"),
+                          (axs[2], 1e-2, pe.VERDE, r"Wiener, $K=0{,}01$")):
+        G = np.conj(H) / (np.abs(H) ** 2 + K)
+        ax.plot(n[sl], x[sl], color=pe.GRIS_CLARO, lw=1.8)
+        ax.plot(n[sl], y[sl], color=pe.GRIS, lw=0.7)
+        ax.plot(n[sl], np.real(np.fft.ifft(G * Y))[sl], color=c, lw=0.9)
+        ax.set_ylim(-0.6, 1.6)
+        ax.set_xlabel("$n$")
+        ax.set_title(tit)
+    guardar(fig, "deconvolucion_wiener")
+
+
+@figura
+def sustraccion_espectral():
+    fs = 8000
+    rng = np.random.default_rng(1)
+    t = np.arange(0, 3, 1 / fs)
+    s = np.sin(2 * np.pi * (300 + 150 * t) * t) * (t > 1)
+    x = s + 0.3 * rng.standard_normal(t.size)
+    f, tt, X = signal.stft(x, fs, nperseg=256)
+    Pv = np.mean(np.abs(X[:, tt < 0.9]) ** 2, axis=1, keepdims=True)
+    P = np.maximum(np.abs(X) ** 2 - 2.0 * Pv, 0.02 * np.abs(X) ** 2)
+    ref = np.max(np.abs(X) ** 2)
+    fig, axs = pe.figura(1, 3, ancho=6.4, alto=1.8, gridspec_kw={"width_ratios": [1, 1, 0.9]})
+    for ax, Z, tit in ((axs[0], np.abs(X) ** 2, "Ruidosa"),
+                       (axs[1], P, r"Tras restar ($\alpha=2$, $\beta=0{,}02$)")):
+        ZdB = np.maximum(10 * np.log10(Z / ref + 1e-12), -50)
+        ax.pcolormesh(tt, f, ZdB, cmap=MAPA, vmin=-50, vmax=0, shading="auto", rasterized=True)
+        ax.grid(False)
+        ax.set_ylim(0, 2000)
+        ax.set_xlabel("$t$ (s)")
+        ax.set_title(tit)
+    axs[0].set_ylabel("$f$ (Hz)")
+    g = np.linspace(-5, 20, 400)
+    G = 10 ** (g / 10)
+    for a, b, c in ((1, 0.0, pe.AZUL), (2, 0.0, pe.ROJO), (2, 0.02, pe.VERDE)):
+        gan = np.sqrt(np.maximum(1 - a / G, b))
+        axs[2].plot(g, 20 * np.log10(gan + 1e-6), color=c,
+                    label=rf"$\alpha={a}$, $\beta={b:g}$".replace(".", "{,}"))
+    axs[2].set_ylim(-40, 2)
+    axs[2].set_xlabel(r"$|X|^2/\hat\Phi_{vv}$ (dB)")
+    axs[2].set_title("Ganancia (dB)")
+    axs[2].legend(fontsize=5.5, loc="lower right")
+    guardar(fig, "sustraccion_espectral")
+
 if __name__ == "__main__":
     nombres = sys.argv[1:] or list(FIGURAS)
     for nombre in nombres:
