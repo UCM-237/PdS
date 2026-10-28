@@ -19,7 +19,7 @@
         \[
           \mathrm{MAD}=\operatorname{med}\set*{\abs{x_i-\operatorname{med}\set{x}}}
         \]
-        \item Con datos gaussianos, $\hat\sigma=1{,}4826\cdot\mathrm{MAD}$ estima $\sigma$ sin sesgo (el factor es $1/F_Z^{-1}(3/4)=1/0{,}6745$, con $F_Z$ la función de distribución de una gaussiana $\mathcal N(0,1)$: la MAD de $Z$ es su tercer cuartil).
+        \item Con datos gaussianos, $\hat\sigma=1{,}4826\cdot\mathrm{MAD}$ estima $\sigma$ sin sesgo (el factor\footnote[frame]{$\Phi$ es la función de distribución de una gaussiana $\mathcal N(0,1)$, $\Phi(z)=\Pr\set{Z\le z}$. La MAD de $Z$ es $\Phi^{-1}(3/4)=0{,}6745$.} es $1/\Phi^{-1}(3/4)$).
       \end{itemize}
     \end{column}
     \begin{column}{0.46\textwidth}
