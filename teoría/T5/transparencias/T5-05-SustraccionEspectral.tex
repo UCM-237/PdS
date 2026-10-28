@@ -1,0 +1,42 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T5 · Sustracción espectral]{Aplicaciones}
+\subtitle{Tema 5 · Cápsula: reducción de ruido por sustracción espectral}
+
+\begin{document}
+\portada
+
+\begin{frame}{Restar el ruido en cada celda de la STFT}
+  \footnotesize
+  \begin{itemize}
+    \item Ruido aditivo, incorrelado con la señal y \alert{estacionario}: en cada trama $m$ y frecuencia $k$, $E\set{\abs{X[m,k]}^2}\approx\abs{S[m,k]}^2+\Phi_{vv}[k]$.
+    \item Se estima $\hat\Phi_{vv}[k]$ promediando $\abs{X}^2$ en tramas \alert{solo de ruido} (un silencio inicial) y se resta potencia:
+    \[
+      \abs{\hat S[m,k]}^2=\max\Big(\abs{X[m,k]}^2-\alpha\,\hat\Phi_{vv}[k],\ \beta\abs{X[m,k]}^2\Big)
+    \]
+    \item Se conserva la \alert{fase ruidosa}, $\hat S=\abs{\hat S}\,\e^{j\angle X}$: el oído es poco sensible a la fase.
+    \item Se vuelve al tiempo con la ISTFT (solapamiento y suma con una ventana que cumpla COLA).
+    \item Equivale a una ganancia que cambia con $m$ y $k$: $\abs{G}^2=\max\big(1-\alpha\hat\Phi_{vv}/\abs X^2,\beta\big)$.
+  \end{itemize}
+  \herramienta{T5-stft}
+\end{frame}
+
+\begin{frame}{Ajuste: $\alpha$, $\beta$ y el ruido musical}
+  \footnotesize
+  \begin{center}\includegraphics[width=0.82\linewidth]{sustraccion_espectral}\end{center}
+  \begin{itemize}
+    \item \alert{Ruido musical}: $\abs X^2$ fluctúa alrededor de $\Phi_{vv}$; en las celdas donde por azar supera $\alpha\hat\Phi_{vv}$ queda un pico aislado que suena como un tono breve de frecuencia aleatoria.
+    \item $\alpha>1$ (sobresustracción, 2–5) elimina más picos a cambio de distorsionar la señal débil.
+    \item $\beta$ (suelo, 0,01–0,1) deja un ruido de fondo continuo que enmascara los picos aislados. Más $\beta$: menos ruido musical y más ruido residual.
+    \item Longitud de trama: la de la STFT (20–40\,ms en audio). Tramas más largas estiman mejor la potencia, pero emborronan los transitorios.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{En código: sustracción espectral}
+  \codigo[basicstyle=\ttfamily\fontsize{6.1}{6.8}\selectfont]{sustraccion_espectral}
+  \nota{Tono de 440\,Hz tras 1\,s de silencio y ruido de $\sigma=0{,}3$: la SNR pasa de unos 6 a unos 14\,dB.}
+\end{frame}
+
+\end{document}

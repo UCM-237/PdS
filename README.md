@@ -21,11 +21,11 @@ curso.
 | T1 | Señales y sistemas | Señales · Operaciones · Sistemas · Aplicaciones |
 | T2 | Muestreo | Muestreo · Reconstrucción · Cuantificación · Muestreo discreto |
 | T3 | Transformada discreta de Fourier | DFT · Propiedades · Análisis espectral · FFT |
-| T4 | Filtros | Introducción · Filtros continuos · Filtros IIR · Filtros FIR · Filtros especiales |
-| T5 | Aplicaciones | STFT · Wavelets · Imágenes |
-| T6 | Señales aleatorias | Variables aleatorias · Varias variables · Señales aleatorias · Análisis espectral |
+| T4 | Filtros | Introducción · Filtros continuos · Filtros IIR · Filtros FIR · Filtros especiales · Mediana |
+| T5 | Aplicaciones | STFT · Wavelets · Imágenes · Deconvolución · Sustracción espectral |
+| T6 | Señales aleatorias | Variables aleatorias · Varias variables · Señales aleatorias · Análisis espectral · Estimadores robustos · Predicción y Wiener · Detección |
 
-Cada tema tiene sus transparencias (una presentación por clase), unos apuntes
+Cada tema tiene sus transparencias (una presentación por clase, más cápsulas cortas con las técnicas que piden los proyectos), unos apuntes
 que las desarrollan, una hoja de ejercicios con su versión resuelta, ejemplos
 de código y las herramientas interactivas correspondientes.
 
