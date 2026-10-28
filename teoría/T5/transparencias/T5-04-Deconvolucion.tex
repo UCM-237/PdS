@@ -28,7 +28,7 @@
     \[
       G[k]=\frac{H^*[k]}{\abs{H[k]}^2+\dfrac{\Phi_{vv}[k]}{\Phi_{xx}[k]}}\approx\frac{H^*[k]}{\abs{H[k]}^2+K}
     \]
-    \item Donde $\abs H^2\gg K$ invierte ($G\approx1/H$); donde $\abs H^2\ll K$ \alert{no se atreve} y atenúa ($G\to0$).
+    \item Donde $\abs H^2\gg K$ invierte ($G\approx1/H$); donde $\abs H^2\ll K$ se atenúa ($G\to0$).
     \item $K$ es la inversa de la SNR. Demasiado pequeño: ruido amplificado. Demasiado grande: la imagen sigue borrosa.
     \item Mejor una $K$ que dependa de la frecuencia: las imágenes naturales tienen $\Phi_{xx}$ que cae con $\abs f$ (aprox. $1/\abs f^2$), y el ruido blanco es plano.
     \item En 2D es lo mismo con la DFT 2D: \texttt{fft2}, producto punto a punto, \texttt{ifft2}. Con bordes de la imagen, enventanar o extender por simetría para no crear falsas altas frecuencias.
