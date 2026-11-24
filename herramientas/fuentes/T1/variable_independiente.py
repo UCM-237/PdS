@@ -8,18 +8,18 @@ import pds_bokeh as pb
 S = ColumnDataSource(dict(t=[], x=[], v=[], y=[]))
 D = ColumnDataSource(dict(n=[], x=[], v=[], y=[]))
 
-p1 = pb.figura("Señal original x", "t", "", ancho=330, alto=200, x_range=(-6, 6), y_range=(-0.3, 1.3))
+p1 = pb.figura("Señal original x", "t", "", ancho=None, alto=200, x_range=(-6, 6), y_range=(-0.3, 1.3))
 p1.line("t", "x", source=S, color=pb.GRIS, line_width=2)
 pb.tallos(p1, "n", "x", D, color=pb.GRIS)
-p2 = pb.figura("Paso 1: desplazar, v = x(t + β)", "t", "", ancho=330, alto=200, x_range=(-6, 6), y_range=(-0.3, 1.3))
+p2 = pb.figura("Paso 1: desplazar, v = x(t + β)", "t", "", ancho=None, alto=200, x_range=(-6, 6), y_range=(-0.3, 1.3))
 p2.line("t", "v", source=S, color=pb.NARANJA, line_width=2)
 pb.tallos(p2, "n", "v", D, color=pb.NARANJA)
-p3 = pb.figura("Paso 2: escalar e invertir, y(t) = v(αt) = x(αt + β)", "t", "", ancho=720, alto=220,
+p3 = pb.figura("Paso 2: escalar e invertir, y(t) = v(αt) = x(αt + β)", "t", "", ancho=None, alto=220,
                x_range=(-6, 6), y_range=(-0.3, 1.3))
 p3.line("t", "x", source=S, color=pb.GRIS_CLARO, line_width=1.5, legend_label="x")
 p3.line("t", "y", source=S, color=pb.AZUL, line_width=2.5, legend_label="y")
 pb.tallos(p3, "n", "y", D, color=pb.AZUL)
-pb.leyenda(p3, "right")
+pb.leyenda(p3, "top_right")
 for p in (p1, p2, p3):
     p.add_layout(Span(location=0, dimension="height", line_color=pb.GRIS, line_width=1))
 
@@ -27,7 +27,7 @@ senal = pb.selector("Señal x", ["Triángulo asimétrico", "Pulso con escalón",
 dominio = pb.botones(["Continuo", "Discreto"])
 alfa = pb.deslizador("α (escalado; negativo invierte)", -3, 3, 1, 0.1)
 beta = pb.deslizador("β (desplazamiento)", -5, 5, 0, 0.1)
-info = Div(text="", width=240)
+info = pb.info()
 
 cb = pb.js("""
     const f = u => senal.value.startsWith("Tri") ? (u >= -1 && u < 0 ? u + 1 : (u >= 0 && u <= 3 ? 1 - u / 3 : 0))
@@ -51,9 +51,9 @@ cb = pb.js("""
 """, S=S, D=D, senal=senal, dominio=dominio, alfa=alfa, beta=beta, info=info)
 pb.conectar(cb, senal, dominio, alfa, beta)
 
-pb.pagina(__file__, "Operaciones sobre la variable independiente", tema=1,
-          descripcion="y(t) = x(αt + β) se obtiene en dos pasos: desplazar x a la izquierda β unidades y después escalar "
-                      "el eje por α (comprimir si |α| > 1, expandir si |α| < 1, invertir si α < 0). En discreto, "
-                      "comprimir por un entero pierde muestras.",
-          controles=[senal, dominio, alfa, beta, info], graficas=[[p1, p2], p3], inicio=cb,
+pb.pagina_panel(__file__, "Operaciones sobre la variable independiente", tema=1,
+          descripcion=r"$y(t) = x(\alpha t + \beta)$ se obtiene en dos pasos: desplazar $x$ a la izquierda $\beta$ unidades "
+                      r"y después escalar el eje por $\alpha$ (comprimir si $|\alpha| > 1$, expandir si $|\alpha| < 1$, "
+                      r"invertir si $\alpha < 0$). En discreto, comprimir por un entero pierde muestras.",
+          controles=[senal, dominio], graficas=[pb.grafica([p1, p2], beta), pb.grafica(p3, alfa, info)], inicio=cb,
           referencia="Transparencias T1-02, transformaciones de la variable independiente · Apuntes del Tema 1, sección 4")

@@ -4,9 +4,9 @@
 
 La transformada de Fourier de una señal continua es
 
-> X(f) = ∫ x(t) e^{−j2πft} dt,  y su inversa,  x(t) = ∫ X(f) e^{j2πft} df.
+> $$X(f) = \int_{-\infty}^{\infty} x(t)\, e^{-j2\pi f t}\, dt, \qquad x(t) = \int_{-\infty}^{\infty} X(f)\, e^{j2\pi f t}\, df.$$
 
-Describe la señal como una «suma continua» de exponenciales complejas: |X(f)| dice cuánto hay de cada frecuencia y ∠X(f), con qué fase. Con la pulsación ω = 2πf se escribe X(jω). Algunos pares básicos: un pulso rectangular de anchura 1 centrado da sinc(f); el triangular de anchura 2, sinc²(f); la gaussiana e^{−πt²}, ella misma, e^{−πf²}; la exponencial e^{−t}u(t), 1/(1 + j2πf).
+Describe la señal como una «suma continua» de exponenciales complejas: $|X(f)|$ dice cuánto hay de cada frecuencia y $\angle X(f)$, con qué fase. Con la pulsación $\omega = 2\pi f$ se escribe $X(j\omega)$. Algunos pares básicos: un pulso rectangular de anchura 1 centrado da $\mathrm{sinc}(f)$; el triangular de anchura 2, $\mathrm{sinc}^2(f)$; la gaussiana $e^{-\pi t^2}$, ella misma, $e^{-\pi f^2}$; la exponencial $e^{-t}u(t)$, $\dfrac{1}{1 + j2\pi f}$.
 
 ### Las propiedades: cada operación tiene su pareja
 
@@ -14,11 +14,11 @@ Calcular transformadas desde la definición es laborioso. Casi siempre se combin
 
 | Tiempo | Frecuencia | Qué significa |
 |---|---|---|
-| x(t − t₀) | e^{−j2πft₀} X(f) | desplazar no cambia el módulo; añade una fase lineal de pendiente −2πt₀ |
-| x(at) | X(f/a)/∣a∣ | comprimir en el tiempo ensancha el espectro, y al revés |
-| x(t) cos(2πf₀t) | ½X(f − f₀) + ½X(f + f₀) | modular traslada el espectro a ±f₀ (es lo que hace una emisora de radio) |
-| dx/dt | j2πf X(f) | derivar realza las frecuencias altas y anula la continua |
-| (x ∗ h)(t) | X(f) H(f) | convolucionar es multiplicar los espectros |
+| $x(t - t_0)$ | $e^{-j2\pi f t_0} X(f)$ | desplazar no cambia el módulo; añade una fase lineal de pendiente $-2\pi t_0$ |
+| $x(at)$ | $\frac{1}{\lvert a\rvert} X(f/a)$ | comprimir en el tiempo ensancha el espectro, y al revés |
+| $x(t)\cos(2\pi f_0 t)$ | $\tfrac12 X(f - f_0) + \tfrac12 X(f + f_0)$ | modular traslada el espectro a $\pm f_0$ (es lo que hace una emisora de radio) |
+| $\dfrac{dx}{dt}$ | $j2\pi f\, X(f)$ | derivar realza las frecuencias altas y anula la continua |
+| $(x * h)(t)$ | $X(f)\, H(f)$ | convolucionar es multiplicar los espectros |
 
 ### Duración y ancho de banda
 
@@ -26,50 +26,54 @@ La propiedad de escalado expresa un principio general: una señal no puede ser a
 
 ### Parseval
 
-La energía se conserva: ∫|x(t)|² dt = ∫|X(f)|² df. De las operaciones de la tabla, el desplazamiento no cambia la energía, el escalado la divide por |a| y la modulación, la derivada y la convolución la cambian en general.
+La energía se conserva:
+
+$$\int_{-\infty}^{\infty} |x(t)|^2\, dt = \int_{-\infty}^{\infty} |X(f)|^2\, df.$$
+
+De las operaciones de la tabla, el desplazamiento no cambia la energía, el escalado la divide por $|a|$ y la modulación, la derivada y la convolución la cambian en general.
 
 ### Simetrías
 
-Si x es real, X(−f) = X*(f): el módulo es par y la fase impar, y basta dibujar f ≥ 0. Si además x es par, X es real; si es impar, imaginaria pura.
+Si $x$ es real, $X(-f) = X^*(f)$: el módulo es par y la fase impar, y basta dibujar $f \ge 0$. Si además $x$ es par, $X$ es real; si es impar, imaginaria pura.
 
 ## Guía de uso
 
-- **Señal x(t)** elige entre un pulso rectangular de anchura 1, un triangular de anchura 2, la gaussiana e^{−πt²} y la exponencial e^{−t}u(t), todas en t = 0.
-- **Operación** aplica una de las propiedades de la tabla; **t₀**, **a** y **f₀** son sus parámetros.
-- Arriba, x(t) en gris y el resultado y(t) en azul. Debajo, el módulo y la fase de X(f) y de Y(f). La fase se omite donde el módulo es casi nulo.
-- El recuadro escribe la relación entre Y(f) y X(f) y compara las energías.
+- **Señal x(t)** elige entre un pulso rectangular de anchura 1, un triangular de anchura 2, la gaussiana $e^{-\pi t^2}$ y la exponencial $e^{-t}u(t)$, todas en $t = 0$.
+- **Operación** aplica una de las propiedades de la tabla. Debajo de la gráfica del tiempo aparece solo el parámetro de la operación elegida: **t₀**, **a** o **f₀**.
+- Arriba, $x(t)$ en gris y el resultado $y(t)$ en azul. Debajo, el módulo y la fase de $X(f)$ y de $Y(f)$. La fase se omite donde el módulo es casi nulo.
+- El recuadro escribe la relación entre $Y(f)$ y $X(f)$ y compara las energías.
 - La transformada se calcula con una FFT de la señal muestreada cada 0,02 s, así que es una aproximación muy buena, pero no exacta.
 
 ## Ejercicios
 
-**1. Desplazamiento.** Con el pulso rectangular y t₀ = 1, ¿cambia |Y(f)|? ¿Qué pendiente tiene la fase? Comprueba con t₀ = −0,5.
+**1. Desplazamiento.** Con el pulso rectangular y $t_0 = 1$, ¿cambia $|Y(f)|$? ¿Qué pendiente tiene la fase? Comprueba con $t_0 = -0{,}5$.
 
 <details><summary>Solución</summary>
-|Y| = |X|: el módulo no cambia. La fase añade −2πft₀: con t₀ = 1 baja 2π rad por cada hercio (la gráfica la envuelve en [−π, π]). Con t₀ = −0,5 sube π rad por hercio. La energía es la misma.
+$|Y| = |X|$: el módulo no cambia. La fase añade $-2\pi f t_0$: con $t_0 = 1$ baja $2\pi$ rad por cada hercio (la gráfica la envuelve en $[-\pi, \pi]$). Con $t_0 = -0{,}5$ sube $\pi$ rad por hercio. La energía es la misma.
 </details>
 
-**2. Escalado.** Con el pulso rectangular y a = 2, ¿dónde está el primer cero de |Y(f)|? ¿Y su valor en f = 0?
+**2. Escalado.** Con el pulso rectangular y $a = 2$, ¿dónde está el primer cero de $|Y(f)|$? ¿Y su valor en $f = 0$?
 
 <details><summary>Solución</summary>
-x(2t) es un pulso de anchura 0,5: Y(f) = ½ sinc(f/2). El primer cero pasa de 1 Hz a 2 Hz y el valor en f = 0, que es el área, baja de 1 a 0,5. La energía pasa de 1 a 0,5.
+$x(2t)$ es un pulso de anchura 0,5: $Y(f) = \tfrac12\,\mathrm{sinc}(f/2)$. El primer cero pasa de 1 Hz a 2 Hz y el valor en $f = 0$, que es el área, baja de 1 a 0,5. La energía pasa de 1 a 0,5.
 </details>
 
-**3. Modulación.** Con la gaussiana y f₀ = 1,5 Hz, describe |Y(f)|. ¿Qué pasa si f₀ = 0,3 Hz?
+**3. Modulación.** Con la gaussiana y $f_0 = 1{,}5$ Hz, describe $|Y(f)|$. ¿Qué pasa si $f_0 = 0{,}3$ Hz?
 
 <details><summary>Solución</summary>
-Dos copias de e^{−πf²} de altura 0,5 centradas en ±1,5 Hz. Con f₀ = 0,3 las copias se solapan y su suma ya no es la de dos gaussianas separadas: la modulación solo «traslada limpiamente» si f₀ es mayor que el ancho de banda de x.
+Dos copias de $e^{-\pi f^2}$ de altura 0,5 centradas en $\pm 1{,}5$ Hz. Con $f_0 = 0{,}3$ las copias se solapan y su suma ya no es la de dos gaussianas separadas: la modulación solo «traslada limpiamente» si $f_0$ es mayor que el ancho de banda de $x$.
 </details>
 
-**4. Derivada.** Con la gaussiana, aplica la derivada. ¿Cuánto vale |Y(0)|? ¿Dónde está el máximo de |Y(f)|?
+**4. Derivada.** Con la gaussiana, aplica la derivada. ¿Cuánto vale $|Y(0)|$? ¿Dónde está el máximo de $|Y(f)|$?
 
 <details><summary>Solución</summary>
-Y(f) = j2πf e^{−πf²}: Y(0) = 0, porque la derivada tiene área nula. |Y| = 2π|f|e^{−πf²} es máximo donde su derivada se anula, 1 − 2πf² = 0, es decir, en |f| = 1/√(2π) ≈ 0,40 Hz.
+$Y(f) = j2\pi f\, e^{-\pi f^2}$: $Y(0) = 0$, porque la derivada tiene área nula. $|Y| = 2\pi |f|\, e^{-\pi f^2}$ es máximo donde su derivada se anula, $1 - 2\pi f^2 = 0$, es decir, en $|f| = 1/\sqrt{2\pi} \approx 0{,}40$ Hz.
 </details>
 
-**5. Ejercicio 8 c de la hoja.** Con el pulso rectangular, aplica la convolución x ∗ x. ¿Qué señal sale y cuál es su transformada?
+**5. Ejercicio 8 c de la hoja.** Con el pulso rectangular, aplica la convolución $x * x$. ¿Qué señal sale y cuál es su transformada?
 
 <details><summary>Solución</summary>
-El triángulo de anchura 2 y altura 1, el mismo que la segunda señal de la lista. Su transformada es sinc²(f): la convolución en el tiempo se convierte en el producto X(f)·X(f). Los ceros siguen en los enteros, pero los lóbulos laterales bajan más deprisa.
+El triángulo de anchura 2 y altura 1, el mismo que la segunda señal de la lista. Su transformada es $\mathrm{sinc}^2(f)$: la convolución en el tiempo se convierte en el producto $X(f)\,X(f)$. Los ceros siguen en los enteros, pero los lóbulos laterales bajan más deprisa.
 </details>
 
 ## Para profundizar
@@ -85,5 +89,5 @@ El triángulo de anchura 2 y altura 1, el mismo que la segunda señal de la list
 - **Serie de Fourier.** La transformada es el límite de la serie cuando el periodo tiende a infinito. Herramienta: [Serie de Fourier](T1-serie-fourier.html).
 - **Operaciones sobre la variable independiente.** Desplazar y escalar en el tiempo son las operaciones de la herramienta. Herramienta: [Operaciones sobre la variable independiente](T1-variable-independiente.html).
 - **Convolución.** El producto de espectros es la base del filtrado. Herramienta: [Convolución continua](T1-convolucion-continua.html).
-- **Muestreo (Tema 2).** Muestrear multiplica por un tren de impulsos y repite el espectro, que es la modulación aplicada a todos los múltiplos de fs. Herramienta: [Espectro de una señal muestreada](T2-muestreo-ideal.html).
+- **Muestreo (Tema 2).** Muestrear multiplica por un tren de impulsos y repite el espectro, que es la modulación aplicada a todos los múltiplos de $f_s$. Herramienta: [Espectro de una señal muestreada](T2-muestreo-ideal.html).
 - **Fase lineal (Tema 4).** Un filtro con fase lineal retrasa la señal sin deformarla, por la propiedad de desplazamiento. Herramienta: [Fase lineal y retardo de grupo](T4-fase-lineal.html).

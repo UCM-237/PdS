@@ -8,14 +8,14 @@ import pds_bokeh as pb
 T = ColumnDataSource(dict(t=[], x=[], y=[]))
 F = ColumnDataSource(dict(f=[], X=[], Y=[], pX=[], pY=[]))
 
-p1 = pb.figura("Tiempo: x(t) y y(t)", "t (s)", "", ancho=720, alto=200, x_range=(-6, 6))
+p1 = pb.figura("Tiempo: x(t) y y(t)", "t (s)", "", ancho=None, alto=200, x_range=(-6, 6))
 p1.line("t", "x", source=T, color=pb.GRIS_CLARO, line_width=2, legend_label="x(t)")
 p1.line("t", "y", source=T, color=pb.AZUL, line_width=2, legend_label="y(t)")
-pb.leyenda(p1, "right")
-p2 = pb.figura("Módulo |X(f)| y |Y(f)|", "f (Hz)", "", ancho=330, alto=200, x_range=(-4, 4))
+pb.leyenda(p1, "top_right")
+p2 = pb.figura("Módulo |X(f)| y |Y(f)|", "f (Hz)", "", ancho=None, alto=200, x_range=(-4, 4))
 p2.line("f", "X", source=F, color=pb.GRIS_CLARO, line_width=2)
 p2.line("f", "Y", source=F, color=pb.AZUL, line_width=2)
-p3 = pb.figura("Fase ∠X(f) y ∠Y(f) (rad)", "f (Hz)", "", ancho=330, alto=200, x_range=(-4, 4), y_range=(-3.4, 3.4))
+p3 = pb.figura("Fase ∠X(f) y ∠Y(f) (rad)", "f (Hz)", "", ancho=None, alto=200, x_range=(-4, 4), y_range=(-3.4, 3.4))
 p3.line("f", "pX", source=F, color=pb.GRIS_CLARO, line_width=2)
 p3.line("f", "pY", source=F, color=pb.ROJO, line_width=2)
 
@@ -25,9 +25,11 @@ op = pb.selector("Operación", ["Ninguna", "Desplazamiento x(t − t₀)", "Esca
 t0 = pb.deslizador("t₀ (s)", -3, 3, 1, 0.05)
 a = pb.deslizador("a (escalado)", 0.25, 4, 2, 0.05)
 f0 = pb.deslizador("f₀ (Hz)", 0, 3, 1.5, 0.05)
-info = Div(text="", width=240)
+info = pb.info()
 
 cb = pb.js("""
+    // Solo se muestra el parámetro de la operación elegida
+    t0.visible = op.value.startsWith("Desp"); a.visible = op.value.startsWith("Esc"); f0.visible = op.value.startsWith("Mod");
     const N = 4096, dt = 0.02, tmin = -N / 2 * dt, t = enteros(0, N - 1).map(n => tmin + n * dt);
     const base = u => senal.value.startsWith("Pulso r") ? (Math.abs(u) <= 0.5 ? 1 : 0)
                     : senal.value.startsWith("Pulso t") ? Math.max(0, 1 - Math.abs(u))
@@ -54,9 +56,10 @@ cb = pb.js("""
 """, T=T, F=F, senal=senal, op=op, t0=t0, a=a, f0=f0, info=info)
 pb.conectar(cb, senal, op, t0, a, f0)
 
-pb.pagina(__file__, "Propiedades de la transformada de Fourier", tema=1,
-          descripcion="Cada operación en el tiempo tiene su pareja en frecuencia: desplazar añade una fase lineal sin "
-                      "tocar el módulo, comprimir ensancha el espectro, modular lo traslada, derivar lo multiplica por "
-                      "j2πf y convolucionar lo multiplica. La transformada se calcula con la FFT de la señal muestreada finamente.",
-          controles=[senal, op, t0, a, f0, info], graficas=[p1, [p2, p3]], inicio=cb,
+pb.pagina_panel(__file__, "Propiedades de la transformada de Fourier", tema=1,
+          descripcion=r"Cada operación en el tiempo tiene su pareja en frecuencia: desplazar añade una fase lineal sin "
+                      r"tocar el módulo, comprimir ensancha el espectro, modular lo traslada, derivar lo multiplica por "
+                      r"$j2\pi f$ y convolucionar lo multiplica. La transformada se calcula con la FFT de la señal "
+                      r"muestreada finamente.",
+          controles=[senal, op], graficas=[pb.grafica(p1, t0, a, f0), [p2, p3], info], inicio=cb,
           referencia="Transparencias T1-02, propiedades de la transformada de Fourier · Apuntes del Tema 1, sección 6")

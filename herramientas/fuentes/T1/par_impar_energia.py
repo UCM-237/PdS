@@ -10,21 +10,21 @@ D = ColumnDataSource(dict(t=[], x=[], xr=[], p=[], i=[]))
 EP = ColumnDataSource(dict(T=[], E=[], P=[]))
 
 def tres(titulo, col, color, extra=None):
-    p = pb.figura(titulo, "t o n", "", ancho=340 if extra is None else 720, alto=170, x_range=(-8, 8))
+    p = pb.figura(titulo, "t o n", "", ancho=None, alto=170, x_range=(-8, 8))
     if extra:
         p.line("t", extra, source=S, color=pb.GRIS_CLARO, line_width=2, line_dash="dashed", legend_label="x(−t)")
     p.line("t", col, source=S, color=color, line_width=2, **({"legend_label": "x(t)"} if extra else {}))
     pb.tallos(p, "t", col, D, color=color, size=5)
     if extra:
-        pb.leyenda(p, "right")
+        pb.leyenda(p, "above")
     return p
 
 p1 = tres("Señal x y su reflejada x(−t)", "x", pb.AZUL, extra="xr")
 p2 = tres("Parte par x_p = [x(t) + x(−t)]/2", "p", pb.VERDE)
 p3 = tres("Parte impar x_i = [x(t) − x(−t)]/2", "i", pb.ROJO)
-p4 = pb.figura("Energía en [−T, T]", "T", "E(T)", ancho=340, alto=170, x_axis_type="log")
+p4 = pb.figura("Energía en [−T, T]", "T", "E(T)", ancho=None, alto=170, x_axis_type="log")
 p4.line("T", "E", source=EP, color=pb.AZUL, line_width=2)
-p5 = pb.figura("Potencia media en [−T, T]", "T", "E(T)/2T", ancho=340, alto=170, x_axis_type="log")
+p5 = pb.figura("Potencia media en [−T, T]", "T", "E(T)/2T", ancho=None, alto=170, x_axis_type="log")
 p5.line("T", "P", source=EP, color=pb.NARANJA, line_width=2)
 
 senal = pb.selector("Señal", ["Pulso rectangular", "Exponencial causal e^(−at)u(t)", "Escalón u(t)",
@@ -33,7 +33,7 @@ a = pb.deslizador("a (decaimiento)", 0.1, 2, 0.5, 0.05)
 fi = pb.deslizador("φ (rad, sinusoide)", -3.14, 3.14, 0, 0.01)
 t0 = pb.deslizador("Desplazamiento t₀: x(t − t₀)", -4, 4, 0, 0.5)
 dom = pb.botones(["Continuo", "Discreto"])
-info = Div(text="", width=240)
+info = pb.info()
 
 cb = pb.js("""
     const av = a.value, s = senal.value, sh = t0.value;
@@ -72,9 +72,11 @@ cb = pb.js("""
 """, S=S, D=D, EP=EP, senal=senal, a=a, fi=fi, t0=t0, dom=dom, info=info)
 pb.conectar(cb, senal, a, fi, t0, dom)
 
-pb.pagina(__file__, "Par, impar, energía y potencia", tema=1,
-          descripcion="Toda señal es la suma de una parte par, x_p(t) = [x(t) + x(−t)]/2, y una impar, x_i(t) = [x(t) − x(−t)]/2. "
-                      "Las gráficas de abajo acumulan la energía y la potencia media en una ventana [−T, T] cada vez más ancha: "
-                      "si la energía se estabiliza, la señal es de energía; si lo hace la potencia, es de potencia.",
-          controles=[senal, a, fi, t0, dom, info], graficas=[p1, [p2, p3], [p4, p5]], inicio=cb,
+pb.pagina_panel(__file__, "Par, impar, energía y potencia", tema=1,
+          descripcion=r"Toda señal es la suma de una parte par, $x_p(t) = \tfrac12[x(t) + x(-t)]$, y una impar, "
+                      r"$x_i(t) = \tfrac12[x(t) - x(-t)]$. Las gráficas de abajo acumulan la energía y la potencia media en "
+                      r"una ventana $[-T, T]$ cada vez más ancha: si la energía se estabiliza, la señal es de energía; si lo "
+                      r"hace la potencia, es de potencia.",
+          controles=[senal, dom], graficas=[pb.grafica(p1, pb.fila(a, fi, t0)), [p2, p3], [p4, p5], info],
+          inicio=cb,
           referencia="Transparencias T1-01, clasificación de señales · Apuntes del Tema 1, sección 2")

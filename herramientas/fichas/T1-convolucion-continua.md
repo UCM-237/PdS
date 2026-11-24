@@ -82,7 +82,7 @@ Dura $2 + 2 = 4$ (de $t = 0$ a $t = 4$). En $t = 2$, $h(2-\tau)$ es el triángul
 ## Relación con otros conceptos
 
 - **Convolución discreta.** La misma operación con sumas en lugar de integrales. Herramienta: [Convolución discreta](T1-convolucion-discreta.html).
-- **Inversión y desplazamiento.** h(t − τ) es h invertida y desplazada t. Herramienta: [Operaciones sobre la variable independiente](T1-variable-independiente.html).
-- **Producto en frecuencia.** Convolucionar en el tiempo es multiplicar los espectros. Herramienta: [Propiedades de la transformada de Fourier](T1-propiedades-fourier.html), con la operación «Convolución x ∗ x».
+- **Inversión y desplazamiento.** $h(t - \tau)$ es $h$ invertida y desplazada $t$. Herramienta: [Operaciones sobre la variable independiente](T1-variable-independiente.html).
+- **Producto en frecuencia.** Convolucionar en el tiempo es multiplicar los espectros. Herramienta: [Propiedades de la transformada de Fourier](T1-propiedades-fourier.html), con la operación «Convolución $x * x$».
 - **Sistemas LTI continuos.** La salida de un sistema LTI es la convolución con h; con una sinusoide, se reduce a multiplicar por $H(j\omega)$. Herramienta: [Respuesta de un sistema LTI continuo](T1-respuesta-lti-continua.html).
 - **Reconstrucción (Tema 2).** El reconstructor ideal y los retenedores convolucionan el tren de muestras con una respuesta al impulso. Herramienta: [Reconstrucción](T2-reconstruccion.html).

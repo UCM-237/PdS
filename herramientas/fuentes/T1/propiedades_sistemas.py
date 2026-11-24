@@ -8,14 +8,14 @@ import pds_bokeh as pb
 E = ColumnDataSource(dict(n=[], a=[], b=[]))
 Sa = ColumnDataSource(dict(n=[], a=[], b=[]))
 
-p1 = pb.figura("Entradas", "n", "", ancho=680, alto=200, x_range=(-20.5, 20.5))
+p1 = pb.figura("Entradas", "n", "", ancho=None, alto=200, x_range=(-20.5, 20.5))
 pb.tallos(p1, "n", "a", E, color=pb.AZUL, legend_label="entrada A")
 p1.scatter("n", "b", source=E, marker="square", size=9, line_color=pb.NARANJA, fill_color=None, line_width=2, legend_label="entrada B")
-pb.leyenda(p1, "right")
-p2 = pb.figura("Salidas que se comparan", "n", "", ancho=680, alto=220, x_range=p1.x_range)
+pb.leyenda(p1, "above")
+p2 = pb.figura("Salidas que se comparan", "n", "", ancho=None, alto=220, x_range=p1.x_range)
 pb.tallos(p2, "n", "a", Sa, color=pb.AZUL, legend_label="salida A")
 p2.scatter("n", "b", source=Sa, marker="square", size=9, line_color=pb.NARANJA, fill_color=None, line_width=2, legend_label="salida B")
-pb.leyenda(p2, "right")
+pb.leyenda(p2, "above")
 marca = Span(location=0, dimension="height", line_color=pb.GRIS, line_dash="dashed")
 p1.add_layout(marca); p2.add_layout(Span(location=0, dimension="height", line_color=pb.GRIS, line_dash="dashed"))
 
@@ -28,7 +28,7 @@ x2 = pb.selector("Señal x₂", ["Seno", "Pulso", "Rampa corta", "Aleatoria"])
 al = pb.deslizador("α (linealidad)", -2, 2, 1.5, 0.5)
 be = pb.deslizador("β (linealidad)", -2, 2, -1, 0.5)
 n0 = pb.deslizador("n₀ (retardo o instante de corte)", -8, 8, 3, 1)
-info = Div(text="", width=240)
+info = pb.info()
 
 cb = pb.js("""
     const r = ruido(81, 5), sen = (nom) => n => {
@@ -42,6 +42,10 @@ cb = pb.js("""
         7: x => n => x(2 * n), 8: x => n => x(n) * Math.cos(PI * n / 4)}[SIS.indexOf(sistema.value)];
     // Propiedades teóricas [lineal, invariante, causal, estable]
     const T = [[1, 1, 1, 1], [0, 1, 1, 1], [0, 1, 1, 1], [1, 0, 1, 0], [1, 1, 0, 1], [1, 0, 0, 1], [1, 1, 1, 0], [1, 0, 0, 1], [1, 0, 1, 1]][SIS.indexOf(sistema.value)];
+    // Solo se muestran los parámetros que usa la prueba elegida
+    const lin = prueba.value === "Linealidad", est = prueba.value.startsWith("Estab");
+    x2.visible = lin || prueba.value === "Causalidad"; al.visible = lin; be.visible = lin;
+    x1.visible = !est; n0.visible = !lin && !est;
     const n = enteros(-20, 20), f1 = sen(x1.value), f2 = sen(x2.value), a = al.value, b = be.value, d = n0.value;
     let A, B, ya, yb, texto, nombres;
     if (prueba.value === "Linealidad") {
@@ -80,9 +84,10 @@ cb = pb.js("""
 """, E=E, Sa=Sa, sistema=sistema, prueba=prueba, x1=x1, x2=x2, al=al, be=be, n0=n0, info=info, marca=marca, ley=p2.legend[0], leyE=p1.legend[0], SIS=SISTEMAS)
 pb.conectar(cb, sistema, prueba, x1, x2, al, be, n0)
 
-pb.pagina(__file__, "Propiedades de los sistemas", tema=1,
+pb.pagina_panel(__file__, "Propiedades de los sistemas", tema=1,
           descripcion="Elige un sistema y la propiedad que quieres comprobar. La herramienta le aplica las entradas que pide la "
                       "definición y compara las dos salidas: si no coinciden, el sistema no tiene la propiedad. Para la estabilidad, "
                       "se mira si un escalón (entrada acotada) da una salida acotada.",
-          controles=[sistema, prueba, x1, x2, al, be, n0, info], graficas=[p1, p2], inicio=cb,
+          controles=[sistema, prueba], graficas=[pb.grafica(p1, pb.fila(x1, x2), pb.fila(al, be), n0),
+                                                 pb.grafica(p2, info)], inicio=cb,
           referencia="Transparencias T1-03, propiedades de los sistemas · Apuntes del Tema 1, sección 7")

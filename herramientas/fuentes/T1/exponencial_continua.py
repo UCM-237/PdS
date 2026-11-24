@@ -11,7 +11,7 @@ r, f, th = 0.3, 1.0, 0.0
 env = np.exp(r * t)
 datos = ColumnDataSource(dict(t=t, x=env * np.cos(2 * np.pi * f * t + th), sup=env, inf=-env))
 
-p = pb.figura("x(t) = Re{C·exp(st)} = exp(σt)·cos(2πft + θ)", "t (s)", "x(t)")
+p = pb.figura("x(t) = Re{C·exp(st)} = exp(σt)·cos(2πft + θ)", "t (s)", "x(t)", ancho=None, alto=260)
 p.line("t", "sup", source=datos, color=pb.GRIS_CLARO, line_dash="dashed", legend_label="±exp(σt)")
 p.line("t", "inf", source=datos, color=pb.GRIS_CLARO, line_dash="dashed")
 p.line("t", "x", source=datos, color=pb.AZUL, line_width=2, legend_label="x(t)")
@@ -33,9 +33,9 @@ cb = CustomJS(args=dict(d=datos, s=sigma, f=frec, th=fase), code="""
 for c in (sigma, frec, fase):
     c.js_on_change("value", cb)
 
-pb.pagina(__file__, "Exponencial compleja continua", tema=1,
-          descripcion="Con s = σ + jω y C = e<sup>jθ</sup>, la parte real de C e<sup>st</sup> "
-                      "es una sinusoide de frecuencia f = ω/2π cuya envolvente e<sup>σt</sup> "
-                      "crece si σ &gt; 0, decrece si σ &lt; 0 y es constante si σ = 0.",
-          controles=[sigma, frec, fase], graficas=[p],
+pb.pagina_panel(__file__, "Exponencial compleja continua", tema=1,
+          descripcion=r"Con $s = \sigma + j\omega$ y $C = e^{j\theta}$, la parte real de $C e^{st}$ es una "
+                      r"sinusoide de frecuencia $f = \omega/2\pi$ cuya envolvente $e^{\sigma t}$ crece si $\sigma > 0$, "
+                      r"decrece si $\sigma < 0$ y es constante si $\sigma = 0$.",
+          graficas=[pb.grafica(p, pb.fila(sigma, frec, fase))],
           referencia="Transparencias T1-01, «Exponencial compleja continua» · Apuntes del Tema 1, sección 3")

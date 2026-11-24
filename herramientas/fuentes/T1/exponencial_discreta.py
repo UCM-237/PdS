@@ -8,7 +8,7 @@ import pds_bokeh as pb
 muestras = ColumnDataSource(dict(n=[], x=[]))
 curva = ColumnDataSource(dict(t=[], x=[], sup=[], inf=[]))
 
-p = pb.figura("x[n] = r^n · cos(Ωn + θ)", "n", "x[n]", ancho=620)
+p = pb.figura("x[n] = r^n · cos(Ωn + θ)", "n", "x[n]", ancho=None, alto=260)
 p.line("t", "sup", source=curva, color=pb.GRIS_CLARO, line_dash="dashed")
 p.line("t", "inf", source=curva, color=pb.GRIS_CLARO, line_dash="dashed")
 p.line("t", "x", source=curva, color=pb.GRIS_CLARO, legend_label="r^t · cos(Ωt + θ) entre muestras")
@@ -18,7 +18,7 @@ pb.leyenda(p, "below")
 r = pb.deslizador("r", 0.8, 1.1, 1.0, 0.01)
 w = pb.deslizador("Ω (rad/muestra)", 0, 6.28, 0.785, 0.005)
 th = pb.deslizador("θ (rad)", -3.14, 3.14, 0, 0.05)
-info = Div(text="", width=240)
+info = pb.info()
 
 cb = pb.js("""
     const n = enteros(0, 40), t = rango(0, 40, 801);
@@ -38,9 +38,9 @@ cb = pb.js("""
 """, muestras=muestras, curva=curva, r=r, w=w, th=th, info=info)
 pb.conectar(cb, r, w, th)
 
-pb.pagina(__file__, "Exponencial compleja discreta", tema=1,
-          descripcion="Al contrario que en tiempo continuo, cos(Ωn) solo es periódica si Ω/2π es "
-                      "racional, y Ω y Ω + 2π dan la misma secuencia: la frecuencia discreta solo "
-                      "tiene sentido en un intervalo de 2π. Cuanto más cerca de π, más rápido oscila.",
-          controles=[r, w, th, info], graficas=[p], inicio=cb,
+pb.pagina_panel(__file__, "Exponencial compleja discreta", tema=1,
+          descripcion=r"Al contrario que en tiempo continuo, $\cos(\Omega n)$ solo es periódica si $\Omega/2\pi$ es "
+                      r"racional, y $\Omega$ y $\Omega + 2\pi$ dan la misma secuencia: la frecuencia discreta solo "
+                      r"tiene sentido en un intervalo de $2\pi$. Cuanto más cerca de $\pi$, más rápido oscila.",
+          graficas=[pb.grafica(p, pb.fila(r, w, th), info)], inicio=cb,
           referencia="Transparencias T1-01, «Exponencial compleja discreta» · Apuntes del Tema 1, sección 3")

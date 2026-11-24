@@ -3,6 +3,7 @@
 import sys, pathlib
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / "comun"))
 import numpy as np
+from bokeh.layouts import column
 from bokeh.models import ColumnDataSource, Div
 import pds_bokeh as pb
 
@@ -17,8 +18,9 @@ p1 = pb.figura("Polos (×) y región de convergencia", "Re", "Im", ancho=280, al
 p1.annulus(x=0, y=0, inner_radius="r0", outer_radius="r1", source=An, fill_color=pb.VERDE, fill_alpha=0.18, line_color=None)
 p1.quad(left="left", right="right", top=2.5, bottom=-2.5, source=Fr, fill_color=pb.VERDE, fill_alpha=0.18, line_color=None)
 p1.line("x", "y", source=C, color=pb.GRIS, line_width=1.5)
+p1.toolbar.autohide = True
 p1.scatter("x", "y", source=Po, marker="x", size=13, line_width=3, color=pb.ROJO)
-p2 = pb.figura("Señal correspondiente", "t o n", "", ancho=440, alto=280, x_range=(-10, 10), y_range=(-4, 4))
+p2 = pb.figura("Señal correspondiente", "t o n", "", ancho=None, alto=280, x_range=(-10, 10), y_range=(-4, 4))
 p2.line("t", "x", source=Xt, color=pb.AZUL, line_width=2)
 pb.tallos(p2, "t", "x", Xn, color=pb.AZUL, size=5)
 
@@ -26,7 +28,10 @@ dom = pb.botones(["Transformada Z", "Laplace"])
 a = pb.deslizador("Polo p₁ (real)", -1.8, 1.8, 0.5, 0.05)
 b = pb.deslizador("Polo p₂ (real)", -1.8, 1.8, -1.4, 0.05)
 roc = pb.selector("Región de convergencia", ["Exterior o a la derecha (causal)", "Entre los dos polos (bilateral)", "Interior o a la izquierda (anticausal)"])
-info = Div(text="", width=240)
+for c in (a, b):
+    c.width = 280
+    c.margin = (0, 0, 6, 46)
+info = pb.info()
 
 cb = pb.js("""
     const z = dom.active === 0, pa = a.value, pb_ = b.value;
@@ -63,10 +68,10 @@ cb = pb.js("""
 """, An=An, Fr=Fr, Po=Po, C=C, Xt=Xt, Xn=Xn, dom=dom, a=a, b=b, roc=roc, info=info)
 pb.conectar(cb, dom, a, b, roc)
 
-pb.pagina(__file__, "Región de convergencia", tema=1,
-          descripcion="Una transformada de Laplace o Z con dos polos reales puede corresponder a una señal causal, anticausal o "
-                      "bilateral: lo decide la región de convergencia (ROC). En Z, la ROC es un anillo limitado por los módulos "
-                      "de los polos; en Laplace, una franja vertical limitada por sus partes reales. El sistema es estable si la ROC "
-                      "contiene la circunferencia unidad o el eje jω.",
-          controles=[dom, a, b, roc, info], graficas=[[p1, p2]], inicio=cb,
+pb.pagina_panel(__file__, "Región de convergencia", tema=1,
+          descripcion=r"Una transformada de Laplace o Z con dos polos reales puede corresponder a una señal causal, "
+                      r"anticausal o bilateral: lo decide la región de convergencia (ROC). En Z, la ROC es un anillo "
+                      r"limitado por los módulos de los polos; en Laplace, una franja vertical limitada por sus partes "
+                      r"reales. El sistema es estable si la ROC contiene la circunferencia unidad $|z| = 1$ o el eje $j\omega$.",
+          controles=[dom, roc], graficas=[[column(p1, a, b, width=330), p2], info], inicio=cb,
           referencia="Transparencias T1-02, transformadas de Laplace y Z · Apuntes del Tema 1, sección 6")

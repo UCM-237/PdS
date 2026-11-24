@@ -2,63 +2,67 @@
 
 ### La señal que lo resume todo
 
-La exponencial compleja continua es x(t) = C e^{st}, con C = |C| e^{jθ} y s = σ + jω números complejos. Con la fórmula de Euler,
+La exponencial compleja continua es $x(t) = C e^{st}$, con $C = |C| e^{j\theta}$ y $s = \sigma + j\omega$ números complejos. Con la fórmula de Euler,
 
-> C e^{st} = |C| e^{σt} e^{j(ωt + θ)} = |C| e^{σt} [cos(ωt + θ) + j sin(ωt + θ)].
+> $$C e^{st} = |C| e^{\sigma t} e^{j(\omega t + \theta)} = |C| e^{\sigma t} \big[\cos(\omega t + \theta) + j \sin(\omega t + \theta)\big].$$
 
-Según los valores de s salen casi todas las señales básicas: una constante (s = 0), una exponencial real (ω = 0), una sinusoide (σ = 0) o una sinusoide amortiguada o creciente (σ y ω no nulos).
+Según los valores de $s$ salen casi todas las señales básicas: una constante ($s = 0$), una exponencial real ($\omega = 0$), una sinusoide ($\sigma = 0$) o una sinusoide amortiguada o creciente ($\sigma$ y $\omega$ no nulos).
 
 ### Qué controla cada parte de s
 
-- La **parte real σ** fija la envolvente |C| e^{σt}. Si σ < 0 la señal se amortigua, si σ > 0 crece y si σ = 0 tiene amplitud constante. La **constante de tiempo** τ = 1/|σ| es lo que tarda la envolvente en multiplicarse o dividirse por e ≈ 2,72.
-- La **parte imaginaria ω** es la pulsación de la oscilación, en rad/s; f = ω/2π es la frecuencia en hercios y T = 1/f el periodo.
-- La **fase θ** desplaza la oscilación en el tiempo: cos(ωt + θ) = cos(ω(t + θ/ω)). Con θ = −π/2, el coseno se convierte en un seno.
+- La **parte real $\sigma$** fija la envolvente $|C| e^{\sigma t}$. Si $\sigma < 0$ la señal se amortigua, si $\sigma > 0$ crece y si $\sigma = 0$ tiene amplitud constante. La **constante de tiempo** $\tau = 1/|\sigma|$ es lo que tarda la envolvente en multiplicarse o dividirse por $e \approx 2{,}72$.
+- La **parte imaginaria $\omega$** es la pulsación de la oscilación, en rad/s; $f = \omega/2\pi$ es la frecuencia en hercios y $T = 1/f$ el periodo.
+- La **fase $\theta$** desplaza la oscilación en el tiempo: $\cos(\omega t + \theta) = \cos\big(\omega(t + \theta/\omega)\big)$. Con $\theta = -\pi/2$, el coseno se convierte en un seno.
 
 ### Por qué importa
 
-Las exponenciales complejas son las **autofunciones** de los sistemas LTI: si la entrada es e^{st}, la salida es H(s) e^{st}, la misma exponencial multiplicada por un número complejo. Por eso las transformadas de Fourier y de Laplace descomponen las señales en exponenciales complejas. Además, la respuesta libre de un sistema continuo es una suma de exponenciales e^{p t}, una por cada polo p: un polo con parte real negativa da una respuesta que se extingue.
+Las exponenciales complejas son las **autofunciones** de los sistemas LTI: si la entrada es $e^{st}$, la salida es $H(s)\, e^{st}$, la misma exponencial multiplicada por un número complejo. Por eso las transformadas de Fourier y de Laplace descomponen las señales en exponenciales complejas. Además, la respuesta libre de un sistema continuo es una suma de exponenciales $e^{pt}$, una por cada polo $p$: un polo con parte real negativa da una respuesta que se extingue.
 
 ### Señal real a partir de exponenciales complejas
 
-Una sinusoide real es la suma de dos exponenciales complejas conjugadas: cos(ωt + θ) = ½ e^{j(ωt+θ)} + ½ e^{−j(ωt+θ)}. Por eso su espectro tiene dos rayas, en ±ω.
+Una sinusoide real es la suma de dos exponenciales complejas conjugadas:
+
+$$\cos(\omega t + \theta) = \tfrac12 e^{j(\omega t + \theta)} + \tfrac12 e^{-j(\omega t + \theta)}.$$
+
+Por eso su espectro tiene dos rayas, en $\pm\omega$.
 
 ## Guía de uso
 
-- **σ** es la parte real de s, en 1/s: negativa para amortiguar y positiva para crecer.
-- **f** es la frecuencia de la oscilación, en hercios (ω = 2πf).
+- **σ** es la parte real de $s$, en 1/s: negativa para amortiguar y positiva para crecer.
+- **f** es la frecuencia de la oscilación, en hercios ($\omega = 2\pi f$).
 - **θ** es la fase inicial, en radianes.
-- La gráfica muestra la parte real, e^{σt} cos(2πft + θ), con su envolvente ±e^{σt}.
+- La gráfica muestra la parte real, $e^{\sigma t}\cos(2\pi f t + \theta)$, con su envolvente $\pm e^{\sigma t}$. Los tres deslizadores están debajo.
 
 ## Ejercicios
 
-**1. Leer la envolvente.** Con σ = −0,5 1/s y f = 1 Hz, ¿cuánto vale la constante de tiempo? ¿Cuánto tarda la envolvente en reducirse a la mitad? Mídelo en la gráfica.
+**1. Leer la envolvente.** Con $\sigma = -0{,}5$ 1/s y $f = 1$ Hz, ¿cuánto vale la constante de tiempo? ¿Cuánto tarda la envolvente en reducirse a la mitad? Mídelo en la gráfica.
 
 <details><summary>Solución</summary>
-τ = 1/0,5 = 2 s. La envolvente se reduce a la mitad cuando e^{−0,5t} = 1/2, es decir, en t = 2 ln 2 ≈ 1,39 s. En ese tiempo caben unas 1,4 oscilaciones de periodo 1 s.
+$\tau = 1/0{,}5 = 2$ s. La envolvente se reduce a la mitad cuando $e^{-0{,}5t} = 1/2$, es decir, en $t = 2 \ln 2 \approx 1{,}39$ s. En ese tiempo caben unas 1,4 oscilaciones de periodo 1 s.
 </details>
 
-**2. Oscilaciones en una constante de tiempo.** Con f = 1 Hz, busca σ para que la señal haga unas 5 oscilaciones antes de que su amplitud caiga a 1/e.
+**2. Oscilaciones en una constante de tiempo.** Con $f = 1$ Hz, busca $\sigma$ para que la señal haga unas 5 oscilaciones antes de que su amplitud caiga a $1/e$.
 
 <details><summary>Solución</summary>
-5 oscilaciones de 1 s duran 5 s, así que τ = 5 s y σ = −0,2 1/s. Cuanto más cerca de 0 está σ frente a ω, más oscilaciones se ven antes de que la señal se extinga: es lo que pasa con un polo cerca del eje imaginario.
+5 oscilaciones de 1 s duran 5 s, así que $\tau = 5$ s y $\sigma = -0{,}2$ 1/s. Cuanto más cerca de 0 está $\sigma$ frente a $\omega$, más oscilaciones se ven antes de que la señal se extinga: es lo que pasa con un polo cerca del eje imaginario.
 </details>
 
-**3. Del coseno al seno.** Con σ = 0 y f = 1 Hz, ¿qué θ convierte la señal en sin(2πt)? ¿Y en −cos(2πt)?
+**3. Del coseno al seno.** Con $\sigma = 0$ y $f = 1$ Hz, ¿qué $\theta$ convierte la señal en $\sin(2\pi t)$? ¿Y en $-\cos(2\pi t)$?
 
 <details><summary>Solución</summary>
-sin(2πt) = cos(2πt − π/2): θ = −π/2. −cos(2πt) = cos(2πt + π): θ = ±π. Un cambio de fase θ equivale a un adelanto de θ/ω segundos.
+$\sin(2\pi t) = \cos(2\pi t - \pi/2)$: $\theta = -\pi/2$. $-\cos(2\pi t) = \cos(2\pi t + \pi)$: $\theta = \pm\pi$. Un cambio de fase $\theta$ equivale a un adelanto de $\theta/\omega$ segundos.
 </details>
 
-**4. Crecer o decrecer.** Fija f = 0,5 Hz. ¿Qué signo de σ corresponde a un sistema estable cuya respuesta libre fuera esta señal? Pon σ = 0 y explica por qué ese caso es el límite.
+**4. Crecer o decrecer.** Fija $f = 0{,}5$ Hz. ¿Qué signo de $\sigma$ corresponde a un sistema estable cuya respuesta libre fuera esta señal? Pon $\sigma = 0$ y explica por qué ese caso es el límite.
 
 <details><summary>Solución</summary>
-Hace falta σ < 0: la respuesta se extingue. Con σ > 0 crece sin límite y el sistema es inestable. Con σ = 0 la oscilación se mantiene indefinidamente: corresponde a polos sobre el eje imaginario, que no son BIBO estables.
+Hace falta $\sigma < 0$: la respuesta se extingue. Con $\sigma > 0$ crece sin límite y el sistema es inestable. Con $\sigma = 0$ la oscilación se mantiene indefinidamente: corresponde a polos sobre el eje imaginario, que no son BIBO estables.
 </details>
 
-**5. Ejercicio 11 e de la hoja.** H(s) = (s − 1)/(s² + 2s + 5) tiene polos en s = −1 ± 2j. Reproduce con la herramienta la forma de su respuesta libre e indica si el sistema es estable.
+**5. Ejercicio 11 e de la hoja.** $H(s) = \dfrac{s - 1}{s^2 + 2s + 5}$ tiene polos en $s = -1 \pm 2j$. Reproduce con la herramienta la forma de su respuesta libre e indica si el sistema es estable.
 
 <details><summary>Solución</summary>
-σ = −1 1/s y ω = 2 rad/s, es decir, f = 2/(2π) ≈ 0,32 Hz. La señal es una oscilación amortiguada con τ = 1 s: el sistema es estable. El cero en s = 1 cambia la amplitud y la fase de la respuesta, pero no su estabilidad.
+$\sigma = -1$ 1/s y $\omega = 2$ rad/s, es decir, $f = 2/(2\pi) \approx 0{,}32$ Hz. La señal es una oscilación amortiguada con $\tau = 1$ s: el sistema es estable. El cero en $s = 1$ cambia la amplitud y la fase de la respuesta, pero no su estabilidad.
 </details>
 
 ## Para profundizar
@@ -72,7 +76,7 @@ Hace falta σ < 0: la respuesta se extingue. Con σ > 0 crece sin límite y el s
 
 ## Relación con otros conceptos
 
-- **Exponencial discreta.** Al muestrear e^{st} se obtiene zⁿ con z = e^{sTs}. Herramientas: [Exponencial compleja discreta](T1-exponencial-discreta.html) y [Exponencial continua frente a discreta](T1-continua-discreta.html).
-- **Respuesta en frecuencia.** Con s = jω, la salida de un sistema LTI es H(jω) e^{jωt}. Herramienta: [Respuesta de un sistema LTI continuo](T1-respuesta-lti-continua.html).
-- **Polos de un sistema continuo (Tema 4).** Cada polo p aporta un término e^{pt} a la respuesta libre; su posición en el plano s decide si se amortigua. Herramienta: [Polos y ceros en el plano s](T4-polos-ceros-s.html).
-- **Serie y transformada de Fourier.** Descomponen una señal en exponenciales complejas con σ = 0. Herramienta: [Serie de Fourier](T1-serie-fourier.html).
+- **Exponencial discreta.** Al muestrear $e^{st}$ se obtiene $z^n$ con $z = e^{sT_s}$. Herramientas: [Exponencial compleja discreta](T1-exponencial-discreta.html) y [Exponencial continua frente a discreta](T1-continua-discreta.html).
+- **Respuesta en frecuencia.** Con $s = j\omega$, la salida de un sistema LTI es $H(j\omega)\,e^{j\omega t}$. Herramienta: [Respuesta de un sistema LTI continuo](T1-respuesta-lti-continua.html).
+- **Polos de un sistema continuo (Tema 4).** Cada polo $p$ aporta un término $e^{pt}$ a la respuesta libre; su posición en el plano $s$ decide si se amortigua. Herramienta: [Polos y ceros en el plano s](T4-polos-ceros-s.html).
+- **Serie y transformada de Fourier.** Descomponen una señal en exponenciales complejas con $\sigma = 0$. Herramienta: [Serie de Fourier](T1-serie-fourier.html).
