@@ -29,8 +29,9 @@ Repitiendo para cada t se obtiene y(t). Las zonas de t se separan según cómo s
 ## Guía de uso
 
 - **Señal x(t)** y **Respuesta al impulso h(t)** se eligen entre pulsos de anchura 1 y 2, un triángulo de anchura 2, la exponencial e^{−t}u(t), el escalón y una rampa en [0, 1]. Todas empiezan en t = 0.
-- **t** es el desplazamiento: el instante en que se calcula la salida.
-- Arriba, x(τ) y h(t − τ); en medio, su producto, cuya área sombreada es y(t); abajo, la salida completa y, marcado, el valor y(t) actual.
+- **Desplazamiento t** es el instante en que se calcula la salida.
+- Arriba, x(τ) y h(t − τ) con su producto sombreado en verde: el área sombreada es y(t). Justo debajo está el deslizador de t, alineado con el eje τ: la línea discontinua marca dónde está h.
+- Abajo, la salida completa en gris y, en azul, lo calculado hasta el instante t; el punto naranja es el valor y(t) actual.
 
 ## Ejercicios
 
