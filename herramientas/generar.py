@@ -52,6 +52,10 @@ def indice() -> None:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PdS · Herramientas interactivas</title>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@{pb.KATEX}/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@{pb.KATEX}/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@{pb.KATEX}/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {{delimiters: [{{left: '$', right: '$', display: false}}], throwOnError: false}})"></script>
 <style>
   body {{ font-family: {pb.FUENTE}; color: #222; background: #fff; max-width: 860px;
          margin: 0 auto; padding: 24px 16px; line-height: 1.45; }}

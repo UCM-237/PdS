@@ -64,9 +64,9 @@ cb = pb.js("""
 pb.conectar(cb, sx, sh, n)
 
 pb.pagina_panel(__file__, "Convolución discreta", tema=1,
-                descripcion="y[n] = Σ x[k] h[n − k]. Para cada n se invierte h, se desplaza n muestras, "
-                            "se multiplica muestra a muestra por x y se suma. Si x tiene L muestras y h "
-                            "tiene P, y tiene L + P − 1.",
+                descripcion=r"$y[n] = \sum_k x[k]\,h[n-k]$. Para cada $n$ se invierte $h$, se desplaza "
+                            r"$n$ muestras, se multiplica muestra a muestra por $x$ y se suma. Si $x$ tiene "
+                            r"$L$ muestras y $h$ tiene $P$, $y$ tiene $L + P - 1$.",
                 controles=[sx, sh],
                 graficas=[pb.grafica(p1, n, info), p2], inicio=cb,
                 referencia="Transparencias T1-02, «Convolución discreta: ejemplo» · Apuntes del Tema 1, sección 5")
