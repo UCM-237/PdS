@@ -45,6 +45,11 @@ GRIS_CLARO = "#B8BAC6"
 REJILLA = "#E3E4EC"
 CICLO = [AZUL, ROJO, VERDE, NARANJA, GRIS]
 
+# Márgenes de las figuras de ancho variable: el eje y cabe en BORDE_IZQ, y los
+# controles que van debajo de una gráfica se alinean con su zona de datos.
+BORDE_IZQ = 64
+BORDE_DER = 16
+
 FUENTE = "Fira Sans, Helvetica, Arial, sans-serif"
 
 TEMAS = {
@@ -113,12 +118,27 @@ _CSS = f"""
 """
 
 
-def figura(titulo: str, eje_x: str, eje_y: str, ancho: int = 520, alto: int = 260,
+def figura(titulo: str, eje_x: str, eje_y: str, ancho: int | None = 520, alto: int = 260,
            **kw):
-    """Figura con el estilo común; ``ancho`` y ``alto`` son los de la zona de datos."""
+    """Figura con el estilo común; ``ancho`` y ``alto`` son los de la zona de datos.
+
+    Con ``ancho=None`` la figura ocupa todo el ancho disponible y se ajusta al
+    mostrar u ocultar el panel lateral (``pagina_panel``). Sus márgenes son
+    fijos (``BORDE_IZQ``, ``BORDE_DER``) para que los ejes de varias gráficas
+    y los controles de ``grafica()`` queden alineados.
+    """
     kw.setdefault("tools", "pan,wheel_zoom,box_zoom,reset,save")
-    p = _figure(title=titulo, x_axis_label=eje_x, y_axis_label=eje_y,
-                frame_width=ancho, frame_height=alto, **kw)
+    if ancho is None:
+        kw.setdefault("sizing_mode", "stretch_width")
+        kw.setdefault("min_border_left", BORDE_IZQ)
+        kw.setdefault("min_border_right", BORDE_DER)
+        kw.setdefault("toolbar_location", "above")
+        p = _figure(title=titulo, x_axis_label=eje_x, y_axis_label=eje_y,
+                    frame_height=alto, **kw)
+        p.toolbar.autohide = True
+    else:
+        p = _figure(title=titulo, x_axis_label=eje_x, y_axis_label=eje_y,
+                    frame_width=ancho, frame_height=alto, **kw)
     p.toolbar.logo = None
     p.outline_line_color = None
     p.title.text_font = FUENTE
@@ -784,9 +804,107 @@ def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
     destino.write_text(file_html(doc, RECURSOS, title=f"PdS · {titulo}", template=_PLANTILLA,
                                  template_variables={"fuente": FUENTE, "ficha": ficha}),
                        encoding="utf-8")
+    _entrada_indice(tema, nombre, titulo, destino, descripcion)
+    return destino
+
+
+def _entrada_indice(tema: int, nombre: str, titulo: str, destino: pathlib.Path,
+                    descripcion: str) -> None:
     indice = SALIDA / "indice"
     indice.mkdir(exist_ok=True)
     (indice / f"T{tema}-{nombre}.json").write_text(json.dumps(
         {"tema": tema, "titulo": titulo, "archivo": destino.name,
          "descripcion": descripcion}, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+# ── Disposición con panel lateral ──────────────────────────────────────────
+#
+# Plantilla común de las herramientas: cabecera arriba, gráficas a todo el
+# ancho con cada control debajo de la gráfica a la que afecta, y la ficha de
+# uso en un panel a la derecha que se muestra u oculta. La estructura está en
+# comun/pds_panel.html y el estilo en comun/pds_panel.css.
+
+COMUN = pathlib.Path(__file__).resolve().parent
+PANEL_ANCHO = 400  # px del panel lateral
+
+# Etiqueta de la pestaña para cada apartado de la ficha (h2 del Markdown)
+PESTANAS = {
+    "Introducción": "Teoría",
+    "Guía de uso": "Guía",
+    "Ejercicios": "Ejercicios",
+    "Para profundizar": "Recursos",
+    "Relación con otros conceptos": "Relación",
+}
+
+
+def grafica(p, *controles):
+    """Una gráfica con los controles que la afectan justo debajo.
+
+    Los controles ocupan el ancho de la zona de datos de ``p`` (que debe
+    crearse con ``figura(..., ancho=None)``), de modo que un deslizador con el
+    mismo rango que el eje x queda alineado con él.
+    """
+    for c in controles:
+        c.sizing_mode = "stretch_width"
+        c.width = None
+        c.margin = (0, BORDE_DER, 6, BORDE_IZQ)
+    return column(p, *controles, sizing_mode="stretch_width")
+
+
+def _secciones(ficha_html: str) -> list[dict]:
+    """Parte la ficha por sus apartados ``<h2>`` para mostrarlos en pestañas."""
+    trozos = re.split(r"<h2>(.*?)</h2>", ficha_html)
+    secciones = []
+    if trozos[0].strip():
+        secciones.append({"titulo": "Ficha", "html": trozos[0]})
+    for titulo, cuerpo in zip(trozos[1::2], trozos[2::2]):
+        secciones.append({"titulo": titulo, "html": f"<h2>{titulo}</h2>{cuerpo}"})
+    for i, sec in enumerate(secciones):
+        sec["etiqueta"] = PESTANAS.get(sec["titulo"], sec["titulo"])
+        sec["id"] = re.sub(r"[^a-z0-9]+", "-", sec["etiqueta"].lower()) or f"s{i}"
+    return secciones
+
+
+def _css_panel() -> str:
+    variables = (f":root {{ --pds-fuente: {FUENTE}; --pds-texto: #222; --pds-azul: {AZUL};"
+                 f" --pds-verde: {VERDE}; --pds-gris: {GRIS}; --pds-rejilla: {REJILLA};"
+                 f" --pds-fondo-suave: #F4F5FA; --pds-panel-ancho: {PANEL_ANCHO}px; }}\n")
+    return variables + (COMUN / "pds_panel.css").read_text(encoding="utf-8")
+
+
+def pagina_panel(fuente: str, titulo: str, tema: int, descripcion: str, graficas,
+                 controles=(), referencia: str = "", inicio=None) -> pathlib.Path:
+    """Escribe html/<nombre de la fuente>.html con la disposición de panel lateral.
+
+    ``controles`` son los controles generales (por ejemplo, la elección de
+    señales): van en una fila encima de las gráficas. ``graficas`` es una
+    lista de figuras creadas con ``figura(..., ancho=None)`` o de bloques
+    ``grafica(p, control, …)``, que se apilan a todo el ancho. La ficha
+    (``fichas/Tn-nombre.md``) va en el panel de la derecha, una pestaña por
+    apartado. ``inicio`` es como en ``pagina()``.
+    """
+    nombre = pathlib.Path(fuente).stem.replace("_", "-")
+    filas = []
+    if controles:
+        for c in controles:
+            c.margin = (0, 16, 8, 0)
+        filas.append(row(*controles, margin=(0, 0, 4, BORDE_IZQ), styles={"flex-wrap": "wrap"}))
+    filas += list(graficas)
+    doc = Document()
+    doc.add_root(column(*filas, sizing_mode="stretch_width"))
+    if inicio is not None:
+        doc.js_on_event(DocumentReady, inicio)
+    ficha = _ficha(tema, nombre)
+    plantilla = Template((COMUN / "pds_panel.html").read_text(encoding="utf-8"))
+    SALIDA.mkdir(exist_ok=True)
+    destino = SALIDA / f"T{tema}-{nombre}.html"
+    destino.write_text(file_html(doc, RECURSOS, title=f"PdS · {titulo}", template=plantilla,
+                                 template_variables={
+                                     "css": _css_panel(), "tema": tema,
+                                     "nombre_tema": html.escape(TEMAS[tema]),
+                                     "titulo": html.escape(titulo), "descripcion": descripcion,
+                                     "referencia": html.escape(referencia),
+                                     "secciones": _secciones(ficha) if ficha else []}),
+                       encoding="utf-8")
+    _entrada_indice(tema, nombre, titulo, destino, descripcion)
     return destino

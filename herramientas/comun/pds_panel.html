@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+{{ css }}
+</style>
+{{ bokeh_css | indent(2) }}
+{{ bokeh_js | indent(2) }}
+</head>
+<body>
+<div class="pds-app{% if not secciones %} pds-sin-panel{% endif %}" id="pds-app">
+  <main class="pds-principal">
+    <header class="pds-cabecera">
+      <div class="pds-cabecera-texto">
+        <p class="pds-tema">Tema {{ tema }} · {{ nombre_tema }}</p>
+        <h1 class="pds-titulo">{{ titulo }}</h1>
+        <p class="pds-texto">{{ descripcion }}</p>
+        {% if referencia %}<p class="pds-ref">{{ referencia }}</p>{% endif %}
+      </div>
+      {% if secciones %}
+      <button type="button" class="pds-alternar" id="pds-alternar"
+              aria-controls="pds-panel" aria-expanded="true">
+        <span class="pds-flecha" aria-hidden="true">‹</span> Ayuda y ejercicios
+      </button>
+      {% endif %}
+    </header>
+    {{ plot_div | indent(4) }}
+  </main>
+  {% if secciones %}
+  <aside class="pds-panel" id="pds-panel" aria-label="Ayuda y ejercicios">
+    <div class="pds-panel-cabecera">
+      <p class="pds-panel-titulo">Ficha de uso</p>
+      <button type="button" class="pds-cerrar" id="pds-cerrar" title="Ocultar el panel"
+              aria-label="Ocultar el panel">×</button>
+    </div>
+    <div class="pds-pestanas" role="tablist">
+      {% for s in secciones %}
+      <button type="button" class="pds-pestana" role="tab" id="pds-tab-{{ s.id }}"
+              aria-controls="pds-sec-{{ s.id }}" aria-selected="{{ 'true' if loop.first else 'false' }}"
+              data-seccion="{{ s.id }}">{{ s.etiqueta }}</button>
+      {% endfor %}
+    </div>
+    <div class="pds-panel-cuerpo">
+      {% for s in secciones %}
+      <section class="pds-seccion pds-ficha" role="tabpanel" id="pds-sec-{{ s.id }}"
+               aria-labelledby="pds-tab-{{ s.id }}"{% if not loop.first %} hidden{% endif %}>
+        {{ s.html }}
+      </section>
+      {% endfor %}
+    </div>
+  </aside>
+  {% endif %}
+</div>
+{{ plot_script | indent(2) }}
+{% if secciones %}
+<script>
+(function () {
+  // Panel lateral: se muestra u oculta con el botón y recuerda la elección y
+  // la pestaña. En pantallas estrechas empieza oculto y se superpone.
+  const app = document.getElementById("pds-app");
+  const alternar = document.getElementById("pds-alternar");
+  const estrecha = window.matchMedia("(max-width: 900px)");
+  const guardar = (k, v) => { try { localStorage.setItem("pds-" + k, v); } catch (e) {} };
+  const leer = k => { try { return localStorage.getItem("pds-" + k); } catch (e) { return null; } };
+
+  function mostrar(abierto, recordar) {
+    app.classList.toggle("pds-sin-panel", !abierto);
+    alternar.setAttribute("aria-expanded", String(abierto));
+    if (recordar && !estrecha.matches) guardar("panel", abierto ? "1" : "0");
+    // Bokeh reajusta el ancho de las gráficas al cambiar su contenedor.
+    setTimeout(() => window.dispatchEvent(new Event("resize")), 220);
+  }
+  mostrar(!estrecha.matches && leer("panel") !== "0", false);
+  alternar.addEventListener("click", () => mostrar(app.classList.contains("pds-sin-panel"), true));
+  document.getElementById("pds-cerrar").addEventListener("click", () => mostrar(false, true));
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && estrecha.matches) mostrar(false, false);
+  });
+
+  const pestanas = Array.from(document.querySelectorAll(".pds-pestana"));
+  function elegir(id) {
+    for (const p of pestanas) {
+      const activa = p.dataset.seccion === id;
+      p.setAttribute("aria-selected", String(activa));
+      document.getElementById("pds-sec-" + p.dataset.seccion).hidden = !activa;
+    }
+    guardar("pestana", id);
+  }
+  pestanas.forEach(p => p.addEventListener("click", () => elegir(p.dataset.seccion)));
+  const previa = leer("pestana");
+  if (previa && pestanas.some(p => p.dataset.seccion === previa)) elegir(previa);
+})();
+</script>
+{% endif %}
+</body>
+</html>

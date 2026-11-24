@@ -1,0 +1,185 @@
+/* Disposición común de las herramientas con panel lateral (pds_bokeh.pagina_panel).
+ *
+ *   ┌───────────────────────────────────────────┬──────────────────┐
+ *   │ cabecera: tema, título, descripción  [Ayuda]                  │
+ *   ├───────────────────────────────────────────┼──────────────────┤
+ *   │ controles generales (selectores)          │ panel lateral:   │
+ *   │ gráfica 1                                 │ pestañas de la   │
+ *   │   controles que afectan a la gráfica 1    │ ficha (teoría,   │
+ *   │ gráfica 2                                 │ guía, ejercicios │
+ *   │   …                                       │ y recursos)      │
+ *   └───────────────────────────────────────────┴──────────────────┘
+ *
+ * Los colores (--pds-azul, --pds-gris…) los define pds_bokeh.py a partir de
+ * la paleta común, delante de este fichero.
+ */
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  font-family: var(--pds-fuente);
+  color: var(--pds-texto);
+  background: #fff;
+}
+
+/* ── Rejilla principal ─────────────────────────────────────────────── */
+
+.pds-app {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--pds-panel-ancho);
+  min-height: 100vh;
+  transition: grid-template-columns 0.2s ease;
+}
+.pds-app.pds-sin-panel { grid-template-columns: minmax(0, 1fr) 0; }
+
+.pds-principal { min-width: 0; padding: 16px 28px 32px; }
+
+/* ── Cabecera ──────────────────────────────────────────────────────── */
+
+.pds-cabecera {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.pds-cabecera-texto { flex: 1; min-width: 0; }
+.pds-tema { color: var(--pds-gris); font-size: 13px; margin: 0; }
+.pds-titulo { color: var(--pds-azul); font-size: 22px; font-weight: 600; margin: 2px 0 6px; }
+.pds-texto { max-width: 820px; font-size: 14px; line-height: 1.45; margin: 0; }
+.pds-ref { color: var(--pds-gris); font-size: 12px; margin: 6px 0 0; }
+
+/* Botón que muestra u oculta el panel */
+.pds-alternar {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 600 13px var(--pds-fuente);
+  color: var(--pds-azul);
+  background: var(--pds-fondo-suave);
+  border: 1px solid var(--pds-rejilla);
+  border-radius: 6px;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+.pds-alternar:hover { border-color: var(--pds-azul); }
+.pds-alternar:focus-visible, .pds-pestana:focus-visible, .pds-cerrar:focus-visible {
+  outline: 2px solid var(--pds-azul);
+  outline-offset: 2px;
+}
+.pds-alternar .pds-flecha { transition: transform 0.2s ease; }
+.pds-app:not(.pds-sin-panel) .pds-alternar .pds-flecha { transform: rotate(180deg); }
+
+/* ── Panel lateral (ficha) ─────────────────────────────────────────── */
+
+.pds-panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--pds-fondo-suave);
+  border-left: 1px solid var(--pds-rejilla);
+}
+.pds-sin-panel .pds-panel { visibility: hidden; border-left: 0; }
+
+.pds-panel-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 0;
+}
+.pds-panel-titulo { color: var(--pds-azul); font-size: 15px; font-weight: 600; margin: 0; }
+.pds-cerrar {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--pds-gris);
+  background: none;
+  border: 0;
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+.pds-cerrar:hover { color: var(--pds-azul); background: #fff; }
+
+.pds-pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 10px 12px 0;
+  border-bottom: 1px solid var(--pds-rejilla);
+}
+.pds-pestana {
+  font: 13px var(--pds-fuente);
+  color: var(--pds-gris);
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  padding: 6px 8px 7px;
+  margin-bottom: -1px;
+  cursor: pointer;
+}
+.pds-pestana:hover { color: var(--pds-azul); }
+.pds-pestana[aria-selected="true"] {
+  color: var(--pds-azul);
+  font-weight: 600;
+  border-bottom-color: var(--pds-azul);
+}
+
+.pds-panel-cuerpo { flex: 1; overflow-y: auto; padding: 4px 18px 24px; }
+.pds-seccion[hidden] { display: none; }
+
+/* ── Contenido de la ficha ─────────────────────────────────────────── */
+
+.pds-ficha { font-size: 14px; line-height: 1.55; color: var(--pds-texto); }
+.pds-ficha h2 { color: var(--pds-azul); font-size: 16px; font-weight: 600; margin: 16px 0 6px; }
+.pds-ficha h3 { font-size: 14.5px; font-weight: 600; margin: 16px 0 4px; }
+.pds-ficha p, .pds-ficha li { margin: 6px 0; }
+.pds-ficha ul, .pds-ficha ol { padding-left: 22px; }
+.pds-ficha blockquote {
+  margin: 8px 0;
+  padding: 4px 12px;
+  border-left: 3px solid var(--pds-azul);
+  background: #fff;
+}
+.pds-ficha details {
+  margin: 4px 0 14px;
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid var(--pds-rejilla);
+  border-radius: 6px;
+}
+.pds-ficha summary { cursor: pointer; color: var(--pds-verde); font-weight: 600; }
+.pds-ficha a { color: var(--pds-azul); }
+.pds-ficha code { font-size: 12.5px; background: #fff; padding: 1px 4px; border-radius: 3px; }
+.pds-ficha table { border-collapse: collapse; margin: 8px 0; font-size: 13.5px; }
+.pds-ficha th, .pds-ficha td {
+  text-align: left;
+  padding: 4px 10px 4px 0;
+  border-bottom: 1px solid var(--pds-rejilla);
+  vertical-align: top;
+}
+
+/* ── Pantallas estrechas: el panel se superpone ───────────────────── */
+
+@media (max-width: 900px) {
+  .pds-app, .pds-app.pds-sin-panel { grid-template-columns: minmax(0, 1fr); }
+  .pds-principal { padding: 12px 16px 24px; }
+  .pds-cabecera { flex-direction: column-reverse; gap: 8px; }
+  .pds-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(var(--pds-panel-ancho), 92vw);
+    z-index: 10;
+    box-shadow: -6px 0 24px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pds-app, .pds-alternar .pds-flecha { transition: none; }
+}

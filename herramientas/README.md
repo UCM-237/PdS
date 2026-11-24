@@ -13,6 +13,7 @@ cálculos que dependen de los controles se hacen en el propio navegador.
 | --- | --- |
 | `fuentes/Tn/` | Un script de Python por herramienta, ordenados por tema |
 | `comun/pds_bokeh.py` | Estilo común (paleta y notación de `teoría/comun`), controles y plantilla de página |
+| `comun/pds_panel.html`, `comun/pds_panel.css` | Estructura y estilo de la disposición con panel lateral (`pagina_panel`) |
 | `generar.py` | Ejecuta todas las fuentes y escribe el índice |
 | `fichas/` | Ficha de uso de cada herramienta (`Tn-nombre.md`): introducción, guía de uso, ejercicios, recursos y relación con otros conceptos; se añade al pie de la página |
 | `html/` | Páginas generadas (`Tn-nombre.html`) e índice (`index.html`) |
@@ -56,6 +57,27 @@ con el ratón y `pb.plano_pz()`, mover, añadir y borrar polos y ceros.
 
 Notación: ω (rad/s) y f (Hz) en tiempo continuo; Ω (rad/muestra) y
 F (ciclos/muestra) en tiempo discreto.
+
+## Disposición con panel lateral
+
+Es la disposición a la que se irán pasando todas las herramientas; de momento
+la usa `fuentes/T1/convolucion_continua.py`, que sirve de ejemplo:
+
+- Las gráficas ocupan todo el ancho, apiladas. Se crean con
+  `pb.figura(..., ancho=None)` y se adaptan al mostrar u ocultar el panel.
+- Cada control va justo debajo de la gráfica a la que afecta:
+  `pb.grafica(p, control, …)`. El control ocupa el ancho de la zona de datos,
+  así que un deslizador con el mismo rango que el eje x queda alineado con él.
+- Los controles generales (elección de señales…) van en una fila encima.
+- La ficha va en un panel a la derecha, con una pestaña por apartado
+  (Teoría, Guía, Ejercicios, Recursos, Relación). El botón «Ayuda y
+  ejercicios» lo muestra u oculta y la página recuerda la elección. En
+  pantallas estrechas empieza oculto y se superpone a las gráficas.
+
+```python
+pb.pagina_panel(__file__, titulo, tema=n, descripcion=…, controles=[sx, sh],
+                graficas=[pb.grafica(p1, t), p2], inicio=cb, referencia=…)
+```
 
 ## Publicación
 

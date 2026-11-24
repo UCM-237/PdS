@@ -11,25 +11,29 @@ SENALES = ["Pulso de anchura 1", "Pulso de anchura 2", "Triángulo", "Exponencia
 senales = ColumnDataSource(dict(tau=[], x=[], h=[], p=[]))
 salida = ColumnDataSource(dict(t=[], y=[]))
 actual = ColumnDataSource(dict(t=[], y=[]))
+T0, T1 = -4, 6  # eje común de τ y de t; el desplazamiento recorre el mismo rango
 
-p1 = pb.figura("x(τ) y h(t − τ)", "τ", "", ancho=620, alto=170, x_range=(-4, 6))
+# Arriba: las dos señales y el área de su producto, que es y(t)
+p1 = pb.figura("x(τ), h(t − τ) y su producto: el área sombreada es y(t)", "τ", "",
+               ancho=None, alto=210, x_range=(T0, T1))
+p1.varea("tau", 0, "p", source=senales, fill_color=pb.VERDE, fill_alpha=0.30,
+         legend_label="x(τ) h(t − τ)")
 p1.line("tau", "x", source=senales, color=pb.AZUL, line_width=2, legend_label="x(τ)")
 p1.line("tau", "h", source=senales, color=pb.ROJO, line_width=2, legend_label="h(t − τ)")
-p2 = pb.figura("x(τ) h(t − τ): su área es y(t)", "τ", "", ancho=620, alto=150, x_range=p1.x_range)
-p2.varea("tau", 0, "p", source=senales, fill_color=pb.VERDE, fill_alpha=0.35)
-p2.line("tau", "p", source=senales, color=pb.VERDE, line_width=1.5)
-p3 = pb.figura("y(t) = (x * h)(t)", "t", "y(t)", ancho=620, alto=170, x_range=p1.x_range)
-p3.line("t", "y", source=salida, color=pb.GRIS_CLARO, line_width=1.5, legend_label="y(t) completa")
-p3.line("t", "y", source=actual, color=pb.AZUL, line_width=2.5, legend_label="calculada hasta t")
+# Abajo: la salida completa y lo calculado hasta el instante actual
+p2 = pb.figura("y(t) = (x ∗ h)(t)", "t", "y(t)", ancho=None, alto=190, x_range=p1.x_range)
+p2.line("t", "y", source=salida, color=pb.GRIS_CLARO, line_width=1.5, legend_label="y(t) completa")
+p2.line("t", "y", source=actual, color=pb.AZUL, line_width=2.5, legend_label="calculada hasta t")
+punto = ColumnDataSource(dict(t=[], y=[]))
+p2.scatter("t", "y", source=punto, color=pb.NARANJA, size=8)
 marca = Span(location=0, dimension="height", line_color=pb.NARANJA, line_dash="dashed")
-for q in (p1, p2, p3):
+for q in (p1, p2):
     q.add_layout(marca)
-for q in (p1, p3):
-    pb.leyenda(q, "right")
+    pb.leyenda(q, "top_left")
 
 sx = pb.selector("Señal x(t)", SENALES, SENALES[0])
 sh = pb.selector("Respuesta al impulso h(t)", SENALES, SENALES[3])
-t = pb.deslizador("t (desplazamiento)", -3, 5, -1, 0.02)
+t = pb.deslizador("Desplazamiento t", T0, T1, 0.5, 0.02)
 
 cb = pb.js("""
     function forma(nombre, u) {
@@ -40,23 +44,27 @@ cb = pb.js("""
         if (nombre.startsWith("Escalón")) return u >= 0 ? 1 : 0;
         return (u >= 0 && u < 1) ? u : 0;
     }
-    const dt = 0.01, tau = rango(-4, 6, 1001), T = t.value;
+    const dt = 0.01, tau = rango(T0, T1, 1001), T = t.value;
     const x = tau.map(u => forma(sx.value, u)), h = tau.map(u => forma(sh.value, T - u));
     senales.data = {tau: tau, x: x, h: h, p: x.map((v, i) => v * h[i])};
     // y(t) completa por integración numérica
-    const ts = rango(-4, 6, 501), y = ts.map(tt => {
+    const ts = rango(T0, T1, 501), y = ts.map(tt => {
         let s = 0; for (let i = 0; i < tau.length; i++) s += x[i] * forma(sh.value, tt - tau[i]);
         return s * dt; });
     salida.data = {t: ts, y: y};
     const k = ts.findIndex(v => v > T);
     actual.data = {t: ts.slice(0, k < 0 ? ts.length : k), y: y.slice(0, k < 0 ? ts.length : k)};
+    const j = Math.min(Math.max(Math.round((T - T0) / (T1 - T0) * (ts.length - 1)), 0), ts.length - 1);
+    punto.data = {t: [T], y: [y[j]]};
     marca.location = T;
-""", senales=senales, salida=salida, actual=actual, marca=marca, sx=sx, sh=sh, t=t)
+""", senales=senales, salida=salida, actual=actual, punto=punto, marca=marca, sx=sx, sh=sh, t=t,
+   T0=T0, T1=T1)
 pb.conectar(cb, sx, sh, t)
 
-pb.pagina(__file__, "Convolución continua", tema=1,
-          descripcion="y(t) = ∫ x(τ) h(t − τ) dτ. Para cada t se invierte h, se desplaza hasta t, "
-                      "se multiplica por x y se integra. Mueve t para ver cómo se construye y(t); "
-                      "su duración es la suma de las duraciones de x y h.",
-          controles=[sx, sh, t], graficas=[p1, p2, p3], inicio=cb,
-          referencia="Transparencias T1-02, «Convolución continua: ejemplo» · Apuntes del Tema 1, sección 5")
+pb.pagina_panel(__file__, "Convolución continua", tema=1,
+                descripcion="y(t) = ∫ x(τ) h(t − τ) dτ. Para cada t se invierte h, se desplaza hasta t, "
+                            "se multiplica por x y se integra. Mueve t para ver cómo se construye y(t); "
+                            "su duración es la suma de las duraciones de x y h.",
+                controles=[sx, sh],
+                graficas=[pb.grafica(p1, t), p2], inicio=cb,
+                referencia="Transparencias T1-02, «Convolución continua: ejemplo» · Apuntes del Tema 1, sección 5")
