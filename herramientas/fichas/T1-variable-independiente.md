@@ -35,8 +35,8 @@ El desplazamiento modela retardos (un eco, la propagación de una onda), la inve
 
 - **Señal x** elige la señal original: un triángulo asimétrico (no nulo entre $-1$ y 3, con el pico en 0), un pulso con un escalón (1 en $[-1, 1)$ y 0,5 en $[1, 2)$) o una exponencial truncada ($e^{-0{,}8t}$ en $[0, 4]$).
 - **Continuo o Discreto** cambia el tipo de señal. En discreto, $\alpha$ y $\beta$ se redondean a enteros.
-- **β** desplaza: está debajo de las dos gráficas de arriba, la original y el paso 1 ($v = x(t + \beta)$).
-- **α** escala el eje (si es negativo, también invierte): está debajo de la gráfica de abajo, el resultado $y = x(\alpha t + \beta)$, con $x$ en gris como referencia.
+- **β** desplaza: su efecto se ve en las dos gráficas de arriba, la original y el paso 1 ($v = x(t + \beta)$).
+- **α** escala el eje (si es negativo, también invierte): su efecto se ve en la gráfica de abajo, el resultado $y = x(\alpha t + \beta)$, con $x$ en gris como referencia.
 - El recuadro dice dónde acaba el punto $t = 0$ de $x$ y si la señal se comprime, se expande o se invierte.
 
 ## Ejercicios

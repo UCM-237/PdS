@@ -22,7 +22,7 @@ Igual que en continuo, las exponenciales $z^n$ son autofunciones de los sistemas
 - **r** es el módulo de $z$: menor que 1 amortigua y mayor que 1 hace crecer la secuencia.
 - **Ω** es la frecuencia discreta, entre 0 y $2\pi$ rad/muestra.
 - **θ** es la fase inicial.
-- La gráfica muestra las muestras $r^n \cos(\Omega n + \theta)$ y, en gris, la curva continua que pasa por ellas, como referencia. Los deslizadores están debajo.
+- La gráfica muestra las muestras $r^n \cos(\Omega n + \theta)$ y, en gris, la curva continua que pasa por ellas, como referencia. Los deslizadores están arriba, a la izquierda.
 - El recuadro indica $\Omega/2\pi$, si la secuencia es periódica (y con qué periodo) y el valor principal de $\Omega$.
 
 ## Ejercicios

@@ -77,6 +77,6 @@ pb.pagina_panel(__file__, "Par, impar, energía y potencia", tema=1,
                       r"$x_i(t) = \tfrac12[x(t) - x(-t)]$. Las gráficas de abajo acumulan la energía y la potencia media en "
                       r"una ventana $[-T, T]$ cada vez más ancha: si la energía se estabiliza, la señal es de energía; si lo "
                       r"hace la potencia, es de potencia.",
-          controles=[senal, dom], graficas=[pb.grafica(p1, pb.fila(a, fi, t0)), [p2, p3], [p4, p5], info],
+          controles=[[senal, dom], [a, fi, t0]], graficas=[p1, [p2, p3], [p4, p5], info],
           inicio=cb,
           referencia="Transparencias T1-01, clasificación de señales · Apuntes del Tema 1, sección 2")

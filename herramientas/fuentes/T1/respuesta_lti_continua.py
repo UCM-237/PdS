@@ -55,5 +55,5 @@ pb.pagina_panel(__file__, "Respuesta de un sistema LTI continuo", tema=1,
                       r"sale como $|H(j\omega_0)|\cos(\omega_0 t + \angle H(j\omega_0))$. La respuesta en frecuencia dice "
                       r"cuánto se escala y se desfasa cada frecuencia. Sistemas: $1/(1 + s/\omega_c)$, "
                       r"$(s/\omega_c)/(1 + s/\omega_c)$ y $\omega_n^2/(s^2 + 2\zeta\omega_n s + \omega_n^2)$.",
-          controles=[sis], graficas=[pb.grafica([p1, p2], pb.fila(wc, z)), pb.grafica(p3, w0, info)], inicio=cb,
+          controles=[sis, wc, z, w0], graficas=[[p1, p2], pb.grafica(p3, info)], inicio=cb,
           referencia="Transparencias T1-03, «Exponenciales complejas: autofunciones de los sistemas LTI» · Apuntes del Tema 1, sección 8")

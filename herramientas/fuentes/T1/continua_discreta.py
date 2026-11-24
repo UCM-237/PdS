@@ -38,5 +38,5 @@ pb.pagina_panel(__file__, "Exponencial continua frente a discreta", tema=1,
           descripcion=r"Al muestrear $\cos(2\pi f t)$ cada $T_s = 1/f_s$ se obtiene $\cos(\Omega n)$ con "
                       r"$\Omega = 2\pi f/f_s$. Como $\Omega$ y $\Omega + 2\pi$ dan las mismas muestras, frecuencias "
                       r"continuas separadas un múltiplo de $f_s$ son indistinguibles: es el origen del aliasing del Tema 2.",
-          graficas=[pb.grafica(p, pb.fila(f, fs, th), info)], inicio=cb,
+          controles=[f, fs, th], graficas=[pb.grafica(p, info)], inicio=cb,
           referencia="Transparencias T1-01, «frecuencias equivalentes» · Apuntes del Tema 1, sección 3 · Tema 2")

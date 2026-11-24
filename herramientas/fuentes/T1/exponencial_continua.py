@@ -37,5 +37,5 @@ pb.pagina_panel(__file__, "Exponencial compleja continua", tema=1,
           descripcion=r"Con $s = \sigma + j\omega$ y $C = e^{j\theta}$, la parte real de $C e^{st}$ es una "
                       r"sinusoide de frecuencia $f = \omega/2\pi$ cuya envolvente $e^{\sigma t}$ crece si $\sigma > 0$, "
                       r"decrece si $\sigma < 0$ y es constante si $\sigma = 0$.",
-          graficas=[pb.grafica(p, pb.fila(sigma, frec, fase))],
+          controles=[sigma, frec, fase], graficas=[p],
           referencia="Transparencias T1-01, «Exponencial compleja continua» · Apuntes del Tema 1, sección 3")

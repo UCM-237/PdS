@@ -66,10 +66,14 @@ la usan `fuentes/T1/convolucion_continua.py`, que sirve de ejemplo, y
 
 - Las gráficas ocupan todo el ancho, apiladas. Se crean con
   `pb.figura(..., ancho=None)` y se adaptan al mostrar u ocultar el panel.
-- Cada control va justo debajo de la gráfica a la que afecta:
+- Los controles que cambian el contenido (señales, operación, parámetros)
+  van agrupados arriba a la izquierda: `controles=[…]`. Una lista dentro de
+  `controles` es una línea propia del grupo, por ejemplo
+  `controles=[[senal, op], [a, b]]`.
+- Debajo de una gráfica van solo los controles que cambian su visualización
+  sin cambiar el contenido, como el desplazamiento de la convolución:
   `pb.grafica(p, control, …)`. El control ocupa el ancho de la zona de datos,
   así que un deslizador con el mismo rango que el eje x queda alineado con él.
-- Los controles generales (elección de señales…) van en una fila encima.
 - La ficha va en un panel a la derecha, con una pestaña por apartado
   (Teoría, Guía, Ejercicios, Recursos, Relación). El botón «Ayuda y
   ejercicios» lo muestra u oculta y la página recuerda la elección. En

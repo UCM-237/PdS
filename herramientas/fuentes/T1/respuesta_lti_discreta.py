@@ -58,5 +58,5 @@ pb.pagina_panel(__file__, "Respuesta de un sistema LTI discreto", tema=1,
                       r"vez pasado el transitorio. La respuesta en frecuencia es periódica de periodo $2\pi$ y, para un "
                       r"sistema real, basta verla en $[0, \pi]$. Sistemas: media móvil, $y[n] = a\,y[n-1] + (1 - a)\,x[n]$ "
                       r"e $y[n] = x[n] - x[n-1]$.",
-          controles=[sis], graficas=[pb.grafica([p1, p2], pb.fila(L, a)), pb.grafica(p3, W0, info)], inicio=cb,
+          controles=[sis, L, a, W0], graficas=[[p1, p2], pb.grafica(p3, info)], inicio=cb,
           referencia="Transparencias T1-03, «Exponenciales complejas: autofunciones de los sistemas LTI» · Apuntes del Tema 1, sección 8")

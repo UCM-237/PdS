@@ -88,6 +88,5 @@ pb.pagina_panel(__file__, "Propiedades de los sistemas", tema=1,
           descripcion="Elige un sistema y la propiedad que quieres comprobar. La herramienta le aplica las entradas que pide la "
                       "definición y compara las dos salidas: si no coinciden, el sistema no tiene la propiedad. Para la estabilidad, "
                       "se mira si un escalón (entrada acotada) da una salida acotada.",
-          controles=[sistema, prueba], graficas=[pb.grafica(p1, pb.fila(x1, x2), pb.fila(al, be), n0),
-                                                 pb.grafica(p2, info)], inicio=cb,
+          controles=[[sistema, prueba], [x1, x2], [al, be, n0]], graficas=[p1, pb.grafica(p2, info)], inicio=cb,
           referencia="Transparencias T1-03, propiedades de los sistemas · Apuntes del Tema 1, sección 7")

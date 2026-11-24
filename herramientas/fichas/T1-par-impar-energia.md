@@ -38,7 +38,7 @@ Las dos gráficas de abajo calculan $E(T)$ y $P(T)$ en la ventana $[-T, T]$ para
 - **a** es el decaimiento de las exponenciales y **φ** la fase de la sinusoide, $\cos(t + \varphi)$.
 - **t₀** desplaza la señal: $x(t - t_0)$. Desplazar cambia la parte par e impar, pero no la energía ni la potencia.
 - **Continuo o Discreto** usa $t$ real o $n$ entero (las sumas sustituyen a las integrales).
-- Arriba, $x$ y su reflejada $x(-t)$, con los deslizadores debajo; en medio, $x_p$ y $x_i$; abajo, $E(T)$ y $P(T)$ en escala logarítmica de $T$, y el recuadro con los valores.
+- Los controles están arriba, a la izquierda. Debajo, $x$ y su reflejada $x(-t)$; en medio, $x_p$ y $x_i$; abajo, $E(T)$ y $P(T)$ en escala logarítmica de $T$, y el recuadro con los valores.
 
 ## Ejercicios
 

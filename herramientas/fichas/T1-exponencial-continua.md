@@ -31,7 +31,7 @@ Por eso su espectro tiene dos rayas, en $\pm\omega$.
 - **σ** es la parte real de $s$, en 1/s: negativa para amortiguar y positiva para crecer.
 - **f** es la frecuencia de la oscilación, en hercios ($\omega = 2\pi f$).
 - **θ** es la fase inicial, en radianes.
-- La gráfica muestra la parte real, $e^{\sigma t}\cos(2\pi f t + \theta)$, con su envolvente $\pm e^{\sigma t}$. Los tres deslizadores están debajo.
+- La gráfica muestra la parte real, $e^{\sigma t}\cos(2\pi f t + \theta)$, con su envolvente $\pm e^{\sigma t}$. Los tres deslizadores están arriba, a la izquierda.
 
 ## Ejercicios
 

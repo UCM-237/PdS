@@ -29,7 +29,7 @@ Los sistemas lineales e invariantes (LTI) son los más importantes, porque queda
   - Invarianza: compara $T\{x_1[n - n_0]\}$ con $y_1[n - n_0]$.
   - Causalidad: aplica $x_1$ y una versión de $x_1$ cambiada solo después de $n_0$ (se le suma $x_2$ a partir de $n_0 + 1$); si las salidas difieren antes de $n_0$, el sistema mira al futuro.
   - Estabilidad: aplica un escalón y mide la salida.
-- **x₁, x₂, α, β y n₀** son los datos de la prueba. Están debajo de la gráfica de entradas, y solo aparecen los que usa la prueba elegida.
+- **x₁, x₂, α, β y n₀** son los datos de la prueba. Están arriba, debajo de los selectores, y solo aparecen los que usa la prueba elegida.
 - Arriba, las entradas; abajo, las dos salidas que se comparan. El recuadro da la diferencia máxima y las propiedades teóricas del sistema.
 
 ## Ejercicios
