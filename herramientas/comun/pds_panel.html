@@ -9,6 +9,19 @@
 <style>
 {{ css }}
 </style>
+<script>
+  // Ecuaciones en LaTeX: $…$ en línea y $$…$$ en bloque (cabecera y ficha).
+  function pdsMatematicas() {
+    for (const el of document.querySelectorAll(".pds-cabecera, .pds-panel")) {
+      renderMathInElement(el, {
+        delimiters: [{left: "$$", right: "$$", display: true},
+                     {left: "$", right: "$", display: false}],
+        throwOnError: false,
+      });
+    }
+  }
+</script>
+{{ katex }}
 {{ bokeh_css | indent(2) }}
 {{ bokeh_js | indent(2) }}
 </head>
@@ -33,6 +46,10 @@
   </main>
   {% if secciones %}
   <aside class="pds-panel" id="pds-panel" aria-label="Ayuda y ejercicios">
+    <div class="pds-separador" id="pds-separador" role="separator" aria-orientation="vertical"
+         aria-controls="pds-panel" tabindex="0" title="Arrastra para cambiar el ancho del panel">
+      <span class="pds-asa" aria-hidden="true"></span>
+    </div>
     <div class="pds-panel-cabecera">
       <p class="pds-panel-titulo">Ficha de uso</p>
       <button type="button" class="pds-cerrar" id="pds-cerrar" title="Ocultar el panel"
@@ -80,6 +97,56 @@
   document.getElementById("pds-cerrar").addEventListener("click", () => mostrar(false, true));
   document.addEventListener("keydown", e => {
     if (e.key === "Escape" && estrecha.matches) mostrar(false, false);
+  });
+
+  // Ancho del panel: se arrastra el separador (o flechas con el foco en él).
+  const separador = document.getElementById("pds-separador");
+  const MIN = 260, MAX_FRACCION = 0.7;
+  let reajuste = null;
+  function reajustar() {
+    // Bokeh recalcula el ancho de las gráficas; como mucho cada 100 ms.
+    if (reajuste) return;
+    reajuste = setTimeout(() => { reajuste = null; window.dispatchEvent(new Event("resize")); }, 100);
+  }
+  function ancho(px, recordar) {
+    const max = Math.max(MIN, Math.round(window.innerWidth * MAX_FRACCION));
+    px = Math.round(Math.min(Math.max(px, MIN), max));
+    app.style.setProperty("--pds-panel-ancho", px + "px");
+    separador.setAttribute("aria-valuenow", String(px));
+    separador.setAttribute("aria-valuemin", String(MIN));
+    separador.setAttribute("aria-valuemax", String(max));
+    if (recordar) guardar("ancho", String(px));
+    reajustar();
+  }
+  const anchoPrevio = parseInt(leer("ancho"), 10);
+  if (anchoPrevio) ancho(anchoPrevio, false);
+  separador.addEventListener("pointerdown", e => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    separador.setPointerCapture(e.pointerId);
+    app.classList.add("pds-arrastrando");
+    const mover = ev => ancho(window.innerWidth - ev.clientX, false);
+    const soltar = ev => {
+      separador.removeEventListener("pointermove", mover);
+      separador.removeEventListener("pointerup", soltar);
+      separador.removeEventListener("pointercancel", soltar);
+      app.classList.remove("pds-arrastrando");
+      ancho(window.innerWidth - ev.clientX, true);
+    };
+    separador.addEventListener("pointermove", mover);
+    separador.addEventListener("pointerup", soltar);
+    separador.addEventListener("pointercancel", soltar);
+  });
+  separador.addEventListener("dblclick", () => {
+    app.style.removeProperty("--pds-panel-ancho");
+    try { localStorage.removeItem("pds-ancho"); } catch (e) {}
+    reajustar();
+  });
+  separador.addEventListener("keydown", e => {
+    const paso = e.shiftKey ? 80 : 20;
+    const actual = document.getElementById("pds-panel").getBoundingClientRect().width;
+    if (e.key === "ArrowLeft") { ancho(actual + paso, true); e.preventDefault(); }
+    if (e.key === "ArrowRight") { ancho(actual - paso, true); e.preventDefault(); }
   });
 
   const pestanas = Array.from(document.querySelectorAll(".pds-pestana"));

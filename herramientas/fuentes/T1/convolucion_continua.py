@@ -62,9 +62,9 @@ cb = pb.js("""
 pb.conectar(cb, sx, sh, t)
 
 pb.pagina_panel(__file__, "Convolución continua", tema=1,
-                descripcion="y(t) = ∫ x(τ) h(t − τ) dτ. Para cada t se invierte h, se desplaza hasta t, "
-                            "se multiplica por x y se integra. Mueve t para ver cómo se construye y(t); "
-                            "su duración es la suma de las duraciones de x y h.",
+                descripcion=r"$y(t) = \int x(\tau)\,h(t-\tau)\,d\tau$. Para cada $t$ se invierte $h$, "
+                            r"se desplaza hasta $t$, se multiplica por $x$ y se integra. Mueve $t$ para ver "
+                            r"cómo se construye $y(t)$; su duración es la suma de las duraciones de $x$ y $h$.",
                 controles=[sx, sh],
                 graficas=[pb.grafica(p1, t), p2], inicio=cb,
                 referencia="Transparencias T1-02, «Convolución continua: ejemplo» · Apuntes del Tema 1, sección 5")

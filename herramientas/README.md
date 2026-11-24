@@ -73,7 +73,12 @@ la usan `fuentes/T1/convolucion_continua.py`, que sirve de ejemplo, y
 - La ficha va en un panel a la derecha, con una pestaña por apartado
   (Teoría, Guía, Ejercicios, Recursos, Relación). El botón «Ayuda y
   ejercicios» lo muestra u oculta y la página recuerda la elección. En
-  pantallas estrechas empieza oculto y se superpone a las gráficas.
+  pantallas estrechas empieza oculto y se superpone a las gráficas. Su ancho
+  se cambia arrastrando el separador vertical (doble clic: ancho inicial).
+- Las ecuaciones de la ficha y de la descripción se escriben en LaTeX,
+  `$…$` en línea y `$$…$$` en bloque, y las dibuja KaTeX. Con `make sin-red`
+  KaTeX (`comun/katex/`) va incrustado en la página. Los títulos y ejes de
+  las gráficas siguen en texto (Unicode).
 
 ```python
 pb.pagina_panel(__file__, titulo, tema=n, descripcion=…, controles=[sx, sh],

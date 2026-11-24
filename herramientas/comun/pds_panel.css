@@ -87,6 +87,47 @@ body {
 }
 .pds-sin-panel .pds-panel { visibility: hidden; border-left: 0; }
 
+/* Separador vertical: se arrastra para cambiar el ancho del panel */
+.pds-separador {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -5px;
+  width: 10px;
+  cursor: col-resize;
+  z-index: 2;
+  touch-action: none;
+}
+.pds-separador::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  width: 2px;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+.pds-separador:hover::after, .pds-separador:focus-visible::after,
+.pds-arrastrando .pds-separador::after { background: var(--pds-azul); }
+.pds-separador:focus-visible { outline: none; }
+.pds-separador .pds-asa {
+  position: absolute;
+  top: 50%;
+  left: 1px;
+  width: 8px;
+  height: 36px;
+  margin-top: -18px;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid #B8BAC6;
+}
+.pds-separador:hover .pds-asa, .pds-arrastrando .pds-separador .pds-asa { border-color: var(--pds-azul); }
+/* Mientras se arrastra: sin animación ni selección de texto, y las gráficas
+   no capturan el ratón */
+.pds-arrastrando { transition: none; cursor: col-resize; user-select: none; }
+.pds-arrastrando .pds-principal { pointer-events: none; }
+
 .pds-panel-cabecera {
   display: flex;
   align-items: center;
@@ -155,6 +196,11 @@ body {
 }
 .pds-ficha summary { cursor: pointer; color: var(--pds-verde); font-weight: 600; }
 .pds-ficha a { color: var(--pds-azul); }
+/* Ecuaciones (KaTeX): las de bloque, centradas y con desplazamiento propio
+   si no caben */
+.katex { font-size: 1.08em; }
+.katex-display { margin: 10px 0; overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+.pds-ficha blockquote .katex-display { margin: 4px 0; }
 .pds-ficha code { font-size: 12.5px; background: #fff; padding: 1px 4px; border-radius: 3px; }
 .pds-ficha table { border-collapse: collapse; margin: 8px 0; font-size: 13.5px; }
 .pds-ficha th, .pds-ficha td {
@@ -178,6 +224,7 @@ body {
     z-index: 10;
     box-shadow: -6px 0 24px rgba(0, 0, 0, 0.15);
   }
+  .pds-separador { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

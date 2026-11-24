@@ -768,10 +768,22 @@ def _ficha(tema: int, nombre: str) -> str:
     if not fichero.exists():
         return ""
     import markdown
-    # Los exponentes se escriben e^{…} en el Markdown y se muestran como superíndices
-    texto = re.sub(r"\^\{([^{}]*)\}", r"<sup>\1</sup>", fichero.read_text(encoding="utf-8"))
+    # Las ecuaciones en LaTeX ($…$ y $$…$$) se apartan antes de pasar el
+    # Markdown, para que no toque sus _ y *, y se reponen después; en la
+    # página las dibuja KaTeX.
+    formulas = []
+
+    def apartar(m):
+        formulas.append(html.escape(m.group(0), quote=False))
+        return f"PDSFORMULA{len(formulas) - 1}Z"
+
+    texto = re.sub(r"\$\$.+?\$\$|\$[^$\n]+?\$", apartar, fichero.read_text(encoding="utf-8"),
+                   flags=re.S)
+    # Fuera de las ecuaciones, e^{…} y x_{…} se muestran como superíndice y subíndice
+    texto = re.sub(r"\^\{([^{}]*)\}", r"<sup>\1</sup>", texto)
     texto = re.sub(r"_\{([^{}]*)\}", r"<sub>\1</sub>", texto)
-    return markdown.markdown(texto, extensions=["tables", "md_in_html"])
+    salida = markdown.markdown(texto, extensions=["tables", "md_in_html"])
+    return re.sub(r"PDSFORMULA(\d+)Z", lambda m: formulas[int(m.group(1))], salida)
 
 
 def pagina(fuente: str, titulo: str, tema: int, descripcion: str, controles,
@@ -861,8 +873,35 @@ def _secciones(ficha_html: str) -> list[dict]:
         secciones.append({"titulo": titulo, "html": f"<h2>{titulo}</h2>{cuerpo}"})
     for i, sec in enumerate(secciones):
         sec["etiqueta"] = PESTANAS.get(sec["titulo"], sec["titulo"])
-        sec["id"] = re.sub(r"[^a-z0-9]+", "-", sec["etiqueta"].lower()) or f"s{i}"
+        import unicodedata
+        llano = unicodedata.normalize("NFKD", sec["etiqueta"].lower()).encode("ascii", "ignore").decode()
+        sec["id"] = re.sub(r"[^a-z0-9]+", "-", llano).strip("-") or f"s{i}"
     return secciones
+
+
+KATEX = "0.16.11"  # versión de comun/katex/ (la misma que se carga de la CDN)
+
+
+def _katex() -> str:
+    """Etiquetas de KaTeX: desde la CDN o, con PDS_INLINE, incrustado en la
+    página (con sus fuentes), para que las ecuaciones se vean sin red."""
+    if RECURSOS is not INLINE:
+        cdn = f"https://cdn.jsdelivr.net/npm/katex@{KATEX}/dist"
+        return (f'<link rel="stylesheet" href="{cdn}/katex.min.css">\n'
+                f'<script defer src="{cdn}/katex.min.js"></script>\n'
+                f'<script defer src="{cdn}/contrib/auto-render.min.js" onload="pdsMatematicas()"></script>')
+    import base64
+    carpeta = COMUN / "katex"
+
+    def fuente(m):
+        datos = base64.b64encode((carpeta / "fonts" / f"{m.group(1)}.woff2").read_bytes()).decode()
+        return f'src:url(data:font/woff2;base64,{datos}) format("woff2")'
+
+    css = re.sub(r'src:url\(fonts/([\w-]+)\.woff2\) format\("woff2"\)[^;}]*', fuente,
+                 (carpeta / "katex.min.css").read_text(encoding="utf-8"))
+    js = "\n".join((carpeta / n).read_text(encoding="utf-8") for n in ("katex.min.js", "auto-render.min.js"))
+    return (f"<style>{css}</style>\n<script>{js}</script>\n"
+            '<script>document.addEventListener("DOMContentLoaded", pdsMatematicas);</script>')
 
 
 def _css_panel() -> str:
@@ -900,7 +939,7 @@ def pagina_panel(fuente: str, titulo: str, tema: int, descripcion: str, graficas
     destino = SALIDA / f"T{tema}-{nombre}.html"
     destino.write_text(file_html(doc, RECURSOS, title=f"PdS · {titulo}", template=plantilla,
                                  template_variables={
-                                     "css": _css_panel(), "tema": tema,
+                                     "css": _css_panel(), "katex": _katex(), "tema": tema,
                                      "nombre_tema": html.escape(TEMAS[tema]),
                                      "titulo": html.escape(titulo), "descripcion": descripcion,
                                      "referencia": html.escape(referencia),
