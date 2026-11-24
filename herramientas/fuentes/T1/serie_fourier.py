@@ -11,21 +11,22 @@ tiempo = ColumnDataSource(dict(t=[], x=[], s=[]))
 coef = ColumnDataSource(dict(k=[], c=[], usado=[]))
 usados = ColumnDataSource(dict(k=[], c=[]))
 
-p1 = pb.figura("x(t) y suma parcial con |k| ≤ K", "t (periodos)", "", ancho=620, alto=230)
+p1 = pb.figura("x(t) y suma parcial con |k| ≤ K", "t (periodos)", "", ancho=None, alto=230)
 p1.line("t", "x", source=tiempo, color=pb.GRIS, line_width=1.5, legend_label="x(t)")
 p1.line("t", "s", source=tiempo, color=pb.AZUL, line_width=2, legend_label="suma parcial")
-pb.leyenda(p1, "right")
-p2 = pb.figura("|c_k| (los que entran en la suma, en azul)", "k (armónico; frecuencia k f₀)", "|c_k|", ancho=620, alto=170)
+pb.leyenda(p1, "above")
+p2 = pb.figura("|c_k| (los que entran en la suma, en azul)", "k (armónico; frecuencia k f₀)", "|c_k|", ancho=None, alto=170)
 pb.tallos(p2, "k", "c", coef, color=pb.GRIS_CLARO)
 pb.tallos(p2, "k", "c", usados, color=pb.AZUL)
 
 sx = pb.selector("Señal periódica", SENALES)
 K = pb.deslizador("K (armónicos)", 0, 60, 5, 1)
 d = pb.deslizador("Ciclo de trabajo del tren de pulsos", 0.05, 0.95, 0.25, 0.01)
-info = Div(text="", width=240)
+info = pb.info()
 
 cb = pb.js("""
     // Un periodo T = 1 muestreado con M puntos; c_k por la DFT (aproximación de la integral).
+    d.visible = sx.value === "Tren de pulsos";
     const M = 4096, u = rango(0, 1, M + 1).slice(0, M), D = d.value;
     function forma(v) {
         v = mod(v, 1);
@@ -55,10 +56,10 @@ cb = pb.js("""
 """, tiempo=tiempo, coef=coef, usados=usados, sx=sx, K=K, d=d, info=info)
 pb.conectar(cb, sx, K, d)
 
-pb.pagina(__file__, "Serie de Fourier", tema=1,
-          descripcion="Una señal periódica es una suma de exponenciales complejas a múltiplos de f₀ = 1/T, "
-                      "con coeficientes c<sub>k</sub>. Al truncar la suma, la potencia que falta es la de los "
-                      "coeficientes omitidos (Parseval). En las discontinuidades la suma parcial se pasa "
-                      "de la señal un 9 % del salto por muchos armónicos que se sumen: es el fenómeno de Gibbs.",
-          controles=[sx, K, d, info], graficas=[p1, p2], inicio=cb,
+pb.pagina_panel(__file__, "Serie de Fourier", tema=1,
+          descripcion=r"Una señal periódica es una suma de exponenciales complejas a múltiplos de $f_0 = 1/T$, "
+                      r"$x(t) = \sum_k c_k\, e^{j2\pi k f_0 t}$. Al truncar la suma, la potencia que falta es la de los "
+                      r"coeficientes omitidos (Parseval). En las discontinuidades la suma parcial se pasa de la señal un "
+                      r"9 % del salto por muchos armónicos que se sumen: es el fenómeno de Gibbs.",
+          controles=[sx], graficas=[pb.grafica(p1, d, info), pb.grafica(p2, K)], inicio=cb,
           referencia="Transparencias T1-02, «Serie de Fourier de señales continuas periódicas» · Apuntes del Tema 1, sección 6")

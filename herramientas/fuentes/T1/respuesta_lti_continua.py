@@ -10,14 +10,14 @@ SISTEMAS = ["Paso bajo de primer orden", "Paso alto de primer orden", "Segundo o
 frec = ColumnDataSource(dict(w=[], m=[], f=[]))
 tiempo = ColumnDataSource(dict(t=[], x=[], y=[]))
 
-p1 = pb.figura("|H(jω)|", "ω (rad/s)", "|H|", ancho=300, alto=180, x_axis_type="log")
+p1 = pb.figura("|H(jω)|", "ω (rad/s)", "|H|", ancho=None, alto=180, x_axis_type="log")
 p1.line("w", "m", source=frec, color=pb.AZUL, line_width=2)
-p2 = pb.figura("∠H(jω)", "ω (rad/s)", "fase (rad)", ancho=300, alto=180, x_axis_type="log", x_range=p1.x_range)
+p2 = pb.figura("∠H(jω)", "ω (rad/s)", "fase (rad)", ancho=None, alto=180, x_axis_type="log", x_range=p1.x_range)
 p2.line("w", "f", source=frec, color=pb.AZUL, line_width=2)
 m1 = Span(location=1, dimension="height", line_color=pb.NARANJA, line_dash="dashed")
 m2 = Span(location=1, dimension="height", line_color=pb.NARANJA, line_dash="dashed")
 p1.add_layout(m1); p2.add_layout(m2)
-p3 = pb.figura("Entrada x(t) = cos(ω₀t) y salida en régimen permanente", "t (s)", "", ancho=680, alto=200)
+p3 = pb.figura("Entrada x(t) = cos(ω₀t) y salida en régimen permanente", "t (s)", "", ancho=None, alto=200)
 p3.line("t", "x", source=tiempo, color=pb.GRIS, line_width=1.5, legend_label="x(t)")
 p3.line("t", "y", source=tiempo, color=pb.ROJO, line_width=2, legend_label="y(t) = |H| cos(ω₀t + ∠H)")
 pb.leyenda(p3, "below")
@@ -26,11 +26,12 @@ sis = pb.selector("Sistema", SISTEMAS)
 w0 = pb.deslizador("log₁₀ ω₀ (ω₀ en rad/s)", -1, 2, 0, 0.02)
 wc = pb.deslizador("ωc o ωn (rad/s)", 0.5, 20, 2, 0.1)
 z = pb.deslizador("ζ (solo segundo orden)", 0.05, 2, 0.3, 0.01)
-info = Div(text="", width=240)
+info = pb.info()
 
 cb = pb.js("""
     function H(w) {   // devuelve [re, im]
         const c = wc.value, Z = z.value, s = sis.value;
+        z.visible = s.startsWith("Segundo");
         if (s.startsWith("Paso bajo")) { const d = 1 + (w / c) ** 2; return [1 / d, -(w / c) / d]; }
         if (s.startsWith("Paso alto")) { const d = 1 + (w / c) ** 2; return [(w / c) ** 2 / d, (w / c) / d]; }
         const a = c * c - w * w, b = 2 * Z * c * w, d = a * a + b * b; return [c * c * a / d, -c * c * b / d];
@@ -49,10 +50,10 @@ cb = pb.js("""
 """, frec=frec, tiempo=tiempo, m1=m1, m2=m2, sis=sis, w0=w0, wc=wc, z=z, info=info)
 pb.conectar(cb, sis, w0, wc, z)
 
-pb.pagina(__file__, "Respuesta de un sistema LTI continuo", tema=1,
-          descripcion="Las exponenciales complejas son autofunciones de los sistemas LTI: la entrada "
-                      "cos(ω₀t) sale como |H(jω₀)| cos(ω₀t + ∠H(jω₀)). La respuesta en frecuencia "
-                      "dice cuánto se escala y se desfasa cada frecuencia. Sistemas: 1/(1 + s/ωc), (s/ωc)/(1 + s/ωc) "
-                      "y ωn²/(s² + 2ζωn s + ωn²).",
-          controles=[sis, w0, wc, z, info], graficas=[[p1, p2], p3], inicio=cb,
+pb.pagina_panel(__file__, "Respuesta de un sistema LTI continuo", tema=1,
+          descripcion=r"Las exponenciales complejas son autofunciones de los sistemas LTI: la entrada $\cos(\omega_0 t)$ "
+                      r"sale como $|H(j\omega_0)|\cos(\omega_0 t + \angle H(j\omega_0))$. La respuesta en frecuencia dice "
+                      r"cuánto se escala y se desfasa cada frecuencia. Sistemas: $1/(1 + s/\omega_c)$, "
+                      r"$(s/\omega_c)/(1 + s/\omega_c)$ y $\omega_n^2/(s^2 + 2\zeta\omega_n s + \omega_n^2)$.",
+          controles=[sis], graficas=[pb.grafica([p1, p2], pb.fila(wc, z)), pb.grafica(p3, w0, info)], inicio=cb,
           referencia="Transparencias T1-03, «Exponenciales complejas: autofunciones de los sistemas LTI» · Apuntes del Tema 1, sección 8")

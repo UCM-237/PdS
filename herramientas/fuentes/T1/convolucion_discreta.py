@@ -34,7 +34,7 @@ for q in (p1, p2):
 sx = pb.selector("Señal x[n]", SECUENCIAS, SECUENCIAS[0])
 sh = pb.selector("Respuesta al impulso h[n]", SECUENCIAS, SECUENCIAS[3])
 n = pb.deslizador("Desplazamiento n", K0, K1, 2, 1)
-info = Div(text="")
+info = pb.info()
 
 cb = pb.js("""
     function forma(nombre, m) {
@@ -58,7 +58,7 @@ cb = pb.js("""
     marca.location = N;
     const terminos = p.map((v, i) => [v, i]).filter(a => Math.abs(a[0]) > 1e-12)
         .map(a => `${x[a[1]].toFixed(2)}·${h[a[1]].toFixed(2)}`);
-    info.text = `<p style="margin:2px 0 8px;font-size:14px">y[${N}] = ${terminos.length ? terminos.join(" + ") : "0"} = <b>${y[j].toFixed(3)}</b></p>`;
+    info.text = `<p>y[${N}] = ${terminos.length ? terminos.join(" + ") : "0"} = <b>${y[j].toFixed(3)}</b></p>`;
 """, sen=sen, sal=sal, act=act, marca=marca, sx=sx, sh=sh, n=n, info=info,
    punto=punto, K0=K0, K1=K1)
 pb.conectar(cb, sx, sh, n)

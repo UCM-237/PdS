@@ -10,14 +10,14 @@ SISTEMAS = ["Media móvil de L muestras", "Primer orden (a)", "Diferencia"]
 frec = ColumnDataSource(dict(W=[], m=[], f=[]))
 ent = ColumnDataSource(dict(n=[], x=[], y=[]))
 
-p1 = pb.figura("|H(e^jΩ)|", "Ω (rad/muestra)", "|H|", ancho=300, alto=180, x_range=(0, 3.1416))
+p1 = pb.figura("|H(e^jΩ)|", "Ω (rad/muestra)", "|H|", ancho=None, alto=180, x_range=(0, 3.1416))
 p1.line("W", "m", source=frec, color=pb.AZUL, line_width=2)
-p2 = pb.figura("∠H(e^jΩ)", "Ω (rad/muestra)", "fase (rad)", ancho=300, alto=180, x_range=p1.x_range)
+p2 = pb.figura("∠H(e^jΩ)", "Ω (rad/muestra)", "fase (rad)", ancho=None, alto=180, x_range=p1.x_range)
 p2.line("W", "f", source=frec, color=pb.AZUL, line_width=2)
 m1 = Span(location=0.5, dimension="height", line_color=pb.NARANJA, line_dash="dashed")
 m2 = Span(location=0.5, dimension="height", line_color=pb.NARANJA, line_dash="dashed")
 p1.add_layout(m1); p2.add_layout(m2)
-p3 = pb.figura("x[n] = cos(Ω₀n) y salida y[n]", "n", "", ancho=680, alto=200)
+p3 = pb.figura("x[n] = cos(Ω₀n) y salida y[n]", "n", "", ancho=None, alto=200)
 pb.tallos(p3, "n", "x", ent, color=pb.GRIS_CLARO, legend_label="x[n]")
 pb.tallos(p3, "n", "y", ent, color=pb.ROJO, legend_label="y[n]")
 pb.leyenda(p3, "below")
@@ -26,9 +26,10 @@ sis = pb.selector("Sistema", SISTEMAS)
 W0 = pb.deslizador("Ω₀ (rad/muestra)", 0, 3.14, 0.5, 0.01)
 L = pb.deslizador("L (media móvil)", 2, 16, 4, 1)
 a = pb.deslizador("a (primer orden)", -0.95, 0.95, 0.8, 0.01)
-info = Div(text="", width=240)
+info = pb.info()
 
 cb = pb.js("""
+    L.visible = sis.value.startsWith("Media"); a.visible = sis.value.startsWith("Primer");
     function H(W) {
         const s = sis.value;
         if (s.startsWith("Media")) { let r = 0, i = 0; for (let k = 0; k < L.value; k++) { r += Math.cos(W * k); i -= Math.sin(W * k); } return [r / L.value, i / L.value]; }
@@ -52,10 +53,10 @@ cb = pb.js("""
 """, frec=frec, ent=ent, m1=m1, m2=m2, sis=sis, W0=W0, L=L, a=a, info=info)
 pb.conectar(cb, sis, W0, L, a)
 
-pb.pagina(__file__, "Respuesta de un sistema LTI discreto", tema=1,
-          descripcion="En tiempo discreto, cos(Ω₀n) sale como |H(e<sup>jΩ₀</sup>)| cos(Ω₀n + ∠H) una vez "
-                      "pasado el transitorio. La respuesta en frecuencia es periódica de periodo 2π y, "
-                      "para un sistema real, basta verla en [0, π]. Sistemas: media móvil, y[n] = a y[n−1] + (1 − a) x[n] "
-                      "e y[n] = x[n] − x[n−1].",
-          controles=[sis, W0, L, a, info], graficas=[[p1, p2], p3], inicio=cb,
+pb.pagina_panel(__file__, "Respuesta de un sistema LTI discreto", tema=1,
+          descripcion=r"En tiempo discreto, $\cos(\Omega_0 n)$ sale como $|H(e^{j\Omega_0})|\cos(\Omega_0 n + \angle H)$ una "
+                      r"vez pasado el transitorio. La respuesta en frecuencia es periódica de periodo $2\pi$ y, para un "
+                      r"sistema real, basta verla en $[0, \pi]$. Sistemas: media móvil, $y[n] = a\,y[n-1] + (1 - a)\,x[n]$ "
+                      r"e $y[n] = x[n] - x[n-1]$.",
+          controles=[sis], graficas=[pb.grafica([p1, p2], pb.fila(L, a)), pb.grafica(p3, W0, info)], inicio=cb,
           referencia="Transparencias T1-03, «Exponenciales complejas: autofunciones de los sistemas LTI» · Apuntes del Tema 1, sección 8")

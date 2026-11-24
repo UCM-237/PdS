@@ -2,19 +2,19 @@
 
 ### Las transformadas de Laplace y Z
 
-La transformada de Fourier no existe para señales que crecen, como e^{t}u(t). Las transformadas de Laplace y Z la generalizan multiplicando la señal por una exponencial real que la «amortigua»:
+La transformada de Fourier no existe para señales que crecen, como $e^{t}u(t)$. Las transformadas de Laplace y Z la generalizan multiplicando la señal por una exponencial real que la «amortigua»:
 
-> X(s) = ∫ x(t) e^{−st} dt, con s = σ + jω;  X(z) = Σ_n x[n] z^{−n}, con z = r e^{jΩ}.
+> $$X(s) = \int_{-\infty}^{\infty} x(t)\, e^{-st}\, dt, \quad s = \sigma + j\omega; \qquad X(z) = \sum_{n=-\infty}^{\infty} x[n]\, z^{-n}, \quad z = r e^{j\Omega}.$$
 
-Con σ = 0 (s = jω) la de Laplace se reduce a la de Fourier; con r = 1 (z = e^{jΩ}), la Z se reduce a la DTFT.
+Con $\sigma = 0$ ($s = j\omega$) la de Laplace se reduce a la de Fourier; con $r = 1$ ($z = e^{j\Omega}$), la Z se reduce a la DTFT.
 
 ### La región de convergencia
 
-La integral o la suma solo convergen para algunos valores de s o z. Ese conjunto es la **región de convergencia** (ROC) y forma parte de la transformada: la misma expresión algebraica puede corresponder a señales distintas según la ROC. El ejemplo básico:
+La integral o la suma solo convergen para algunos valores de $s$ o $z$. Ese conjunto es la **región de convergencia** (ROC) y forma parte de la transformada: la misma expresión algebraica puede corresponder a señales distintas según la ROC. El ejemplo básico:
 
-> aⁿu[n] → 1/(1 − a z^{−1}), con ROC |z| > |a|;  −aⁿu[−n − 1] → 1/(1 − a z^{−1}), con ROC |z| < |a|.
+> $$a^n u[n] \;\longleftrightarrow\; \frac{1}{1 - a z^{-1}},\ |z| > |a|; \qquad -a^n u[-n-1] \;\longleftrightarrow\; \frac{1}{1 - a z^{-1}},\ |z| < |a|.$$
 
-En Laplace, e^{at}u(t) y −e^{at}u(−t) tienen la misma transformada 1/(s − a), con ROC Re s > a y Re s < a.
+En Laplace, $e^{at}u(t)$ y $-e^{at}u(-t)$ tienen la misma transformada $\dfrac{1}{s - a}$, con ROC $\mathrm{Re}\,s > a$ y $\mathrm{Re}\,s < a$.
 
 ### La forma de la ROC dice cómo es la señal
 
@@ -26,46 +26,46 @@ En Laplace, e^{at}u(t) y −e^{at}u(−t) tienen la misma transformada 1/(s − 
 
 ### Estabilidad
 
-Un sistema LTI es BIBO estable si y solo si su respuesta al impulso es absolutamente integrable (o sumable), y eso equivale a que la ROC de H contenga el **eje jω** (Laplace) o la **circunferencia unidad** (Z). Por eso un sistema causal y estable tiene todos los polos en el semiplano izquierdo, o dentro de la circunferencia unidad. Un sistema estable con un polo fuera de ellos existe, pero no es causal.
+Un sistema LTI es BIBO estable si y solo si su respuesta al impulso es absolutamente integrable (o sumable), y eso equivale a que la ROC de $H$ contenga el **eje $j\omega$** (Laplace) o la **circunferencia unidad** (Z). Por eso un sistema causal y estable tiene todos los polos en el semiplano izquierdo, o dentro de la circunferencia unidad. Un sistema estable con un polo fuera de ellos existe, pero no es causal.
 
 ## Guía de uso
 
 - **Transformada Z o Laplace** elige el tipo de transformada.
-- **p₁ y p₂** son dos polos reales. La transformada es X = 1/(1 − p₁z^{−1}) + 1/(1 − p₂z^{−1}) en Z o 1/(s − p₁) + 1/(s − p₂) en Laplace.
+- **p₁ y p₂** son dos polos reales; sus deslizadores están debajo del plano. La transformada es $X = \dfrac{1}{1 - p_1 z^{-1}} + \dfrac{1}{1 - p_2 z^{-1}}$ en Z o $\dfrac{1}{s - p_1} + \dfrac{1}{s - p_2}$ en Laplace.
 - **Región de convergencia** elige una de las tres regiones posibles con dos polos.
-- A la izquierda, los polos y la ROC sombreada, con la circunferencia unidad o el eje jω. A la derecha, la señal que corresponde a esa ROC.
-- El recuadro escribe X, la ROC, la señal y si el sistema es estable.
+- A la izquierda, los polos y la ROC sombreada, con la circunferencia unidad o el eje $j\omega$. A la derecha, la señal que corresponde a esa ROC.
+- El recuadro escribe $X$, la ROC, la señal y si el sistema es estable.
 
 ## Ejercicios
 
-**1. Una expresión, tres señales.** En Z, con p₁ = 0,5 y p₂ = −1,4, recorre las tres ROC. Escribe la señal de cada una y di cuál es estable.
+**1. Una expresión, tres señales.** En Z, con $p_1 = 0{,}5$ y $p_2 = -1{,}4$, recorre las tres ROC. Escribe la señal de cada una y di cuál es estable.
 
 <details><summary>Solución</summary>
-|z| > 1,4: x = 0,5ⁿu[n] + (−1,4)ⁿu[n], causal e inestable. 0,5 < |z| < 1,4: x = 0,5ⁿu[n] − (−1,4)ⁿu[−n−1], bilateral y estable (la ROC contiene |z| = 1). |z| < 0,5: x = −0,5ⁿu[−n−1] − (−1,4)ⁿu[−n−1], anticausal e inestable.
+$|z| > 1{,}4$: $x = 0{,}5^n u[n] + (-1{,}4)^n u[n]$, causal e inestable. $0{,}5 < |z| < 1{,}4$: $x = 0{,}5^n u[n] - (-1{,}4)^n u[-n-1]$, bilateral y estable (la ROC contiene $|z| = 1$). $|z| < 0{,}5$: $x = -0{,}5^n u[-n-1] - (-1{,}4)^n u[-n-1]$, anticausal e inestable.
 </details>
 
-**2. Causal y estable.** En Z, ¿qué condición deben cumplir p₁ y p₂ para que la señal causal sea estable? Compruébalo moviendo los polos.
+**2. Causal y estable.** En Z, ¿qué condición deben cumplir $p_1$ y $p_2$ para que la señal causal sea estable? Compruébalo moviendo los polos.
 
 <details><summary>Solución</summary>
-La ROC causal es |z| > max(|p₁|, |p₂|). Contiene la circunferencia unidad si los dos polos tienen módulo menor que 1. Basta un polo fuera para que la secuencia crezca.
+La ROC causal es $|z| > \max(|p_1|, |p_2|)$. Contiene la circunferencia unidad si los dos polos tienen módulo menor que 1. Basta un polo fuera para que la secuencia crezca.
 </details>
 
-**3. Laplace.** Con p₁ = −1 y p₂ = 0,5, ¿qué ROC da un sistema estable? ¿Es causal?
+**3. Laplace.** Con $p_1 = -1$ y $p_2 = 0{,}5$, ¿qué ROC da un sistema estable? ¿Es causal?
 
 <details><summary>Solución</summary>
-La franja −1 < Re s < 0,5 contiene el eje jω: es estable, y la señal es e^{−t}u(t) − e^{0,5t}u(−t), bilateral, no causal. La ROC causal, Re s > 0,5, no contiene el eje jω y es inestable.
+La franja $-1 < \mathrm{Re}\,s < 0{,}5$ contiene el eje $j\omega$: es estable, y la señal es $e^{-t}u(t) - e^{0{,}5t}u(-t)$, bilateral, no causal. La ROC causal, $\mathrm{Re}\,s > 0{,}5$, no contiene el eje $j\omega$ y es inestable.
 </details>
 
-**4. Polos con el mismo módulo.** En Z, pon p₁ = 0,8 y p₂ = −0,8 y elige «Entre los dos polos». ¿Qué ocurre?
+**4. Polos con el mismo módulo.** En Z, pon $p_1 = 0{,}8$ y $p_2 = -0{,}8$ y elige «Entre los dos polos». ¿Qué ocurre?
 
 <details><summary>Solución</summary>
-Los dos polos están en la misma circunferencia |z| = 0,8, así que no hay anillo entre ellos: esa ROC no existe. Solo son posibles |z| > 0,8 (causal, estable) y |z| < 0,8 (anticausal, inestable).
+Los dos polos están en la misma circunferencia $|z| = 0{,}8$, así que no hay anillo entre ellos: esa ROC no existe. Solo son posibles $|z| > 0{,}8$ (causal, estable) y $|z| < 0{,}8$ (anticausal, inestable).
 </details>
 
-**5. Ejercicios 11 y 12 de la hoja.** La hoja estudia la estabilidad de sistemas causales. Con H(z) = z/(z − 1,5) = 1/(1 − 1,5z^{−1}), pon p₁ = 1,5 y p₂ = 0 (el segundo término vale 1 y solo añade δ[n]). ¿Es estable el sistema causal? ¿Hay alguna ROC que dé un sistema estable?
+**5. Ejercicios 11 y 12 de la hoja.** La hoja estudia la estabilidad de sistemas causales. Con $H(z) = \dfrac{z}{z - 1{,}5} = \dfrac{1}{1 - 1{,}5z^{-1}}$, pon $p_1 = 1{,}5$ y $p_2 = 0$ (el segundo término vale 1 y solo añade $\delta[n]$). ¿Es estable el sistema causal? ¿Hay alguna ROC que dé un sistema estable?
 
 <details><summary>Solución</summary>
-El causal tiene ROC |z| > 1,5, que no contiene |z| = 1: inestable, con h[n] = 1,5ⁿu[n] (más el δ[n] del segundo término). La ROC 0 < |z| < 1,5 sí contiene la circunferencia unidad y da un sistema estable, con −1,5ⁿu[−n−1] en lugar de 1,5ⁿu[n], pero no causal.
+El causal tiene ROC $|z| > 1{,}5$, que no contiene $|z| = 1$: inestable, con $h[n] = 1{,}5^n u[n]$ (más el $\delta[n]$ del segundo término). La ROC $0 < |z| < 1{,}5$ sí contiene la circunferencia unidad y da un sistema estable, con $-1{,}5^n u[-n-1]$ en lugar de $1{,}5^n u[n]$, pero no causal.
 </details>
 
 ## Para profundizar
@@ -78,7 +78,7 @@ El causal tiene ROC |z| > 1,5, que no contiene |z| = 1: inestable, con h[n] = 1,
 
 ## Relación con otros conceptos
 
-- **Exponenciales.** Cada polo p aporta una exponencial e^{pt} o pⁿ. Herramientas: [Exponencial compleja continua](T1-exponencial-continua.html) y [Exponencial compleja discreta](T1-exponencial-discreta.html).
+- **Exponenciales.** Cada polo $p$ aporta una exponencial $e^{pt}$ o $p^n$. Herramientas: [Exponencial compleja continua](T1-exponencial-continua.html) y [Exponencial compleja discreta](T1-exponencial-discreta.html).
 - **Estabilidad y causalidad.** Herramienta: [Propiedades de los sistemas](T1-propiedades-sistemas.html).
-- **Polos y ceros (Tema 4).** La respuesta en frecuencia se lee sobre el eje jω o la circunferencia unidad, que deben estar en la ROC. Herramientas: [Polos y ceros en el plano s](T4-polos-ceros-s.html) y [Polos y ceros en el plano z](T4-polos-ceros-z.html).
+- **Polos y ceros (Tema 4).** La respuesta en frecuencia se lee sobre el eje $j\omega$ o la circunferencia unidad, que deben estar en la ROC. Herramientas: [Polos y ceros en el plano s](T4-polos-ceros-s.html) y [Polos y ceros en el plano z](T4-polos-ceros-z.html).
 - **Fase cero (Tema 4).** Los filtros de fase cero son no causales: su ROC es un anillo con polos dentro y fuera. Herramienta: [Filtrado de fase cero](T4-fase-cero.html).

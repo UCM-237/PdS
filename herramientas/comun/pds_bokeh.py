@@ -849,13 +849,40 @@ PESTANAS = {
 }
 
 
+def fila(*controles):
+    """Controles en una fila que se reparte el ancho (y salta de línea si no
+    caben). Se usa dentro de ``grafica()`` para varios deslizadores."""
+    for i, c in enumerate(controles):
+        c.sizing_mode = "stretch_width"
+        c.width = None
+        c.min_width = 180
+        c.margin = (0, 0 if i == len(controles) - 1 else 20, 4, 0)
+    return row(*controles, sizing_mode="stretch_width", styles={"flex-wrap": "wrap"})
+
+
+def info(texto: str = "") -> Div:
+    """Recuadro de texto que actualiza el CustomJS (resultados, avisos…)."""
+    return Div(text=texto, stylesheets=[InlineStyleSheet(css=_CSS_INFO)], sizing_mode="stretch_width",
+               margin=(4, BORDE_DER, 6, BORDE_IZQ))
+
+
+_CSS_INFO = f"""
+:host {{ font-family: {FUENTE}; font-size: 14px; line-height: 1.45; color: #222; }}
+p {{ margin: 2px 0 6px; }}
+"""
+
+
 def grafica(p, *controles):
     """Una gráfica con los controles que la afectan justo debajo.
 
     Los controles ocupan el ancho de la zona de datos de ``p`` (que debe
     crearse con ``figura(..., ancho=None)``), de modo que un deslizador con el
-    mismo rango que el eje x queda alineado con él.
+    mismo rango que el eje x queda alineado con él. Varios controles en la
+    misma línea: ``grafica(p, fila(a, b))``. También admite un ``info()``.
+    ``p`` puede ser una lista de figuras, que van en fila.
     """
+    if isinstance(p, (list, tuple)):
+        p = row(*p, sizing_mode="stretch_width")
     for c in controles:
         c.sizing_mode = "stretch_width"
         c.width = None
@@ -918,7 +945,8 @@ def pagina_panel(fuente: str, titulo: str, tema: int, descripcion: str, graficas
     ``controles`` son los controles generales (por ejemplo, la elección de
     señales): van en una fila encima de las gráficas. ``graficas`` es una
     lista de figuras creadas con ``figura(..., ancho=None)`` o de bloques
-    ``grafica(p, control, …)``, que se apilan a todo el ancho. La ficha
+    ``grafica(p, control, …)``, que se apilan a todo el ancho; una lista
+    dentro de ``graficas`` es una fila de gráficas. La ficha
     (``fichas/Tn-nombre.md``) va en el panel de la derecha, una pestaña por
     apartado. ``inicio`` es como en ``pagina()``.
     """
@@ -928,7 +956,9 @@ def pagina_panel(fuente: str, titulo: str, tema: int, descripcion: str, graficas
         for c in controles:
             c.margin = (0, 16, 8, 0)
         filas.append(row(*controles, margin=(0, 0, 4, BORDE_IZQ), styles={"flex-wrap": "wrap"}))
-    filas += list(graficas)
+    # Una lista dentro de ``graficas`` es una fila de gráficas que se reparten el ancho
+    filas += [row(*g, sizing_mode="stretch_width") if isinstance(g, (list, tuple)) else g
+              for g in graficas]
     doc = Document()
     doc.add_root(column(*filas, sizing_mode="stretch_width"))
     if inicio is not None:
