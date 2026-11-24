@@ -43,7 +43,7 @@ def indice() -> None:
         partes.append("<ul>")
         for e in propias:
             partes.append(f'<li><a href="{html.escape(e["archivo"])}">{html.escape(e["titulo"])}</a>'
-                          f'<span>{e["descripcion"]}</span></li>')
+                          f'<div class="desc">{e["descripcion"]}</div></li>')
         partes.append("</ul>")
     (pb.SALIDA / "index.html").write_text(f"""<!DOCTYPE html>
 <html lang="es">
@@ -66,7 +66,7 @@ def indice() -> None:
   li {{ margin: 10px 0; }}
   li a {{ color: {pb.AZUL}; font-weight: 600; text-decoration: none; }}
   li a:hover {{ text-decoration: underline; }}
-  li span {{ display: block; color: {pb.GRIS}; font-size: 14px; }}
+  li .desc {{ color: {pb.GRIS}; font-size: 14px; }}
   .vacio {{ color: {pb.GRIS}; font-style: italic; }}
 </style>
 </head>
