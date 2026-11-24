@@ -61,7 +61,8 @@ F (ciclos/muestra) en tiempo discreto.
 ## Disposición con panel lateral
 
 Es la disposición a la que se irán pasando todas las herramientas; de momento
-la usa `fuentes/T1/convolucion_continua.py`, que sirve de ejemplo:
+la usan `fuentes/T1/convolucion_continua.py`, que sirve de ejemplo, y
+`fuentes/T1/convolucion_discreta.py`:
 
 - Las gráficas ocupan todo el ancho, apiladas. Se crean con
   `pb.figura(..., ancho=None)` y se adaptan al mostrar u ocultar el panel.

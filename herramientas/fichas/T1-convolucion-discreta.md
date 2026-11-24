@@ -33,8 +33,9 @@ Toda la teoría de filtros digitales parte de aquí: un filtro FIR es exactament
 ## Guía de uso
 
 - **Señal x[n]** y **Respuesta al impulso h[n]** se eligen entre pulsos de 4 y 6 muestras, una rampa 1, 2, 3, 4, la exponencial 0,8ⁿu[n] (truncada en 25 muestras), δ[n] + δ[n − 3], una media móvil de 3 muestras y la diferencia δ[n] − δ[n − 1].
-- **n** elige la muestra de salida que se calcula.
-- Arriba, x[k] y h[n − k]; en medio, su producto; abajo, la salida completa con la muestra y[n] marcada. El recuadro escribe la suma de productos que da y[n].
+- **Desplazamiento n** elige la muestra de salida que se calcula.
+- Arriba, x[k] y h[n − k] con su producto en barras verdes: la suma de las barras es y[n]. Justo debajo está el deslizador de n, alineado con el eje k (la línea discontinua marca dónde está h), y la suma de productos que da y[n].
+- Abajo, la salida completa en gris y, en azul, lo calculado hasta n; el punto naranja es la muestra y[n] actual.
 
 ## Ejercicios
 
