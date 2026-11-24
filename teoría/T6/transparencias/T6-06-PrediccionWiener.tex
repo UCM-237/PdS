@@ -1,0 +1,84 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T6 · Predicción y Wiener]{Señales aleatorias}
+\subtitle{Tema 6 · Cápsula: predicción lineal y filtro de Wiener}
+
+\begin{document}
+\portada
+
+\begin{frame}{Predicción lineal: ecuaciones de Yule-Walker}
+  \footnotesize
+  \begin{itemize}
+    \item Se predice cada muestra con las $p$ anteriores y se mira el \alert{error de predicción}:
+    \[
+      \hat x[n]=\sum_{k=1}^{p}a_k\,x[n-k],\qquad e[n]=x[n]-\hat x[n]
+    \]
+    \item Los $a_k$ que minimizan $E\set{e^2[n]}$ en un proceso estacionario cumplen las \alert{ecuaciones normales} (Yule-Walker):
+    \[
+      \sum_{k=1}^{p}a_k\,\phi_{xx}[l-k]=\phi_{xx}[l],\quad l=1,\dots,p
+      \qquad\Longleftrightarrow\qquad
+      \begin{bmatrix}\phi[0]&\cdots&\phi[p-1]\\ \vdots&\ddots&\vdots\\ \phi[p-1]&\cdots&\phi[0]\end{bmatrix}
+      \begin{bmatrix}a_1\\ \vdots\\ a_p\end{bmatrix}=
+      \begin{bmatrix}\phi[1]\\ \vdots\\ \phi[p]\end{bmatrix}
+    \]
+    \item La matriz es Toeplitz y simétrica: se resuelve con el algoritmo de Levinson-Durbin. Potencia del error: $\sigma_e^2=\phi_{xx}[0]-\sum_k a_k\phi_{xx}[k]$.
+    \item Si $x$ es un AR($p$), los $a_k$ son sus coeficientes y $e[n]$ es \alert{ruido blanco}: el predictor es un filtro \alert{blanqueador} $A(z)=1-\sum_k a_kz^{-k}$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{El residuo como detector}
+  \footnotesize
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \item Lo que el modelo explica desaparece del residuo; lo que \alert{no encaja} (un clic, un artefacto) queda aislado y destaca.
+        \item Umbral robusto sobre $e[n]$: $\abs{e[n]}>k\cdot1{,}4826\cdot\mathrm{MAD}(e)$.
+        \item Un impulso en $n_0$ aparece en $e[n]$ en $n_0,\dots,n_0+p$: se corrige el instante y se \alert{interpolan} esas muestras con el propio modelo.
+        \item Una señal real (música, voz) \alert{no es estacionaria}: los $a_k$ se recalculan por bloques de unas decenas de milisegundos.
+        \item Orden $p$: el que deja el residuo casi blanco; más orden también modela el clic.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \includegraphics[width=\linewidth]{prediccion_residuo}
+      \nota{AR(2) con dos clics de amplitud 6. Invisibles en $x[n]$, salen solos del residuo con umbral $5\cdot1{,}4826\cdot\mathrm{MAD}$.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Filtro de Wiener}
+  \footnotesize
+  \begin{itemize}
+    \item Observación $x=s+v$, con $s$ y $v$ incorrelados y de DEP conocida. El filtro lineal que minimiza $E\set{(s-\hat s)^2}$ es
+    \[
+      H(\e^{j\Omega})=\frac{\Phi_{ss}(\e^{j\Omega})}{\Phi_{ss}(\e^{j\Omega})+\Phi_{vv}(\e^{j\Omega})}=\frac{\mathrm{SNR}(\Omega)}{1+\mathrm{SNR}(\Omega)}
+    \]
+    \item En la práctica: $\hat\Phi_{vv}$ con Welch en un tramo \alert{solo de ruido}, y $\hat\Phi_{ss}=\max(\hat\Phi_{xx}-\hat\Phi_{vv},0)$.
+    \item \alert{Wiener local} (imágenes): con la media $\mu$ y la varianza $\sigma^2$ de un entorno, $\hat s=\mu+\frac{\max(\sigma^2-\sigma_v^2,0)}{\sigma^2}(x-\mu)$: suaviza las zonas planas y respeta los bordes.
+  \end{itemize}
+  \begin{center}\includegraphics[width=0.72\linewidth]{wiener_ganancia}\end{center}
+\end{frame}
+
+\begin{frame}{En código: Yule-Walker y residuo}
+  \codigo{prediccion_lineal}
+  \nota{Estima $a\approx(1{,}57;\,-0{,}84;\,-0{,}04;\,0{,}01)$ frente a $(1{,}6;\,-0{,}9;\,0;\,0)$ y marca cada clic en $n_0$, $n_0+1$ y $n_0+2$.}
+\end{frame}
+
+\begin{frame}{En los proyectos}
+  \footnotesize
+  \begin{tabular}{@{}p{0.36\linewidth}p{0.6\linewidth}@{}}
+    \toprule
+    Proyecto & Uso \\ \midrule
+    Audio con ruido (H3) & clics por el residuo de un AR por bloques; filtro de Wiener global con las DEP de Welch \\
+    Imagen con ruido (H3) & Wiener local frente a los filtros lineales del H2 \\
+    Códigos de barras e Imagen con ruido (H4) & deconvolución de Wiener (cápsula de T5) \\
+    \bottomrule
+  \end{tabular}
+  \bigskip
+  \begin{importante}[Por qué el Wiener global mejora poco una señal real]
+    Supone que $\Phi_{ss}$ es la misma en todo el registro. La música, la voz o una imagen cambian de un tramo a otro: hace falta una versión local (por bloques, por entornos o en la STFT).
+  \end{importante}
+\end{frame}
+
+\end{document}

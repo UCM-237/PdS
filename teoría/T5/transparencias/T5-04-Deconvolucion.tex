@@ -1,0 +1,68 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T5 · Deconvolución]{Aplicaciones}
+\subtitle{Tema 5 · Cápsula: deshacer un desenfoque (deconvolución de Wiener)}
+
+\begin{document}
+\portada
+
+\begin{frame}{El problema: dividir por $H$}
+  \footnotesize
+  \begin{itemize}
+    \item Una imagen movida o desenfocada es la original \alert{convolucionada} con la respuesta del sistema óptico, más ruido:
+    \[
+      y=h\conv x+v\qquad\Longrightarrow\qquad Y[k]=H[k]\,X[k]+V[k]
+    \]
+    \item Movimiento de $L$ píxeles en una dirección: $h$ es un pulso de $L$ muestras y $\abs H$ tiene \alert{ceros} en $F=m/L$. Desenfoque de disco de radio $R$: \alert{anillos} de ceros.
+    \item \alert{Filtro inverso} $\hat X=Y/H=X+V/H$: donde $\abs H\approx0$ el ruido se multiplica sin límite.
+  \end{itemize}
+  \begin{center}\includegraphics[width=0.95\linewidth]{deconvolucion_wiener}\end{center}
+\end{frame}
+
+\begin{frame}{Deconvolución de Wiener}
+  \footnotesize
+  \begin{itemize}
+    \item El filtro lineal que minimiza el error cuadrático medio, con $x$ y $v$ incorrelados:
+    \[
+      G[k]=\frac{H^*[k]}{\abs{H[k]}^2+\dfrac{\Phi_{vv}[k]}{\Phi_{xx}[k]}}\approx\frac{H^*[k]}{\abs{H[k]}^2+K}
+    \]
+    \item Donde $\abs H^2\gg K$ invierte ($G\approx1/H$); donde $\abs H^2\ll K$ se atenúa ($G\to0$).
+    \item $K$ es la inversa de la SNR. Demasiado pequeño: ruido amplificado. Demasiado grande: la imagen sigue borrosa.
+    \item Mejor una $K$ que dependa de la frecuencia: las imágenes naturales tienen $\Phi_{xx}$ que cae con $\abs f$ (aprox. $1/\abs f^2$), y el ruido blanco es plano.
+    \item En 2D es lo mismo con la DFT 2D: \texttt{fft2}, producto punto a punto, \texttt{ifft2}. Con bordes de la imagen, enventanar o extender por simetría para no crear falsas altas frecuencias.
+  \end{itemize}
+  \herramienta{T5-dft-2d}
+\end{frame}
+
+\begin{frame}{Estimar $h$ en el espectro}
+  \footnotesize
+  \begin{columns}[T]
+    \begin{column}{0.55\textwidth}
+      \begin{itemize}
+        \item Si $X$ y $V$ son de banda ancha, los ceros de $H$ se ven como \alert{valles} de $\log\abs Y$.
+        \item Movimiento horizontal: valles periódicos a lo largo de $f_x$ con separación $N/L$ muestras de la DFT $\Rightarrow L$. Promediar $\log\abs Y$ de muchas filas los hace visibles.
+        \item Disco: perfil \alert{radial} de $\log\abs Y^2$; el primer anillo está en $\rho\approx0{,}61/R$ ciclos/píxel (primer cero de la función de Bessel).
+        \item Con $h$ estimado, se prueba con varios $K$ y se elige con una medida (PSNR en desarrollo, nitidez o tasa de lectura en prueba).
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.43\textwidth}
+      \scriptsize
+      \begin{tabular}{@{}p{0.4\linewidth}p{0.52\linewidth}@{}}
+        \toprule
+        Proyecto & Uso \\ \midrule
+        Códigos de barras (H4) & imagen 5 (movida): $L$ por los ceros de la fila y Wiener \\
+        Imagen con ruido (H4) & radio del disco por los anillos; Wiener con varios $K$ y con un modelo de $\Phi_{xx}$ \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{En código: inversa frente a Wiener}
+  \codigo{deconvolucion}
+  \nota{Error cuadrático medio: 0,70 con la inversa ($K=0$), 0,19 con $K=10^{-3}$, 0,13 con $K=10^{-2}$ y 0,18 con $K=10^{-1}$. Hay un $K$ óptimo.}
+\end{frame}
+
+\end{document}

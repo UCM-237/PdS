@@ -1,0 +1,74 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+\input{../../comun/pds-beamer}
+\graphicspath{{../figuras/}}
+
+\title[T4 · Mediana]{Filtros}
+\subtitle{Tema 4 · Cápsula: el filtro de mediana}
+
+\begin{document}
+\portada
+
+\begin{frame}{Impulsos: lo que un filtro lineal no sabe quitar}
+  \footnotesize
+  \begin{itemize}
+    \item Muchas señales reales tienen \alert{ruido impulsivo}: saltos del GPS, clics en una grabación, píxeles de sal y pimienta, artefactos de movimiento en un ECG.
+    \item Un filtro LTI responde a un impulso con su respuesta al impulso: lo \alert{reparte} en $L$ muestras en lugar de quitarlo. Y si es paso bajo, también \alert{suaviza los bordes} que queremos conservar.
+    \item El \alert{filtro de mediana} de longitud $L=2K+1$ sustituye cada muestra por la mediana de su ventana:
+    \[
+      y[n]=\operatorname{med}\set{x[n-K],\dots,x[n],\dots,x[n+K]}
+    \]
+  \end{itemize}
+  \begin{center}\includegraphics[width=0.8\linewidth]{mediana_vs_media}\end{center}
+\end{frame}
+
+\begin{frame}{Propiedades}
+  \footnotesize
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \textbf{Lo que gana}
+      \begin{itemize}
+        \item Elimina impulsos de hasta $K$ muestras seguidas, sin dejar rastro.
+        \item Conserva los \alert{escalones} y los bordes: un escalón ideal sale intacto.
+        \item Es invariante al desplazamiento y conserva la amplitud de los tramos constantes.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Lo que pierde}
+      \begin{itemize}
+        \item \alert{No es lineal}: en general $\operatorname{med}\set{a+b}\neq\operatorname{med}\set{a}+\operatorname{med}\set{b}$.
+        \item Por tanto \alert{no tiene respuesta en frecuencia} ni se analiza con $H(z)$ ni con la convolución.
+        \item Recorta los picos estrechos de la señal útil (un QRS más corto que la ventana desaparece).
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \bigskip
+  \begin{importante}[Cómo elegir $L$]
+    $L$ mayor que el doble de la duración del impulso más largo y menor que el detalle útil más estrecho. Si no hay hueco entre ambos, la mediana no sirve.
+  \end{importante}
+\end{frame}
+
+\begin{frame}{Variantes y uso en los proyectos}
+  \footnotesize
+  \begin{itemize}
+    \item \alert{Mediana 2D} ($3\times3$, $5\times5$): la herramienta clásica contra la sal y pimienta. No es separable: la mediana de filas y luego columnas no es la mediana del bloque.
+    \item \alert{Mediana condicionada}: solo se sustituyen las muestras que se detectan como atípicas. Es el filtro de Hampel, que se verá con los estimadores robustos (T6).
+    \item \alert{Medianas en cascada} para estimar una tendencia lenta: una de unos 200\,ms y otra de unos 600\,ms quitan el QRS y la onda T y dejan la línea base de un ECG.
+    \item Coste: ordenar $L$ muestras por salida. Con ventanas deslizantes se reaprovecha el orden anterior.
+  \end{itemize}
+  \medskip
+  \begin{tabular}{@{}ll@{}}
+    \toprule
+    Proyecto & Uso \\ \midrule
+    Registro de carrera (H2) & saltos del GPS en velocidad y altitud \\
+    ECG (H2) & estimador de la línea base con medianas \\
+    Imagen con ruido (H2, H3) & sal y pimienta: media frente a mediana \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{En código: mediana frente a media móvil}
+  \codigo{mediana}
+  \nota{Error máximo: 0,58 con la media y 0,06 con la mediana. En 2D: \texttt{medfilt2} y \texttt{scipy.ndimage.median\_filter}.}
+\end{frame}
+
+\end{document}

@@ -678,6 +678,31 @@ def peine():
     guardar(fig, "peine")
 
 
+# ---------------------------------------------------------------------
+# Cápsula: filtro de mediana
+# ---------------------------------------------------------------------
+@figura
+def mediana_vs_media():
+    rng = np.random.default_rng(4)
+    n = np.arange(200)
+    s = (n >= 100).astype(float)
+    x = s + 0.05 * rng.standard_normal(n.size)
+    x[[30, 31, 140]] += [2, 2, -2]
+    L = 7
+    media = np.convolve(x, np.ones(L) / L, "same")
+    med = signal.medfilt(x, L)
+    fig, axs = pe.figura(1, 2, ancho=6.4, alto=1.9, sharey=True)
+    for ax, y, tit, c in ((axs[0], media, "Media móvil, $L=7$", pe.ROJO),
+                          (axs[1], med, "Mediana, $L=7$", pe.VERDE)):
+        ax.plot(n, x, color=pe.GRIS_CLARO, lw=0.8, label="$x[n]$")
+        ax.plot(n, y, color=c, lw=1.2, label="$y[n]$")
+        ax.set_title(tit)
+        ax.set_xlabel("$n$")
+        ax.set_ylim(-0.8, 2.4)
+        ax.legend(loc="upper left")
+    guardar(fig, "mediana_vs_media")
+
+
 if __name__ == "__main__":
     nombres = sys.argv[1:] or list(FIGURAS)
     for nombre in nombres:

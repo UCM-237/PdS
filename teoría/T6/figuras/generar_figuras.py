@@ -547,6 +547,135 @@ def identificacion():
     guardar(fig, "identificacion")
 
 
+# ---------------------------------------------------------------------
+# Cápsulas: estimadores robustos, predicción lineal, Wiener y detección
+# ---------------------------------------------------------------------
+@figura
+def robusto_sigma():
+    rng = np.random.default_rng(7)
+    fr = np.linspace(0, 0.3, 31)
+    sd, mad = [], []
+    for p in fr:
+        a, b = [], []
+        for _ in range(200):
+            x = rng.standard_normal(400)
+            k = rng.random(400) < p
+            x[k] += rng.choice([-8, 8], k.sum())
+            a.append(x.std())
+            b.append(1.4826 * np.median(np.abs(x - np.median(x))))
+        sd.append(np.mean(a))
+        mad.append(np.mean(b))
+    fig, ax = pe.figura(1, 1, ancho=3.2, alto=1.9)
+    ax.plot(100 * fr, sd, color=pe.ROJO, label="desviación típica")
+    ax.plot(100 * fr, mad, color=pe.VERDE, label=r"$1{,}4826\cdot$MAD")
+    ax.axhline(1, color=pe.GRIS, lw=0.6, ls="--")
+    ax.set_xlabel("atípicos (%)")
+    ax.set_ylabel(r"$\hat\sigma$ (real: 1)")
+    ax.legend(loc="upper left")
+    guardar(fig, "robusto_sigma")
+
+
+@figura
+def hampel_ejemplo():
+    rng = np.random.default_rng(11)
+    N, K, t = 300, 10, 3
+    n = np.arange(N)
+    s = 10 + 2 * (n > 150) + 0.5 * np.sin(2 * np.pi * n / 120)
+    x = s + 0.3 * rng.standard_normal(N)
+    idx = [40, 41, 95, 210, 260]
+    x[idx] += [4, 4.5, -5, 6, -4]
+    y, at = x.copy(), np.zeros(N, bool)
+    for k in range(K, N - K):
+        v = x[k - K:k + K + 1]
+        m = np.median(v)
+        S = 1.4826 * np.median(np.abs(v - m))
+        if abs(x[k] - m) > t * S:
+            y[k], at[k] = m, True
+    fig, ax = pe.figura(1, 1, ancho=3.3, alto=1.9)
+    ax.plot(n, x, color=pe.GRIS_CLARO, lw=0.8, label="$x[n]$")
+    ax.plot(n, y, color=pe.AZUL, lw=1.1, label="limpia")
+    ax.plot(n[at], x[at], "o", color=pe.ROJO, ms=3, label="marcadas")
+    ax.set_xlabel("$n$")
+    ax.legend(loc="lower right", ncol=3)
+    guardar(fig, "hampel_ejemplo")
+
+
+@figura
+def prediccion_residuo():
+    from scipy import linalg
+    rng = np.random.default_rng(2)
+    N, p = 1500, 4
+    x = signal.lfilter([1], [1, -1.6, 0.9], rng.standard_normal(N))
+    x[[400, 1100]] += [6, -6]
+    r = np.correlate(x, x, "full")[N - 1:] / N
+    a = linalg.solve_toeplitz(r[:p], r[1:p + 1])
+    e = signal.lfilter(np.r_[1, -a], [1], x)
+    S = 1.4826 * np.median(np.abs(e))
+    n = np.arange(N)
+    fig, axs = pe.figura(2, 1, ancho=3.3, alto=2.4, sharex=True)
+    axs[0].plot(n, x, color=pe.AZUL, lw=0.7)
+    axs[0].set_ylabel("$x[n]$")
+    axs[1].plot(n, e, color=pe.GRIS, lw=0.7)
+    axs[1].axhline(5 * S, color=pe.ROJO, lw=0.8, ls="--")
+    axs[1].axhline(-5 * S, color=pe.ROJO, lw=0.8, ls="--")
+    axs[1].set_ylabel("$e[n]$")
+    axs[1].set_xlabel("$n$")
+    guardar(fig, "prediccion_residuo")
+
+
+@figura
+def wiener_ganancia():
+    W = np.linspace(0, np.pi, 512)
+    Pss = 1 / np.abs(1 - 0.9 * np.exp(-1j * W)) ** 2
+    Pvv = 1.0 * np.ones_like(W)
+    H = Pss / (Pss + Pvv)
+    fig, axs = pe.figura(1, 2, ancho=6.4, alto=1.8)
+    axs[0].semilogy(W, Pss, color=pe.AZUL, label=r"$\Phi_{ss}$")
+    axs[0].semilogy(W, Pvv, color=pe.ROJO, label=r"$\Phi_{vv}$")
+    axs[0].legend()
+    axs[0].set_title("DEP de la señal y del ruido")
+    axs[1].plot(W, H, color=pe.VERDE)
+    axs[1].set_ylim(0, 1.05)
+    axs[1].set_title(r"$H(\mathrm{e}^{j\Omega})$ de Wiener")
+    for ax in axs:
+        ticks_pi(ax)
+        ax.set_xlabel(r"$\Omega$")
+    guardar(fig, "wiener_ganancia")
+
+
+@figura
+def deteccion_umbral():
+    d = np.linspace(-4, 9, 600)
+    p0 = stats.norm.pdf(d, 0, 1)
+    p1 = stats.norm.pdf(d, 4, 1.3)
+    u = 2.2
+    N0, N1 = 2000, 50                     # muestras sin y con evento
+    us = np.linspace(-1, 8, 200)
+    vp = N1 * stats.norm.sf(us, 4, 1.3)
+    fp = N0 * stats.norm.sf(us, 0, 1)
+    se = vp / N1
+    vpp = vp / np.maximum(vp + fp, 1e-12)
+    fig, axs = pe.figura(1, 2, ancho=6.4, alto=1.9)
+    ax = axs[0]
+    ax.plot(d, p0, color=pe.GRIS, label="sin evento")
+    ax.plot(d, p1, color=pe.AZUL, label="con evento")
+    ax.fill_between(d[d > u], p0[d > u], color=pe.ROJO, alpha=0.35, lw=0, label="FP")
+    ax.fill_between(d[d < u], p1[d < u], color=pe.NARANJA, alpha=0.45, lw=0, label="FN")
+    ax.axvline(u, color=pe.ROJO, lw=0.8, ls="--")
+    ax.set_xlabel("estadístico $d$")
+    ax.set_title("Umbral $u$")
+    ax.legend(loc="upper right", fontsize=6)
+    ax = axs[1]
+    ax.plot(us, se, color=pe.AZUL, label="Se")
+    ax.plot(us, vpp, color=pe.VERDE, label="VPP")
+    ax.plot(us, 2 * se * vpp / np.maximum(se + vpp, 1e-12), color=pe.NARANJA, label="F1")
+    ax.set_xlabel("umbral $u$")
+    ax.set_ylim(0, 1.05)
+    ax.set_title("Métricas frente al umbral")
+    ax.legend(loc="lower right")
+    guardar(fig, "deteccion_umbral")
+
+
 if __name__ == "__main__":
     nombres = sys.argv[1:] or list(FIGURAS)
     for nombre in nombres:
