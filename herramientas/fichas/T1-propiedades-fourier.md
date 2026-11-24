@@ -39,7 +39,7 @@ Si $x$ es real, $X(-f) = X^*(f)$: el módulo es par y la fase impar, y basta dib
 ## Guía de uso
 
 - **Señal x(t)** elige entre un pulso rectangular de anchura 1, un triangular de anchura 2, la gaussiana $e^{-\pi t^2}$ y la exponencial $e^{-t}u(t)$, todas en $t = 0$.
-- **Operación** aplica una de las propiedades de la tabla. Debajo de la gráfica del tiempo aparece solo el parámetro de la operación elegida: **t₀**, **a** o **f₀**.
+- **Operación** aplica una de las propiedades de la tabla. Junto a ella aparece solo el parámetro de la operación elegida: **t₀**, **a** o **f₀**.
 - Arriba, $x(t)$ en gris y el resultado $y(t)$ en azul. Debajo, el módulo y la fase de $X(f)$ y de $Y(f)$. La fase se omite donde el módulo es casi nulo.
 - El recuadro escribe la relación entre $Y(f)$ y $X(f)$ y compara las energías.
 - La transformada se calcula con una FFT de la señal muestreada cada 0,02 s, así que es una aproximación muy buena, pero no exacta.

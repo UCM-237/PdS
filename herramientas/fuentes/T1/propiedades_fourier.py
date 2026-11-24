@@ -61,5 +61,5 @@ pb.pagina_panel(__file__, "Propiedades de la transformada de Fourier", tema=1,
                       r"tocar el módulo, comprimir ensancha el espectro, modular lo traslada, derivar lo multiplica por "
                       r"$j2\pi f$ y convolucionar lo multiplica. La transformada se calcula con la FFT de la señal "
                       r"muestreada finamente.",
-          controles=[senal, op], graficas=[pb.grafica(p1, t0, a, f0), [p2, p3], info], inicio=cb,
+          controles=[senal, op, t0, a, f0], graficas=[p1, [p2, p3], info], inicio=cb,
           referencia="Transparencias T1-02, propiedades de la transformada de Fourier · Apuntes del Tema 1, sección 6")

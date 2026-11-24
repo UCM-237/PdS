@@ -873,7 +873,8 @@ p {{ margin: 2px 0 6px; }}
 
 
 def grafica(p, *controles):
-    """Una gráfica con los controles que la afectan justo debajo.
+    """Una gráfica con los controles de su visualización justo debajo (los
+    que no cambian el contenido, como el desplazamiento de la convolución).
 
     Los controles ocupan el ancho de la zona de datos de ``p`` (que debe
     crearse con ``figura(..., ancho=None)``), de modo que un deslizador con el
@@ -942,8 +943,11 @@ def pagina_panel(fuente: str, titulo: str, tema: int, descripcion: str, graficas
                  controles=(), referencia: str = "", inicio=None) -> pathlib.Path:
     """Escribe html/<nombre de la fuente>.html con la disposición de panel lateral.
 
-    ``controles`` son los controles generales (por ejemplo, la elección de
-    señales): van en una fila encima de las gráficas. ``graficas`` es una
+    ``controles`` son los controles que cambian el contenido (señales,
+    operación, parámetros): van agrupados arriba a la izquierda, encima de las
+    gráficas; una lista dentro de ``controles`` es una línea del grupo. Debajo
+    de cada gráfica (``grafica()``) solo van los que cambian su visualización,
+    como el desplazamiento de la convolución. ``graficas`` es una
     lista de figuras creadas con ``figura(..., ancho=None)`` o de bloques
     ``grafica(p, control, …)``, que se apilan a todo el ancho; una lista
     dentro de ``graficas`` es una fila de gráficas. La ficha
@@ -953,9 +957,16 @@ def pagina_panel(fuente: str, titulo: str, tema: int, descripcion: str, graficas
     nombre = pathlib.Path(fuente).stem.replace("_", "-")
     filas = []
     if controles:
-        for c in controles:
-            c.margin = (0, 16, 8, 0)
-        filas.append(row(*controles, margin=(0, 0, 4, BORDE_IZQ), styles={"flex-wrap": "wrap"}))
+        # Una lista dentro de ``controles`` es una línea propia del grupo
+        # (por ejemplo, los selectores en una y los deslizadores en otra).
+        lineas = [list(c) for c in controles if isinstance(c, (list, tuple))]
+        sueltos = [c for c in controles if not isinstance(c, (list, tuple))]
+        lineas = ([sueltos] if sueltos else []) + lineas
+        for linea in lineas:
+            for c in linea:
+                c.margin = (0, 16, 8, 0)
+        grupo = [row(*linea, styles={"flex-wrap": "wrap"}) for linea in lineas]
+        filas.append(column(*grupo, margin=(0, 0, 4, BORDE_IZQ)))
     # Una lista dentro de ``graficas`` es una fila de gráficas que se reparten el ancho
     filas += [row(*g, sizing_mode="stretch_width") if isinstance(g, (list, tuple)) else g
               for g in graficas]

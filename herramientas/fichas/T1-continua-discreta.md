@@ -32,7 +32,7 @@ $x[n] = \cos(\Omega n + \theta)$ es periódica solo si $\Omega/2\pi = F$ es un n
 
 - **f** es la frecuencia de la sinusoide continua, en hercios, y **fs**, la frecuencia de muestreo; $T_s = 1/f_s$.
 - **θ** es la fase inicial.
-- La gráfica muestra la sinusoide continua y sus muestras $x[n] = x(nT_s)$; en rojo discontinuo, la sinusoide de la frecuencia principal, que pasa por las mismas muestras. Los deslizadores están debajo.
+- La gráfica muestra la sinusoide continua y sus muestras $x[n] = x(nT_s)$; en rojo discontinuo, la sinusoide de la frecuencia principal, que pasa por las mismas muestras. Los deslizadores están arriba, a la izquierda.
 - El recuadro indica $\Omega = 2\pi f/f_s$, su valor principal en $[-\pi, \pi)$ y la frecuencia en hercios que le corresponde. Si $f$ supera $f_s/2$, avisa de que las muestras son las de una sinusoide más lenta.
 
 ## Ejercicios

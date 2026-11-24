@@ -42,5 +42,5 @@ pb.pagina_panel(__file__, "Exponencial compleja discreta", tema=1,
           descripcion=r"Al contrario que en tiempo continuo, $\cos(\Omega n)$ solo es periódica si $\Omega/2\pi$ es "
                       r"racional, y $\Omega$ y $\Omega + 2\pi$ dan la misma secuencia: la frecuencia discreta solo "
                       r"tiene sentido en un intervalo de $2\pi$. Cuanto más cerca de $\pi$, más rápido oscila.",
-          graficas=[pb.grafica(p, pb.fila(r, w, th), info)], inicio=cb,
+          controles=[r, w, th], graficas=[pb.grafica(p, info)], inicio=cb,
           referencia="Transparencias T1-01, «Exponencial compleja discreta» · Apuntes del Tema 1, sección 3")

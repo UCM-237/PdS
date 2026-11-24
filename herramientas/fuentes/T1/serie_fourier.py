@@ -61,5 +61,5 @@ pb.pagina_panel(__file__, "Serie de Fourier", tema=1,
                       r"$x(t) = \sum_k c_k\, e^{j2\pi k f_0 t}$. Al truncar la suma, la potencia que falta es la de los "
                       r"coeficientes omitidos (Parseval). En las discontinuidades la suma parcial se pasa de la señal un "
                       r"9 % del salto por muchos armónicos que se sumen: es el fenómeno de Gibbs.",
-          controles=[sx], graficas=[pb.grafica(p1, d, info), pb.grafica(p2, K)], inicio=cb,
+          controles=[sx, K, d], graficas=[pb.grafica(p1, info), p2], inicio=cb,
           referencia="Transparencias T1-02, «Serie de Fourier de señales continuas periódicas» · Apuntes del Tema 1, sección 6")

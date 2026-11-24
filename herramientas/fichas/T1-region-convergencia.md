@@ -31,7 +31,7 @@ Un sistema LTI es BIBO estable si y solo si su respuesta al impulso es absolutam
 ## Guía de uso
 
 - **Transformada Z o Laplace** elige el tipo de transformada.
-- **p₁ y p₂** son dos polos reales; sus deslizadores están debajo del plano. La transformada es $X = \dfrac{1}{1 - p_1 z^{-1}} + \dfrac{1}{1 - p_2 z^{-1}}$ en Z o $\dfrac{1}{s - p_1} + \dfrac{1}{s - p_2}$ en Laplace.
+- **p₁ y p₂** son dos polos reales; sus deslizadores están arriba, en la segunda línea de controles. La transformada es $X = \dfrac{1}{1 - p_1 z^{-1}} + \dfrac{1}{1 - p_2 z^{-1}}$ en Z o $\dfrac{1}{s - p_1} + \dfrac{1}{s - p_2}$ en Laplace.
 - **Región de convergencia** elige una de las tres regiones posibles con dos polos.
 - A la izquierda, los polos y la ROC sombreada, con la circunferencia unidad o el eje $j\omega$. A la derecha, la señal que corresponde a esa ROC.
 - El recuadro escribe $X$, la ROC, la señal y si el sistema es estable.

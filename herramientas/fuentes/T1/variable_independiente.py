@@ -55,5 +55,5 @@ pb.pagina_panel(__file__, "Operaciones sobre la variable independiente", tema=1,
           descripcion=r"$y(t) = x(\alpha t + \beta)$ se obtiene en dos pasos: desplazar $x$ a la izquierda $\beta$ unidades "
                       r"y después escalar el eje por $\alpha$ (comprimir si $|\alpha| > 1$, expandir si $|\alpha| < 1$, "
                       r"invertir si $\alpha < 0$). En discreto, comprimir por un entero pierde muestras.",
-          controles=[senal, dominio], graficas=[pb.grafica([p1, p2], beta), pb.grafica(p3, alfa, info)], inicio=cb,
+          controles=[[senal, dominio], [beta, alfa]], graficas=[[p1, p2], pb.grafica(p3, info)], inicio=cb,
           referencia="Transparencias T1-02, transformaciones de la variable independiente · Apuntes del Tema 1, sección 4")

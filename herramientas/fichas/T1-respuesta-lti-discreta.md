@@ -26,8 +26,8 @@ la DTFT de la respuesta al impulso o, si el sistema tiene función de transferen
 ## Guía de uso
 
 - **Sistema** elige la media móvil, el de primer orden o la diferencia.
-- **L** y **a** son los parámetros de la media móvil y del primer orden; están debajo del módulo y la fase y solo aparece el del sistema elegido.
-- **Ω₀** es la frecuencia de la entrada $\cos(\Omega_0 n)$, entre 0 y $\pi$; está debajo de la gráfica de la entrada y la salida.
+- **L** y **a** son los parámetros de la media móvil y del primer orden; están arriba, junto al selector del sistema, y solo aparece el del sistema elegido.
+- **Ω₀** es la frecuencia de la entrada $\cos(\Omega_0 n)$, entre 0 y $\pi$; está arriba, con el resto de controles.
 - Arriba, el módulo y la fase de $H(e^{j\Omega})$ en $[0, \pi]$, con $\Omega_0$ marcada. Abajo, la entrada y la salida calculada con la ecuación en diferencias desde $n = 0$, así que se ve el transitorio.
 - El recuadro da $|H|$ y $\angle H$ en $\Omega_0$.
 

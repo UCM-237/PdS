@@ -29,8 +29,8 @@ Es habitual dibujar el módulo en decibelios, $20\log_{10}|H|$, frente a $\log\o
 ## Guía de uso
 
 - **Sistema** elige el paso bajo, el paso alto o el de segundo orden.
-- **ωc o ωn** es la frecuencia de corte de los de primer orden o la natural del de segundo orden, y **ζ** el amortiguamiento de este último (solo aparece con el de segundo orden). Están debajo del módulo y la fase, porque cambian $H$.
-- **log₁₀ ω₀** fija la frecuencia de la sinusoide de entrada, entre 0,1 y 100 rad/s; está debajo de la gráfica del tiempo.
+- **ωc o ωn** es la frecuencia de corte de los de primer orden o la natural del de segundo orden, y **ζ** el amortiguamiento de este último (solo aparece con el de segundo orden). Están arriba, junto al selector del sistema, porque cambian $H$.
+- **log₁₀ ω₀** fija la frecuencia de la sinusoide de entrada, entre 0,1 y 100 rad/s; está arriba, con el resto de controles.
 - Arriba, el módulo y la fase de $H(j\omega)$ con la frecuencia $\omega_0$ marcada. Abajo, la entrada y la salida en régimen permanente.
 - El recuadro da $|H(j\omega_0)|$, $\angle H(j\omega_0)$ y el retardo que corresponde a ese desfase.
 

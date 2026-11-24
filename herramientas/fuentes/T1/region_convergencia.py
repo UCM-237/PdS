@@ -15,6 +15,7 @@ Xt = ColumnDataSource(dict(t=[], x=[]))
 Xn = ColumnDataSource(dict(t=[], x=[]))
 
 p1 = pb.figura("Polos (×) y región de convergencia", "Re", "Im", ancho=280, alto=280, x_range=(-2.5, 2.5), y_range=(-2.5, 2.5))
+p1.frame_width = p1.frame_height = 250  # plano cuadrado: la circunferencia unidad, redonda
 p1.annulus(x=0, y=0, inner_radius="r0", outer_radius="r1", source=An, fill_color=pb.VERDE, fill_alpha=0.18, line_color=None)
 p1.quad(left="left", right="right", top=2.5, bottom=-2.5, source=Fr, fill_color=pb.VERDE, fill_alpha=0.18, line_color=None)
 p1.line("x", "y", source=C, color=pb.GRIS, line_width=1.5)
@@ -73,5 +74,5 @@ pb.pagina_panel(__file__, "Región de convergencia", tema=1,
                       r"anticausal o bilateral: lo decide la región de convergencia (ROC). En Z, la ROC es un anillo "
                       r"limitado por los módulos de los polos; en Laplace, una franja vertical limitada por sus partes "
                       r"reales. El sistema es estable si la ROC contiene la circunferencia unidad $|z| = 1$ o el eje $j\omega$.",
-          controles=[dom, roc], graficas=[[column(p1, a, b, width=330), p2], info], inicio=cb,
+          controles=[[dom, roc], [a, b]], graficas=[[column(p1, width=330), p2], info], inicio=cb,
           referencia="Transparencias T1-02, transformadas de Laplace y Z · Apuntes del Tema 1, sección 6")

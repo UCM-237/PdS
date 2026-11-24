@@ -29,8 +29,8 @@ Cerca de un salto, la suma parcial oscila y se pasa del valor de la señal. Al a
 ## Guía de uso
 
 - **Señal periódica** elige entre un tren de pulsos (centrado en $t = 0$), una onda cuadrada (1 en la primera mitad del periodo y $-1$ en la segunda), una triangular (de $-1$ a 1), un diente de sierra (de $-1$ a 1) y un seno rectificado $|\sin(\pi t)|$. El periodo es $T_0 = 1$.
-- **Ciclo de trabajo** solo afecta al tren de pulsos (solo aparece con él): es la fracción del periodo en que vale 1. Está debajo de la gráfica de la señal.
-- **K** es el número de armónicos de la suma parcial, $|k| \le K$. Está debajo de la gráfica de los coeficientes, porque elige cuáles entran en la suma.
+- **Ciclo de trabajo** solo afecta al tren de pulsos (solo aparece con él): es la fracción del periodo en que vale 1.
+- **K** es el número de armónicos de la suma parcial, $|k| \le K$.
 - Arriba, la señal y la suma parcial durante tres periodos. Abajo, $|c_k|$ para $|k| \le 60$, con los que entran en la suma en azul.
 - El recuadro compara la potencia de $x$ con la de la suma parcial (Parseval) y da el máximo de la suma parcial para ver el fenómeno de Gibbs.
 
